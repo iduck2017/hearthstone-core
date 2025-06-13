@@ -3,6 +3,7 @@
       "outDir": "./dist/",
       "noImplicitAny": true,
       "module": "ESNext",
+      "lib": ["ES2018", "DOM"],
       "target": "ESNext",
       "jsx": "react",
       "allowJs": true,
@@ -10,12 +11,15 @@
       "moduleResolution": "node",
       "strict": true,
       "experimentalDecorators": true,
-      "strictFunctionTypes": true,
+      "strictFunctionTypes": false,
+      "noUncheckedIndexedAccess": true,
       "paths": {
-        "@/*": ["./src/*"],
+        "@/*": ["./src/*"]
       },
+      "baseUrl": "."
     },
     "include": [
-      "src/**/*"
-    ],
+      "src/**/*",
+      "test/**/*"
+    ]
 }
