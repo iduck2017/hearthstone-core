@@ -1,5 +1,5 @@
-import { AppService } from ".";
-import { IngSocModel } from "./ing-soc";
+import { AppService } from "./service/app";
+import { RootModel } from "./common/root";
 
 declare module '*.scss' {
     const content: { [className: string]: string };
@@ -9,6 +9,6 @@ declare module '*.scss' {
 declare global {
     interface Window {
         app: AppService | undefined;
-        root: IngSocModel | undefined;
+        root: RootModel | undefined;
     }
 }

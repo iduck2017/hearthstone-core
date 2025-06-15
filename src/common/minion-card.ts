@@ -1,0 +1,59 @@
+import { Model, Props } from "set-piece";
+import { RoleModel } from "./role";
+import { CardModel } from "./card";
+import { CardType, MinionRace } from "@/types/card";
+
+export namespace MinionCardModel {
+    export type Parent = CardModel.Parent;
+    export type Event = Partial<CardModel.Event>;
+    export type State = Partial<CardModel.State> & {
+        readonly race: ReadonlyArray<MinionRace>;
+    };
+    export type Child = Partial<CardModel.Child> & {
+        readonly role: RoleModel;
+    };
+    export type Refer = Partial<CardModel.Refer>;
+}
+
+export abstract class MinionCardModel<
+    P extends MinionCardModel.Parent = MinionCardModel.Parent,
+    E extends Partial<MinionCardModel.Event> & Model.Event = Partial<MinionCardModel.Event>,
+    S extends Partial<MinionCardModel.State> & Model.State = Partial<MinionCardModel.State>,
+    C extends Partial<MinionCardModel.Child> & Model.Child = Partial<MinionCardModel.Child>,
+    R extends Partial<MinionCardModel.Refer> & Model.Refer = Partial<MinionCardModel.Refer>
+> extends CardModel<
+    P,
+    MinionCardModel.Event & E, 
+    MinionCardModel.State & S,  
+    MinionCardModel.Child & C,
+    MinionCardModel.Refer & R
+> {
+    protected get self(): MinionCardModel { return this; }
+
+    constructor(props: Props<
+        MinionCardModel.State,
+        MinionCardModel.Child,
+        MinionCardModel.Refer
+    > & {
+        state: S & {
+            name: string;
+            desc: string;
+            mana: number;
+        };
+        child: C & {
+            role: RoleModel;
+        };
+        refer: R;
+    }) {
+        super({
+            uuid: props.uuid,
+            state: {
+                type: CardType.MINION,
+                race: [],
+                ...props.state,
+            },
+            child: { ...props.child },
+            refer: { ...props.refer },
+        });
+    }
+}

@@ -5,7 +5,7 @@ const HtmlWebpackPlugin=require('html-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
 module.exports = {
-    entry: './src/index.tsx',
+    entry: './src/index.ts',
     mode: "development",
     output: {
         filename: 'bundle.[hash:4].js',
