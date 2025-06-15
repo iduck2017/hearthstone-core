@@ -1,10 +1,11 @@
-import { CheckService, DebugService, Model, Props } from "set-piece";
+import { CheckService, DebugService, Model, Props, TranxService } from "set-piece";
 import { CardType } from "@/types/card";
 import { BoardModel } from "./board";
 import { HandModel } from "./hand";
 import { ExtensionModel } from "./extension";
 import { RootModel } from "./root";
 import { PlayerModel } from "./player";
+import { RoleModel } from "./role";
 
 export namespace CardModel {
     export type Parent = BoardModel | HandModel | ExtensionModel;
@@ -15,9 +16,12 @@ export namespace CardModel {
         readonly mana: number;
     };
     export type Event = {
-        onUse: CardModel;
+        toUse: void;
+        onUse: void;
     };
-    export type Child = {};
+    export type Child = {
+        role?: RoleModel;
+    };
     export type Refer = {};
 }
 
@@ -83,13 +87,6 @@ export abstract class CardModel<
         }
     }
 
-    @DebugService.log()
-    @CheckService.if(self => self.route.hand)
-    use() {
-        const hand = this.route.hand;
-        if (!hand) return;
-        hand.del(this);        
-        this.event.onUse(this);
-    }
-
+    public abstract use(): void;
+    
 }

@@ -12,7 +12,7 @@ export class WispRoleModel extends RoleModel {
             uuid: props.uuid,
             state: {
                 attack: 1,
-                health: 1,
+                baseHealth: 1,
                 ...props.state,
             },
             child: { ...props.child },

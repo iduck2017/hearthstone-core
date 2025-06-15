@@ -11,7 +11,7 @@ export class MageRoleModel extends RoleModel {
             ...props,
             state: {
                 attack: 0,
-                health: 30,
+                baseHealth: 30,
                 ...props.state,
             },
             child: { ...props.child },

@@ -1,12 +1,26 @@
-import { Model, Props } from "set-piece";
+import { DebugService, Model, Props, State, TranxService } from "set-piece";
+import { MinionCardModel } from "./minion-card";
+import { HeroModel } from "./hero";
 
 export namespace RoleModel {
+    export type Parent = MinionCardModel | HeroModel
     export type State = {
         readonly attack: number;
-        readonly health: number;
+        readonly baseHealth: number;
         lostHealth: number;
     };
-    export type Event = {};
+    export type Event = {
+        toAttack: RoleModel;
+        onAttack: RoleModel;
+        onDamageDeal: {
+            target: RoleModel;
+            damage: number;
+        };
+        onDamageRecv: {
+            target: RoleModel;
+            damage: number;
+        };
+    };
     export type Child = {};
     export type Refer = {};
 }
@@ -31,7 +45,7 @@ export class RoleModel<
     > & {
         state: S & {
             readonly attack: number;
-            readonly health: number;
+            readonly baseHealth: number;
         };
         child: C;
         refer: R;
@@ -47,8 +61,40 @@ export class RoleModel<
         })
     }
 
-    
-    attack() {
-
+    public get state(): State<RoleModel.State & S> & {
+        readonly health: number;
+    } {
+        const result = super.state;
+        return {
+            ...result,
+            health: result.baseHealth - result.lostHealth,
+        }
     }
+
+    
+    @DebugService.log()
+    public attack(target: RoleModel) {
+        this.event.toAttack(target);
+        const { damageDeal, damageRecv } = this._attack(target);
+        this.event.onDamageDeal({ target, damage: damageDeal })
+        target.event.onDamageDeal({ target: this, damage: damageRecv })
+        this.event.onDamageRecv({ target, damage: damageRecv })
+        target.event.onDamageRecv({ target: this, damage: damageDeal })
+        this.event.onAttack(target);
+    }
+
+    @TranxService.use()
+    private _attack(target: RoleModel) {
+        const damageDeal = this.state.attack;
+        const damageRecv = target.state.attack;
+        target.draft.state.lostHealth += damageDeal;
+        this.draft.state.lostHealth += damageRecv;
+        return {
+            damageDeal,
+            damageRecv,
+        }
+    }
+
+
+
 }

@@ -34,13 +34,13 @@ export class RootModel extends Model<
     }
 
     public start(props: {
-        p1: PlayerModel;
-        p2: PlayerModel;
+        player1: PlayerModel;
+        player2: PlayerModel;
     }) {
         this.draft.child.game = new GameModel({
             child: {
-                player1: props.p1,
-                player2: props.p2,
+                player1: props.player1,
+                player2: props.player2,
             },
         });
     }

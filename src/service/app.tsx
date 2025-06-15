@@ -34,16 +34,25 @@ export class AppService {
 
     @DebugService.log()
     public static test() {
-        const p1 = new PlayerModel({
+        const player1 = new PlayerModel({
             child: { hero: new MageHeroModel({}) },
         });
-        const p2 = new PlayerModel({
+        const player2 = new PlayerModel({
             child: { hero: new MageHeroModel({}) },
         });
-        AppService._root?.start({ p1, p2 });
-        p1.child.hand.get();
-        p2.child.hand.get();
-        console.log(p1.child.hand.child.cards);
-        console.log(p2.child.hand.child.cards);
+        AppService._root?.start({ player1, player2 });
+        player1.child.hand.gen();
+        player2.child.hand.gen();
+        console.log(player1.child.hand.child.cards);
+        console.log(player2.child.hand.child.cards);
+        const wisp1 = player1.child.hand.child.cards[0];
+        const wisp2 = player2.child.hand.child.cards[0];
+        if (!wisp1?.child.role) return;
+        if (!wisp2?.child.role) return;
+        wisp1.use();
+        wisp2.use();
+        console.log('health', wisp1.child.role?.state.health);
+        wisp1.child.role.attack(wisp2.child.role);
+        console.log('health', wisp1.child.role?.state.health);
     }
 }

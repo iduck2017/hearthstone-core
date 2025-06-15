@@ -9,6 +9,7 @@ export namespace HandModel {
     };
     export type Child = {
         cards: CardModel[];
+        cache: CardModel[];
     };
     export type Refer = {};
 }
@@ -30,22 +31,33 @@ export class HandModel extends Model<
             state: { ...props.state },
             child: {
                 cards: [],
+                cache: [],
                 ...props.child,
             },
             refer: { ...props.refer },
         });
     }
 
-    public get() {
+    public gen() {
         this.draft.child.cards.push(
             new WispCardModel({})
         )
     }
 
     @TranxService.use()
-    public del(card: CardModel) {
+    public use(card: CardModel) {
         const index = this.draft.child.cards.indexOf(card);
         if (index === -1) return;
         this.draft.child.cards.splice(index, 1);
+        this.draft.child.cache.push(card);
     }
+
+    
+    public del(card: CardModel) {
+        const index = this.draft.child.cache.indexOf(card);
+        if (index === -1) return;
+        this.draft.child.cache.splice(index, 1);
+    }
+    
+
 }

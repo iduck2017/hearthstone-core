@@ -1,11 +1,14 @@
-import { Model, Props } from "set-piece";
+import { CheckService, DebugService, Model, Props, TranxService } from "set-piece";
 import { RoleModel } from "./role";
 import { CardModel } from "./card";
 import { CardType, MinionRace } from "@/types/card";
 
 export namespace MinionCardModel {
     export type Parent = CardModel.Parent;
-    export type Event = Partial<CardModel.Event>;
+    export type Event = Partial<CardModel.Event> & {
+        onBattlecry: void;
+        onSummon: void;
+    };
     export type State = Partial<CardModel.State> & {
         readonly race: ReadonlyArray<MinionRace>;
     };
@@ -56,4 +59,29 @@ export abstract class MinionCardModel<
             refer: { ...props.refer },
         });
     }
+
+    @DebugService.log()
+    @CheckService.if(self => self.route.hand)
+    public use() {
+        this.event.toUse(undefined);
+        const hand = this.route.hand;
+        if (!hand) return;
+        hand.use(this);
+        this.event.onUse(undefined);
+        this.event.onBattlecry(undefined);
+        this.summon();
+        this.event.onSummon(undefined);
+    }
+    
+    @TranxService.use()
+    private summon() {
+        const owner = this.route.owner;
+        const board = owner?.child.board;
+        const hand = this.route.hand;
+        if (!board) return;
+        if (!hand) return;
+        hand.del(this);
+        board.add(this);
+    }
+
 }

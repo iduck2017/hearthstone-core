@@ -4,6 +4,7 @@ import { HeroModel } from "./hero";
 import { HandModel } from "./hand";
 import { GameModel } from "./game";
 import { RootModel } from "./root";
+import { CardModel } from "./card";
 
 export namespace PlayerModel {
     export type State = {};
