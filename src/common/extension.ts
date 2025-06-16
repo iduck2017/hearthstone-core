@@ -1,6 +1,6 @@
 import { Model, Props } from "set-piece";
 import { CardModel } from "./card";
-import { MageRoleModel } from "../extension/classic/hero/mage/role";
+import { MageRoleModel } from "./hero/mage/role";
 import { HeroModel } from "./hero";
 
 export namespace ExtensionModel {
@@ -8,7 +8,6 @@ export namespace ExtensionModel {
     export type Event = {};
     export type Child = {
         readonly cards: CardModel[];
-        readonly heros: HeroModel[];
     };
     export type Refer = {};
 }
@@ -27,7 +26,6 @@ export abstract class ExtensionModel extends Model<
     > & {
         child: {
             cards: CardModel[];
-            heros: HeroModel[];
         };
     }) {
         super({

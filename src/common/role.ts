@@ -1,6 +1,7 @@
 import { DebugService, Model, Props, State, TranxService } from "set-piece";
-import { MinionCardModel } from "./minion-card";
+import { MinionCardModel } from "./card/minion";
 import { HeroModel } from "./hero";
+import { BattlecryModel } from "./feature/battlecry";
 
 export namespace RoleModel {
     export type Parent = MinionCardModel | HeroModel
@@ -21,7 +22,8 @@ export namespace RoleModel {
             damage: number;
         };
     };
-    export type Child = {};
+    export type Child = {
+    };
     export type Refer = {};
 }
 
@@ -67,6 +69,7 @@ export class RoleModel<
         const result = super.state;
         return {
             ...result,
+            lostHealth: this.draft.state.lostHealth,
             health: result.baseHealth - result.lostHealth,
         }
     }
@@ -94,7 +97,5 @@ export class RoleModel<
             damageRecv,
         }
     }
-
-
 
 }

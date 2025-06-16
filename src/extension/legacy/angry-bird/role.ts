@@ -1,17 +1,17 @@
+import { RoleModel } from "@/common/role";
 import { Props } from "set-piece";
-import { RoleModel } from "../../../../common/role";
 
-export class MageRoleModel extends RoleModel {
+export class AngryBirdRoleModel extends RoleModel {
     constructor(props: Props<
         RoleModel.State,
         RoleModel.Child,
         RoleModel.Refer
     >) {
         super({
-            ...props,
+            uuid: props.uuid,
             state: {
-                attack: 0,
-                baseHealth: 30,
+                attack: 1,
+                baseHealth: 1,
                 ...props.state,
             },
             child: { ...props.child },

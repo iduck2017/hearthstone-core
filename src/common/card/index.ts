@@ -1,11 +1,11 @@
 import { CheckService, DebugService, Model, Props, TranxService } from "set-piece";
 import { CardType } from "@/types/card";
-import { BoardModel } from "./board";
-import { HandModel } from "./hand";
-import { ExtensionModel } from "./extension";
-import { RootModel } from "./root";
-import { PlayerModel } from "./player";
-import { RoleModel } from "./role";
+import { BoardModel } from "../container/board";
+import { HandModel } from "../container/hand";
+import { ExtensionModel } from "../extension";
+import { RootModel } from "../root";
+import { PlayerModel } from "../player";
+import { RoleModel } from "../role";
 
 export namespace CardModel {
     export type Parent = BoardModel | HandModel | ExtensionModel;
@@ -19,9 +19,7 @@ export namespace CardModel {
         toUse: void;
         onUse: void;
     };
-    export type Child = {
-        role?: RoleModel;
-    };
+    export type Child = {};
     export type Refer = {};
 }
 

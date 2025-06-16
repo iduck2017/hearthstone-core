@@ -1,4 +1,4 @@
-import { MinionCardModel } from "@/common/minion-card";
+import { MinionCardModel } from "@/common/card/minion";
 import { WispRoleModel } from "./role";
 import { CheckService, Props, StoreService } from "set-piece";
 import { MinionRace } from "@/types/card";
@@ -16,7 +16,6 @@ export class WispCardModel extends MinionCardModel {
                 name: 'Wisp',
                 desc: '',
                 mana: 0,
-                race: [MinionRace.UNDEAD],
                 ...props.state,
             },
             child: { 

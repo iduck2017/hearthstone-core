@@ -1,7 +1,7 @@
 import { Model, Props, TranxService } from "set-piece";
-import { CardModel } from "./card";
-import { WispCardModel } from "@/extension/classic/card/wisp/card";
-import { PlayerModel } from "./player";
+import { CardModel } from "../card";
+import { WispCardModel } from "@/extension/legacy/wisp/card";
+import { PlayerModel } from "../player";
 
 export namespace HandModel {
     export type Event = {};

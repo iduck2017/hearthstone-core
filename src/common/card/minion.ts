@@ -1,7 +1,8 @@
 import { CheckService, DebugService, Model, Props, TranxService } from "set-piece";
-import { RoleModel } from "./role";
-import { CardModel } from "./card";
+import { RoleModel } from "../role";
+import { CardModel } from ".";
 import { CardType, MinionRace } from "@/types/card";
+import { BattlecryModel } from "../feature/battlecry";
 
 export namespace MinionCardModel {
     export type Parent = CardModel.Parent;
@@ -14,6 +15,7 @@ export namespace MinionCardModel {
     };
     export type Child = Partial<CardModel.Child> & {
         readonly role: RoleModel;
+        readonly battlecry: BattlecryModel[];
     };
     export type Refer = Partial<CardModel.Refer>;
 }
@@ -55,7 +57,10 @@ export abstract class MinionCardModel<
                 race: [],
                 ...props.state,
             },
-            child: { ...props.child },
+            child: { 
+                battlecry: [],
+                ...props.child,
+            },
             refer: { ...props.refer },
         });
     }
@@ -68,7 +73,7 @@ export abstract class MinionCardModel<
         if (!hand) return;
         hand.use(this);
         this.event.onUse(undefined);
-        this.event.onBattlecry(undefined);
+        this.battlecry();
         this.summon();
         this.event.onSummon(undefined);
     }
@@ -78,10 +83,15 @@ export abstract class MinionCardModel<
         const owner = this.route.owner;
         const board = owner?.child.board;
         const hand = this.route.hand;
-        if (!board) return;
-        if (!hand) return;
+        if (!board || !hand) return;
         hand.del(this);
         board.add(this);
     }
 
+
+    @DebugService.log()
+    private battlecry() {
+        this.child.battlecry.forEach(battlecry => battlecry.prepare());
+        this.event.onBattlecry(undefined);
+    }
 }

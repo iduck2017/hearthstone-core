@@ -1,10 +1,9 @@
-import React from "react";
-import { createRoot } from "react-dom/client";
-import { DebugService, Model, RouteAgent, StoreService } from "set-piece";
+import { DebugService, RouteAgent } from "set-piece";
 import { RootModel } from "../common/root";
 import { ExtensionModel as Extensions } from "@/common/extension";
 import { PlayerModel } from "@/common/player";
-import { MageHeroModel } from "@/extension/classic/hero/mage/hero";
+import { MageHeroModel } from "@/common/hero/mage/hero";
+import { MinionCardModel } from "@/common/card/minion";
 
 export class AppService {
     private static _view?: HTMLElement;
@@ -47,8 +46,8 @@ export class AppService {
         console.log(player2.child.hand.child.cards);
         const wisp1 = player1.child.hand.child.cards[0];
         const wisp2 = player2.child.hand.child.cards[0];
-        if (!wisp1?.child.role) return;
-        if (!wisp2?.child.role) return;
+        if (!(wisp1 instanceof MinionCardModel)) return;
+        if (!(wisp2 instanceof MinionCardModel)) return;
         wisp1.use();
         wisp2.use();
         console.log('health', wisp1.child.role?.state.health);

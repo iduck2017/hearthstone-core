@@ -1,7 +1,7 @@
 import { Model, Props } from "set-piece";
-import { SkillModel } from "./skill";
-import { MageRoleModel } from "../extension/classic/hero/mage/role";
-import { RoleModel } from "./role";
+import { SkillModel } from "../skill";
+import { MageRoleModel } from "./mage/role";
+import { RoleModel } from "../role";
 
 export namespace HeroModel {
     export type Event = {};

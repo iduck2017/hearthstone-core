@@ -1,6 +1,6 @@
 import { DebugService, Model, Props, StoreService, TranxService } from "set-piece";
-import { CardModel } from "./card";
-import { PlayerModel } from "./player";
+import { CardModel } from "../card";
+import { PlayerModel } from "../player";
 
 export namespace BoardModel {
     export type State = {};

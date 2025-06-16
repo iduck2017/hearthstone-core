@@ -1,10 +1,10 @@
-import { ClassicExtensionModel } from "./extension/classic";
+import { LegacyExtensionModel } from "./extension/legacy";
 import { AppService } from "./service/app";
 
 window.app = AppService;
 AppService.boot({
     extensions: [
-        new ClassicExtensionModel({}),
+        new LegacyExtensionModel({}),
     ],
 });
 AppService.test();

@@ -1,10 +1,9 @@
 import { Model, Props } from "set-piece";
-import { BoardModel } from "./board";  
+import { BoardModel } from "./container/board";  
 import { HeroModel } from "./hero";
-import { HandModel } from "./hand";
+import { HandModel } from "./container/hand";
 import { GameModel } from "./game";
 import { RootModel } from "./root";
-import { CardModel } from "./card";
 
 export namespace PlayerModel {
     export type State = {};
