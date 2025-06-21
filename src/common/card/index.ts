@@ -1,61 +1,57 @@
-import { CheckService, DebugService, Model, Props, TranxService } from "set-piece";
+import { DebugService, Model } from "set-piece";
 import { CardType } from "@/types/card";
 import { BoardModel } from "../container/board";
 import { HandModel } from "../container/hand";
 import { ExtensionModel } from "../extension";
 import { RootModel } from "../root";
 import { PlayerModel } from "../player";
-import { RoleModel } from "../role";
+import { BattlecryModel } from "../feature/battlecry";
 
 export namespace CardModel {
-    export type Parent = BoardModel | HandModel | ExtensionModel;
     export type State = {
         readonly name: string;
         readonly desc: string;
-        readonly type: CardType;
         readonly mana: number;
+        readonly type: CardType;
     };
     export type Event = {
-        toUse: void;
+        onUseBefore: void;
         onUse: void;
+        onBattlecry: void;
     };
-    export type Child = {};
+    export type Child = {
+        readonly battlecry: BattlecryModel[];
+    };
     export type Refer = {};
 }
 
 export abstract class CardModel<
-    P extends CardModel.Parent = CardModel.Parent,
-    E extends Partial<CardModel.Event> & Model.Event = Partial<CardModel.Event>,
-    S extends Partial<CardModel.State> & Model.State = Partial<CardModel.State>,
-    C extends Partial<CardModel.Child> & Model.Child = Partial<CardModel.Child>,
-    R extends Partial<CardModel.Refer> & Model.Refer = Partial<CardModel.Refer>
+    P extends BoardModel | HandModel | ExtensionModel = BoardModel | HandModel | ExtensionModel,
+    E extends Model.Event = {},
+    S extends Model.State = {},
+    C extends Model.Child = {},
+    R extends Model.Refer = {}
 > extends Model<
     P,
-    CardModel.Event & E, 
-    CardModel.State & S, 
-    CardModel.Child & C,
-    CardModel.Refer & R
+    E & CardModel.Event, 
+    S & CardModel.State, 
+    C & CardModel.Child,
+    R & CardModel.Refer
 > {
     protected get self(): CardModel { return this; }
 
-    constructor(props: Props<
-        CardModel.State,
-        CardModel.Child,
-        CardModel.Refer
-    > & {
-        state: S & {
-            name: string;
-            desc: string;
-            mana: number;
-            type: CardType;
-        };
+    constructor(props: CardModel['props'] & {
+        state: S & CardModel.State;
         child: C;
         refer: R;
     }) {
         super({
             uuid: props.uuid,
             state: { ...props.state },
-            child: { ...props.child },
+            child: {
+                battlecry: [],
+                ...props.child,
+            },
             refer: { ...props.refer },
         });
     }
@@ -87,4 +83,11 @@ export abstract class CardModel<
 
     public abstract use(): void;
     
+    @DebugService.log()
+    protected battlecry() {
+        const self = this.self;
+        self.child.battlecry.forEach(feat => feat.prepare());
+        self.event.onBattlecry();
+    }
+
 }

@@ -1,7 +1,5 @@
 import { Model, Props } from "set-piece";
 import { CardModel } from "./card";
-import { MageRoleModel } from "./hero/mage/role";
-import { HeroModel } from "./hero";
 
 export namespace ExtensionModel {
     export type State = {};

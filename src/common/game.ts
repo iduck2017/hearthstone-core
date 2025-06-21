@@ -42,4 +42,11 @@ export class GameModel extends Model<
             refer: { ...props.refer },
         });
     }
+
+
+    public query(options: {
+        
+    }) {
+
+    }
 }

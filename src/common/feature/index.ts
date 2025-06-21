@@ -1,4 +1,4 @@
-import { Model, Props } from "set-piece";
+import { Model } from "set-piece";
 
 export namespace FeatureModel {
     export type Event = {}
@@ -10,22 +10,23 @@ export namespace FeatureModel {
     export type Refer = {};
 }
 
-export abstract class FeatureModel extends Model<
-    Model,
-    FeatureModel.Event,
-    FeatureModel.State,
-    FeatureModel.Child,
-    FeatureModel.Refer
+export abstract class FeatureModel<
+    P extends Model = Model,
+    E extends Model.Event = {},
+    S extends Model.State = {},
+    C extends Model.Child = {},
+    R extends Model.Refer = {}
+> extends Model<
+    P,
+    E & FeatureModel.Event,
+    S & FeatureModel.State,
+    C & FeatureModel.Child,
+    R & FeatureModel.Refer
 > {
-    constructor(props: Props<
-        FeatureModel.State,
-        FeatureModel.Child,
-        FeatureModel.Refer
-    > & {
-        state: { 
-            name: string;
-            desc: string;
-        };
+    constructor(props: FeatureModel['props'] & {
+        state: S & FeatureModel.State;
+        child: C;
+        refer: R;
     }) {
         super({
             uuid: props.uuid,

@@ -1,7 +1,6 @@
 import { DebugService, Model, Props, State, TranxService } from "set-piece";
 import { MinionCardModel } from "./card/minion";
 import { HeroModel } from "./hero";
-import { BattlecryModel } from "./feature/battlecry";
 
 export namespace RoleModel {
     export type Parent = MinionCardModel | HeroModel
@@ -11,7 +10,7 @@ export namespace RoleModel {
         lostHealth: number;
     };
     export type Event = {
-        toAttack: RoleModel;
+        onAttackBefore: RoleModel;
         onAttack: RoleModel;
         onDamageDeal: {
             target: RoleModel;
@@ -77,7 +76,7 @@ export class RoleModel<
     
     @DebugService.log()
     public attack(target: RoleModel) {
-        this.event.toAttack(target);
+        this.event.onAttackBefore(target);
         const { damageDeal, damageRecv } = this._attack(target);
         this.event.onDamageDeal({ target, damage: damageDeal })
         target.event.onDamageDeal({ target: this, damage: damageRecv })
@@ -97,5 +96,6 @@ export class RoleModel<
             damageRecv,
         }
     }
+
 
 }

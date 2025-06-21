@@ -1,9 +1,8 @@
 import { FeatureModel } from "@/common/feature";
 import { BattlecryModel } from "@/common/feature/battlecry";
-import { EffectModel } from "@/common/feature/effect";
 import { Props } from "set-piece";
 
-export class AbusiveSergeantEffectModel extends EffectModel {
+export class AbusiveSergeantEffectModel extends FeatureModel {
     constructor(props: Props<
         FeatureModel.State,
         FeatureModel.Child,

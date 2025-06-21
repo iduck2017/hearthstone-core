@@ -1,4 +1,4 @@
-import { DebugService, Model, Props, StoreService, TranxService } from "set-piece";
+import { DebugService, Model, StoreService, TranxService } from "set-piece";
 import { CardModel } from "../card";
 import { PlayerModel } from "../player";
 
@@ -19,11 +19,7 @@ export class BoardModel extends Model<
     BoardModel.Child,
     BoardModel.Refer
 > {
-    constructor(props: Props<
-        BoardModel.State,
-        BoardModel.Child,
-        BoardModel.Refer
-    >) {
+    constructor(props: BoardModel['props']) {
         super({
             uuid: props.uuid,
             state: { ...props.state },

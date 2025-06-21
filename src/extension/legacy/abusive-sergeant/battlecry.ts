@@ -1,7 +1,12 @@
+import { MinionCardModel } from "@/common/card/minion";
 import { FeatureModel } from "@/common/feature";
+import { BattlecryModel } from "@/common/feature/battlecry";
+import { GameQuery } from "@/types/query";
 import { Props } from "set-piece";
 
-export class AbusiveSergeantBattlecryModel extends FeatureModel {
+export class AbusiveSergeantBattlecryModel extends BattlecryModel<
+    MinionCardModel
+> {
     constructor(props: Props<
         FeatureModel.State,
         FeatureModel.Child,
@@ -14,6 +19,14 @@ export class AbusiveSergeantBattlecryModel extends FeatureModel {
                 desc: 'Give a minion +2 Attack this turn.',
                 ...props.state,
             },
+            child: {},
+            refer: {}
         });
     }
+
+    public prepare(): GameQuery | undefined {
+        return undefined;
+    }
+
+
 }

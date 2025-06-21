@@ -1,4 +1,4 @@
-import { Model, Props, TranxService } from "set-piece";
+import { Model, TranxService } from "set-piece";
 import { CardModel } from "../card";
 import { WispCardModel } from "@/extension/legacy/wisp/card";
 import { PlayerModel } from "../player";
@@ -21,11 +21,7 @@ export class HandModel extends Model<
     HandModel.Child,
     HandModel.Refer
 > {
-    constructor(props: Props<
-        HandModel.State,
-        HandModel.Child,
-        HandModel.Refer
-    >) {
+    constructor(props: HandModel['props']) {
         super({
             uuid: props.uuid,
             state: { ...props.state },

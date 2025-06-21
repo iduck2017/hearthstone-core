@@ -1,11 +1,12 @@
-import { Model, Props } from "set-piece";
+import { Model } from "set-piece";
 import { SkillModel } from "../skill";
-import { MageRoleModel } from "./mage/role";
 import { RoleModel } from "../role";
 
 export namespace HeroModel {
     export type Event = {};
-    export type State = {};
+    export type State = {
+        readonly name: string;
+    };
     export type Child = {
         readonly role: RoleModel;
         skill: SkillModel;
@@ -13,22 +14,23 @@ export namespace HeroModel {
     export type Refer = {};
 }
 
-export abstract class HeroModel extends Model< 
-    Model,
-    HeroModel.Event,
-    HeroModel.State,
-    HeroModel.Child,
-    HeroModel.Refer
+export abstract class HeroModel<
+    P extends Model = Model,
+    E extends Model.Event = {},
+    S extends Model.State = {},
+    C extends Model.Child = {},
+    R extends Model.Refer = {}
+> extends Model< 
+    P,
+    E & HeroModel.Event,
+    S & HeroModel.State,
+    C & HeroModel.Child,
+    R & HeroModel.Refer
 > {
-    constructor(props: Props<
-        HeroModel.State,
-        HeroModel.Child,
-        HeroModel.Refer
-    > & {
-        child: { 
-            skill: SkillModel;
-            role: RoleModel;
-        };
+    constructor(props: HeroModel['props'] & {
+        state: S & HeroModel.State;
+        child: C & HeroModel.Child;
+        refer: R;
     }) {
         super({
             uuid: props.uuid,

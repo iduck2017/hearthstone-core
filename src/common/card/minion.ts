@@ -1,53 +1,42 @@
-import { CheckService, DebugService, Model, Props, TranxService } from "set-piece";
+import { CheckService, DebugService, Model, TranxService } from "set-piece";
 import { RoleModel } from "../role";
 import { CardModel } from ".";
 import { CardType, MinionRace } from "@/types/card";
-import { BattlecryModel } from "../feature/battlecry";
+import { BoardModel } from "../container/board";
+import { HandModel } from "../container/hand";
+import { ExtensionModel } from "../extension";
 
 export namespace MinionCardModel {
-    export type Parent = CardModel.Parent;
-    export type Event = Partial<CardModel.Event> & {
-        onBattlecry: void;
+    export type Event = {
         onSummon: void;
     };
-    export type State = Partial<CardModel.State> & {
-        readonly race: ReadonlyArray<MinionRace>;
+    export type State = {
+        readonly race: Readonly<MinionRace[]>;
     };
-    export type Child = Partial<CardModel.Child> & {
+    export type Child = {
         readonly role: RoleModel;
-        readonly battlecry: BattlecryModel[];
     };
-    export type Refer = Partial<CardModel.Refer>;
+    export type Refer = {};
 }
 
 export abstract class MinionCardModel<
-    P extends MinionCardModel.Parent = MinionCardModel.Parent,
-    E extends Partial<MinionCardModel.Event> & Model.Event = Partial<MinionCardModel.Event>,
-    S extends Partial<MinionCardModel.State> & Model.State = Partial<MinionCardModel.State>,
-    C extends Partial<MinionCardModel.Child> & Model.Child = Partial<MinionCardModel.Child>,
-    R extends Partial<MinionCardModel.Refer> & Model.Refer = Partial<MinionCardModel.Refer>
+    P extends BoardModel | HandModel | ExtensionModel = BoardModel | HandModel | ExtensionModel,
+    E extends Model.Event = {},
+    S extends Model.State = {},
+    C extends Model.Child = {},
+    R extends Model.Refer = {}
 > extends CardModel<
     P,
-    MinionCardModel.Event & E, 
-    MinionCardModel.State & S,  
-    MinionCardModel.Child & C,
-    MinionCardModel.Refer & R
+    E & MinionCardModel.Event, 
+    S & MinionCardModel.State,  
+    C & MinionCardModel.Child,
+    R & MinionCardModel.Refer
 > {
     protected get self(): MinionCardModel { return this; }
 
-    constructor(props: Props<
-        MinionCardModel.State,
-        MinionCardModel.Child,
-        MinionCardModel.Refer
-    > & {
-        state: S & {
-            name: string;
-            desc: string;
-            mana: number;
-        };
-        child: C & {
-            role: RoleModel;
-        };
+    constructor(props: MinionCardModel['props'] & {
+        state: S & Pick<CardModel.State, 'name' | 'desc' | 'mana'>;
+        child: C & Pick<MinionCardModel.Child, 'role'>;
         refer: R;
     }) {
         super({
@@ -68,14 +57,13 @@ export abstract class MinionCardModel<
     @DebugService.log()
     @CheckService.if(self => self.route.hand)
     public use() {
-        this.event.toUse(undefined);
+        this.self.event.onUseBefore();
         const hand = this.route.hand;
         if (!hand) return;
         hand.use(this);
-        this.event.onUse(undefined);
+        this.self.event.onUse();
         this.battlecry();
         this.summon();
-        this.event.onSummon(undefined);
     }
     
     @TranxService.use()
@@ -86,12 +74,5 @@ export abstract class MinionCardModel<
         if (!board || !hand) return;
         hand.del(this);
         board.add(this);
-    }
-
-
-    @DebugService.log()
-    private battlecry() {
-        this.child.battlecry.forEach(battlecry => battlecry.prepare());
-        this.event.onBattlecry(undefined);
     }
 }

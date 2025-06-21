@@ -1,12 +1,7 @@
-import { Props } from "set-piece";
 import { RoleModel } from "../../role";
 
 export class MageRoleModel extends RoleModel {
-    constructor(props: Props<
-        RoleModel.State,
-        RoleModel.Child,
-        RoleModel.Refer
-    >) {
+    constructor(props: MageRoleModel['props']) {    
         super({
             ...props,
             state: {
