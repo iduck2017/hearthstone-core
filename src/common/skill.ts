@@ -1,4 +1,4 @@
-import { Model, Props } from "set-piece";
+import { Model } from "set-piece";
 
 export namespace SkillModel {
     export type Event = {};
@@ -14,11 +14,7 @@ export abstract class SkillModel extends Model<
     SkillModel.Child,
     SkillModel.Refer
 > {
-    constructor(props: Props<
-        SkillModel.State,
-        SkillModel.Child,
-        SkillModel.Refer
-    >) {
+    constructor(props: SkillModel['props']) {
         super({
             uuid: props.uuid,
             state: { ...props.state },

@@ -1,7 +1,5 @@
 import { ExtensionModel } from "@/common/extension";
 import { WispCardModel } from "./wisp/card";
-import { Props } from "set-piece";
-import { MageHeroModel } from "../../common/hero/mage/hero";
 
 export namespace LegacyExtensionModel {
     export type Event = Partial<ExtensionModel.Event>;
@@ -11,11 +9,7 @@ export namespace LegacyExtensionModel {
 }
 
 export class LegacyExtensionModel extends ExtensionModel {
-    constructor(props: Props<
-        LegacyExtensionModel.State,
-        LegacyExtensionModel.Child,
-        LegacyExtensionModel.Refer
-    >) {
+    constructor(props: LegacyExtensionModel['props']) {
         super({
             uuid: props.uuid,
             state: {

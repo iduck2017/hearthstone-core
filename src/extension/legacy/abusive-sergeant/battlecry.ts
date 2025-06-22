@@ -1,17 +1,15 @@
 import { MinionCardModel } from "@/common/card/minion";
 import { FeatureModel } from "@/common/feature";
 import { BattlecryModel } from "@/common/feature/battlecry";
-import { GameQuery } from "@/types/query";
-import { Props } from "set-piece";
+import { MinionRoleModel } from "@/common/minion";
+import { TargetType } from "@/types/query";
+import { Selector } from "@/utils/selector";
+import { AbusiveSergeantBuffModel } from "./buff";
 
 export class AbusiveSergeantBattlecryModel extends BattlecryModel<
     MinionCardModel
 > {
-    constructor(props: Props<
-        FeatureModel.State,
-        FeatureModel.Child,
-        FeatureModel.Refer
-    >) {
+    constructor(props: AbusiveSergeantBattlecryModel['props']) {
         super({
             uuid: props.uuid,
             state: {
@@ -24,9 +22,14 @@ export class AbusiveSergeantBattlecryModel extends BattlecryModel<
         });
     }
 
-    public prepare(): GameQuery | undefined {
-        return undefined;
+    public prepare(): Selector | undefined {
+        if (!this.route.game) return undefined;
+        const candidates = this.route.game.query(TargetType.Minion, {})
+        return new Selector(candidates, this.run).use()
     }
 
+    public run(target: MinionRoleModel) {
+        target.apply(new AbusiveSergeantBuffModel({}))
+    }
 
 }

@@ -1,7 +1,10 @@
 import { Model } from "set-piece";
 import { FeatureModel } from ".";
 import { CardModel } from "../card";
-import { GameQuery } from "@/types/query";
+import { Selector } from "@/utils/selector";
+import { RootModel } from "../root";
+import { PlayerModel } from "../player";
+import { GameModel } from "../game";
 
 export namespace BattlecryModel {
     export type Event = {};
@@ -36,7 +39,25 @@ export abstract class BattlecryModel<
         });
     }
 
-    public abstract prepare(): GameQuery | undefined;
+    public get route(): Readonly<{
+        parent: P | undefined;
+        root: RootModel | undefined;
+        game: GameModel | undefined;
+        owner: PlayerModel | undefined;
+        opponent: PlayerModel | undefined;
+    }> {
+        const route = super.route;
+        const root = route.root instanceof RootModel ? route.root : undefined;
+        return {
+            root,
+            parent: route.parent,
+            game: root?.child.game,
+            owner: route.parent?.route.owner,
+            opponent: route.parent?.route.opponent,
+        }
+    }
+
+    public abstract prepare(): Selector | undefined;
     
-    public abstract run(): void;
+    public abstract run(...options: any[]): void;
 }

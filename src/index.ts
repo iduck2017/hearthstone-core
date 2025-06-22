@@ -1,10 +1,11 @@
 import { LegacyExtensionModel } from "./extension/legacy";
 import { AppService } from "./service/app";
 
-window.app = AppService;
 AppService.boot({
     extensions: [
         new LegacyExtensionModel({}),
     ],
 });
-AppService.test();
+AppService.debug()
+window.app = AppService;
+window.root = AppService.root;

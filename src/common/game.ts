@@ -1,14 +1,21 @@
-import { Model, Props, StoreService } from "set-piece";
+import { Model, StoreService } from "set-piece";
 import { PlayerModel } from "./player";
+import { MinionCardModel } from "./card/minion";
+import { GameQuery, TargetType } from "@/types/query";
+import { HeroModel } from "./hero";
+import { MinionRoleModel } from "./minion";
 
 export namespace GameModel {
     export type State = {
-        round: number;
+        turn: number;
     };
-    export type Event = {};
+    export type Event = {
+        onTurnEnd: void;
+        onTurnStart: void;
+    };
     export type Child = {
-        readonly player1: PlayerModel;
-        readonly player2: PlayerModel;
+        readonly playerA: PlayerModel;
+        readonly playerB: PlayerModel;
     };
     export type Refer = {};
 }
@@ -22,20 +29,13 @@ export class GameModel extends Model<
     GameModel.Child,
     GameModel.Refer
 > {
-    constructor(props: Props<
-        GameModel.State,
-        GameModel.Child,
-        GameModel.Refer
-    > & {
-        child: {
-            readonly player1: PlayerModel;
-            readonly player2: PlayerModel;
-        };
+    constructor(props: GameModel['props'] & {
+        child: GameModel.Child;
     }) {
         super({
             uuid: props.uuid,
             state: { 
-                round: 0,
+                turn: 0,
                 ...props.state 
             },
             child: { ...props.child },
@@ -43,10 +43,21 @@ export class GameModel extends Model<
         });
     }
 
+    public query(target: TargetType.Minion, options: GameQuery): MinionRoleModel[];
+    public query(target: TargetType, options: GameQuery): Model[] {
+        if (target === TargetType.Minion) {
+            let result: MinionRoleModel[] = [];
+            const { playerA, playerB } = this.child;
+            if (options.side !== playerA) result.push(...playerB.child.board.child.cards.map(item => item.child.role));
+            if (options.side !== playerB) result.push(...playerA.child.board.child.cards.map(item => item.child.role));
+            return result;
+        }
+        return [];  
+    }
 
-    public query(options: {
-        
-    }) {
-
+    public nextTurn() {
+        this.event.onTurnEnd();
+        this.draft.state.turn ++;
+        this.event.onTurnStart();
     }
 }

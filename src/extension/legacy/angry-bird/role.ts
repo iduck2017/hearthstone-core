@@ -1,20 +1,20 @@
+import { MinionRoleModel } from "@/common/minion";
 import { RoleModel } from "@/common/role";
-import { Props } from "set-piece";
+import { AngryBirdFeatureModel } from "./feature";
 
-export class AngryBirdRoleModel extends RoleModel {
-    constructor(props: Props<
-        RoleModel.State,
-        RoleModel.Child,
-        RoleModel.Refer
-    >) {
+export class AngryBirdRoleModel extends MinionRoleModel {
+    constructor(props: AngryBirdRoleModel['props']) {
         super({
             uuid: props.uuid,
             state: {
                 attack: 1,
-                baseHealth: 1,
+                health: 1,
                 ...props.state,
             },
-            child: { ...props.child },
+            child: {
+                features: [new AngryBirdFeatureModel({})],
+                ...props.child 
+            },
             refer: { ...props.refer },
         });
     }

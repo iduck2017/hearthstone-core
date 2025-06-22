@@ -1,26 +1,26 @@
 import { CheckService, DebugService, Model, TranxService } from "set-piece";
 import { RoleModel } from "../role";
 import { CardModel } from ".";
-import { CardType, MinionRace } from "@/types/card";
+import { CardType, MinionRaceType } from "@/types/card";
 import { BoardModel } from "../container/board";
 import { HandModel } from "../container/hand";
 import { ExtensionModel } from "../extension";
+import { MinionRoleModel } from "../minion";
+
 
 export namespace MinionCardModel {
-    export type Event = {
-        onSummon: void;
-    };
+    export type Event = {};
     export type State = {
-        readonly race: Readonly<MinionRace[]>;
+        readonly race: Readonly<MinionRaceType[]>;
     };
     export type Child = {
-        readonly role: RoleModel;
+        readonly role: MinionRoleModel;
     };
     export type Refer = {};
 }
 
 export abstract class MinionCardModel<
-    P extends BoardModel | HandModel | ExtensionModel = BoardModel | HandModel | ExtensionModel,
+    P extends CardModel.Parent = CardModel.Parent,
     E extends Model.Event = {},
     S extends Model.State = {},
     C extends Model.Child = {},
@@ -52,6 +52,12 @@ export abstract class MinionCardModel<
             },
             refer: { ...props.refer },
         });
+    }
+
+    @DebugService.log()
+    
+    public prepare() {
+
     }
 
     @DebugService.log()

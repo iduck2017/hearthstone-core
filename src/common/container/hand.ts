@@ -34,10 +34,10 @@ export class HandModel extends Model<
         });
     }
 
-    public gen() {
-        this.draft.child.cards.push(
-            new WispCardModel({})
-        )
+    public add(card?: CardModel) {
+        if (!card) return;
+        this.draft.child.cards.push(card);
+        return card;
     }
 
     @TranxService.use()

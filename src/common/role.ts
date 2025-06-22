@@ -1,13 +1,14 @@
-import { DebugService, Model, Props, State, TranxService } from "set-piece";
+import { DebugService, Event, EventAgent, Model, State, TranxService } from "set-piece";
 import { MinionCardModel } from "./card/minion";
 import { HeroModel } from "./hero";
+import { FeatureModel } from "./feature";
 
 export namespace RoleModel {
     export type Parent = MinionCardModel | HeroModel
     export type State = {
-        readonly attack: number;
-        readonly baseHealth: number;
-        lostHealth: number;
+        attack: number;
+        health: number;
+        curHealth: number;
     };
     export type Event = {
         onAttackBefore: RoleModel;
@@ -17,47 +18,52 @@ export namespace RoleModel {
             damage: number;
         };
         onDamageRecv: {
-            target: RoleModel;
+            source: RoleModel;
             damage: number;
         };
+        onResetBefore: {
+            attack?: number;
+            health?: number;
+        }
     };
     export type Child = {
+        readonly features: Readonly<FeatureModel[]>;
+        readonly effect: FeatureModel[];
     };
     export type Refer = {};
 }
 
 export class RoleModel<
-    P extends Model = Model,
-    E extends Partial<RoleModel.Event> & Model.Event = Partial<RoleModel.Event>,
-    S extends Partial<RoleModel.State> & Model.State = Partial<RoleModel.State>,
-    C extends Partial<RoleModel.Child> & Model.Child = Partial<RoleModel.Child>,
-    R extends Partial<RoleModel.Refer> & Model.Refer = Partial<RoleModel.Refer>
+    P extends HeroModel | MinionCardModel = HeroModel | MinionCardModel,
+    E extends Model.Event = {},
+    S extends Model.State = {},
+    C extends Model.Child = {},
+    R extends Model.Refer = {}
 > extends Model<
     P,
-    RoleModel.Event & E,
-    RoleModel.State & S,
-    RoleModel.Child & C,
-    RoleModel.Refer & R
+    E & RoleModel.Event,
+    S & RoleModel.State,
+    C & RoleModel.Child,
+    R & RoleModel.Refer
 > {
-    public constructor(props: Props<
-        RoleModel.State,
-        RoleModel.Child,
-        RoleModel.Refer
-    > & {
-        state: S & {
-            readonly attack: number;
-            readonly baseHealth: number;
-        };
-        child: C;
-        refer: R;
+    public get alias(): RoleModel { return this; }
+
+    public constructor(props: RoleModel['props'] & {
+        state: S & Pick<RoleModel.State, 'attack' | 'health'>,
+        child: C,
+        refer: R
     }) {
         super({
             uuid: props.uuid,
             state: {
-                lostHealth: 0,
+                curHealth: props.state.health,
                 ...props.state 
             },
-            child: { ...props.child },
+            child: { 
+                features: [],
+                effect: [],
+                ...props.child,
+            },
             refer: { ...props.refer },
         })
     }
@@ -68,34 +74,54 @@ export class RoleModel<
         const result = super.state;
         return {
             ...result,
-            lostHealth: this.draft.state.lostHealth,
-            health: result.baseHealth - result.lostHealth,
-        }
+            curHealth: this.draft.state.curHealth,
+        };
     }
 
+    public apply(feature: FeatureModel) {
+        this.child.effect.push(feature);
+        return feature;
+    }
     
     @DebugService.log()
+    @TranxService.use()
     public attack(target: RoleModel) {
-        this.event.onAttackBefore(target);
-        const { damageDeal, damageRecv } = this._attack(target);
-        this.event.onDamageDeal({ target, damage: damageDeal })
-        target.event.onDamageDeal({ target: this, damage: damageRecv })
-        this.event.onDamageRecv({ target, damage: damageRecv })
-        target.event.onDamageRecv({ target: this, damage: damageDeal })
-        this.event.onAttack(target);
+        this.alias.event.onAttackBefore(target);
+        const sourceAttack = this.state.attack;
+        const targetAttack = target.state.attack;
+        this.dealDamage(target, sourceAttack);
+        target.dealDamage(this, targetAttack);
+        this.alias.event.onAttack(target);
     }
+    
+    public dealDamage(target: RoleModel, damage: number) {
+        target.recvDamage(this, damage);
+        this.alias.event.onDamageDeal({ target, damage });
+    }
+
+    public recvDamage(source: RoleModel, damage: number) {
+        this.alias.draft.state.curHealth -= damage;
+        this.alias.event.onDamageRecv({ source, damage });
+    }
+
 
     @TranxService.use()
-    private _attack(target: RoleModel) {
-        const damageDeal = this.state.attack;
-        const damageRecv = target.state.attack;
-        target.draft.state.lostHealth += damageDeal;
-        this.draft.state.lostHealth += damageRecv;
-        return {
-            damageDeal,
-            damageRecv,
+    public reset(option: {
+        attack?: number,
+        health?: number
+    }) {
+        this.alias.event.onResetBefore(option)
+        if (option.attack) this.alias.draft.state.attack = option.attack;
+        if (option.health) this.alias.draft.state.health = option.health;
+    }
+    
+    @EventAgent.use(self => self.proxy.event.onStateChange)
+    private handleHealthUpdate(that: RoleModel, event: Event.OnStateChange<RoleModel>) {
+        const { prev, next } = event;
+        if (prev.health !== next.health) {
+            const dltHealth = next.health - prev.health;
+            if (dltHealth > 0) this.alias.draft.state.curHealth += dltHealth;
+            if (dltHealth < 0 && this.state.curHealth > next.health) this.alias.draft.state.curHealth = next.health;
         }
     }
-
-
 }

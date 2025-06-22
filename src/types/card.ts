@@ -4,7 +4,7 @@ export enum CardType {
     WEAPON = 'weapon',
 }
 
-export enum MinionRace {
+export enum MinionRaceType {
     UNDEAD = 'undead',
     BEAST = 'beast',
 }

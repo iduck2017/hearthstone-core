@@ -1,4 +1,4 @@
-import { Model, Props } from "set-piece";
+import { Model } from "set-piece";
 import { BoardModel } from "./container/board";  
 import { HeroModel } from "./hero";
 import { HandModel } from "./container/hand";
@@ -23,14 +23,8 @@ export class PlayerModel extends Model<
     PlayerModel.Child,
     PlayerModel.Refer
 > {
-    constructor(props: Props<
-        PlayerModel.State,
-        PlayerModel.Child,
-        PlayerModel.Refer
-    > & {
-        child: {
-            readonly hero: HeroModel;
-        };
+    constructor(props: PlayerModel['props'] & {
+        child: Pick<PlayerModel.Child, 'hero'>;
     }) {
         super({
             uuid: props.uuid,
@@ -46,14 +40,14 @@ export class PlayerModel extends Model<
 
 
     public get route(): Readonly<{
-        root?: RootModel;
-        parent?: GameModel;
-        opponent?: PlayerModel;
+        root: RootModel | undefined;
+        parent: GameModel | undefined;
+        opponent: PlayerModel | undefined;
     }> {
         const route = super.route;
         const root = route.root instanceof RootModel ? route.root : undefined;
-        const { player1, player2 } = route.parent?.child ?? {};
-        const opponent = player1 === this ? player2 : player1;
+        const { playerA, playerB } = route.parent?.child ?? {};
+        const opponent = playerA === this ? playerB : playerA;
         return {
             ...super.route,
             root,

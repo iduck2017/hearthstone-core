@@ -4,6 +4,7 @@ import { ExtensionModel as Extensions } from "@/common/extension";
 import { PlayerModel } from "@/common/player";
 import { MageHeroModel } from "@/common/hero/mage/hero";
 import { MinionCardModel } from "@/common/card/minion";
+import { WispCardModel } from "@/extension/legacy/wisp/card";
 
 export class AppService {
     private static _view?: HTMLElement;
@@ -26,26 +27,21 @@ export class AppService {
     }) {
         AppService._extensions = props.extensions;
         AppService._root = new RootModel({});
-        window.root = AppService._root;
         RouteAgent.boot(AppService._root);
         console.log(AppService._root);
     }
 
     @DebugService.log()
-    public static test() {
-        const player1 = new PlayerModel({
-            child: { hero: new MageHeroModel({}) },
-        });
-        const player2 = new PlayerModel({
-            child: { hero: new MageHeroModel({}) },
-        });
-        AppService._root?.start({ player1, player2 });
-        player1.child.hand.gen();
-        player2.child.hand.gen();
-        console.log(player1.child.hand.child.cards);
-        console.log(player2.child.hand.child.cards);
-        const wisp1 = player1.child.hand.child.cards[0];
-        const wisp2 = player2.child.hand.child.cards[0];
+    public static debug() {
+        const playerA = new PlayerModel({ child: { hero: new MageHeroModel({}) } });
+        const playerB = new PlayerModel({ child: { hero: new MageHeroModel({}) } });
+        AppService._root?.start({ playerA, playerB });
+        playerA.child.hand.add(new WispCardModel({}));
+        playerB.child.hand.add(new WispCardModel({}));
+        console.log(playerA.child.hand.child.cards);
+        console.log(playerB.child.hand.child.cards);
+        const wisp1 = playerA.child.hand.child.cards[0];
+        const wisp2 = playerB.child.hand.child.cards[0];
         if (!(wisp1 instanceof MinionCardModel)) return;
         if (!(wisp2 instanceof MinionCardModel)) return;
         wisp1.use();

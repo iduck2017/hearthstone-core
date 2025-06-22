@@ -1,18 +1,13 @@
 import { MinionCardModel } from "@/common/card/minion";
-import { Props } from "set-piece";
 import { AbusiveSergeantRoleModel } from "./role";
 
 export class AbusiveSergeantCardModel extends MinionCardModel {
-    constructor(props: Props<
-        MinionCardModel.State,
-        MinionCardModel.Child,
-        MinionCardModel.Refer
-    >) {
+    constructor(props: AbusiveSergeantCardModel['props']) {
         super({
             uuid: props.uuid,
             state: {
                 name: 'Abusive Sergeant',
-                desc: '',
+                desc: 'Battlecry: Give a minion +2 Attack this turn.',
                 mana: 1,
                 ...props.state,
             },

@@ -1,12 +1,13 @@
 import { DebugService, Model, StoreService, TranxService } from "set-piece";
 import { CardModel } from "../card";
 import { PlayerModel } from "../player";
+import { MinionCardModel } from "../card/minion";
 
 export namespace BoardModel {
     export type State = {};
     export type Event = {};
     export type Child = {
-        cards: CardModel[];
+        readonly cards: MinionCardModel[];
     };
     export type Refer = {};
 }
@@ -31,10 +32,14 @@ export class BoardModel extends Model<
         })
     }
 
+    @TranxService.use()
+    reset() {
+        while (this.draft.child.cards.length) this.draft.child.cards.pop();
+    }
 
     @DebugService.log()
     @TranxService.use()
-    add(card: CardModel) {
-        this.draft.child.cards.push(card);
+    add(...cards: MinionCardModel[]) {
+        this.draft.child.cards.push(...cards);
     }
 }

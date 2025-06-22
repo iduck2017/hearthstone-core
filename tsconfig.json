@@ -1,25 +1,25 @@
 {
-    "compilerOptions": {
-      "outDir": "./dist/",
-      "noImplicitAny": true,
-      "module": "ESNext",
-      "lib": ["ES2018", "DOM"],
-      "target": "ESNext",
-      "jsx": "react",
-      "allowJs": true,
-      "allowSyntheticDefaultImports": true,
-      "moduleResolution": "node",
-      "strict": true,
-      "experimentalDecorators": true,
-      "strictFunctionTypes": false,
-      "noUncheckedIndexedAccess": true,
-      "paths": {
-        "@/*": ["./src/*"]
-      },
-      "baseUrl": "."
+  "compilerOptions": {
+    "outDir": "./dist/",
+    "noImplicitAny": true,
+    "module": "ESNext",
+    "lib": ["ES2018", "DOM"],
+    "target": "ESNext",
+    "jsx": "react",
+    "allowJs": true,
+    "allowSyntheticDefaultImports": true,
+    "moduleResolution": "node",
+    "strict": true,
+    "experimentalDecorators": true,
+    "strictFunctionTypes": false,
+    "noUncheckedIndexedAccess": true,
+    "paths": {
+      "@/*": ["./src/*"]
     },
-    "include": [
-      "src/**/*",
-      "test/**/*"
-    ]
+    "baseUrl": "."
+  },
+  "include": [
+    "src/**/*",
+    "test/**/*"
+  ]
 }

@@ -1,4 +1,4 @@
-import { Model, Props, StoreService } from "set-piece";
+import { DebugService, Model, StoreService } from "set-piece";
 import { GameModel } from "./game";
 import { PlayerModel } from "./player";
 
@@ -20,11 +20,7 @@ export class RootModel extends Model<
     RootModel.Child,
     RootModel.Refer
 > {
-    constructor(props: Props<
-        RootModel.State,
-        RootModel.Child,
-        RootModel.Refer
-    >) {
+    constructor(props: RootModel['props']) {
         super({
             uuid: props.uuid,
             state: { ...props?.state },
@@ -33,15 +29,18 @@ export class RootModel extends Model<
         });
     }
 
-    public start(props: {
-        player1: PlayerModel;
-        player2: PlayerModel;
-    }) {
+    @DebugService.log()
+    public start(props: Pick<GameModel.Child, 'playerA' | 'playerB'>) {
         this.draft.child.game = new GameModel({
             child: {
-                player1: props.player1,
-                player2: props.player2,
+                playerA: props.playerA,
+                playerB: props.playerB,
             },
         });
+    }
+
+    @DebugService.log()
+    public end() {
+        delete this.draft.child.game;
     }
 }

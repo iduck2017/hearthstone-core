@@ -7,7 +7,9 @@ import { RootModel } from "../root";
 import { PlayerModel } from "../player";
 import { BattlecryModel } from "../feature/battlecry";
 
+
 export namespace CardModel {
+    export type Parent = BoardModel | HandModel | ExtensionModel;
     export type State = {
         readonly name: string;
         readonly desc: string;
@@ -26,7 +28,7 @@ export namespace CardModel {
 }
 
 export abstract class CardModel<
-    P extends BoardModel | HandModel | ExtensionModel = BoardModel | HandModel | ExtensionModel,
+    P extends CardModel.Parent = CardModel.Parent,
     E extends Model.Event = {},
     S extends Model.State = {},
     C extends Model.Child = {},
@@ -58,12 +60,12 @@ export abstract class CardModel<
     
 
     public get route(): Readonly<{
-        parent?: P;
-        root?: RootModel;
-        hand?: HandModel;
-        board?: BoardModel;
-        owner?: PlayerModel;
-        opponent?: PlayerModel;
+        parent: P | undefined;
+        root: RootModel | undefined;
+        hand: HandModel | undefined;
+        board: BoardModel | undefined;
+        owner: PlayerModel | undefined;
+        opponent: PlayerModel | undefined;
     }> {
         const route = super.route;
         const root = route.root instanceof RootModel ? route.root : undefined;
@@ -87,7 +89,6 @@ export abstract class CardModel<
     protected battlecry() {
         const self = this.self;
         self.child.battlecry.forEach(feat => feat.prepare());
-        self.event.onBattlecry();
     }
 
 }

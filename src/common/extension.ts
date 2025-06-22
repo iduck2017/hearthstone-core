@@ -1,4 +1,4 @@
-import { Model, Props } from "set-piece";
+import { Model } from "set-piece";
 import { CardModel } from "./card";
 
 export namespace ExtensionModel {
@@ -17,14 +17,8 @@ export abstract class ExtensionModel extends Model<
     ExtensionModel.Child,
     ExtensionModel.Refer
 > {
-    constructor(props: Props<
-        ExtensionModel.State,
-        ExtensionModel.Child,
-        ExtensionModel.Refer
-    > & {
-        child: {
-            cards: CardModel[];
-        };
+    constructor(props: ExtensionModel['props'] & {
+        child: ExtensionModel.Child;
     }) {
         super({
             uuid: props.uuid,

@@ -1,13 +1,12 @@
 import { MinionRoleModel } from "@/common/minion";
-import { RoleModel } from "@/common/role";
 
-export class AbusiveSergeantRoleModel extends MinionRoleModel {
-    constructor(props: AbusiveSergeantRoleModel['props']) {
+export class ShatteredSunClericRoleModel extends MinionRoleModel {
+    constructor(props: ShatteredSunClericRoleModel['props']) {
         super({
             uuid: props.uuid,
             state: {
-                attack: 2,
-                health: 1,
+                attack: 3,
+                health: 2,
                 ...props.state,
             },
             child: { ...props.child },

@@ -1,18 +1,15 @@
+import { MinionRoleModel } from "@/common/minion";
 import { RoleModel } from "@/common/role";
-import { Props, StoreService } from "set-piece";
+import { StoreService } from "set-piece";
 
 @StoreService.is('wisp-role')
-export class WispRoleModel extends RoleModel {
-    constructor(props: Props<
-        RoleModel.State,
-        RoleModel.Child,
-        RoleModel.Refer
-    >) {
+export class WispRoleModel extends MinionRoleModel {
+    constructor(props: WispRoleModel['props']) {
         super({
             uuid: props.uuid,
             state: {
                 attack: 1,
-                baseHealth: 1,
+                health: 1,
                 ...props.state,
             },
             child: { ...props.child },
