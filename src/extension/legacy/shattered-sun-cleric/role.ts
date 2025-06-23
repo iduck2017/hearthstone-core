@@ -1,4 +1,4 @@
-import { MinionRoleModel } from "@/common/minion";
+import { MinionRoleModel } from "@/common/role/minion";
 
 export class ShatteredSunClericRoleModel extends MinionRoleModel {
     constructor(props: ShatteredSunClericRoleModel['props']) {

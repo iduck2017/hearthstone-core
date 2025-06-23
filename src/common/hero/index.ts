@@ -16,10 +16,10 @@ export namespace HeroModel {
 
 export abstract class HeroModel<
     P extends Model = Model,
-    E extends Model.Event = {},
-    S extends Model.State = {},
-    C extends Model.Child = {},
-    R extends Model.Refer = {}
+    E extends Partial<HeroModel.Event> & Model.Event = {},
+    S extends Partial<HeroModel.State> & Model.State = {},
+    C extends Partial<HeroModel.Child> & Model.Child = {},
+    R extends Partial<HeroModel.Refer> & Model.Refer = {}
 > extends Model< 
     P,
     E & HeroModel.Event,

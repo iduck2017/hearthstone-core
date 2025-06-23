@@ -38,12 +38,11 @@ export class PlayerModel extends Model<
         });
     }
 
-
-    public get route(): Readonly<{
-        root: RootModel | undefined;
-        parent: GameModel | undefined;
-        opponent: PlayerModel | undefined;
-    }> {
+    public get route(): Readonly<Partial<{
+        root: RootModel;
+        parent: GameModel;
+        opponent: PlayerModel;
+    }>> {
         const route = super.route;
         const root = route.root instanceof RootModel ? route.root : undefined;
         const { playerA, playerB } = route.parent?.child ?? {};

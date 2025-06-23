@@ -1,10 +1,13 @@
 import { BattlecryModel } from "@/common/feature/battlecry";
-import { MinionRoleModel } from "@/common/minion";
+import { MinionRoleModel } from "@/common/role/minion";
 import { TargetType } from "@/types/query";
 import { Selector } from "@/utils/selector";
 import { ShatteredSunClericBuffModel } from "./buff";
+import { DebugService } from "set-piece";
 
-export class ShatteredSunClericBattlecryModel extends BattlecryModel {
+export class ShatteredSunClericBattlecryModel extends BattlecryModel<
+    [MinionRoleModel]
+> {
     constructor(props: ShatteredSunClericBattlecryModel['props']) {
         super({
             uuid: props.uuid,
@@ -18,16 +21,17 @@ export class ShatteredSunClericBattlecryModel extends BattlecryModel {
         });
     }
 
-    public prepare(): Selector | undefined {
+    public prepare(): [Selector<MinionRoleModel>] | undefined {
         if (!this.route.game) return;
-        const candidates = this.route.game.query(TargetType.Minion, {
-            side: this.route.owner,
+        const candidates = this.route.game.query(TargetType.Minion, { 
+            side: this.route.owner 
         })
         if (candidates.length === 0) return;
-        return new Selector(candidates, this.run).use()
+        return [new Selector(candidates, 'Choose a friendly minion')]
     }
 
-    public run(target: MinionRoleModel) {
+    @DebugService.log()
+    public async run(target: MinionRoleModel) {
         target.apply(new ShatteredSunClericBuffModel({}))
     }
 }

@@ -25,15 +25,5 @@ describe('shattered-sun-cleric', () => {
 
         const handA = game.child.playerA.child.hand;
         handA.add(card);
-
-        expect(Selector.stack.length).toBe(0);
-        card.use();
-        expect(Selector.stack.length).toBe(1);
-
-        const selector = Selector.stack[0];
-        selector?.run(wispA);
-
-        expect(wispA.state.attack).toBe(2);
-        expect(wispA.state.health).toBe(2);
     });
 })

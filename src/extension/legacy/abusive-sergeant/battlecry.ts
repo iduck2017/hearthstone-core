@@ -1,12 +1,12 @@
 import { MinionCardModel } from "@/common/card/minion";
-import { FeatureModel } from "@/common/feature";
 import { BattlecryModel } from "@/common/feature/battlecry";
-import { MinionRoleModel } from "@/common/minion";
 import { TargetType } from "@/types/query";
 import { Selector } from "@/utils/selector";
 import { AbusiveSergeantBuffModel } from "./buff";
+import { MinionRoleModel } from "@/common/role/minion";
 
 export class AbusiveSergeantBattlecryModel extends BattlecryModel<
+    [MinionRoleModel],
     MinionCardModel
 > {
     constructor(props: AbusiveSergeantBattlecryModel['props']) {
@@ -22,13 +22,14 @@ export class AbusiveSergeantBattlecryModel extends BattlecryModel<
         });
     }
 
-    public prepare(): Selector | undefined {
-        if (!this.route.game) return undefined;
+    public prepare(): [Selector<MinionRoleModel>] | undefined {
+        if (!this.route.game) return;
         const candidates = this.route.game.query(TargetType.Minion, {})
-        return new Selector(candidates, this.run).use()
+        if (!candidates.length) return;
+        return [new Selector(candidates, 'Choose a minion')];
     }
 
-    public run(target: MinionRoleModel) {
+    public async run(target: MinionRoleModel) {
         target.apply(new AbusiveSergeantBuffModel({}))
     }
 

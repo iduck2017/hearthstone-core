@@ -1,4 +1,4 @@
-import { DebugService, Model } from "set-piece";
+import { DebugService, EventAgent, Model, StateAgent } from "set-piece";
 import { CardType } from "@/types/card";
 import { BoardModel } from "../container/board";
 import { HandModel } from "../container/hand";
@@ -6,6 +6,7 @@ import { ExtensionModel } from "../extension";
 import { RootModel } from "../root";
 import { PlayerModel } from "../player";
 import { BattlecryModel } from "../feature/battlecry";
+import { GameModel } from "../game";
 
 
 export namespace CardModel {
@@ -17,22 +18,21 @@ export namespace CardModel {
         readonly type: CardType;
     };
     export type Event = {
-        onUseBefore: void;
-        onUse: void;
-        onBattlecry: void;
+        onPlay: {};
+        onPlayBefore: {};
     };
     export type Child = {
-        readonly battlecry: BattlecryModel[];
+        readonly battlecries: BattlecryModel[];
     };
     export type Refer = {};
 }
 
 export abstract class CardModel<
     P extends CardModel.Parent = CardModel.Parent,
-    E extends Model.Event = {},
-    S extends Model.State = {},
-    C extends Model.Child = {},
-    R extends Model.Refer = {}
+    E extends Partial<CardModel.Event> & Model.Event = {},
+    S extends Partial<CardModel.State> & Model.State = {},
+    C extends Partial<CardModel.Child> & Model.Child = {},
+    R extends Partial<CardModel.Refer> & Model.Refer = {}
 > extends Model<
     P,
     E & CardModel.Event, 
@@ -40,8 +40,6 @@ export abstract class CardModel<
     C & CardModel.Child,
     R & CardModel.Refer
 > {
-    protected get self(): CardModel { return this; }
-
     constructor(props: CardModel['props'] & {
         state: S & CardModel.State;
         child: C;
@@ -51,22 +49,22 @@ export abstract class CardModel<
             uuid: props.uuid,
             state: { ...props.state },
             child: {
-                battlecry: [],
+                battlecries: [],
                 ...props.child,
             },
             refer: { ...props.refer },
         });
     }
-    
 
-    public get route(): Readonly<{
-        parent: P | undefined;
-        root: RootModel | undefined;
-        hand: HandModel | undefined;
-        board: BoardModel | undefined;
-        owner: PlayerModel | undefined;
-        opponent: PlayerModel | undefined;
-    }> {
+    public get route(): Readonly<Partial<{
+        parent: P;
+        root: RootModel;
+        game: GameModel;
+        hand: HandModel;
+        board: BoardModel;
+        owner: PlayerModel;
+        opponent: PlayerModel;
+    }>> {
         const route = super.route;
         const root = route.root instanceof RootModel ? route.root : undefined;
         const hand = route.parent instanceof HandModel ? route.parent : undefined;
@@ -76,6 +74,7 @@ export abstract class CardModel<
         return {
             ...route,
             root,
+            game: root?.child.game,
             hand,
             board,
             owner,
@@ -83,12 +82,13 @@ export abstract class CardModel<
         }
     }
 
-    public abstract use(): void;
-    
-    @DebugService.log()
-    protected battlecry() {
-        const self = this.self;
-        self.child.battlecry.forEach(feat => feat.prepare());
-    }
+    public abstract prepare(): void;
 
+    protected async battlecry(registry: Map<Model, Model[]>) {
+        for (const item of this.child.battlecries) {
+            const params = registry.get(item);
+            if (!params) return;
+            await item.run(...params);
+        }
+    }
 }

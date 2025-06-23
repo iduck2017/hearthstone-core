@@ -47,7 +47,6 @@ export class HandModel extends Model<
         this.draft.child.cards.splice(index, 1);
         this.draft.child.cache.push(card);
     }
-
     
     public del(card: CardModel) {
         const index = this.draft.child.cache.indexOf(card);

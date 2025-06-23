@@ -37,6 +37,7 @@ export class RootModel extends Model<
                 playerB: props.playerB,
             },
         });
+        console.log(this.status, this.child.game?.status)
     }
 
     @DebugService.log()

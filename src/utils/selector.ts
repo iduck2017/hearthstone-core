@@ -1,29 +1,40 @@
-export class Selector<T = any> {
+import { Model } from "set-piece";
+
+export class Selector<T extends Model = Model> {
+
+    private static _isLock: boolean = false;
+    public static get isLock() { return this._isLock; }
+
+    private static _current?: Selector;
+    public static get current() { return this._current; }
+
     public readonly candidates: Readonly<T[]>;
 
-    private readonly handler: (target: T) => unknown;
+    public readonly desc: string;
+
+    private resolve?: (target: T | undefined) => unknown;
 
     constructor(
         candidates: T[],
-        handler: (target: T) => unknown
+        desc: string,
     ) {
         this.candidates = candidates;
-        this.handler = handler;
+        this.desc = desc;
     }
 
-    public use() {
-        Selector._stack.push(this);
-        return this;
-    }
+    public set(target: T) { this.resolve?.(target); }
+    public cancel() { this.resolve?.(undefined); }
 
-    public run(target: T) {
-        this.handler(target);
-        Selector._stack.pop();
-    }
-
-    
-    private static _stack: Selector[] = [];
-    public static get stack(): Readonly<Selector[]> {
-        return [...this._stack];
+    public async get(): Promise<T | undefined> {
+        if (Selector._isLock) return;
+        Selector._isLock = true;
+        Selector._current = this;
+        const result = await new Promise<T | undefined>((resolve, reject) => {
+            this.resolve = resolve;
+        })
+        delete this.resolve;
+        delete Selector._current;
+        Selector._isLock = false;
+        return result;
     }
 }

@@ -1,24 +1,27 @@
 import { Model } from "set-piece";
 import { FeatureModel } from ".";
 import { CardModel } from "../card";
-import { Selector } from "@/utils/selector";
 import { RootModel } from "../root";
 import { PlayerModel } from "../player";
 import { GameModel } from "../game";
+import { Selector } from "@/utils/selector";
 
 export namespace BattlecryModel {
-    export type Event = {};
-    export type State = {};
-    export type Child = {};
-    export type Refer = {};
+    export type Event = Partial<FeatureModel.Event> & {
+        onBattlecry: void;
+    };
+    export type State = Partial<FeatureModel.State> & {};
+    export type Child = Partial<FeatureModel.Child> & {};
+    export type Refer = Partial<FeatureModel.Refer> & {};
 }
 
 export abstract class BattlecryModel<
+    T extends Model[] = Model[],
     P extends CardModel = CardModel,
-    E extends Model.Event = {},
-    S extends Model.State = {},
-    C extends Model.Child = {},
-    R extends Model.Refer = {}
+    E extends Partial<BattlecryModel.Event> & Model.Event = {},
+    S extends Partial<BattlecryModel.State> & Model.State = {},
+    C extends Partial<BattlecryModel.Child> & Model.Child = {},
+    R extends Partial<BattlecryModel.Refer> & Model.Refer = {}
 > extends FeatureModel<
     P, 
     E & BattlecryModel.Event, 
@@ -39,25 +42,22 @@ export abstract class BattlecryModel<
         });
     }
 
-    public get route(): Readonly<{
-        parent: P | undefined;
-        root: RootModel | undefined;
-        game: GameModel | undefined;
-        owner: PlayerModel | undefined;
-        opponent: PlayerModel | undefined;
-    }> {
+    public get route(): Readonly<Partial<{
+        parent: P;
+        root: RootModel;
+        game: GameModel;
+        owner: PlayerModel;
+        opponent: PlayerModel;
+    }>> {
         const route = super.route;
-        const root = route.root instanceof RootModel ? route.root : undefined;
+        const card = route.parent;
         return {
-            root,
+            ...card?.route,
             parent: route.parent,
-            game: root?.child.game,
-            owner: route.parent?.route.owner,
-            opponent: route.parent?.route.opponent,
         }
     }
 
-    public abstract prepare(): Selector | undefined;
-    
-    public abstract run(...options: any[]): void;
+    public abstract prepare(): { [K in keyof T]: Selector<T[K]> } | undefined;
+
+    public abstract run(...target: T): Promise<void>;
 }

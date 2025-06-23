@@ -9,23 +9,23 @@ import { MinionCardModel } from "../card/minion";
 import { DeepReadonly } from "utility-types";
 
 export namespace BuffModel {
-    export type State = {
+    export type State = Partial<FeatureModel.State> & {
         buffAttack: number;
         buffHealth: number;
         isValid: boolean;
         isActive: boolean;
     }
-    export type Event = {}
-    export type Child = {}
-    export type Refer = {}
+    export type Event = Partial<FeatureModel.Event> & {};
+    export type Child = Partial<FeatureModel.Child> & {};
+    export type Refer = Partial<FeatureModel.Refer> & {};
 }
 
 export class BuffModel<
     P extends RoleModel = RoleModel,
-    E extends Model.Event = {},
-    S extends Model.State = {},
-    C extends Model.Child = {},
-    R extends Model.Refer = {}
+    E extends Partial<BuffModel.Event> & Model.Event = {},
+    S extends Partial<BuffModel.State> & Model.State = {},
+    C extends Partial<BuffModel.Child> & Model.Child = {},
+    R extends Partial<BuffModel.Refer> & Model.Refer = {}
 > extends FeatureModel<
     P,
     E & BuffModel.Event,
@@ -33,8 +33,6 @@ export class BuffModel<
     C & BuffModel.Child,
     R & BuffModel.Refer
 > {
-    public get alias(): BuffModel { return this; }
-
     constructor(props: BuffModel['props'] & {
         state: S & 
             Pick<BuffModel.State, 'buffAttack' | 'buffHealth'> & 
@@ -54,24 +52,21 @@ export class BuffModel<
         })
     }
 
-    public get route(): Readonly<{
-        parent: P | undefined;
-        role: RoleModel | undefined;
-        card: MinionCardModel | undefined;
-        root: RootModel | undefined;
-        game: GameModel | undefined;
-        owner: PlayerModel | undefined;
-        opponent: PlayerModel | undefined;
-    }>{
+    public get route(): Readonly<Partial<{
+        parent: P;
+        role: RoleModel;
+        card: MinionCardModel;
+        root: Model;
+        game: GameModel;
+        owner: PlayerModel;
+        opponent: PlayerModel;
+    }>>{
         const route = super.route;
-        const root = route.root instanceof RootModel ? route.root : undefined;
         const role = route.parent;
         const card = role?.route.parent instanceof CardModel ? role.route.parent : undefined;
         const owner = card?.route.owner;
         return {
-            parent: route.parent,
-            root,
-            game: root?.child.game,
+            ...route,
             owner,
             opponent: owner?.route.opponent,
             role,
@@ -79,7 +74,7 @@ export class BuffModel<
         }
     }
 
-    @StateAgent.use(self => self.alias.route.role?.proxy.decor)
+    @StateAgent.use(self => self.route.role?.proxy.decor)
     private handleBuff(that: RoleModel, buff: DeepReadonly<RoleModel.State>): DeepReadonly<RoleModel.State> {
         console.warn('handleBuff', this.state.isValid, this.state.isActive);
         if (!this.state.isValid) return buff;
@@ -91,7 +86,7 @@ export class BuffModel<
         }
     }
 
-    @EventAgent.use(self => self.alias.proxy.event.onStateChange)
+    @EventAgent.use(self => self.proxy.event.onStateChange)
     private handleStateChange(that: BuffModel, event: Event.OnStateChange<BuffModel>) {
         const { prev, next } = event;
         if (prev.isActive !== next.isActive) this.reload();
@@ -99,9 +94,8 @@ export class BuffModel<
         if (prev.buffHealth !== next.buffHealth) this.reload();
     }
 
-
-    @EventAgent.use(self => self.alias.route.role?.proxy.event.onResetBefore)
+    @EventAgent.use(self => self.route.role?.proxy.event.onResetBefore)
     private handleHealthReset(that: RoleModel, event: RoleModel.Event['onResetBefore']) {
-        this.alias.draft.state.isValid = false;
+        this.draft.state.isValid = false;
     }
 }

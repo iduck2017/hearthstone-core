@@ -1,7 +1,8 @@
 import { DebugService, Event, EventAgent, Model, State, TranxService } from "set-piece";
-import { MinionCardModel } from "./card/minion";
-import { HeroModel } from "./hero";
-import { FeatureModel } from "./feature";
+import { MinionCardModel } from "../card/minion";
+import { HeroModel } from "../hero";
+import { FeatureModel } from "../feature";
+import { GameModel } from "../game";
 
 export namespace RoleModel {
     export type Parent = MinionCardModel | HeroModel
@@ -33,12 +34,12 @@ export namespace RoleModel {
     export type Refer = {};
 }
 
-export class RoleModel<
+export abstract class RoleModel<
     P extends HeroModel | MinionCardModel = HeroModel | MinionCardModel,
-    E extends Model.Event = {},
-    S extends Model.State = {},
-    C extends Model.Child = {},
-    R extends Model.Refer = {}
+    E extends Partial<RoleModel.Event> & Model.Event = {},
+    S extends Partial<RoleModel.State> & Model.State = {},
+    C extends Partial<RoleModel.Child> & Model.Child = {},
+    R extends Partial<RoleModel.Refer> & Model.Refer = {}
 > extends Model<
     P,
     E & RoleModel.Event,
@@ -46,8 +47,6 @@ export class RoleModel<
     C & RoleModel.Child,
     R & RoleModel.Refer
 > {
-    public get alias(): RoleModel { return this; }
-
     public constructor(props: RoleModel['props'] & {
         state: S & Pick<RoleModel.State, 'attack' | 'health'>,
         child: C,
@@ -79,29 +78,29 @@ export class RoleModel<
     }
 
     public apply(feature: FeatureModel) {
-        this.child.effect.push(feature);
+        this.draft.child.effect.push(feature);
         return feature;
     }
     
     @DebugService.log()
     @TranxService.use()
     public attack(target: RoleModel) {
-        this.alias.event.onAttackBefore(target);
+        this.event.onAttackBefore(target);
         const sourceAttack = this.state.attack;
         const targetAttack = target.state.attack;
         this.dealDamage(target, sourceAttack);
         target.dealDamage(this, targetAttack);
-        this.alias.event.onAttack(target);
+        this.event.onAttack(target);
     }
     
     public dealDamage(target: RoleModel, damage: number) {
         target.recvDamage(this, damage);
-        this.alias.event.onDamageDeal({ target, damage });
+        this.event.onDamageDeal({ target, damage });
     }
 
     public recvDamage(source: RoleModel, damage: number) {
-        this.alias.draft.state.curHealth -= damage;
-        this.alias.event.onDamageRecv({ source, damage });
+        this.draft.state.curHealth -= damage;
+        this.event.onDamageRecv({ source, damage });
     }
 
 
@@ -110,18 +109,18 @@ export class RoleModel<
         attack?: number,
         health?: number
     }) {
-        this.alias.event.onResetBefore(option)
-        if (option.attack) this.alias.draft.state.attack = option.attack;
-        if (option.health) this.alias.draft.state.health = option.health;
+        this.event.onResetBefore(option)
+        if (option.attack) this.draft.state.attack = option.attack;
+        if (option.health) this.draft.state.health = option.health;
     }
     
-    @EventAgent.use(self => self.proxy.event.onStateChange)
+    @EventAgent.use((self: RoleModel) => self.proxy.event.onStateChange)
     private handleHealthUpdate(that: RoleModel, event: Event.OnStateChange<RoleModel>) {
         const { prev, next } = event;
         if (prev.health !== next.health) {
             const dltHealth = next.health - prev.health;
-            if (dltHealth > 0) this.alias.draft.state.curHealth += dltHealth;
-            if (dltHealth < 0 && this.state.curHealth > next.health) this.alias.draft.state.curHealth = next.health;
+            if (dltHealth > 0) this.draft.state.curHealth += dltHealth;
+            if (dltHealth < 0 && this.state.curHealth > next.health) this.draft.state.curHealth = next.health;
         }
     }
 }

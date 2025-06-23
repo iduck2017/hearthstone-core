@@ -1,9 +1,7 @@
 import { Model, StoreService } from "set-piece";
 import { PlayerModel } from "./player";
-import { MinionCardModel } from "./card/minion";
 import { GameQuery, TargetType } from "@/types/query";
-import { HeroModel } from "./hero";
-import { MinionRoleModel } from "./minion";
+import { MinionRoleModel } from "./role/minion";
 
 export namespace GameModel {
     export type State = {

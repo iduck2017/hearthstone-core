@@ -18,7 +18,7 @@ export class AbusiveSergeantBuffModel extends BuffModel {
         });
     }
 
-    @EventAgent.use(self => self.alias.route.game?.proxy.event.onTurnEnd)
+    @EventAgent.use(self => self.route.game?.proxy.event.onTurnEnd)
     private onTurnEnd(that: GameModel) {
         this.draft.state.isActive = false;
     }

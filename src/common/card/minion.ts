@@ -1,30 +1,25 @@
-import { CheckService, DebugService, Model, TranxService } from "set-piece";
-import { RoleModel } from "../role";
+import { DebugService, Model, TranxService } from "set-piece";
 import { CardModel } from ".";
 import { CardType, MinionRaceType } from "@/types/card";
-import { BoardModel } from "../container/board";
-import { HandModel } from "../container/hand";
-import { ExtensionModel } from "../extension";
-import { MinionRoleModel } from "../minion";
-
+import { MinionRoleModel } from "../role/minion";
 
 export namespace MinionCardModel {
-    export type Event = {};
-    export type State = {
+    export type Event = Partial<CardModel.Event>;
+    export type State = Partial<CardModel.State> & {
         readonly race: Readonly<MinionRaceType[]>;
     };
-    export type Child = {
+    export type Child = Partial<CardModel.Child> & {
         readonly role: MinionRoleModel;
     };
-    export type Refer = {};
+    export type Refer = Partial<CardModel.Refer>;
 }
 
 export abstract class MinionCardModel<
     P extends CardModel.Parent = CardModel.Parent,
-    E extends Model.Event = {},
-    S extends Model.State = {},
-    C extends Model.Child = {},
-    R extends Model.Refer = {}
+    E extends Partial<MinionCardModel.Event> & Model.Event = {},
+    S extends Partial<MinionCardModel.State> & Model.State = {},
+    C extends Partial<MinionCardModel.Child> & Model.Child = {},
+    R extends Partial<MinionCardModel.Refer> & Model.Refer = {}
 > extends CardModel<
     P,
     E & MinionCardModel.Event, 
@@ -32,8 +27,6 @@ export abstract class MinionCardModel<
     C & MinionCardModel.Child,
     R & MinionCardModel.Refer
 > {
-    protected get self(): MinionCardModel { return this; }
-
     constructor(props: MinionCardModel['props'] & {
         state: S & Pick<CardModel.State, 'name' | 'desc' | 'mana'>;
         child: C & Pick<MinionCardModel.Child, 'role'>;
@@ -46,39 +39,38 @@ export abstract class MinionCardModel<
                 race: [],
                 ...props.state,
             },
-            child: { 
-                battlecry: [],
-                ...props.child,
-            },
+            child: { ...props.child },
             refer: { ...props.refer },
         });
     }
 
     @DebugService.log()
-    
-    public prepare() {
-
+    @TranxService.use()
+    public async prepare() {
+        const registry: Map<Model, Model[]> = new Map();
+        for (const feat of this.child.battlecries) {
+            const accessors = feat.prepare();
+            if (!accessors) continue;
+            const params: Model[] = [];
+            for (const item of accessors) {
+                const result = await item.get();
+                if (!result) return;
+                params.push(result);
+            }
+            registry.set(feat, params);
+        }
+        this.play(registry);
     }
 
     @DebugService.log()
-    @CheckService.if(self => self.route.hand)
-    public use() {
-        this.self.event.onUseBefore();
+    private async play(registry: Map<Model, Model[]>) {
+        this.event.onPlayBefore({});
         const hand = this.route.hand;
         if (!hand) return;
         hand.use(this);
-        this.self.event.onUse();
-        this.battlecry();
-        this.summon();
+        this.event.onPlay({});
+        await this.battlecry(registry);
+        this.child.role.summon();
     }
     
-    @TranxService.use()
-    private summon() {
-        const owner = this.route.owner;
-        const board = owner?.child.board;
-        const hand = this.route.hand;
-        if (!board || !hand) return;
-        hand.del(this);
-        board.add(this);
-    }
 }

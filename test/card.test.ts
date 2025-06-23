@@ -44,7 +44,7 @@ describe('card', () => {
         if (!card) return;
         expect(board.child.cards.length).toBe(0);
         expect(hand.child.cards.length).toBe(1);
-        card.use();
+        card.prepare();
         expect(board.child.cards.length).toBe(1);
         expect(hand.child.cards.length).toBe(0);
     })

@@ -5,6 +5,8 @@ import { PlayerModel } from "@/common/player";
 import { MageHeroModel } from "@/common/hero/mage/hero";
 import { MinionCardModel } from "@/common/card/minion";
 import { WispCardModel } from "@/extension/legacy/wisp/card";
+import { ShatteredSunClericCardModel } from "@/extension/legacy/shattered-sun-cleric/card";
+import { Selector } from "@/utils/selector";
 
 export class AppService {
     private static _view?: HTMLElement;
@@ -32,7 +34,7 @@ export class AppService {
     }
 
     @DebugService.log()
-    public static debug() {
+    public static async debug() {
         const playerA = new PlayerModel({ child: { hero: new MageHeroModel({}) } });
         const playerB = new PlayerModel({ child: { hero: new MageHeroModel({}) } });
         AppService._root?.start({ playerA, playerB });
@@ -40,14 +42,29 @@ export class AppService {
         playerB.child.hand.add(new WispCardModel({}));
         console.log(playerA.child.hand.child.cards);
         console.log(playerB.child.hand.child.cards);
-        const wisp1 = playerA.child.hand.child.cards[0];
-        const wisp2 = playerB.child.hand.child.cards[0];
-        if (!(wisp1 instanceof MinionCardModel)) return;
-        if (!(wisp2 instanceof MinionCardModel)) return;
-        wisp1.use();
-        wisp2.use();
-        console.log('health', wisp1.child.role?.state.health);
+        const card1 = playerA.child.hand.child.cards[0];
+        const card2 = playerB.child.hand.child.cards[0];
+        if (!card1 || !card2) return;
+        await card1.prepare();
+        await card2.prepare();
+        const wisp1 = playerA.child.board.child.cards[0];
+        const wisp2 = playerB.child.board.child.cards[0];
+        if (!wisp1 || !wisp2) return;
+        console.log('state', wisp1.child.role?.state);
         wisp1.child.role.attack(wisp2.child.role);
-        console.log('health', wisp1.child.role?.state.health);
+        console.log('state', wisp1.child.role?.state);
+        playerA.child.hand.add(new ShatteredSunClericCardModel({}));
+        const card3 = playerA.child.hand.child.cards[0];
+        if (!card3) return;
+        setTimeout(() => {
+            console.log('selector', Selector.current);
+            if (!Selector.current) return;
+            const target = Selector.current.candidates[0];
+            if (!target) Selector.current.cancel();
+            else Selector.current.set(target);
+        }, 1000)
+        await card3.prepare();
+        console.log('state', wisp1.child.role?.state);
+        console.log('state', wisp2.child.role?.state);
     }
 }

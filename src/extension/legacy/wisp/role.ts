@@ -1,4 +1,4 @@
-import { MinionRoleModel } from "@/common/minion";
+import { MinionRoleModel } from "@/common/role/minion";
 import { RoleModel } from "@/common/role";
 import { StoreService } from "set-piece";
 

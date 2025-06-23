@@ -12,10 +12,10 @@ export namespace FeatureModel {
 
 export abstract class FeatureModel<
     P extends Model = Model,
-    E extends Model.Event = {},
-    S extends Model.State = {},
-    C extends Model.Child = {},
-    R extends Model.Refer = {}
+    E extends Partial<FeatureModel.Event> & Model.Event = {},
+    S extends Partial<FeatureModel.State> & Model.State = {},
+    C extends Partial<FeatureModel.Child> & Model.Child = {},
+    R extends Partial<FeatureModel.Refer> & Model.Refer = {}
 > extends Model<
     P,
     E & FeatureModel.Event,
@@ -35,4 +35,6 @@ export abstract class FeatureModel<
             refer: { ...props.refer },
         });
     }
+
+
 }
