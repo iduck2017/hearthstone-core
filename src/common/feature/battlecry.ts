@@ -1,4 +1,4 @@
-import { Model } from "set-piece";
+import { EventAgent, Model } from "set-piece";
 import { FeatureModel } from ".";
 import { CardModel } from "../card";
 import { RootModel } from "../root";
@@ -8,7 +8,7 @@ import { Selector } from "@/utils/selector";
 
 export namespace BattlecryModel {
     export type Event = Partial<FeatureModel.Event> & {
-        onBattlecry: void;
+        onBattlecry: {};
     };
     export type State = Partial<FeatureModel.State> & {};
     export type Child = Partial<FeatureModel.Child> & {};
@@ -58,6 +58,12 @@ export abstract class BattlecryModel<
     }
 
     public abstract prepare(): { [K in keyof T]: Selector<T[K]> } | undefined;
+    
+    @EventAgent.next((self: BattlecryModel) => self.event.onBattlecry, 'async')
+    public async use(...target: T) {
+        await this.run(...target);
+        return {}
+    }
 
-    public abstract run(...target: T): Promise<void>;
+    protected abstract run(...target: T): Promise<void>;
 }

@@ -88,7 +88,7 @@ export abstract class CardModel<
         for (const item of this.child.battlecries) {
             const params = registry.get(item);
             if (!params) return;
-            await item.run(...params);
+            await item.use(...params);
         }
     }
 }
