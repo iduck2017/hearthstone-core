@@ -23,7 +23,7 @@ export class AppService {
 
     private constructor() {}
 
-    @DebugService.log()
+    @DebugService.mute()
     public static boot(props: {
         extensions: Extensions[];
     }) {

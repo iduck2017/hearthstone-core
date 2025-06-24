@@ -76,7 +76,6 @@ export class BuffModel<
 
     @StateAgent.use(self => self.route.role?.proxy.decor)
     private handleBuff(that: RoleModel, buff: DeepReadonly<RoleModel.State>): DeepReadonly<RoleModel.State> {
-        console.warn('handleBuff', this.state.isValid, this.state.isActive);
         if (!this.state.isValid) return buff;
         if (!this.state.isActive) return buff;
         return {

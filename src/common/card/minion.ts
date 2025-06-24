@@ -45,7 +45,6 @@ export abstract class MinionCardModel<
     }
 
     @DebugService.log()
-    @TranxService.use()
     public async prepare() {
         const registry: Map<Model, Model[]> = new Map();
         for (const feat of this.child.battlecries) {
@@ -72,5 +71,4 @@ export abstract class MinionCardModel<
         await this.battlecry(registry);
         this.child.role.summon();
     }
-    
 }
