@@ -2,7 +2,7 @@ import { MinionCardModel } from "@/common/card/minion";
 import { BattlecryModel } from "@/common/feature/battlecry";
 import { TargetType } from "@/types/query";
 import { Selector } from "@/utils/selector";
-import { AbusiveSergeantBuffModel } from "./buff";
+import { AbusiveSergeantEffectModel } from "./effect";
 import { MinionRoleModel } from "@/common/role/minion";
 
 export class AbusiveSergeantBattlecryModel extends BattlecryModel<
@@ -30,7 +30,7 @@ export class AbusiveSergeantBattlecryModel extends BattlecryModel<
     }
 
     public async run(target: MinionRoleModel) {
-        target.apply(new AbusiveSergeantBuffModel({}))
+        target.apply(new AbusiveSergeantEffectModel({}))
     }
 
 }

@@ -9,7 +9,7 @@ export class WispRoleModel extends MinionRoleModel {
             uuid: props.uuid,
             state: {
                 attack: 1,
-                health: 1,
+                maxHealth: 1,
                 ...props.state,
             },
             child: { ...props.child },

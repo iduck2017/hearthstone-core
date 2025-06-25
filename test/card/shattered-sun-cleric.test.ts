@@ -17,7 +17,7 @@ describe('shattered-sun-cleric', () => {
         const wispB = boardB.child.cards[0]?.child.role;
         if (!wispA || !wispB) return;
         expect(wispA.state.attack).toBe(1);
-        expect(wispA.state.health).toBe(1);
+        expect(wispA.state.maxHealth).toBe(1);
 
         const card = new ShatteredSunClericCardModel({});
         const game = AppService.root?.child.game;
@@ -33,7 +33,7 @@ describe('shattered-sun-cleric', () => {
         })
         await card.prepare();
         expect(wispA.state.attack).toBe(2);
-        expect(wispA.state.health).toBe(2);
+        expect(wispA.state.maxHealth).toBe(2);
     });
 })
 
@@ -64,3 +64,4 @@ describe('shattered-sun-cleric', () => {
 // autofix 5+(10-10)/5+10-10 = 5/5
 // 5+(10-10)/5+10 = 5/15
 // 5+(0-10)/5 = 5/5
+

@@ -16,8 +16,8 @@ export namespace HeroModel {
 
 export abstract class HeroModel<
     P extends Model = Model,
-    E extends Partial<HeroModel.Event> & Model.Event = {},
-    S extends Partial<HeroModel.State> & Model.State = {},
+    E extends Partial<HeroModel.Event> = {},
+    S extends Partial<HeroModel.State> = {},
     C extends Partial<HeroModel.Child> & Model.Child = {},
     R extends Partial<HeroModel.Refer> & Model.Refer = {}
 > extends Model< 

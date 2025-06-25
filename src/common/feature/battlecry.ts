@@ -18,8 +18,8 @@ export namespace BattlecryModel {
 export abstract class BattlecryModel<
     T extends Model[] = Model[],
     P extends CardModel = CardModel,
-    E extends Partial<BattlecryModel.Event> & Model.Event = {},
-    S extends Partial<BattlecryModel.State> & Model.State = {},
+    E extends Partial<BattlecryModel.Event> = {},
+    S extends Partial<BattlecryModel.State> = {},
     C extends Partial<BattlecryModel.Child> & Model.Child = {},
     R extends Partial<BattlecryModel.Refer> & Model.Refer = {}
 > extends FeatureModel<

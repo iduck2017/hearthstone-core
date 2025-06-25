@@ -19,7 +19,7 @@ describe('attack', () => {
 
         const wispA = cardA.child.role;
         const wispB = cardB.child.role;
-        expect(wispA.state.health).toBe(1);
+        expect(wispA.state.maxHealth).toBe(1);
         expect(wispA.state.attack).toBe(1);
 
         expect(wispA.state.curHealth).toBe(1);

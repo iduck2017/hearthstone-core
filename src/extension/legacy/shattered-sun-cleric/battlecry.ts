@@ -2,7 +2,7 @@ import { BattlecryModel } from "@/common/feature/battlecry";
 import { MinionRoleModel } from "@/common/role/minion";
 import { TargetType } from "@/types/query";
 import { Selector } from "@/utils/selector";
-import { ShatteredSunClericBuffModel } from "./buff";
+import { ShatteredSunClericEffectModel } from "./buff";
 import { DebugService } from "set-piece";
 
 export class ShatteredSunClericBattlecryModel extends BattlecryModel<
@@ -32,6 +32,6 @@ export class ShatteredSunClericBattlecryModel extends BattlecryModel<
 
     @DebugService.log()
     public async run(target: MinionRoleModel) {
-        target.apply(new ShatteredSunClericBuffModel({}))
+        target.apply(new ShatteredSunClericEffectModel({}))
     }
 }

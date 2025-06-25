@@ -12,8 +12,8 @@ export namespace FeatureModel {
 
 export abstract class FeatureModel<
     P extends Model = Model,
-    E extends Partial<FeatureModel.Event> & Model.Event = {},
-    S extends Partial<FeatureModel.State> & Model.State = {},
+    E extends Partial<FeatureModel.Event> = {},
+    S extends Partial<FeatureModel.State> = {},
     C extends Partial<FeatureModel.Child> & Model.Child = {},
     R extends Partial<FeatureModel.Refer> & Model.Refer = {}
 > extends Model<

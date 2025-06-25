@@ -29,8 +29,8 @@ export namespace CardModel {
 
 export abstract class CardModel<
     P extends CardModel.Parent = CardModel.Parent,
-    E extends Partial<CardModel.Event> & Model.Event = {},
-    S extends Partial<CardModel.State> & Model.State = {},
+    E extends Partial<CardModel.Event> = {},
+    S extends Partial<CardModel.State> = {},
     C extends Partial<CardModel.Child> & Model.Child = {},
     R extends Partial<CardModel.Refer> & Model.Refer = {}
 > extends Model<
@@ -80,6 +80,12 @@ export abstract class CardModel<
             owner,
             opponent,
         }
+    }
+
+    public debug() {
+        super.debug();
+        console.log(this.child.xxx);
+        console.log(this.refer.xxx);
     }
 
     public abstract prepare(): void;

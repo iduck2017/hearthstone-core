@@ -18,8 +18,8 @@ export namespace MinionRoleModel {
 
 export class MinionRoleModel<
     P extends MinionCardModel = MinionCardModel,
-    E extends Partial<MinionRoleModel.Event> & Model.Event = {},
-    S extends Partial<MinionRoleModel.State> & Model.State = {},
+    E extends Partial<MinionRoleModel.Event> = {},
+    S extends Partial<MinionRoleModel.State> = {},
     C extends Partial<MinionRoleModel.Child> & Model.Child = {},
     R extends Partial<MinionRoleModel.Refer> & Model.Refer = {}
 > extends RoleModel<
@@ -30,7 +30,7 @@ export class MinionRoleModel<
     R & MinionRoleModel.Refer
 > {
     constructor(props: MinionRoleModel['props'] & {
-        state: S & Pick<RoleModel.State, 'attack' | 'health'>, 
+        state: S & Pick<RoleModel.State, 'attack' | 'maxHealth'>, 
         child: C, 
         refer: R
     }) {

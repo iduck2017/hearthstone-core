@@ -1,15 +1,16 @@
 import { FeatureModel } from "@/common/feature";
-import { BuffModel } from "@/common/feature/buff";
+import { EffectModel } from "@/common/feature/effect";
 
-export class ShatteredSunClericBuffModel extends BuffModel {
-    constructor(props: ShatteredSunClericBuffModel['props']) {
+export class ShatteredSunClericEffectModel extends EffectModel {
+    constructor(props: ShatteredSunClericEffectModel['props']) {
         super({
             uuid: props.uuid,
             state: {
                 name: 'Shattered Sun Cleric\'s Buff',
                 desc: '+1/+1',
-                buffAttack: 1,
-                buffHealth: 1,
+                modAttack: 1,
+                modHealth: 1,
+                isBuff: true,
                 ...props.state,
             },
             child: { ...props.child },

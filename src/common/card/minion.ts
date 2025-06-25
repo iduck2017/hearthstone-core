@@ -16,8 +16,8 @@ export namespace MinionCardModel {
 
 export abstract class MinionCardModel<
     P extends CardModel.Parent = CardModel.Parent,
-    E extends Partial<MinionCardModel.Event> & Model.Event = {},
-    S extends Partial<MinionCardModel.State> & Model.State = {},
+    E extends Partial<MinionCardModel.Event> = {},
+    S extends Partial<MinionCardModel.State> = {},
     C extends Partial<MinionCardModel.Child> & Model.Child = {},
     R extends Partial<MinionCardModel.Refer> & Model.Refer = {}
 > extends CardModel<

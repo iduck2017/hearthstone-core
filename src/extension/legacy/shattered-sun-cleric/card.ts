@@ -4,6 +4,10 @@ import { ShatteredSunClericBattlecryModel } from "./battlecry";
 
 export class ShatteredSunClericCardModel extends MinionCardModel {
     constructor(props: ShatteredSunClericCardModel['props']) {
+        const battlecries = props.child?.battlecries ?? [];
+        if (!battlecries.find(item => item instanceof ShatteredSunClericBattlecryModel)) {
+            battlecries.push(new ShatteredSunClericBattlecryModel({}));
+        }
         super({
             uuid: props.uuid,
             state: {
@@ -14,8 +18,8 @@ export class ShatteredSunClericCardModel extends MinionCardModel {
             },
             child: {
                 role: new ShatteredSunClericRoleModel({}),
-                battlecries: [new ShatteredSunClericBattlecryModel({})],
                 ...props.child,
+                battlecries,
             },
             refer: { ...props.refer },
         });
