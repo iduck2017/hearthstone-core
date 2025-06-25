@@ -7,6 +7,7 @@ import { MinionCardModel } from "@/common/card/minion";
 import { WispCardModel } from "@/extension/legacy/wisp/card";
 import { ShatteredSunClericCardModel } from "@/extension/legacy/shattered-sun-cleric/card";
 import { Selector } from "@/utils/selector";
+import { GameModel } from "@/common/game";
 
 export class AppService {
     private static _view?: HTMLElement;
@@ -37,7 +38,9 @@ export class AppService {
     public static async debug() {
         const playerA = new PlayerModel({ child: { hero: new MageHeroModel({}) } });
         const playerB = new PlayerModel({ child: { hero: new MageHeroModel({}) } });
-        AppService._root?.start({ playerA, playerB });
+        AppService._root?.start(new GameModel({
+            child: { playerA, playerB}
+        }));
         playerA.child.hand.add(new WispCardModel({}));
         playerB.child.hand.add(new WispCardModel({}));
         console.log(playerA.child.hand.child.cards);

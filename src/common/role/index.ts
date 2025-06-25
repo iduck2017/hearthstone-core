@@ -100,7 +100,7 @@ export abstract class RoleModel<
         return { target, damage };
     }
 
-    @DebugService.log(LogLevel.WARN)
+    @DebugService.log()
     @EventAgent.next(self => self.event.onDamageRecv)
     @TranxService.use()
     public recvDamage(source: RoleModel, damage: number) {
@@ -110,7 +110,7 @@ export abstract class RoleModel<
         return { source, damage };
     }
 
-    @DebugService.log(LogLevel.WARN)
+    @DebugService.log()
     @EventAgent.use((self: RoleModel) => self.proxy.event.onStateChange)
     @TranxService.use()
     private handleRawHealthBalance(that: RoleModel, event: Event.OnStateChange<RoleModel>) {

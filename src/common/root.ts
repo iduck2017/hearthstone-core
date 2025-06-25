@@ -30,13 +30,8 @@ export class RootModel extends Model<
     }
 
     @DebugService.log()
-    public start(props: Pick<GameModel.Child, 'playerA' | 'playerB'>) {
-        this.draft.child.game = new GameModel({
-            child: {
-                playerA: props.playerA,
-                playerB: props.playerB,
-            },
-        });
+    public start(game: GameModel) {
+        this.draft.child.game = game;
         console.log(this.status, this.child.game?.status)
     }
 
