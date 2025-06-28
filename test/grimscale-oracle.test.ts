@@ -16,6 +16,7 @@ import { MageHeroModel } from "@/common/hero/mage/hero";
 import { BoardModel } from "@/common/container/board";
 import { RoleModel } from "@/common/role";
 import '@/index'
+import { WispCardModel } from "@/extension/legacy/wisp/card";
 
 describe('grimscale-oracle', () => {
     test('start', async () => {
@@ -28,7 +29,10 @@ describe('grimscale-oracle', () => {
                     child: {
                         hero: new MageHeroModel({}),
                         board: new BoardModel({
-                            child: { cards: [new MurlocRaiderCardModel({})] }
+                            child: { cards: [
+                                new MurlocRaiderCardModel({}),
+                                new WispCardModel({})
+                            ]}
                         }),
                         hand: new HandModel({
                             child: { cards: [new GrimscaleOracleCardModel({})] }
@@ -60,15 +64,19 @@ describe('grimscale-oracle', () => {
         const cardA = boardA.child.cards.find(item => item instanceof MurlocRaiderCardModel);
         const cardB = boardB.child.cards.find(item => item instanceof MurlocRaiderCardModel);
         const cardC = handA.child.cards.find(item => item instanceof GrimscaleOracleCardModel);
+        const cardD = boardA.child.cards.find(item => item instanceof WispCardModel);
+        
         expect(cardA).toBeDefined();
         expect(cardB).toBeDefined();
         expect(cardC).toBeDefined();
-        if (!cardA || !cardB || !cardC) return;
+        expect(cardD).toBeDefined();
+        if (!cardA || !cardB || !cardC || !cardD) return;
         
         const roleA = cardA.child.role;
         const roleB = cardB.child.role;
+        const roleD = cardD.child.role;
         
-        // Initial state: both raiders have 2 attack
+        // Initial state: both raiders have 2 attack, wisp has 1 attack
         expect(roleA.state).toMatchObject({
             health: 1,
             attack: 2,
@@ -80,6 +88,12 @@ describe('grimscale-oracle', () => {
             attack: 2,
             modAttack: 0,
             curAttack: 2,
+        });
+        expect(roleD.state).toMatchObject({
+            health: 1,
+            attack: 1,
+            modAttack: 0,
+            curAttack: 1,
         });
         
         // Play Grimscale Oracle
@@ -99,6 +113,14 @@ describe('grimscale-oracle', () => {
             attack: 2,
             modAttack: 0,      // No aura effect
             curAttack: 2,      // Still 2 attack
+        });
+        
+        // Player A's wisp should remain unchanged (not a murloc, so no aura effect)
+        expect(roleD.state).toMatchObject({
+            health: 1,
+            attack: 1,
+            modAttack: 0,      // No aura effect (not a murloc)
+            curAttack: 1,      // Still 1 attack
         });
     })
 }) 

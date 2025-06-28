@@ -1,6 +1,7 @@
 import { EffectModel } from "@/common/feature/effect";
 import { RoleModel } from "@/common/role";
 import { MinionRoleModel } from "@/common/role/minion";
+import { MinionRaceType } from "@/types/card";
 import { CheckService, DebugService, LogLevel, StateAgent, TranxService } from "set-piece";
 import { DeepReadonly } from "utility-types";
 
@@ -37,6 +38,7 @@ export class GrimscaleOracleEffectModel extends EffectModel<
         state: DeepReadonly<MinionRoleModel.State & RoleModel.State>
     ): DeepReadonly<MinionRoleModel.State & RoleModel.State> {
         if (!this.route.parent?.route.board) return state;
+        if (!that.state.races.includes(MinionRaceType.MURLOC)) return state;
         if (!this.state.isActive) return state;
         // console.log('that', that.name, that.state)
         return {
