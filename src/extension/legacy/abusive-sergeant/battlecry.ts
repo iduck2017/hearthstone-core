@@ -22,7 +22,7 @@ export class AbusiveSergeantBattlecryModel extends BattlecryModel<
         });
     }
 
-    public prepare(): [Selector<MinionRoleModel>] | undefined {
+    public preparePlay(): [Selector<MinionRoleModel>] | undefined {
         if (!this.route.game) return;
         const candidates = this.route.game.query(TargetType.Minion, {})
         if (!candidates.length) return;
@@ -32,5 +32,4 @@ export class AbusiveSergeantBattlecryModel extends BattlecryModel<
     public async run(target: MinionRoleModel) {
         target.apply(new AbusiveSergeantEffectModel({}))
     }
-
 }

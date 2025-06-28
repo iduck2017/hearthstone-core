@@ -30,7 +30,7 @@ export class MinionRoleModel<
     R & MinionRoleModel.Refer
 > {
     constructor(props: MinionRoleModel['props'] & {
-        state: S & Pick<RoleModel.State, 'attack' | 'maxHealth'>, 
+        state: S & Pick<RoleModel.State, 'attack' | 'health'>, 
         child: C, 
         refer: R
     }) {
@@ -42,7 +42,6 @@ export class MinionRoleModel<
         })
     }
     
-
     public get route(): Readonly<Partial<{
         parent: P;
         card: MinionCardModel;

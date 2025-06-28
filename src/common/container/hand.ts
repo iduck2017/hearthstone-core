@@ -34,12 +34,22 @@ export class HandModel extends Model<
         });
     }
 
+    public clear() {
+        this.draft.child.cards = [];
+    }
+
     public add(card?: CardModel) {
         if (!card) return;
         this.draft.child.cards.push(card);
         return card;
     }
 
+    public del(card: CardModel) {
+        const index = this.draft.child.cache.indexOf(card);
+        if (index === -1) return;
+        this.draft.child.cache.splice(index, 1);
+    }
+    
     @TranxService.use()
     public use(card: CardModel) {
         const index = this.draft.child.cards.indexOf(card);
@@ -47,12 +57,4 @@ export class HandModel extends Model<
         this.draft.child.cards.splice(index, 1);
         this.draft.child.cache.push(card);
     }
-    
-    public del(card: CardModel) {
-        const index = this.draft.child.cache.indexOf(card);
-        if (index === -1) return;
-        this.draft.child.cache.splice(index, 1);
-    }
-    
-
 }

@@ -10,7 +10,7 @@ export class ShatteredSunClericEffectModel extends EffectModel {
                 desc: '+1/+1',
                 modAttack: 1,
                 modHealth: 1,
-                isBuff: true,
+                isEnable: true,
                 ...props.state,
             },
             child: { ...props.child },

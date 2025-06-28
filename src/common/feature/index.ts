@@ -35,6 +35,4 @@ export abstract class FeatureModel<
             refer: { ...props.refer },
         });
     }
-
-
 }

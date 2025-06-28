@@ -1,6 +1,6 @@
 import { EffectModel } from "@/common/feature/effect";
 import { GameModel } from "@/common/game";
-import { EventAgent } from "set-piece";
+import { EventAgent, TranxService } from "set-piece";
 
 export class AbusiveSergeantEffectModel extends EffectModel {
     constructor(props: AbusiveSergeantEffectModel['props']) {
@@ -11,7 +11,7 @@ export class AbusiveSergeantEffectModel extends EffectModel {
                 desc: '+2 Attack this turn.',
                 modAttack: 2,
                 modHealth: 0,
-                isBuff: true,
+                isEnable: true,
                 ...props.state,
             },
             child: { ...props.child },
@@ -20,7 +20,9 @@ export class AbusiveSergeantEffectModel extends EffectModel {
     }
 
     @EventAgent.use(self => self.route.game?.proxy.event.onTurnEnd)
-    private onTurnEnd(that: GameModel) {
-        this.draft.state.isBuff = false;
+    @TranxService.use()
+    private handleTurnEnd(that: GameModel) {
+        this.draft.state.isActive = false;
+        this.reload();
     }
 }

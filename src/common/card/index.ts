@@ -1,4 +1,4 @@
-import { DebugService, EventAgent, Model, StateAgent } from "set-piece";
+import { Model } from "set-piece";
 import { CardType } from "@/types/card";
 import { BoardModel } from "../container/board";
 import { HandModel } from "../container/hand";
@@ -88,13 +88,13 @@ export abstract class CardModel<
         console.log(this.refer.xxx);
     }
 
-    public abstract prepare(): void;
+    public abstract preparePlay(): void;
 
     protected async battlecry(registry: Map<Model, Model[]>) {
         for (const item of this.child.battlecries) {
             const params = registry.get(item);
             if (!params) return;
-            await item.use(...params);
+            await item.performRun(...params);
         }
     }
 }

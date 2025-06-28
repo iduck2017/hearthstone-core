@@ -48,8 +48,8 @@ export class AppService {
         const card1 = playerA.child.hand.child.cards[0];
         const card2 = playerB.child.hand.child.cards[0];
         if (!card1 || !card2) return;
-        await card1.prepare();
-        await card2.prepare();
+        await card1.preparePlay();
+        await card2.preparePlay();
         const wisp1 = playerA.child.board.child.cards[0];
         const wisp2 = playerB.child.board.child.cards[0];
         if (!wisp1 || !wisp2) return;
@@ -66,7 +66,7 @@ export class AppService {
             if (!target) Selector.current.cancel();
             else Selector.current.set(target);
         }, 1000)
-        await card3.prepare();
+        await card3.preparePlay();
         console.log('state', wisp1.child.role?.state);
         console.log('state', wisp2.child.role?.state);
     }

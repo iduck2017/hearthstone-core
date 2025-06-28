@@ -7,7 +7,7 @@ export namespace BoardModel {
     export type State = {};
     export type Event = {};
     export type Child = {
-        readonly cards: MinionCardModel[];
+        cards: MinionCardModel[];
     };
     export type Refer = {};
 }
@@ -33,8 +33,8 @@ export class BoardModel extends Model<
     }
 
     @TranxService.use()
-    reset() {
-        while (this.draft.child.cards.length) this.draft.child.cards.pop();
+    clear() {
+        this.draft.child.cards = [];
     }
 
     @DebugService.log()

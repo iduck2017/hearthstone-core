@@ -1,7 +1,7 @@
 import { RoleModel } from "../../role";
 
-export class MageRoleModel extends RoleModel {
-    constructor(props: MageRoleModel['props']) {    
+export class WarriorRoleModel extends RoleModel {
+    constructor(props: WarriorRoleModel['props']) {    
         super({
             ...props,
             state: {

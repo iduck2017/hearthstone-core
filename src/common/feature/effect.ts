@@ -1,4 +1,4 @@
-import { EventAgent, Model, Event, StateAgent } from "set-piece";
+import { Model, StateAgent, TranxService } from "set-piece";
 import { FeatureModel } from ".";
 import { GameModel } from "../game";
 import { PlayerModel } from "../player";
@@ -11,7 +11,8 @@ export namespace EffectModel {
     export type State = Partial<FeatureModel.State> & {
         modAttack: number;
         modHealth: number;
-        isBuff: boolean;
+        isEnable: boolean;
+        isActive: boolean;
     }
     export type Event = Partial<FeatureModel.Event> & {};
     export type Child = Partial<FeatureModel.Child> & {};
@@ -32,13 +33,18 @@ export class EffectModel<
     R & EffectModel.Refer
 > {
     constructor(props: EffectModel['props'] & {
-        state: S & EffectModel.State & Pick<FeatureModel.State, 'name' | 'desc'>;
+        state: S 
+            & Pick<EffectModel.State, 'modAttack' | 'modHealth' | 'isEnable'> 
+            & Pick<FeatureModel.State, 'name' | 'desc'>;
         child: C;
         refer: R;
     }) {
         super({
             uuid: props.uuid,
-            state: { ...props.state },
+            state: {
+                isActive: true,
+                ...props.state,
+            },
             child: { ...props.child },
             refer: { ...props.refer },
         })
@@ -66,23 +72,24 @@ export class EffectModel<
         }
     }
 
-    @StateAgent.use(self => self.route.role?.proxy.decor)
+    @StateAgent.use(self => {
+        if (!self.state.isEnable) return;
+        if (!self.state.isActive) return;
+        return self.route.role?.proxy.decor;
+    })
     private handleBuff(that: RoleModel, state: DeepReadonly<RoleModel.State>): DeepReadonly<RoleModel.State> {
-        if (!this.state.isBuff) return state;
+        if (!this.state.isEnable) return state;
+        if (!this.state.isActive) return state;
         return {
             ...state,
-            attack: state.attack + this.state.modAttack,
-            maxHealth: state.maxHealth + this.state.modHealth,
-            tmpHealth: state.tmpHealth + Math.max(0, this.state.modHealth),
+            modAttack: state.modAttack + this.state.modAttack,
+            modHealth: state.modHealth + this.state.modHealth,
         }
     }
 
-    @EventAgent.use(self => self.proxy.event.onStateChange)
-    private handleStateChange(that: EffectModel, event: Event.OnStateChange<EffectModel>) {
-        const { prev, next } = event;
-        if (prev.isBuff !== next.isBuff) this.reload();
-        if (prev.modAttack !== next.modAttack) this.reload();
-        if (prev.modHealth !== next.modHealth) this.reload();
+    @TranxService.use()
+    public reset() {
+        this.draft.state.isEnable = false;
+        this.reload();
     }
-
 }

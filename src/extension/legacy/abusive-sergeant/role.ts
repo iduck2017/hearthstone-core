@@ -7,11 +7,11 @@ export class AbusiveSergeantRoleModel extends MinionRoleModel {
             uuid: props.uuid,
             state: {
                 attack: 2,
-                maxHealth: 1,
+                health: 1,
                 ...props.state,
             },
             child: { ...props.child },
             refer: { ...props.refer },
-        });
+        }); 
     }
 }

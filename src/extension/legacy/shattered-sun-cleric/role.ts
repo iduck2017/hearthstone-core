@@ -6,7 +6,7 @@ export class ShatteredSunClericRoleModel extends MinionRoleModel {
             uuid: props.uuid,
             state: {
                 attack: 3,
-                maxHealth: 2,
+                health: 2,
                 ...props.state,
             },
             child: { ...props.child },

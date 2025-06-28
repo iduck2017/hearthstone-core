@@ -21,7 +21,7 @@ export class ShatteredSunClericBattlecryModel extends BattlecryModel<
         });
     }
 
-    public prepare(): [Selector<MinionRoleModel>] | undefined {
+    public preparePlay(): [Selector<MinionRoleModel>] | undefined {
         if (!this.route.game) return;
         const candidates = this.route.game.query(TargetType.Minion, { 
             side: this.route.owner 

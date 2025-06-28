@@ -1,13 +1,12 @@
-import { RootModel } from "@/common/root";
-import { LegacyExtensionModel } from "@/extension/legacy";
 import { AppService } from "@/service/app"
 import { WispCardModel } from "@/extension/legacy/wisp/card";
-import '@/index'
 import { GameModel } from "@/common/game";
 import { PlayerModel } from "@/common/player";
 import { HandModel } from "@/common/container/hand";
 import { MageHeroModel } from "@/common/hero/mage/hero";
 import { BoardModel } from "@/common/container/board";
+import { RoleModel } from "@/common/role";
+import '@/index'
 
 describe('wisp', () => {
     test('start', () => {
@@ -35,25 +34,30 @@ describe('wisp', () => {
             }
         })
         root.start(game)
-        const handA = game.child.playerA.child.hand;
-        expect(handA.child.cards.length).toBe(1);
-        const boardB = game.child.playerB.child.board;
-        expect(boardB.child.cards.length).toBe(1);
     })
 
     test('summon', async () => {
         const root = AppService.root;
         const game = root?.child.game;
         if (!game) return;
-
         const handA = game.child.playerA.child.hand;
+        const handB = game.child.playerB.child.hand;
         const boardA = game.child.playerA.child.board;
-        expect(handA.child.cards.length).toBe(1);
-        expect(boardA.child.cards.length).toBe(0);
-        const wispA = handA.child.cards[0];
-        await wispA?.prepare();
-        expect(handA.child.cards.length).toBe(0);
-        expect(boardA.child.cards.length).toBe(1);
+        const boardB = game.child.playerB.child.board;
+        expect([
+            handA.child.cards.length,
+            handB.child.cards.length,
+            boardA.child.cards.length,
+            boardB.child.cards.length,
+        ]).toEqual([1, 0, 0, 1]);
+        const card = handA.child.cards[0];
+        await card?.preparePlay();
+        expect([
+            handA.child.cards.length,
+            handB.child.cards.length,
+            boardA.child.cards.length,
+            boardB.child.cards.length,
+        ]).toEqual([0, 0, 1, 1]);
     })
 
     test('attack', () => {
@@ -62,23 +66,30 @@ describe('wisp', () => {
         if (!game) return;
         const boardA = game.child.playerA.child.board;
         const boardB = game.child.playerB.child.board;
-        const wispA = boardA.child.cards[0]?.child.role;
-        const wispB = boardB.child.cards[0]?.child.role;
-        if (!wispA || !wispB) return;
-        expect(wispA.state.attack).toBe(1);
-        expect(wispA.state.maxHealth).toBe(1);
-        expect(wispA.state.curHealth).toBe(1);
-        expect(wispB.state.attack).toBe(1);
-        expect(wispB.state.maxHealth).toBe(1);
-        expect(wispB.state.curHealth).toBe(1);
-        wispA.attack(wispB);
-        expect(wispA.state.attack).toBe(1);
-        expect(wispA.state.rawDamage).toBe(1);
-        expect(wispA.state.maxHealth).toBe(1);
-        expect(wispA.state.curHealth).toBe(0);
-        expect(wispB.state.attack).toBe(1);
-        expect(wispB.state.rawDamage).toBe(1);
-        expect(wispB.state.maxHealth).toBe(1);
-        expect(wispB.state.curHealth).toBe(0);
+        const roleA = boardA.child.cards[0]?.child.role;
+        const roleB = boardB.child.cards[0]?.child.role;
+        if (!roleA || !roleB) return;
+        let state: RoleModel['state'] = {
+            attack: 1,
+            health: 1,
+            modAttack: 0,
+            modHealth: 0,
+            refHealth: 1,
+            damage: 0,
+            maxHealth: 1,
+            curHealth: 1,
+            curAttack: 1,
+        }
+        expect(roleA.state).toEqual(state);
+        expect(roleB.state).toEqual(state);
+        roleA.attack(roleB);
+        state = {
+            ...state,
+            damage: 1,
+            curHealth: 0,
+            maxHealth: 1,
+        }
+        expect(roleA.state).toEqual(state);
+        expect(roleB.state).toEqual(state);
     })
 })

@@ -57,10 +57,10 @@ export abstract class BattlecryModel<
         }
     }
 
-    public abstract prepare(): { [K in keyof T]: Selector<T[K]> } | undefined;
+    public abstract preparePlay(): { [K in keyof T]: Selector<T[K]> } | undefined;
     
-    @EventAgent.next((self: BattlecryModel) => self.event.onBattlecry, 'async')
-    public async use(...target: T) {
+    @EventAgent.next(self => self.event.onBattlecry, 'async')
+    public async performRun(...target: T) {
         await this.run(...target);
         return {}
     }

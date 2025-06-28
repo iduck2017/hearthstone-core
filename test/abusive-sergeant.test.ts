@@ -3,14 +3,14 @@ import { HandModel } from "@/common/container/hand";
 import { GameModel } from "@/common/game";
 import { MageHeroModel } from "@/common/hero/mage/hero";
 import { PlayerModel } from "@/common/player";
-import { ShatteredSunClericCardModel } from "@/extension/legacy/shattered-sun-cleric/card";
+import { AbusiveSergeantCardModel } from "@/extension/legacy/abusive-sergeant/card";
 import { WispCardModel } from "@/extension/legacy/wisp/card";
 import { AppService } from "@/service/app";
 import { Selector } from "@/utils/selector";
 import { RoleModel } from "@/common/role";
 import '@/index'
 
-describe('shattered-sun-cleric', () => {
+describe('abusive-sergeant', () => {
     test('start', async () => {
         const root = AppService.root;
         expect(root).toBeDefined();
@@ -20,11 +20,11 @@ describe('shattered-sun-cleric', () => {
                 playerA: new PlayerModel({
                     child: {
                         hero: new MageHeroModel({}),
-                        board: new BoardModel({
-                            child: { cards: [new WispCardModel({})] }
-                        }),
                         hand: new HandModel({
-                            child: { cards: [new ShatteredSunClericCardModel({})] }
+                            child: { cards: [
+                                new AbusiveSergeantCardModel({}),
+                                new WispCardModel({})
+                            ]}
                         })
                     }
                 }),
@@ -33,7 +33,7 @@ describe('shattered-sun-cleric', () => {
                         hero: new MageHeroModel({}),
                         hand: new HandModel({
                             child: { cards: [
-                                new ShatteredSunClericCardModel({}),
+                                new AbusiveSergeantCardModel({}),
                                 new WispCardModel({})
                             ]}
                         })
@@ -44,15 +44,53 @@ describe('shattered-sun-cleric', () => {
         root.start(game)
     });
 
+    test('skip', async () => {
+        const root = AppService.root;
+        const game = root?.child.game;
+        expect(game).toBeDefined();
+        if (!game) return;
+        const hand = game.child.playerB.child.hand;
+        const boardA = game.child.playerA.child.board;
+        const boardB = game.child.playerB.child.board;
+        const cardA = hand.child.cards.find(item => item instanceof AbusiveSergeantCardModel);
+        const cardB = hand.child.cards.find(item => item instanceof WispCardModel);
+        expect(cardA).toBeDefined();
+        expect(cardB).toBeDefined();
+        if (!cardA || !cardB) return;
+        
+        // Player B has no minions on board, so Abusive Sergeant cannot trigger battlecry
+        expect(boardB.child.cards.length).toBe(0);
+        expect(boardA.child.cards.length).toBe(0);
+        
+        // Play both cards without battlecry effect
+        await cardA.preparePlay();
+        await cardB.preparePlay();
+        expect(boardB.child.cards.length).toBe(2);
+        
+        // Wisp state remains normal, no buff applied
+        const role = cardB.child.role;
+        const state: RoleModel['state'] = {
+            attack: 1,
+            health: 1,
+            modAttack: 0,
+            modHealth: 0,
+            refHealth: 1,
+            maxHealth: 1,
+            curHealth: 1,
+            curAttack: 1,
+            damage: 0,
+        }
+        expect(role.state).toEqual(state);
+    })
+
     test('battlecry', async () => {
         const root = AppService.root;
         const game = root?.child.game;
         expect(game).toBeDefined();
         if (!game) return;
         const hand = game.child.playerA.child.hand;
-        const board = game.child.playerA.child.board;
-        const cardA = hand.child.cards.find(item => item instanceof ShatteredSunClericCardModel);
-        const cardB = board.child.cards.find(item => item instanceof WispCardModel);
+        const cardA = hand.child.cards.find(item => item instanceof AbusiveSergeantCardModel);
+        const cardB = hand.child.cards.find(item => item instanceof WispCardModel);
         expect(cardA).toBeDefined();
         expect(cardB).toBeDefined();
         if (!cardA || !cardB) return;
@@ -72,58 +110,21 @@ describe('shattered-sun-cleric', () => {
         const role = cardB.child.role;
         expect(role.state).toEqual(state);
         
-        // Use Shattered Sun Cleric to buff the wisp
+        // Play the wisp first to have a target on board
+        await cardB.preparePlay();
+        
+        // Use Abusive Sergeant to buff the wisp with +2 attack
         process.nextTick(() => {
             Selector.current?.set(role)
         })
         await cardA.preparePlay();
         
-        // State after buff: +1/+1 (attack and health)
-        state = {
+        // State after buff: +2 attack only, health unchanged
+        expect(role.state).toEqual({
             ...state,
-            modAttack: 1,      // +1 attack
-            modHealth: 1,      // +1 health
-            refHealth: 2,      // reference health increased
-            curHealth: 2,      // current health increased
-            maxHealth: 2,      // max health increased
-            curAttack: 2,      // current attack increased
-        }
-        expect(role.state).toEqual(state);
-    })
-
-    test('skip', async () => {
-        const root = AppService.root;
-        const game = root?.child.game;
-        expect(game).toBeDefined();
-        if (!game) return;
-        const hand = game.child.playerB.child.hand;
-        const board = game.child.playerB.child.board;
-        const cardA = hand.child.cards.find(item => item instanceof ShatteredSunClericCardModel);
-        const cardB = hand.child.cards.find(item => item instanceof WispCardModel);
-        expect(cardA).toBeDefined();
-        expect(cardB).toBeDefined();
-        if (!cardA || !cardB) return;
-        
-        // Player B has no minions on board, so battlecry cannot trigger
-        const role = cardB.child.role;
-        const state: RoleModel['state'] = {
-            attack: 1,
-            health: 1,
-            modAttack: 0,
-            modHealth: 0,
-            refHealth: 1,
-            maxHealth: 1,
-            curHealth: 1,
-            curAttack: 1,
-            damage: 0,
-        }
-        expect(role.state).toEqual(state);
-        expect(board.child.cards.length).toBe(0);
-        
-        // Play both cards, but no battlecry effect
-        await cardA.preparePlay();
-        await cardB.preparePlay();
-        expect(role.state).toEqual(state);
+            modAttack: 2,      // +2 attack
+            curAttack: 3,      // current attack (1 + 2)
+        });
     })
 
     test('attack', async () => {
@@ -142,31 +143,49 @@ describe('shattered-sun-cleric', () => {
         const roleA = cardA.child.role;
         const roleB = cardB.child.role;
         
-        // Attack each other
-        roleA.attack(roleB);
-        
-        // State after attack: both minions deal 2 damage to each other
-        expect(roleA.state).toEqual({
+        // State before attack: Player A's wisp has +2 attack buff
+        const stateA: RoleModel['state'] = {
             attack: 1,
             health: 1,
-            modAttack: 1,      // +1 attack from cleric
-            modHealth: 1,      // +1 health from cleric
-            refHealth: 2,      // reference health
-            maxHealth: 2,      // max health
-            curHealth: 1,      // current health after taking 1 damage
-            damage: 1,         // damage taken
-        })
-        expect(roleB.state).toEqual({
+            modAttack: 2,      // +2 attack from Abusive Sergeant
+            modHealth: 0,      // no health buff
+            refHealth: 1,      // reference health unchanged
+            maxHealth: 1,      // max health unchanged
+            curHealth: 1,      // current health
+            curAttack: 3,      // current attack (1 + 2)
+            damage: 0,
+        }
+        expect(roleA.state).toEqual(stateA);
+        
+        const stateB: RoleModel['state'] = {
             attack: 1,
             health: 1,
             modAttack: 0,      // no buffs
             modHealth: 0,      // no buffs
             refHealth: 1,      // reference health
             maxHealth: 1,      // max health
-            curHealth: 0,      // current health after taking 2 damage
+            curHealth: 1,      // current health
+            curAttack: 1,      // current attack
+            damage: 0,
+        }
+        expect(roleB.state).toEqual(stateB);
+        
+        // Attack each other
+        roleA.attack(roleB);
+        
+        // State after attack: buffed wisp deals 3 damage, takes 1 damage
+        expect(roleA.state).toEqual({
+            ...stateA,
             damage: 1,         // damage taken
-        })
+            curHealth: 0,      // current health after taking 1 damage
+            curAttack: 3,      // buff still active
+        });
+        
+        expect(roleB.state).toEqual({
+            ...stateB,
+            damage: 3,         // damage taken (1 + 2 from buffed attack)
+            curHealth: -2,     // current health after taking 3 damage
+            curAttack: 1,      // no buffs
+        });
     })
 })
-
-

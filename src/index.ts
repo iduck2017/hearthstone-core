@@ -15,4 +15,4 @@ export function main(options: {
     }
 }
 
-main({ level: LogLevel.ERROR });
+main({ level: LogLevel.INFO });

@@ -1,4 +1,4 @@
-import { DebugService, Model, TranxService } from "set-piece";
+import { DebugService, Model } from "set-piece";
 import { CardModel } from ".";
 import { CardType, MinionRaceType } from "@/types/card";
 import { MinionRoleModel } from "../role/minion";
@@ -45,10 +45,10 @@ export abstract class MinionCardModel<
     }
 
     @DebugService.log()
-    public async prepare() {
+    public async preparePlay() {
         const registry: Map<Model, Model[]> = new Map();
         for (const feat of this.child.battlecries) {
-            const accessors = feat.prepare();
+            const accessors = feat.preparePlay();
             if (!accessors) continue;
             const params: Model[] = [];
             for (const item of accessors) {
