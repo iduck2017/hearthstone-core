@@ -4,14 +4,16 @@ import { HeroModel } from "../hero";
 import { FeatureModel } from "../feature";
 import { EffectModel } from "../feature/effect";
 
+// 1damage/5health/2refHealth/3modHealth
+
 export namespace RoleModel {
     export type Parent = MinionCardModel | HeroModel
     export type State = {
         readonly attack: number;
-        readonly maxHealth: number;
-        readonly tmpHealth: number;
-        rawDamage: number;
-        tmpDamage: number;
+        readonly health: number;
+        readonly modHealth: number;
+        refHealth: number;
+        damage: number;
     };
     export type Event = {
         onAttackBefore: RoleModel;
@@ -45,16 +47,16 @@ export abstract class RoleModel<
     R & RoleModel.Refer
 > {
     public constructor(props: RoleModel['props'] & {
-        state: S & Pick<RoleModel.State, 'attack' | 'maxHealth'>,
+        state: S & Pick<RoleModel.State, 'attack' | 'health'>,
         child: C,
         refer: R
     }) {
         super({
             uuid: props.uuid,
             state: {
-                tmpHealth: 0,
-                rawDamage: 0,
-                tmpDamage: 0,
+                modHealth: 0,
+                refHealth: 0,
+                damage: 0,
                 ...props.state 
             },
             child: { 
@@ -68,11 +70,13 @@ export abstract class RoleModel<
 
     public get state() {
         const state = super.state;
-        const tmpDamage = Math.min(state.tmpHealth, state.tmpDamage);
-        const curHealth = state.maxHealth - state.rawDamage - tmpDamage;
-        const isEnrage = curHealth < state.maxHealth;
+        const maxHealth = state.health + state.modHealth;
+        const refHealth = Math.max(state.refHealth, maxHealth);
+        const curHealth = Math.min(refHealth - state.damage, maxHealth);
+        const isEnrage = curHealth < maxHealth;
         return {
             ...state,
+            maxHealth,
             curHealth,
             isEnrage,
         };
@@ -104,9 +108,7 @@ export abstract class RoleModel<
     @EventAgent.next(self => self.event.onDamageRecv)
     @TranxService.use()
     public recvDamage(source: RoleModel, damage: number) {
-        const tmpDamage = Math.max(0, this.state.tmpHealth - this.state.tmpDamage);
-        this.draft.state.tmpDamage += Math.min(tmpDamage, damage);
-        this.draft.state.rawDamage += damage - Math.min(tmpDamage, damage);
+        this.draft.state.damage += damage;
         return { source, damage };
     }
 
@@ -114,11 +116,10 @@ export abstract class RoleModel<
     @EventAgent.use((self: RoleModel) => self.proxy.event.onStateChange)
     @TranxService.use()
     private handleRawHealthBalance(that: RoleModel, event: Event.OnStateChange<RoleModel>) {
-        const { tmpHealth, tmpDamage } = event.next;
-        if (tmpHealth < tmpDamage) {
-            console.log('Imbalance', event.next);
-            this.draft.state.tmpDamage = tmpHealth;
-        }
+        const { refHealth, maxHealth, damage } = event.next;
+        const dltHealth = refHealth - maxHealth;
+        if (dltHealth > 0) this.draft.state.damage -= Math.min(damage, dltHealth);
+        if (dltHealth !== 0) that.draft.state.refHealth = maxHealth;
     }
 
     @DebugService.log(LogLevel.WARN)
