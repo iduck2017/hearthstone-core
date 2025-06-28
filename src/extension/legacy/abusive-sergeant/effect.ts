@@ -1,6 +1,6 @@
 import { EffectModel } from "@/common/feature/effect";
 import { GameModel } from "@/common/game";
-import { EventAgent, TranxService } from "set-piece";
+import { DebugService, EventAgent, LogLevel, TranxService } from "set-piece";
 
 export class AbusiveSergeantEffectModel extends EffectModel {
     constructor(props: AbusiveSergeantEffectModel['props']) {
@@ -20,6 +20,7 @@ export class AbusiveSergeantEffectModel extends EffectModel {
     }
 
     @EventAgent.use(self => self.route.game?.proxy.event.onTurnEnd)
+    @DebugService.log(LogLevel.WARN)
     @TranxService.use()
     private handleTurnEnd(that: GameModel) {
         this.draft.state.isActive = false;

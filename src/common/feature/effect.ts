@@ -64,7 +64,8 @@ export class EffectModel<
         const card = role?.route.parent instanceof CardModel ? role.route.parent : undefined;
         const owner = card?.route.owner;
         return {
-            ...route,
+            ...card?.route,
+            parent: route.parent,
             owner,
             opponent: owner?.route.opponent,
             role,

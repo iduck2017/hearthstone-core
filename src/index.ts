@@ -15,4 +15,4 @@ export function main(options: {
     }
 }
 
-main({ level: LogLevel.INFO });
+main({ level: LogLevel.WARN });

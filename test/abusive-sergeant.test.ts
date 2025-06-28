@@ -188,4 +188,35 @@ describe('abusive-sergeant', () => {
             curAttack: 1,      // no buffs
         });
     })
+
+    test('end-of-turn', async () => {
+        const root = AppService.root;
+        const game = root?.child.game;
+        expect(game).toBeDefined();
+        if (!game) return;
+        const board = game.child.playerA.child.board;
+        const card = board.child.cards.find(item => item instanceof WispCardModel);
+        const role = card?.child.role;
+        expect(role).toBeDefined();
+        if (!role) return;
+
+        const state: RoleModel['state'] = {
+            attack: 1,
+            health: 1,
+            modAttack: 2,
+            modHealth: 0,
+            refHealth: 1,
+            maxHealth: 1,
+            curHealth: 0,
+            curAttack: 3,
+            damage: 1,
+        }
+        expect(role.state).toEqual(state);
+        game.nextTurn();
+        expect(role.state).toEqual({
+            ...state,
+            modAttack: 0,
+            curAttack: 1,
+        });
+    })
 })
