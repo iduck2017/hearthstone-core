@@ -5,9 +5,7 @@ import { MinionRoleModel } from "../role/minion";
 
 export namespace MinionCardModel {
     export type Event = Partial<CardModel.Event>;
-    export type State = Partial<CardModel.State> & {
-        readonly race: Readonly<MinionRaceType[]>;
-    };
+    export type State = Partial<CardModel.State> & {};
     export type Child = Partial<CardModel.Child> & {
         readonly role: MinionRoleModel;
     };
@@ -36,7 +34,6 @@ export abstract class MinionCardModel<
             uuid: props.uuid,
             state: {
                 type: CardType.MINION,
-                race: [],
                 ...props.state,
             },
             child: { ...props.child },

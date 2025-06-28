@@ -7,6 +7,7 @@ export class ShatteredSunClericRoleModel extends MinionRoleModel {
             state: {
                 attack: 3,
                 health: 2,
+                races: [],
                 ...props.state,
             },
             child: { ...props.child },

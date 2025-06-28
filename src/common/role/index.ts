@@ -15,6 +15,7 @@ export namespace RoleModel {
         readonly modHealth: number;
         readonly modAttack: number;
         refHealth: number;
+        isShield: boolean;
     };
     export type Event = {
         onAttackBefore: RoleModel;
@@ -57,8 +58,9 @@ export abstract class RoleModel<
             state: {
                 modHealth: 0,
                 modAttack: 0,
-                damage: 0,
                 refHealth: props.state.health,
+                damage: 0,
+                isShield: false,
                 ...props.state 
             },
             child: { 
@@ -100,17 +102,22 @@ export abstract class RoleModel<
         this.event.onAttack(target);
     }
     
-    @EventAgent.next(self => self.event.onDamageDeal)
     public dealDamage(target: RoleModel, damage: number) {
-        target.recvDamage(this, damage);
+        const result = target.recvDamage(this, damage);
+        damage = result.damage;
+        if (damage) this.event.onDamageDeal({ target, damage });
         return { target, damage };
     }
 
     @DebugService.log()
-    @EventAgent.next(self => self.event.onDamageRecv)
     @TranxService.use()
     public recvDamage(source: RoleModel, damage: number) {
+        if (this.state.isShield) {
+            this.draft.state.isShield = false;
+            return { source, damage: 0};
+        }
         this.draft.state.damage += damage;
+        this.event.onDamageRecv({ source, damage });
         return { source, damage };
     }
 

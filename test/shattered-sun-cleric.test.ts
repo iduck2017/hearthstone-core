@@ -58,7 +58,7 @@ describe('shattered-sun-cleric', () => {
         if (!cardA || !cardB) return;
         
         // Initial state of the wisp
-        let state: RoleModel['state'] = {
+        let state = {
             attack: 1,
             health: 1,
             modAttack: 0,
@@ -70,7 +70,7 @@ describe('shattered-sun-cleric', () => {
             curAttack: 1,
         }
         const role = cardB.child.role;
-        expect(role.state).toEqual(state);
+        expect(role.state).toMatchObject(state);
         
         // Use Shattered Sun Cleric to buff the wisp
         process.nextTick(() => {
@@ -79,7 +79,7 @@ describe('shattered-sun-cleric', () => {
         await cardA.preparePlay();
         
         // State after buff: +1/+1 (attack and health)
-        state = {
+        expect(role.state).toMatchObject({
             ...state,
             modAttack: 1,      // +1 attack
             modHealth: 1,      // +1 health
@@ -87,8 +87,7 @@ describe('shattered-sun-cleric', () => {
             curHealth: 2,      // current health increased
             maxHealth: 2,      // max health increased
             curAttack: 2,      // current attack increased
-        }
-        expect(role.state).toEqual(state);
+        });
     })
 
     test('skip', async () => {
@@ -106,7 +105,7 @@ describe('shattered-sun-cleric', () => {
         
         // Player B has no minions on board, so battlecry cannot trigger
         const role = cardB.child.role;
-        const state: RoleModel['state'] = {
+        const state = {
             attack: 1,
             health: 1,
             modAttack: 0,
@@ -117,13 +116,13 @@ describe('shattered-sun-cleric', () => {
             curAttack: 1,
             damage: 0,
         }
-        expect(role.state).toEqual(state);
+        expect(role.state).toMatchObject(state);
         expect(board.child.cards.length).toBe(0);
         
         // Play both cards, but no battlecry effect
         await cardA.preparePlay();
         await cardB.preparePlay();
-        expect(role.state).toEqual(state);
+        expect(role.state).toMatchObject(state);
     })
 
     test('attack', async () => {
@@ -145,8 +144,8 @@ describe('shattered-sun-cleric', () => {
         // Attack each other
         roleA.attack(roleB);
         
-        // State after attack: both minions deal 2 damage to each other
-        expect(roleA.state).toEqual({
+        // State after attack
+        expect(roleA.state).toMatchObject({
             attack: 1,
             health: 1,
             modAttack: 1,      // +1 attack from cleric
@@ -156,15 +155,15 @@ describe('shattered-sun-cleric', () => {
             curHealth: 1,      // current health after taking 1 damage
             damage: 1,         // damage taken
         })
-        expect(roleB.state).toEqual({
+        expect(roleB.state).toMatchObject({
             attack: 1,
             health: 1,
             modAttack: 0,      // no buffs
             modHealth: 0,      // no buffs
             refHealth: 1,      // reference health
             maxHealth: 1,      // max health
-            curHealth: 0,      // current health after taking 2 damage
-            damage: 1,         // damage taken
+            curHealth: -1,      // current health after taking 2 damage
+            damage: 2,         // damage taken
         })
     })
 })

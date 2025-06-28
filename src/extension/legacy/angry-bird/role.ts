@@ -1,6 +1,7 @@
 import { MinionRoleModel } from "@/common/role/minion";
 import { RoleModel } from "@/common/role";
 import { AngryBirdEffectModel } from "./effect";
+import { MinionRaceType } from "@/types/card";
 
 export class AngryBirdRoleModel extends MinionRoleModel {
     constructor(props: AngryBirdRoleModel['props']) {
@@ -13,6 +14,7 @@ export class AngryBirdRoleModel extends MinionRoleModel {
             state: {
                 attack: 1,
                 health: 1,
+                races: [MinionRaceType.BEAST],
                 ...props.state,
             },
             child: {

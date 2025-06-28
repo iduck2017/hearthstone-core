@@ -6,9 +6,12 @@ import { GameModel } from "../game";
 import { PlayerModel } from "../player";
 import { HandModel } from "../container/hand";
 import { BoardModel } from "../container/board";
+import { MinionRaceType } from "@/types/card";
 
 export namespace MinionRoleModel {
-    export type State = Partial<RoleModel.State> & {};
+    export type State = Partial<RoleModel.State> & {
+        races: MinionRaceType[];
+    };
     export type Event = Partial<RoleModel.Event> & {
         onSummon: {};
     };
@@ -30,7 +33,9 @@ export class MinionRoleModel<
     R & MinionRoleModel.Refer
 > {
     constructor(props: MinionRoleModel['props'] & {
-        state: S & Pick<RoleModel.State, 'attack' | 'health'>, 
+        state: S 
+            & Pick<RoleModel.State, 'attack' | 'health'> 
+            & Pick<MinionRoleModel.State, 'races'>, 
         child: C, 
         refer: R
     }) {

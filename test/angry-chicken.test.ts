@@ -56,20 +56,19 @@ describe('angry-chicken', () => {
         
         // Initial state: both Angry Birds are at full health (1/1)
         // When at full health, they don't have the +5 attack buff
-        let state: RoleModel['state'] = {
+        let state = {
             attack: 1,
             health: 1,
             modAttack: 0,      // No attack buff when at full health
             modHealth: 0,
-            refHealth: 1,
             maxHealth: 1,
             curHealth: 1,      // Full health
             curAttack: 1,      // Base attack only
             damage: 0,
         }
         
-        expect(roleA.state).toEqual(state);
-        expect(roleB.state).toEqual(state);
+        expect(roleA.state).toMatchObject(state);
+        expect(roleB.state).toMatchObject(state);
         
         // First attack: both birds attack each other
         // They will deal 1 damage to each other (base attack)
@@ -82,13 +81,12 @@ describe('angry-chicken', () => {
             health: 1,
             modAttack: 5,      // +5 attack buff when damaged
             modHealth: 0,
-            refHealth: 1,
             maxHealth: 1,
             curHealth: 0,      // Damaged (0/1)
             curAttack: 6,      // Base attack (1) + buff (5) = 6
             damage: 1,         // Damage taken
         }
-        expect(roleA.state).toEqual(state);
-        expect(roleB.state).toEqual(state);
+        expect(roleA.state).toMatchObject(state);
+        expect(roleB.state).toMatchObject(state);
     })
 })

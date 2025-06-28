@@ -1,6 +1,7 @@
 import { MinionRoleModel } from "@/common/role/minion";
 import { RoleModel } from "@/common/role";
 import { StoreService } from "set-piece";
+import { MinionRaceType } from "@/types/card";
 
 @StoreService.is('wisp-role')
 export class WispRoleModel extends MinionRoleModel {
@@ -10,6 +11,7 @@ export class WispRoleModel extends MinionRoleModel {
             state: {
                 attack: 1,
                 health: 1,
+                races: [MinionRaceType.UNDEAD],
                 ...props.state,
             },
             child: { ...props.child },
