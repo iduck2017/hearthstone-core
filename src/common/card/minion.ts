@@ -27,7 +27,7 @@ export abstract class MinionCardModel<
 > {
     constructor(props: MinionCardModel['props'] & {
         uuid: string | undefined;
-        state: S & Pick<CardModel.State, 'name' | 'desc' | 'mana'>;
+        state: S & Pick<CardModel.State, 'name' | 'desc' | 'mana' | 'keywords'>;
         child: C & Pick<MinionCardModel.Child, 'role'>;
         refer: R;
     }) {

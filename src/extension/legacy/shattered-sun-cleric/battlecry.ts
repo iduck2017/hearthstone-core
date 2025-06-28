@@ -32,6 +32,6 @@ export class ShatteredSunClericBattlecryModel extends BattlecryModel<
 
     @DebugService.log()
     public async run(target: MinionRoleModel) {
-        target.apply(new ShatteredSunClericEffectModel({}))
+        target.affect(new ShatteredSunClericEffectModel({}))
     }
 }

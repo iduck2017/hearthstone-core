@@ -11,6 +11,7 @@ export class AbusiveSergeantCardModel extends MinionCardModel {
                 name: 'Abusive Sergeant',
                 desc: 'Battlecry: Give a minion +2 Attack this turn.',
                 mana: 1,
+                keywords: [],
                 ...props.state,
             },
             child: {

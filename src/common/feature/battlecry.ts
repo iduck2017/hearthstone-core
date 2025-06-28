@@ -7,6 +7,7 @@ import { GameModel } from "../game";
 import { Selector } from "@/utils/selector";
 import { RoleModel } from "../role";
 import { MinionCardModel } from "../card/minion";
+import { Optional } from "@/types";
 
 export namespace BattlecryModel {
     export type Event = Partial<FeatureModel.Event> & {
@@ -44,7 +45,7 @@ export abstract class BattlecryModel<
         });
     }
 
-    public get route(): Readonly<Partial<{
+    public get route(): Readonly<Optional<{
         parent: P;
         root: RootModel;
         game: GameModel;
@@ -54,8 +55,11 @@ export abstract class BattlecryModel<
         const route = super.route;
         const card = route.parent;
         return {
-            ...card?.route,
             parent: route.parent,
+            root: card?.route.root,
+            game: card?.route.game,
+            owner: card?.route.owner,
+            opponent: card?.route.opponent,
         }
     }
 

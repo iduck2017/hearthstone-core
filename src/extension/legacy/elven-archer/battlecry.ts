@@ -23,10 +23,7 @@ export class ElvenArcherBattlecryModel extends BattlecryModel<
 
     public preparePlay(): [Selector<RoleModel>] | undefined {
         if (!this.route.game) return;
-        const candidates = [
-            ...this.route.game.query(TargetType.MinionRole, {}),
-            ...this.route.game.query(TargetType.HeroRole, {}),
-        ]
+        const candidates = this.route.game.query(TargetType.Role, {})
         if (candidates.length === 0) return;
         return [new Selector(candidates, 'Choose a target')]
     }

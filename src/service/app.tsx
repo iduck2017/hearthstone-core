@@ -1,4 +1,4 @@
-import { DebugService, RouteAgent } from "set-piece";
+import { DebugService, LogLevel, RouteAgent } from "set-piece";
 import { RootModel } from "../common/root";
 import { ExtensionModel as Extensions } from "@/common/extension";
 import { PlayerModel } from "@/common/player";
@@ -24,7 +24,8 @@ export class AppService {
 
     private constructor() {}
 
-    @DebugService.mute()
+    // @DebugService.mute()
+    @DebugService.log()
     public static boot(props: {
         extensions: Extensions[];
     }) {
@@ -36,38 +37,14 @@ export class AppService {
 
     @DebugService.log()
     public static async debug() {
-        const playerA = new PlayerModel({ child: { hero: new MageHeroModel({}) } });
-        const playerB = new PlayerModel({ child: { hero: new MageHeroModel({}) } });
-        AppService._root?.start(new GameModel({
-            child: { playerA, playerB}
-        }));
-        playerA.child.hand.add(new WispCardModel({}));
-        playerB.child.hand.add(new WispCardModel({}));
-        console.log(playerA.child.hand.child.cards);
-        console.log(playerB.child.hand.child.cards);
-        const card1 = playerA.child.hand.child.cards[0];
-        const card2 = playerB.child.hand.child.cards[0];
-        if (!card1 || !card2) return;
-        await card1.preparePlay();
-        await card2.preparePlay();
-        const wisp1 = playerA.child.board.child.cards[0];
-        const wisp2 = playerB.child.board.child.cards[0];
-        if (!wisp1 || !wisp2) return;
-        console.log('state', wisp1.child.role?.state);
-        wisp1.child.role.attack(wisp2.child.role);
-        console.log('state', wisp1.child.role?.state);
-        playerA.child.hand.add(new ShatteredSunClericCardModel({}));
-        const card3 = playerA.child.hand.child.cards[0];
-        if (!card3) return;
-        setTimeout(() => {
-            console.log('selector', Selector.current);
-            if (!Selector.current) return;
-            const target = Selector.current.candidates[0];
-            if (!target) Selector.current.cancel();
-            else Selector.current.set(target);
-        }, 1000)
-        await card3.preparePlay();
-        console.log('state', wisp1.child.role?.state);
-        console.log('state', wisp2.child.role?.state);
+        const game = new GameModel({
+            child: {
+                playerA: new PlayerModel({ child: { hero: new MageHeroModel({}) } }),
+                playerB: new PlayerModel({ child: { hero: new MageHeroModel({}) } }),
+            }
+        })
+        console.warn(game.uuid, game.status.isBind)
+        AppService._root?.start(game);
+        console.log(game)
     }
 }

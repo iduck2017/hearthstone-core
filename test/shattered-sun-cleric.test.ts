@@ -8,6 +8,7 @@ import { WispCardModel } from "@/extension/legacy/wisp/card";
 import { AppService } from "@/service/app";
 import { Selector } from "@/utils/selector";
 import { RoleModel } from "@/common/role";
+import { Utils } from "@/utils/utils";
 import '@/index'
 
 describe('shattered-sun-cleric', () => {
@@ -74,7 +75,12 @@ describe('shattered-sun-cleric', () => {
         
         // Use Shattered Sun Cleric to buff the wisp
         process.nextTick(() => {
-            Selector.current?.set(role)
+            const selector = Selector.current;
+            expect(selector).toBeDefined();
+            if (!selector) return;
+            expect(selector.candidates.length).toBe(1);
+            expect(selector.candidates).toContain(role);
+            selector.set(role);
         })
         await cardA.preparePlay();
         
@@ -120,7 +126,12 @@ describe('shattered-sun-cleric', () => {
         expect(board.child.cards.length).toBe(0);
         
         // Play both cards, but no battlecry effect
+        process.nextTick(() => {
+            const selector = Selector.current;
+            expect(selector).toBeUndefined();
+        })
         await cardA.preparePlay();
+        await Utils.sleep()
         await cardB.preparePlay();
         expect(role.state).toMatchObject(state);
     })

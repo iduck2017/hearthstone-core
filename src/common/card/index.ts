@@ -1,5 +1,5 @@
 import { Model } from "set-piece";
-import { CardType } from "@/types/card";
+import { CardKeyword, CardType } from "@/types/card";
 import { BoardModel } from "../container/board";
 import { HandModel } from "../container/hand";
 import { ExtensionModel } from "../extension";
@@ -7,6 +7,7 @@ import { RootModel } from "../root";
 import { PlayerModel } from "../player";
 import { BattlecryModel } from "../feature/battlecry";
 import { GameModel } from "../game";
+import { Optional } from "@/types";
 
 
 export namespace CardModel {
@@ -16,6 +17,7 @@ export namespace CardModel {
         readonly desc: string;
         readonly mana: number;
         readonly type: CardType;
+        readonly keywords: CardKeyword[];
     };
     export type Event = {
         onPlay: {};
@@ -57,7 +59,7 @@ export abstract class CardModel<
         });
     }
 
-    public get route(): Readonly<Partial<{
+    public get route(): Readonly<Optional<{
         parent: P;
         root: RootModel;
         game: GameModel;
@@ -73,7 +75,7 @@ export abstract class CardModel<
         const owner = board?.route.parent ?? hand?.route.parent;
         const opponent = owner?.route.opponent;
         return {
-            ...route,
+            parent: route.parent,
             root,
             game: root?.child.game,
             hand,

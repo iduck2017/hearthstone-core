@@ -7,6 +7,7 @@ import { PlayerModel } from "../player";
 import { HandModel } from "../container/hand";
 import { BoardModel } from "../container/board";
 import { MinionRaceType } from "@/types/card";
+import { Optional } from "@/types";
 
 export namespace MinionRoleModel {
     export type State = Partial<RoleModel.State> & {
@@ -48,7 +49,7 @@ export class MinionRoleModel<
         })
     }
     
-    public get route(): Readonly<Partial<{
+    public get route(): Readonly<Optional<{
         parent: P;
         card: MinionCardModel;
         root: RootModel;
@@ -61,9 +62,14 @@ export class MinionRoleModel<
         const route = super.route;
         const card = route?.parent;
         return {
-            ...card?.route,
             parent: route.parent,
+            owner: route.owner,
+            opponent: route.opponent,
+            root: route.root,
+            game: route.game,
             card,
+            hand: card?.route.hand,
+            board: card?.route.board,
         }
     }
 

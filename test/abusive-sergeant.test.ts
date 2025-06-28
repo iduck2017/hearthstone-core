@@ -9,6 +9,7 @@ import { AppService } from "@/service/app";
 import { Selector } from "@/utils/selector";
 import { RoleModel } from "@/common/role";
 import '@/index'
+import { Utils } from "@/utils/utils";
 
 describe('abusive-sergeant', () => {
     test('start', async () => {
@@ -63,7 +64,12 @@ describe('abusive-sergeant', () => {
         expect(boardA.child.cards.length).toBe(0);
         
         // Play both cards without battlecry effect
+        process.nextTick(() => {
+            const selector = Selector.current;
+            expect(selector).toBeUndefined();
+        })
         await cardA.preparePlay();
+        await Utils.sleep()
         await cardB.preparePlay();
         expect(boardB.child.cards.length).toBe(2);
         
@@ -110,10 +116,14 @@ describe('abusive-sergeant', () => {
         
         // Play the wisp first to have a target on board
         await cardB.preparePlay();
-        
         // Use Abusive Sergeant to buff the wisp with +2 attack
         process.nextTick(() => {
-            Selector.current?.set(role)
+            const selector = Selector.current;
+            expect(selector).toBeDefined();
+            if (!selector) return;
+            expect(selector.candidates.length).toBe(3);
+            expect(selector.candidates).toContain(role);
+            selector.set(role);
         })
         await cardA.preparePlay();
         

@@ -2,17 +2,23 @@ import { DebugService, LogLevel } from "set-piece";
 import { LegacyExtensionModel } from "./extension/legacy";
 import { AppService } from "./service/app";
 
-export function main(options: {
-    level: LogLevel
-}) {
-    DebugService.level = options.level;
+enum EnvType {
+    BROWSER = 'browser',
+    NODE = 'node',
+}
+
+export function main(env: EnvType) {
+    if (env === EnvType.NODE) {
+        DebugService.level = LogLevel.WARN;
+    }
     AppService.boot({
         extensions: [ new LegacyExtensionModel({}) ],
     });
-    if (global.window) {
-        global.window.app = AppService;
-        global.window.root = AppService.root;
+    if (env === EnvType.BROWSER) {
+        window.app = AppService;
+        window.root = AppService.root;
+        AppService.debug()
     }
 }
 
-main({ level: LogLevel.WARN });
+main(EnvType.NODE);

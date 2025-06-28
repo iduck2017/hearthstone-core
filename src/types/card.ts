@@ -7,4 +7,10 @@ export enum CardType {
 export enum MinionRaceType {
     UNDEAD = 'undead',
     BEAST = 'beast',
+    ELEMENTAL = 'elemental',
+}
+
+export enum CardKeyword {
+    Rush = 'rush',
+    DivineShield = 'divine-shield',
 }

@@ -32,6 +32,14 @@ export class BoardModel extends Model<
         })
     }
 
+    public get child() {
+        const child = super.child;
+        return {
+            ...child,
+            roles: child.cards.map(item => item.child.role),
+        }
+    }
+
     @TranxService.use()
     clear() {
         this.draft.child.cards = [];

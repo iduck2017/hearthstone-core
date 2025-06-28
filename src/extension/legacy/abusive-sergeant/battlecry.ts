@@ -30,6 +30,6 @@ export class AbusiveSergeantBattlecryModel extends BattlecryModel<
     }
 
     public async run(target: MinionRoleModel) {
-        target.apply(new AbusiveSergeantEffectModel({}))
+        target.affect(new AbusiveSergeantEffectModel({}))
     }
 }

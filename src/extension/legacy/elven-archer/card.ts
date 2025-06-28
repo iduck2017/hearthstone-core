@@ -11,6 +11,7 @@ export class ElvenArcherCardModel extends MinionCardModel {
                 name: 'Elven Archer',
                 desc: 'Battlecry: Deal 1 damage.',
                 mana: 1,
+                keywords: [],
                 ...props.state,
             },
             child: {

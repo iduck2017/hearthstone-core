@@ -1,8 +1,14 @@
-import { DebugService, Event, EventAgent, LogLevel, Model, State, TranxService } from "set-piece";
+import { CheckService, DebugService, Event, EventAgent, LogLevel, Model, State, TranxService } from "set-piece";
 import { MinionCardModel } from "../card/minion";
 import { HeroModel } from "../hero";
 import { FeatureModel } from "../feature";
 import { EffectModel } from "../feature/effect";
+import { RootModel } from "../root";
+import { GameModel } from "../game";
+import { TargetType } from "@/types/query";
+import { Selector } from "@/utils/selector";
+import { PlayerModel } from "../player";
+import { Optional } from "@/types";
 
 // 1damage/5health/2refHealth/3modHealth
 
@@ -10,11 +16,13 @@ export namespace RoleModel {
     export type Parent = MinionCardModel | HeroModel
     export type State = {
         damage: number;
+        action: number;
         readonly attack: number;
         readonly health: number;
         readonly modHealth: number;
         readonly modAttack: number;
         refHealth: number;
+        isRush: boolean;
         isShield: boolean;
     };
     export type Event = {
@@ -61,6 +69,8 @@ export abstract class RoleModel<
                 modAttack: 0,
                 refHealth: props.state.health,
                 damage: 0,
+                action: 0,
+                isRush: false,
                 isShield: false,
                 ...props.state 
             },
@@ -87,9 +97,51 @@ export abstract class RoleModel<
         };
     }
 
-    public apply(effect: EffectModel) {
+    public get route(): Readonly<Optional<{
+        parent: P;
+        root: RootModel;
+        game: GameModel;
+        owner: PlayerModel,
+        opponent: PlayerModel,
+    }>> {
+        const route = super.route;
+        const parent = route.parent;
+        return {
+            parent: route.parent,
+            root: parent?.route.root,
+            game: parent?.route.game,
+            owner: parent?.route.owner,
+            opponent: parent?.route.opponent,
+        }
+    }
+
+    public affect(effect: EffectModel) {
         this.draft.child.effect.push(effect);
         return effect;
+    }
+
+    @TranxService.use()
+    public startTurn() {
+        this.draft.state.action += 1;
+    }
+
+    @TranxService.use()
+    public endTurn() {
+        this.draft.state.action = 0;
+        this.draft.state.isRush = false;
+    }
+
+    @DebugService.log()
+    public async prepareAttack() {
+        if (this.state.action <= 0) return;
+        const candidates = this.route.game?.query(TargetType.Role, {
+            isRush: this.state.isRush,
+            side: this.route.opponent
+        });
+        if (!candidates) return;
+        const target = await new Selector(candidates, '').get();
+        if (!target) return;
+        this.attack(target);        
     }
     
     @DebugService.log()
@@ -98,6 +150,7 @@ export abstract class RoleModel<
         this.event.onAttackBefore(target);
         const sourceAttack = this.state.curAttack;
         const targetAttack = target.state.curAttack;
+        this.draft.state.action--;
         this.dealDamage(target, sourceAttack);
         target.dealDamage(this, targetAttack);
         this.event.onAttack(target);
@@ -128,6 +181,7 @@ export abstract class RoleModel<
     private handleBalance(that: RoleModel, event: Event.OnStateChange<RoleModel>) {
         const { refHealth, maxHealth, damage } = event.next;
         const dltHealth = refHealth - maxHealth;
+        if (dltHealth !== 0) console.warn('imbalance', refHealth, maxHealth);
         if (dltHealth > 0) this.draft.state.damage -= Math.min(damage, dltHealth);
         if (dltHealth !== 0) that.draft.state.refHealth = maxHealth;
     }

@@ -6,6 +6,7 @@ import { CardModel } from "../card";
 import { RoleModel } from "../role";
 import { MinionCardModel } from "../card/minion";
 import { DeepReadonly } from "utility-types";
+import { Optional } from "@/types";
 
 export namespace EffectModel {
     export type State = Partial<FeatureModel.State> & {
@@ -50,7 +51,7 @@ export class EffectModel<
         })
     }
 
-    public get route(): Readonly<Partial<{
+    public get route(): Readonly<Optional<{
         parent: P;
         role: RoleModel;
         card: MinionCardModel;
@@ -64,8 +65,9 @@ export class EffectModel<
         const card = role?.route.parent instanceof CardModel ? role.route.parent : undefined;
         const owner = card?.route.owner;
         return {
-            ...card?.route,
             parent: route.parent,
+            root: card?.route.root,
+            game: card?.route.game,
             owner,
             opponent: owner?.route.opponent,
             role,

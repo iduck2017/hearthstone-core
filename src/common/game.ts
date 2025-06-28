@@ -1,4 +1,4 @@
-import { Model, StoreService } from "set-piece";
+import { DebugService, Model, StoreService } from "set-piece";
 import { PlayerModel } from "./player";
 import { GameQuery, TargetType } from "@/types/query";
 import { MinionRoleModel } from "./role/minion";
@@ -17,7 +17,9 @@ export namespace GameModel {
         readonly playerA: PlayerModel;
         readonly playerB: PlayerModel;
     };
-    export type Refer = {};
+    export type Refer = {
+        curPlayer?: PlayerModel;
+    };
 }
 
 
@@ -44,30 +46,39 @@ export class GameModel extends Model<
     }
 
     public query(target: TargetType.MinionRole, options: GameQuery): MinionRoleModel[];
-    public query(target: TargetType.HeroRole, options: GameQuery): RoleModel[];
+    public query(target: TargetType.Role, options: GameQuery): RoleModel[];
     public query(target: TargetType, options: GameQuery): Model[] {
         if (target === TargetType.MinionRole) {
             let result: MinionRoleModel[] = [];
             const { playerA, playerB } = this.child;
+            const { side } = options;
             const boardA = playerA.child.board;
             const boardB = playerB.child.board;
-            if (options.side !== playerA) result.push(...boardB.child.cards.map(item => item.child.role));
-            if (options.side !== playerB) result.push(...boardA.child.cards.map(item => item.child.role));
+            if (side !== playerA) result.push(...boardB.child.roles);
+            if (side !== playerB) result.push(...boardA.child.roles);
             return result;
         }
-        if (target === TargetType.HeroRole) {
+        if (target === TargetType.Role) {
             let result: RoleModel[] = [];
             const { playerA, playerB } = this.child;
-            if (options.side !== playerA) result.push(playerB.child.hero.child.role);
-            if (options.side !== playerB) result.push(playerA.child.hero.child.role);
+            const { isHero, isRush, side } = options;
+            if (!isHero) result.push(...this.query(TargetType.MinionRole, options));
+            if (!isRush && side !== playerA) result.push(playerB.child.role);
+            if (!isRush && side !== playerB) result.push(playerA.child.role);
             return result;
         }
         return [];  
     }
 
+    @DebugService.log()
     public nextTurn() {
+        const curPlayer = this.refer.curPlayer;
+        const nextPlayer = curPlayer?.route.opponent ?? this.child.playerA;
+        curPlayer?.endTurn();
         this.event.onTurnEnd();
         this.draft.state.turn ++;
+        this.draft.refer.curPlayer = nextPlayer;
+        nextPlayer.startTurn();
         this.event.onTurnStart();
     }
 }

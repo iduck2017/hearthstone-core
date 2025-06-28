@@ -15,7 +15,6 @@ import { ElvenArcherCardModel } from "@/extension/legacy/elven-archer/card";
 import { WispCardModel } from "@/extension/legacy/wisp/card";
 import { AppService } from "@/service/app";
 import { Selector } from "@/utils/selector";
-import { RoleModel } from "@/common/role";
 import '@/index'
 
 describe('elven-archer', () => {
@@ -51,6 +50,8 @@ describe('elven-archer', () => {
         const game = root?.child.game;
         expect(game).toBeDefined();
         if (!game) return;
+        const playerA = game.child.playerA;
+        const playerB = game.child.playerB;
         const hand = game.child.playerA.child.hand;
         const board = game.child.playerB.child.board;
         const cardA = hand.child.cards.find(item => item instanceof ElvenArcherCardModel);
@@ -75,7 +76,12 @@ describe('elven-archer', () => {
         
         // Use Elven Archer to deal 1 damage to the wisp
         process.nextTick(() => {
-            Selector.current?.set(role)
+            const selector = Selector.current;
+            expect(selector?.candidates.length).toBe(3);
+            expect(selector?.candidates).toContain(playerA.child.role);
+            expect(selector?.candidates).toContain(playerB.child.role);
+            expect(selector?.candidates).toContain(role);
+            selector?.set(role);
         })
         await cardA.preparePlay();
         
