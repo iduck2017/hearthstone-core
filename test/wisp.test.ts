@@ -52,7 +52,7 @@ describe('wisp', () => {
             boardA.child.cards.length,
             boardB.child.cards.length,
         ]).toMatchObject([1, 0, 0, 1]);
-        const card = handA.child.cards[0];
+        const card = handA.child.cards.find(item => item instanceof WispCardModel);
         await card?.preparePlay();
         expect([
             handA.child.cards.length,
@@ -68,8 +68,10 @@ describe('wisp', () => {
         if (!game) return;
         const boardA = game.child.playerA.child.board;
         const boardB = game.child.playerB.child.board;
-        const roleA = boardA.child.cards[0]?.child.role;
-        const roleB = boardB.child.cards[0]?.child.role;
+        const cardA = boardA.child.cards.find(item => item instanceof WispCardModel);
+        const cardB = boardB.child.cards.find(item => item instanceof WispCardModel);
+        const roleA = cardA?.child.role;
+        const roleB = cardB?.child.role;
         if (!roleA || !roleB) return;
         let state = {
             attack: 1,
@@ -125,8 +127,8 @@ describe('wisp', () => {
         const playerB = game.child.playerB;
         const boardA = playerA.child.board;
         const boardB = playerB.child.board;
-        const cardA = boardA.child.cards[0];
-        const cardB = boardB.child.cards[0];
+        const cardA = boardA.child.cards.find(item => item instanceof WispCardModel);
+        const cardB = boardB.child.cards.find(item => item instanceof WispCardModel);
         if (!cardA || !cardB) return;
         const roleA = cardA.child.role;
         const roleB = cardB.child.role;

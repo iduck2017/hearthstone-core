@@ -41,8 +41,10 @@ describe('argent-squire', () => {
         if (!game) return;
         const boardA = game.child.playerA.child.board;
         const boardB = game.child.playerB.child.board;
-        const roleA = boardA.child.cards[0]?.child.role;
-        const roleB = boardB.child.cards[0]?.child.role;
+        const cardA = boardA.child.cards.find(item => item instanceof ArgentSquireCardModel);
+        const cardB = boardB.child.cards.find(item => item instanceof ArgentSquireCardModel);
+        const roleA = cardA?.child.role;
+        const roleB = cardB?.child.role;
         if (!roleA || !roleB) return;
         
         // Initial state: both Argent Squires have Divine Shield
