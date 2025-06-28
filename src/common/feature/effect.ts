@@ -80,7 +80,7 @@ export class EffectModel<
         if (!self.state.isActive) return;
         return self.route.role?.proxy.decor;
     })
-    private handleBuff(that: RoleModel, state: DeepReadonly<RoleModel.State>): DeepReadonly<RoleModel.State> {
+    private decorateRoleState(that: RoleModel, state: DeepReadonly<RoleModel.State>): DeepReadonly<RoleModel.State> {
         if (!this.state.isEnable) return state;
         if (!this.state.isActive) return state;
         return {

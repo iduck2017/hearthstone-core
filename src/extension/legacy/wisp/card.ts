@@ -12,7 +12,6 @@ export class WispCardModel extends MinionCardModel {
                 name: 'Wisp',
                 desc: '',
                 mana: 0,
-                keywords: [],
                 ...props.state,
             },
             child: { 

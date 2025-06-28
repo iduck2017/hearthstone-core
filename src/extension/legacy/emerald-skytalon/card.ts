@@ -10,7 +10,6 @@ export class EmeraldSkytalonCardModel extends MinionCardModel {
                 name: 'Emerald Skytalon',
                 desc: 'Rush',
                 mana: 1,
-                keywords: [CardKeyword.Rush],
                 ...props.state,
             },
             child: {

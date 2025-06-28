@@ -32,7 +32,6 @@ export class AppService {
         AppService._extensions = props.extensions;
         AppService._root = new RootModel({});
         RouteAgent.boot(AppService._root);
-        console.log(AppService._root);
     }
 
     @DebugService.log()
@@ -43,8 +42,6 @@ export class AppService {
                 playerB: new PlayerModel({ child: { hero: new MageHeroModel({}) } }),
             }
         })
-        console.warn(game.uuid, game.status.isBind)
         AppService._root?.start(game);
-        console.log(game)
     }
 }

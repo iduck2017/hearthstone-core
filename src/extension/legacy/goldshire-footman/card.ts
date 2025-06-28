@@ -10,7 +10,6 @@ export class GoldshireFootmanCardModel extends MinionCardModel {
                 name: 'Goldshire Footman',
                 desc: 'Taunt',
                 mana: 1,
-                keywords: [CardKeyword.Taunt],
                 ...props.state
             },
             child: {

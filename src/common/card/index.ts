@@ -17,7 +17,6 @@ export namespace CardModel {
         readonly desc: string;
         readonly mana: number;
         readonly type: CardType;
-        readonly keywords: CardKeyword[];
     };
     export type Event = {
         onPlay: {};

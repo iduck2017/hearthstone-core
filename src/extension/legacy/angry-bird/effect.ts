@@ -43,11 +43,11 @@ export class AngryBirdEffectModel extends EffectModel<
     }
 
     @StateAgent.use(self => self.route.parent?.proxy.decor)
-    private handleAura(that: RoleModel, buff: DeepReadonly<RoleModel.State>): DeepReadonly<RoleModel.State> {
-        if (!this.state.isActive) return buff;
+    private decorateRoleAttack(that: RoleModel, state: DeepReadonly<RoleModel.State>): DeepReadonly<RoleModel.State> {
+        if (!this.state.isActive) return state;
         return {
-            ...buff,
-            modAttack: buff.modAttack + this.state.modAttack,
+            ...state,
+            modAttack: state.modAttack + this.state.modAttack,
         }
     }
 

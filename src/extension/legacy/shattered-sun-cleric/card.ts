@@ -15,7 +15,6 @@ export class ShatteredSunClericCardModel extends MinionCardModel {
                 name: 'Shattered Sun Cleric',
                 desc: 'Battlecry: Give a friendly minion +1/+1.',
                 mana: 2,
-                keywords: [],
                 ...props.state,
             },
             child: {

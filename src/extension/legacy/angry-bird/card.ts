@@ -9,7 +9,6 @@ export class AngryBirdCardModel extends MinionCardModel {
                 name: 'Angry Bird',
                 desc: 'Has +5 Attack while damaged.',
                 mana: 1,
-                keywords: [],
                 ...props.state,
             },
             child: {

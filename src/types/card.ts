@@ -8,6 +8,7 @@ export enum MinionRaceType {
     UNDEAD = 'undead',
     BEAST = 'beast',
     ELEMENTAL = 'elemental',
+    MURLOC = 'murloc',
 }
 
 export enum CardKeyword {
