@@ -51,20 +51,22 @@ export class GameModel extends Model<
         if (target === TargetType.MinionRole) {
             let result: MinionRoleModel[] = [];
             const { playerA, playerB } = this.child;
-            const { side } = options;
+            const { side, isTaunt } = options;
             const boardA = playerA.child.board;
             const boardB = playerB.child.board;
             if (side !== playerA) result.push(...boardB.child.roles);
             if (side !== playerB) result.push(...boardA.child.roles);
+            if (isTaunt) result = result.filter(item => item.state.isTaunt);
             return result;
         }
         if (target === TargetType.Role) {
             let result: RoleModel[] = [];
             const { playerA, playerB } = this.child;
-            const { isHero, isRush, side } = options;
+            const { isHero, isRush, side, isTaunt } = options;
             if (!isHero) result.push(...this.query(TargetType.MinionRole, options));
             if (!isRush && side !== playerA) result.push(playerB.child.role);
             if (!isRush && side !== playerB) result.push(playerA.child.role);
+            if (isTaunt) result = result.filter(item => item.state.isTaunt);
             return result;
         }
         return [];  

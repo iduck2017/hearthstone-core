@@ -23,6 +23,7 @@ export namespace RoleModel {
         readonly modAttack: number;
         refHealth: number;
         isRush: boolean;
+        isTaunt: boolean;
         isShield: boolean;
     };
     export type Event = {
@@ -71,6 +72,7 @@ export abstract class RoleModel<
                 damage: 0,
                 action: 0,
                 isRush: false,
+                isTaunt: false,
                 isShield: false,
                 ...props.state 
             },
@@ -135,6 +137,7 @@ export abstract class RoleModel<
     public async prepareAttack() {
         if (this.state.action <= 0) return;
         const candidates = this.route.game?.query(TargetType.Role, {
+            isTaunt: true,
             isRush: this.state.isRush,
             side: this.route.opponent
         });

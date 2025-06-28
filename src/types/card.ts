@@ -13,4 +13,5 @@ export enum MinionRaceType {
 export enum CardKeyword {
     Rush = 'rush',
     DivineShield = 'divine-shield',
+    Taunt = 'taunt',
 }

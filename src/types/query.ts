@@ -11,6 +11,7 @@ export type GameQuery = {
     side?: PlayerModel;
     isHero?: boolean;
     isRush?: boolean;
+    isTaunt?: boolean;
 }
 
 export type CardQuery = {
