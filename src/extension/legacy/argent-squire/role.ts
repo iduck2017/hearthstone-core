@@ -4,6 +4,7 @@ import { MinionRoleModel } from "@/common/role/minion";
 export class ArgentSquireRoleModel extends MinionRoleModel {
     public constructor(props: RoleModel['props']) {
         super({
+            uuid: props.uuid,
             state: {
                 attack: 1,
                 health: 1,

@@ -24,7 +24,7 @@ export class AbusiveSergeantBattlecryModel extends BattlecryModel<
 
     public preparePlay(): [Selector<MinionRoleModel>] | undefined {
         if (!this.route.game) return;
-        const candidates = this.route.game.query(TargetType.Minion, {})
+        const candidates = this.route.game.query(TargetType.MinionRole, {})
         if (!candidates.length) return;
         return [new Selector(candidates, 'Choose a minion')];
     }

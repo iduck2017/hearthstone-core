@@ -5,6 +5,8 @@ import { RootModel } from "../root";
 import { PlayerModel } from "../player";
 import { GameModel } from "../game";
 import { Selector } from "@/utils/selector";
+import { RoleModel } from "../role";
+import { MinionCardModel } from "../card/minion";
 
 export namespace BattlecryModel {
     export type Event = Partial<FeatureModel.Event> & {

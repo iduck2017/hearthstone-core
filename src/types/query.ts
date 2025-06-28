@@ -3,7 +3,8 @@ import { HeroModel } from "@/common/hero";
 import { PlayerModel } from "@/common/player";
 
 export enum TargetType {
-    Minion,
+    MinionRole,
+    HeroRole,
 }
 
 export type GameQuery = {

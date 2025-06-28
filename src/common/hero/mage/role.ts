@@ -3,7 +3,7 @@ import { RoleModel } from "../../role";
 export class MageRoleModel extends RoleModel {
     constructor(props: MageRoleModel['props']) {    
         super({
-            ...props,
+            uuid: props.uuid,
             state: {
                 attack: 0,
                 health: 30,

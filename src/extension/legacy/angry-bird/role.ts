@@ -2,13 +2,10 @@ import { MinionRoleModel } from "@/common/role/minion";
 import { RoleModel } from "@/common/role";
 import { AngryBirdEffectModel } from "./effect";
 import { MinionRaceType } from "@/types/card";
+import { FeatureModel } from "@/common/feature";
 
 export class AngryBirdRoleModel extends MinionRoleModel {
     constructor(props: AngryBirdRoleModel['props']) {
-        const effect = props.child?.effect ?? [];
-        if (!effect.find(item => item instanceof AngryBirdEffectModel)) {
-            effect.push(new AngryBirdEffectModel({}));
-        }
         super({
             uuid: props.uuid,
             state: {
@@ -19,7 +16,10 @@ export class AngryBirdRoleModel extends MinionRoleModel {
             },
             child: {
                 ...props.child,
-                effect,
+                effect: FeatureModel.assign(
+                    props.child?.effect,
+                    new AngryBirdEffectModel({})
+                ),
             },
             refer: { ...props.refer },
         });

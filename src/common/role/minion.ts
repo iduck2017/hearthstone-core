@@ -33,6 +33,7 @@ export class MinionRoleModel<
     R & MinionRoleModel.Refer
 > {
     constructor(props: MinionRoleModel['props'] & {
+        uuid: string | undefined;
         state: S 
             & Pick<RoleModel.State, 'attack' | 'health'> 
             & Pick<MinionRoleModel.State, 'races'>, 

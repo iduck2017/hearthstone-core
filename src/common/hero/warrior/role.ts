@@ -3,7 +3,7 @@ import { RoleModel } from "../../role";
 export class WarriorRoleModel extends RoleModel {
     constructor(props: WarriorRoleModel['props']) {    
         super({
-            ...props,
+            uuid: props.uuid,
             state: {
                 attack: 0,
                 health: 30,

@@ -26,6 +26,7 @@ export abstract class MinionCardModel<
     R & MinionCardModel.Refer
 > {
     constructor(props: MinionCardModel['props'] & {
+        uuid: string | undefined;
         state: S & Pick<CardModel.State, 'name' | 'desc' | 'mana'>;
         child: C & Pick<MinionCardModel.Child, 'role'>;
         refer: R;

@@ -41,6 +41,7 @@ export abstract class CardModel<
     R & CardModel.Refer
 > {
     constructor(props: CardModel['props'] & {
+        uuid: string | undefined;
         state: S & CardModel.State;
         child: C;
         refer: R;

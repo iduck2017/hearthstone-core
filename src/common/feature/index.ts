@@ -23,6 +23,14 @@ export abstract class FeatureModel<
     C & FeatureModel.Child,
     R & FeatureModel.Refer
 > {
+    static assign<T extends FeatureModel>(target: T[] | undefined, ...source: T[]) {
+        const result = [...target ?? []];
+        source.forEach(item => {
+            if (!result.find(item => item instanceof item.constructor)) result.push(item);
+        })
+        return result;
+    }
+
     constructor(props: FeatureModel['props'] & {
         state: S & FeatureModel.State;
         child: C;

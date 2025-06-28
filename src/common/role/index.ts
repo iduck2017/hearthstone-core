@@ -49,6 +49,7 @@ export abstract class RoleModel<
     R & RoleModel.Refer
 > {
     public constructor(props: RoleModel['props'] & {
+        uuid: string | undefined;
         state: S & Pick<RoleModel.State, 'attack' | 'health'>,
         child: C,
         refer: R

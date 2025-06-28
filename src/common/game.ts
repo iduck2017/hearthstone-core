@@ -2,6 +2,8 @@ import { Model, StoreService } from "set-piece";
 import { PlayerModel } from "./player";
 import { GameQuery, TargetType } from "@/types/query";
 import { MinionRoleModel } from "./role/minion";
+import { HeroModel } from "./hero";
+import { RoleModel } from "./role";
 
 export namespace GameModel {
     export type State = {
@@ -41,13 +43,23 @@ export class GameModel extends Model<
         });
     }
 
-    public query(target: TargetType.Minion, options: GameQuery): MinionRoleModel[];
+    public query(target: TargetType.MinionRole, options: GameQuery): MinionRoleModel[];
+    public query(target: TargetType.HeroRole, options: GameQuery): RoleModel[];
     public query(target: TargetType, options: GameQuery): Model[] {
-        if (target === TargetType.Minion) {
+        if (target === TargetType.MinionRole) {
             let result: MinionRoleModel[] = [];
             const { playerA, playerB } = this.child;
-            if (options.side !== playerA) result.push(...playerB.child.board.child.cards.map(item => item.child.role));
-            if (options.side !== playerB) result.push(...playerA.child.board.child.cards.map(item => item.child.role));
+            const boardA = playerA.child.board;
+            const boardB = playerB.child.board;
+            if (options.side !== playerA) result.push(...boardB.child.cards.map(item => item.child.role));
+            if (options.side !== playerB) result.push(...boardA.child.cards.map(item => item.child.role));
+            return result;
+        }
+        if (target === TargetType.HeroRole) {
+            let result: RoleModel[] = [];
+            const { playerA, playerB } = this.child;
+            if (options.side !== playerA) result.push(playerB.child.hero.child.role);
+            if (options.side !== playerB) result.push(playerA.child.hero.child.role);
             return result;
         }
         return [];  

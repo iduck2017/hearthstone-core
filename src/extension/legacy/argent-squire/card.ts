@@ -5,9 +5,10 @@ import { ArgentSquireRoleModel } from "./role";
 export class ArgentSquireCardModel extends MinionCardModel {
     public constructor(props: CardModel['props']) {
         super({
+            uuid: props.uuid,
             state: {
                 name: 'Argent Squire',
-                desc: 'Shielded',
+                desc: 'Divine Shield',
                 mana: 1,
                 ...props.state,
             },
