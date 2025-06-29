@@ -1,6 +1,6 @@
-import { MinionCardModel } from "@/common/card/minion";
-import { HeroModel } from "@/common/hero";
-import { PlayerModel } from "@/common/player";
+import { MinionCardModel } from "../model/card/minion";
+import { HeroModel } from "../model/hero";
+import { PlayerModel } from "../model/player";
 
 export enum TargetType {
     MinionRole,

@@ -1,29 +1,22 @@
-export { CardModel } from "./common/card";
-export { MinionCardModel } from "./common/card/minion";
-
-export { HeroModel } from "./common/hero";
-export { PlayerModel } from "./common/player";
-export { GameModel } from "./common/game";
-export { RootModel } from "./common/root";
-export { ExtensionModel } from "./common/extension";
-export { BoardModel } from "./common/container/board";
-export { HandModel } from "./common/container/hand";
-
+export { CardModel } from "./model/card";
+export { MinionCardModel } from "./model/card/minion";
+export { HeroModel } from "./model/hero";
+export { PlayerModel } from "./model/player";
+export { GameModel } from "./model/game";
+export { RootModel } from "./model/root";
+export { ExtensionModel } from "./model/extension";
+export { BoardModel } from "./model/container/board";
+export { HandModel } from "./model/container/hand";
 export { AppService } from "./service/app";
-
 export { Selector } from "./utils/selector";
-
-export { BattlecryModel } from "./common/feature/battlecry";
-export { FeatureModel } from "./common/feature";
-export { EffectModel } from "./common/feature/effect";
-
-export { RoleModel } from "./common/role";
-export { MinionRoleModel } from "./common/role/minion";
-
-export { MageHeroModel } from "./common/hero/mage/hero";
-export { MageRoleModel } from "./common/hero/mage/role";
-export { MageSkillModel } from "./common/hero/mage/skill";
-
+export { BattlecryModel } from "./model/feature/battlecry";
+export { FeatureModel } from "./model/feature";
+export { EffectModel } from "./model/feature/effect";
+export { RoleModel } from "./model/role";
+export { MinionRoleModel } from "./model/role/minion";
+export { MageHeroModel } from "./model/hero/mage/hero";
+export { MageRoleModel } from "./model/hero/mage/role";
+export { MageSkillModel } from "./model/hero/mage/skill";
 export { TargetType, CardQuery } from "./types/query";
 export { CardType, MinionRaceType } from "./types/card";
 export { Utils } from "./utils/utils";

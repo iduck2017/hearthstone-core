@@ -1,4 +1,4 @@
-import { RoleModel } from "@/common/role";
+import { RoleModel } from "../model/role";
 
 export class Damage {
     public readonly target: RoleModel;

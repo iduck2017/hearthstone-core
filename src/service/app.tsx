@@ -1,13 +1,9 @@
-import { DebugService, LogLevel, RouteAgent } from "set-piece";
-import { RootModel } from "../common/root";
-import { ExtensionModel as Extensions } from "@/common/extension";
-import { PlayerModel } from "@/common/player";
-import { MageHeroModel } from "@/common/hero/mage/hero";
-import { MinionCardModel } from "@/common/card/minion";
-import { WispCardModel } from "@/extension/legacy/wisp/card";
-import { ShatteredSunClericCardModel } from "@/extension/legacy/shattered-sun-cleric/card";
-import { Selector } from "@/utils/selector";
-import { GameModel } from "@/common/game";
+import { DebugService, RouteAgent } from "set-piece";
+import { RootModel } from "../model/root";
+import { ExtensionModel as Extensions } from "../model/extension";
+import { PlayerModel } from "../model/player";
+import { MageHeroModel } from "../model/hero/mage/hero";
+import { GameModel } from "../model/game";
 
 export class AppService {
     private static _view?: HTMLElement;

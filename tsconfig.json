@@ -14,9 +14,6 @@
     "experimentalDecorators": true,
     "strictFunctionTypes": false,
     "noUncheckedIndexedAccess": true,
-    "paths": {
-      "@/*": ["./src/*"]
-    },
     "baseUrl": "."
   },
   "include": [
