@@ -1,11 +1,12 @@
 {
   "compilerOptions": {
-    "outDir": "./dist/",
     "noImplicitAny": true,
     "module": "ESNext",
     "lib": ["ES2018", "DOM"],
     "target": "ESNext",
     "jsx": "react",
+    "declaration": true,
+    "declarationDir": "./dist/type",
     "allowJs": true,
     "allowSyntheticDefaultImports": true,
     "moduleResolution": "node",

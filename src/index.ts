@@ -1,24 +1,29 @@
-import { DebugService, LogLevel } from "set-piece";
-import { LegacyExtensionModel } from "./extension/legacy";
-import { AppService } from "./service/app";
+export { CardModel } from "./common/card";
+export { MinionCardModel } from "./common/card/minion";
 
-enum EnvType {
-    BROWSER = 'browser',
-    NODE = 'node',
-}
+export { HeroModel } from "./common/hero";
+export { PlayerModel } from "./common/player";
+export { GameModel } from "./common/game";
+export { RootModel } from "./common/root";
+export { ExtensionModel } from "./common/extension";
+export { BoardModel } from "./common/container/board";
+export { HandModel } from "./common/container/hand";
 
-export function main(env: EnvType) {
-    if (env === EnvType.NODE) {
-        DebugService.level = LogLevel.WARN;
-    }
-    AppService.boot({
-        extensions: [ new LegacyExtensionModel({}) ],
-    });
-    if (env === EnvType.BROWSER) {
-        window.app = AppService;
-        window.root = AppService.root;
-        AppService.debug()
-    }
-}
+export { AppService } from "./service/app";
 
-main(EnvType.NODE);
+export { Selector } from "./utils/selector";
+
+export { BattlecryModel } from "./common/feature/battlecry";
+export { FeatureModel } from "./common/feature";
+export { EffectModel } from "./common/feature/effect";
+
+export { RoleModel } from "./common/role";
+export { MinionRoleModel } from "./common/role/minion";
+
+export { MageHeroModel } from "./common/hero/mage/hero";
+export { MageRoleModel } from "./common/hero/mage/role";
+export { MageSkillModel } from "./common/hero/mage/skill";
+
+export { TargetType, CardQuery } from "./types/query";
+export { CardType, MinionRaceType } from "./types/card";
+export { Utils } from "./utils/utils";

@@ -2,6 +2,18 @@
   "name": "hearthstone-core",
   "version": "0.1.0",
   "private": true,
+  "main": "dist/cjs/index.js",
+  "module": "dist/esm/index.js",
+  "types": "dist/type/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "keywords": [
+    "typescript",
+    "hearthstone"
+  ],
+  "author": "iduck",
+  "license": "MIT",
   "dependencies": {
     "dayjs": "^1.11.10",
     "joi": "^17.13.3",
@@ -12,6 +24,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.19.3",
+    "tsc-alias": "^1.8.16",
     "@babel/plugin-proposal-class-properties": "^7.18.6",
     "@babel/plugin-transform-runtime": "^7.19.1",
     "@babel/preset-env": "^7.19.3",
@@ -48,6 +61,8 @@
   "scripts": {
     "test": "jest",
     "build": "webpack --mode production",
-    "serve": "webpack serve"
+    "serve": "webpack serve",
+    "build:cjs": "tsc -p tsconfig.cjs.json && tsc-alias -p tsconfig.cjs.json",
+    "build:esm": "tsc -p tsconfig.esm.json && tsc-alias -p tsconfig.esm.json"
   }
 }
