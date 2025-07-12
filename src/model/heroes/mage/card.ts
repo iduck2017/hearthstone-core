@@ -1,4 +1,4 @@
-import { HeroCardModel } from "src/model/card/hero";
+import { HeroCardModel } from "../../card/hero";
 import { MageRoleModel } from "./role";
 import { MageSkillModel } from "./skill";
 
@@ -9,6 +9,7 @@ export class MageCardModel extends HeroCardModel {
             state: { 
                 name: 'Mage',
                 desc: '',
+                armor: 0,
                 mana: 0,
                 ...props.state,
             },

@@ -1,19 +1,15 @@
 import { Model, StateUtil, TranxUtil } from "set-piece";
 import { FeatureModel } from ".";
-import { GameModel } from "../game";
-import { PlayerModel } from "../player";
 import { CardModel } from "../card";
 import { RoleModel } from "../role";
-import { MinionCardModel } from "../card/minion";
 import { DeepReadonly } from "utility-types";
-import { Optional } from "set-piece";
+import { RootModel } from "../root";
 
 export namespace EffectModel {
     export type State = Partial<FeatureModel.State> & {
         modAttack: number;
         modHealth: number;
         isEnable: boolean;
-        isActive: boolean;
     }
     export type Event = Partial<FeatureModel.Event> & {};
     export type Child = Partial<FeatureModel.Child> & {};
@@ -32,11 +28,10 @@ export class EffectModel<
     R & EffectModel.Refer
 > {
     constructor(props: EffectModel['props'] & {
-        state: S 
-            & Pick<EffectModel.State, 'modAttack' | 'modHealth' | 'isEnable'> 
-            & Pick<FeatureModel.State, 'name' | 'desc'>;
-        child: C;
-        refer: R;
+        uuid: string | undefined;
+        state: S & Pick<FeatureModel.State, 'desc' | 'name'> & Pick<EffectModel.State, 'modAttack' | 'modHealth' | 'isEnable'>
+        child: C,
+        refer: R,
     }) {
         super({
             uuid: props.uuid,
@@ -49,38 +44,25 @@ export class EffectModel<
         })
     }
 
-    public get route(): Readonly<Optional<{
-        parent: P;
+    public get route(): Readonly<Partial<{
         role: RoleModel;
-        card: MinionCardModel;
-        root: Model;
-        game: GameModel;
-        owner: PlayerModel;
-        opponent: PlayerModel;
+        card: CardModel;
+        root: RootModel;
     }>>{
         const route = super.route;
-        const role = route.parent;
+        const root = route.root instanceof RootModel ? route.root : undefined;
+        const role = route.parent instanceof RoleModel ? route.parent : undefined;
         const card = role?.route.parent instanceof CardModel ? role.route.parent : undefined;
-        const owner = card?.route.owner;
         return {
-            parent: route.parent,
-            root: card?.route.root,
-            game: card?.route.game,
-            owner,
-            opponent: owner?.route.opponent,
-            role,
+            ...route,
+            root,
             card,
         }
     }
 
-    @StateUtil.on(self => {
-        if (!self.state.isEnable) return;
-        if (!self.state.isActive) return;
-        return self.route.role?.proxy.decor;
-    })
+    @StateUtil.on(self => self.route.role?.proxy.decor)
     private onRoleCheck(that: RoleModel, state: DeepReadonly<RoleModel.State>): DeepReadonly<RoleModel.State> {
         if (!this.state.isEnable) return state;
-        if (!this.state.isActive) return state;
         return {
             ...state,
             modAttack: state.modAttack + this.state.modAttack,

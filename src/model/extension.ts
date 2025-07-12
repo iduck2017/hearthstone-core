@@ -17,6 +17,7 @@ export abstract class ExtensionModel extends Model<
     ExtensionModel.Refer
 > {
     constructor(props: ExtensionModel['props'] & {
+        uuid: string | undefined;
         child: ExtensionModel.Child;
     }) {
         super({

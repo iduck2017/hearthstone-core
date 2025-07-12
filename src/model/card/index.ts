@@ -1,15 +1,11 @@
-import { Model, Props } from "set-piece";
+import { Model } from "set-piece";
 import { CardType } from "../../types/card";
-import { ExtensionModel } from "../extension";
 import { RootModel } from "../root";
 import { PlayerModel } from "../player";
 import { BattlecryModel } from "../feature/battlecry";
 import { GameModel } from "../game";
-import { Optional } from "set-piece";
 import { RoleModel } from "../role";
-import { HandModel } from "../hand";
-import { BoardModel } from "../board";
-
+import { MemoryModel } from "../memory";
 
 export namespace CardModel {
     export type State = {
@@ -40,11 +36,12 @@ export abstract class CardModel<
     C & CardModel.Child,
     R & CardModel.Refer
 > {
-    constructor(props: CardModel['props'] & Props<
-        S & CardModel.State,
-        C,
-        R
-    >) {
+    constructor(props: CardModel['props'] & {
+        uuid: string | undefined;
+        state: S & CardModel.State;
+        child: C;
+        refer: R;
+    }) {
         super({
             uuid: props.uuid,
             state: { ...props.state },
@@ -56,8 +53,19 @@ export abstract class CardModel<
         });
     }
 
-    public get route(): Readonly<Optional<{
-        parent: P;
+
+    private get owner(): PlayerModel | undefined {
+        let owner: Model | undefined = super.route.parent;
+        while (owner) {
+            if (owner instanceof PlayerModel) break;
+            owner = owner.route.parent;
+            if (owner instanceof MemoryModel) owner = undefined;
+        }
+        return owner;
+    }
+
+    public get route(): Readonly<Partial<{
+        parent: Model;
         root: RootModel;
         game: GameModel;
         owner: PlayerModel;
@@ -66,7 +74,7 @@ export abstract class CardModel<
         const route = super.route;
         const parent = route.parent;
         const root = route.root instanceof RootModel ? route.root : undefined;
-        const owner = route.parent instanceof PlayerModel ? route.parent : undefined;
+        const owner = this.owner;
         const opponent = owner?.route.opponent;
         const game = root?.child.game;
         return {

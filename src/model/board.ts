@@ -1,6 +1,4 @@
 import { Model } from "set-piece";
-import { PlayerModel } from "./player";
-import { CardModel } from "./card";
 import { MinionCardModel } from "./card/minion";
 
 export namespace BoardModel {

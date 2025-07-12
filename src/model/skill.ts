@@ -1,4 +1,4 @@
-import { Model, Props } from "set-piece";
+import { Model } from "set-piece";
 import { HeroCardModel } from "./card/hero";
 
 export namespace SkillModel {
@@ -19,7 +19,12 @@ export abstract class SkillModel<
     C & SkillModel.Child,
     R & SkillModel.Refer
 > {
-    constructor(props: SkillModel['props'] & Props<S, C, R>) {
+    constructor(props: SkillModel['props'] & {
+        uuid: string | undefined;
+        state: S;
+        child: C;
+        refer: R;
+    }) {
         super({
             uuid: props.uuid,
             state: { ...props.state },

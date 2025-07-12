@@ -1,6 +1,8 @@
 import { Model } from "set-piece";
 import { FeatureModel } from ".";
 import { RoleModel } from "../role";
+import { CardModel } from "../card";
+import { RootModel } from "../root";
 
 export namespace DevineSheildModel {
     export type State = {

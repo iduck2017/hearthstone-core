@@ -1,19 +1,13 @@
 export enum CardType {
-    MINION = 'minion',
-    SPELL = 'spell',
-    WEAPON = 'weapon',
-    HERO = 'hero'
+    MINION,
+    SPELL,
+    WEAPON,
+    HERO
 }
 
-export enum MinionRaceType {
-    UNDEAD = 'undead',
-    BEAST = 'beast',
-    ELEMENTAL = 'elemental',
-    MURLOC = 'murloc',
-}
-
-export enum CardKeyword {
-    Rush = 'rush',
-    DivineShield = 'divine-shield',
-    Taunt = 'taunt',
+export enum RaceType {
+    UNDEAD,
+    BEAST,
+    ELEMENTAL,
+    MURLOC,
 }

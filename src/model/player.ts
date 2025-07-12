@@ -1,7 +1,6 @@
 import { DebugUtil, Model, TranxUtil } from "set-piece";
 import { GameModel } from "./game";
 import { RootModel } from "./root";
-import { Optional } from "set-piece";
 import { CardModel } from "./card";
 import { MinionCardModel } from "./card/minion";
 import { HeroCardModel } from "./card/hero";
@@ -40,7 +39,7 @@ export class PlayerModel extends Model<
         });
     }
 
-    public get route(): Readonly<Optional<{
+    public get route(): Readonly<Partial<{
         parent: Model;
         root: RootModel;
         game: GameModel;

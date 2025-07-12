@@ -1,4 +1,4 @@
-import { HeroCardModel } from "src/model/card/hero";
+import { HeroCardModel } from "../../card/hero";
 import { WarriorRoleModel } from "./role";
 import { WarriorSkillModel } from "./skill";
 
@@ -10,6 +10,7 @@ export class WarriorModel extends HeroCardModel {
                 name: 'Warrior',
                 desc: "",
                 mana: 0,
+                armor: 0,
                 ...props.state,
             },
             child: {

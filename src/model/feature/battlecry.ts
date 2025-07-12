@@ -2,10 +2,7 @@ import { EventUtil, Model } from "set-piece";
 import { FeatureModel } from ".";
 import { CardModel } from "../card";
 import { RootModel } from "../root";
-import { PlayerModel } from "../player";
-import { GameModel } from "../game";
-import { Selector } from "../../utils/selector";
-import { Optional } from "set-piece";
+import { SelectCmd } from "../../utils/select";
 
 export namespace BattlecryModel {
     export type Event = Partial<FeatureModel.Event> & {
@@ -29,6 +26,7 @@ export abstract class BattlecryModel<
     R & BattlecryModel.Refer
 > {
     constructor(props: BattlecryModel['props'] & {
+        uuid: string | undefined;
         state: S & FeatureModel.State;
         child: C;
         refer: R;
@@ -41,25 +39,22 @@ export abstract class BattlecryModel<
         });
     }
 
-    public get route(): Readonly<Optional<{
-        parent: P;
+    public get route(): Readonly<Partial<{
         root: RootModel;
-        game: GameModel;
-        owner: PlayerModel;
-        opponent: PlayerModel;
+        parent: Model;
+        card: CardModel;
     }>> {
         const route = super.route;
-        const card = route.parent;
+        const root = route.root instanceof RootModel ? route.root : undefined;
+        const card = route.parent instanceof CardModel ? route.parent : undefined;
         return {
-            parent: route.parent,
-            root: card?.route.root,
-            game: card?.route.game,
-            owner: card?.route.owner,
-            opponent: card?.route.opponent,
+            ...route,
+            root,
+            card,
         }
     }
 
-    public abstract toPlay(): { [K in keyof T]: Selector<T[K]> } | undefined;
+    public abstract toPlay(): { [K in keyof T]: SelectCmd<T[K]> } | undefined;
     
     @EventUtil.next(self => self.event.battlecry, 'async')
     public async toRun(...target: T) {
