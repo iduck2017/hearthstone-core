@@ -1,17 +1,15 @@
-import { EventAgent, Model } from "set-piece";
+import { EventUtil, Model } from "set-piece";
 import { FeatureModel } from ".";
 import { CardModel } from "../card";
 import { RootModel } from "../root";
 import { PlayerModel } from "../player";
 import { GameModel } from "../game";
 import { Selector } from "../../utils/selector";
-import { RoleModel } from "../role";
-import { MinionCardModel } from "../card/minion";
-import { Optional } from "../../types";
+import { Optional } from "set-piece";
 
 export namespace BattlecryModel {
     export type Event = Partial<FeatureModel.Event> & {
-        onBattlecry: {};
+        battlecry: {};
     };
     export type State = Partial<FeatureModel.State> & {};
     export type Child = Partial<FeatureModel.Child> & {};
@@ -20,13 +18,11 @@ export namespace BattlecryModel {
 
 export abstract class BattlecryModel<
     T extends Model[] = Model[],
-    P extends CardModel = CardModel,
-    E extends Partial<BattlecryModel.Event> = {},
-    S extends Partial<BattlecryModel.State> = {},
+    E extends Partial<BattlecryModel.Event> & Model.Event = {},
+    S extends Partial<BattlecryModel.State> & Model.State = {},
     C extends Partial<BattlecryModel.Child> & Model.Child = {},
     R extends Partial<BattlecryModel.Refer> & Model.Refer = {}
 > extends FeatureModel<
-    P, 
     E & BattlecryModel.Event, 
     S & BattlecryModel.State, 
     C & BattlecryModel.Child, 
@@ -63,10 +59,10 @@ export abstract class BattlecryModel<
         }
     }
 
-    public abstract preparePlay(): { [K in keyof T]: Selector<T[K]> } | undefined;
+    public abstract toPlay(): { [K in keyof T]: Selector<T[K]> } | undefined;
     
-    @EventAgent.next(self => self.event.onBattlecry, 'async')
-    public async performRun(...target: T) {
+    @EventUtil.next(self => self.event.battlecry, 'async')
+    public async toRun(...target: T) {
         await this.run(...target);
         return {}
     }

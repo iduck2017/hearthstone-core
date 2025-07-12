@@ -1,4 +1,4 @@
-import { DebugService, Model } from "set-piece";
+import { DebugUtil, Model } from "set-piece";
 
 export class Selector<T extends Model = Model> {
 
@@ -22,10 +22,10 @@ export class Selector<T extends Model = Model> {
         this.desc = desc;
     }
 
-    @DebugService.log()
+    @DebugUtil.log()
     public set(target: T) { this.resolve?.(target); }
 
-    @DebugService.log()
+    @DebugUtil.log()
     public cancel() { this.resolve?.(undefined); }
 
     public async get(): Promise<T | undefined> {

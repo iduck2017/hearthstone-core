@@ -1,17 +1,17 @@
-import { Model } from "set-piece";
+import { Model, Props } from "set-piece";
 import { CardType } from "../../types/card";
-import { BoardModel } from "../container/board";
-import { HandModel } from "../container/hand";
 import { ExtensionModel } from "../extension";
 import { RootModel } from "../root";
 import { PlayerModel } from "../player";
 import { BattlecryModel } from "../feature/battlecry";
 import { GameModel } from "../game";
-import { Optional } from "../../types";
+import { Optional } from "set-piece";
+import { RoleModel } from "../role";
+import { HandModel } from "../hand";
+import { BoardModel } from "../board";
 
 
 export namespace CardModel {
-    export type Parent = BoardModel | HandModel | ExtensionModel;
     export type State = {
         readonly name: string;
         readonly desc: string;
@@ -20,33 +20,31 @@ export namespace CardModel {
     };
     export type Event = {
         onPlay: {};
-        onPlayBefore: {};
+        toPlay: {};
     };
     export type Child = {
+        readonly role?: RoleModel;
         readonly battlecries: BattlecryModel[];
     };
     export type Refer = {};
 }
 
 export abstract class CardModel<
-    P extends CardModel.Parent = CardModel.Parent,
-    E extends Partial<CardModel.Event> = {},
-    S extends Partial<CardModel.State> = {},
+    E extends Partial<CardModel.Event> & Model.Event = {},
+    S extends Partial<CardModel.State> & Model.State = {},
     C extends Partial<CardModel.Child> & Model.Child = {},
     R extends Partial<CardModel.Refer> & Model.Refer = {}
 > extends Model<
-    P,
     E & CardModel.Event, 
     S & CardModel.State, 
     C & CardModel.Child,
     R & CardModel.Refer
 > {
-    constructor(props: CardModel['props'] & {
-        uuid: string | undefined;
-        state: S & CardModel.State;
-        child: C;
-        refer: R;
-    }) {
+    constructor(props: CardModel['props'] & Props<
+        S & CardModel.State,
+        C,
+        R
+    >) {
         super({
             uuid: props.uuid,
             state: { ...props.state },
@@ -62,41 +60,31 @@ export abstract class CardModel<
         parent: P;
         root: RootModel;
         game: GameModel;
-        hand: HandModel;
-        board: BoardModel;
         owner: PlayerModel;
         opponent: PlayerModel;
     }>> {
         const route = super.route;
+        const parent = route.parent;
         const root = route.root instanceof RootModel ? route.root : undefined;
-        const hand = route.parent instanceof HandModel ? route.parent : undefined;
-        const board = route.parent instanceof BoardModel ? route.parent : undefined;
-        const owner = board?.route.parent ?? hand?.route.parent;
+        const owner = route.parent instanceof PlayerModel ? route.parent : undefined;
         const opponent = owner?.route.opponent;
+        const game = root?.child.game;
         return {
-            parent: route.parent,
             root,
-            game: root?.child.game,
-            hand,
-            board,
+            game,
             owner,
+            parent,
             opponent,
         }
     }
 
-    public debug() {
-        super.debug();
-        console.log(this.child.xxx);
-        console.log(this.refer.xxx);
-    }
-
-    public abstract preparePlay(): void;
+    public abstract toPlay(): void;
 
     protected async battlecry(registry: Map<Model, Model[]>) {
         for (const item of this.child.battlecries) {
             const params = registry.get(item);
             if (!params) return;
-            await item.performRun(...params);
+            await item.toRun(...params);
         }
     }
 }

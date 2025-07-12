@@ -1,24 +1,25 @@
-import { DebugService, LogLevel, Model } from "set-piece";
-import { BoardModel } from "./container/board";  
-import { HeroModel } from "./hero";
-import { HandModel } from "./container/hand";
+import { DebugUtil, Model, TranxUtil } from "set-piece";
 import { GameModel } from "./game";
 import { RootModel } from "./root";
-import { Optional } from "../types";
+import { Optional } from "set-piece";
+import { CardModel } from "./card";
+import { MinionCardModel } from "./card/minion";
+import { HeroCardModel } from "./card/hero";
+import { HandModel } from "./hand";
+import { BoardModel } from "./board";
 
 export namespace PlayerModel {
     export type State = {};
     export type Event = {};
     export type Child = {
         readonly board: BoardModel;
-        readonly hero: HeroModel;
+        readonly hero: HeroCardModel;
         readonly hand: HandModel;
     };
     export type Refer = {};
 }
 
 export class PlayerModel extends Model<
-    GameModel,
     PlayerModel.Event, 
     PlayerModel.State, 
     PlayerModel.Child,
@@ -39,46 +40,36 @@ export class PlayerModel extends Model<
         });
     }
 
-    public get child() {
-        const child = super.child;
-        return {
-            ...child,
-            role: child.hero.child.role,
-        }
-    }
-
     public get route(): Readonly<Optional<{
+        parent: Model;
         root: RootModel;
-        parent: GameModel;
+        game: GameModel;
         opponent: PlayerModel;
     }>> {
-        const route = super.route;
+        const route = super.route;;
         const root = route.root instanceof RootModel ? route.root : undefined;
-        const { playerA, playerB } = route.parent?.child ?? {};
+        const game = root?.child.game;
+        const playerA = game?.child.playerA;
+        const playerB = game?.child.playerB;
         const opponent = playerA === this ? playerB : playerA;
         return {
+            ...route,
             root,
-            parent: route.parent,
+            game,
             opponent,
         }
     }
 
-    @DebugService.log()
+    @DebugUtil.log()
     public endTurn() {
         const board = this.child.board;
-        const roles = board.child.roles;
-        roles.forEach(role => {
-            role.endTurn();
-        })
+        board.child.cards.forEach(item => item.child.role.endTurn());
     }
 
-    @DebugService.log()
+    @DebugUtil.log()
     public startTurn() {
         const board = this.child.board;
-        const roles = board.child.roles;
-        roles.forEach(role => {
-            role.startTurn();
-        })
+        board.child.cards.forEach(item => item.child.role.startTurn())
     }
 
 }

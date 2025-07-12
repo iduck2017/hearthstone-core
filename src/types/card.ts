@@ -2,6 +2,7 @@ export enum CardType {
     MINION = 'minion',
     SPELL = 'spell',
     WEAPON = 'weapon',
+    HERO = 'hero'
 }
 
 export enum MinionRaceType {

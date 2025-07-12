@@ -1,4 +1,4 @@
-import { Model, StateAgent, TranxService } from "set-piece";
+import { Model, StateUtil, TranxUtil } from "set-piece";
 import { FeatureModel } from ".";
 import { GameModel } from "../game";
 import { PlayerModel } from "../player";
@@ -6,7 +6,7 @@ import { CardModel } from "../card";
 import { RoleModel } from "../role";
 import { MinionCardModel } from "../card/minion";
 import { DeepReadonly } from "utility-types";
-import { Optional } from "../../types";
+import { Optional } from "set-piece";
 
 export namespace EffectModel {
     export type State = Partial<FeatureModel.State> & {
@@ -21,13 +21,11 @@ export namespace EffectModel {
 }
 
 export class EffectModel<
-    P extends RoleModel = RoleModel,
-    E extends Partial<EffectModel.Event> = {},
-    S extends Partial<EffectModel.State> = {},
+    E extends Partial<EffectModel.Event> & Model.Event = {},
+    S extends Partial<EffectModel.State> & Model.State = {},
     C extends Partial<EffectModel.Child> & Model.Child = {},
     R extends Partial<EffectModel.Refer> & Model.Refer = {}
 > extends FeatureModel<
-    P,
     E & EffectModel.Event,
     S & EffectModel.State,
     C & EffectModel.Child,
@@ -75,12 +73,12 @@ export class EffectModel<
         }
     }
 
-    @StateAgent.use(self => {
+    @StateUtil.on(self => {
         if (!self.state.isEnable) return;
         if (!self.state.isActive) return;
         return self.route.role?.proxy.decor;
     })
-    private decorateRoleState(that: RoleModel, state: DeepReadonly<RoleModel.State>): DeepReadonly<RoleModel.State> {
+    private onRoleCheck(that: RoleModel, state: DeepReadonly<RoleModel.State>): DeepReadonly<RoleModel.State> {
         if (!this.state.isEnable) return state;
         if (!this.state.isActive) return state;
         return {
@@ -90,7 +88,7 @@ export class EffectModel<
         }
     }
 
-    @TranxService.use()
+    @TranxUtil.span()
     public reset() {
         this.draft.state.isEnable = false;
         this.reload();

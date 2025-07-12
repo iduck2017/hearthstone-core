@@ -11,7 +11,6 @@ export namespace ExtensionModel {
 }
 
 export abstract class ExtensionModel extends Model<
-    never,
     ExtensionModel.Event,
     ExtensionModel.State,
     ExtensionModel.Child,

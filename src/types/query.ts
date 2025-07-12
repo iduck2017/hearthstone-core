@@ -1,9 +1,8 @@
 import { MinionCardModel } from "../model/card/minion";
-import { HeroModel } from "../model/hero";
+import { HeroModel } from "../model/heroes";
 import { PlayerModel } from "../model/player";
 
 export enum TargetType {
-    MinionRole,
     Role,
 }
 

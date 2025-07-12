@@ -1,25 +1,23 @@
-import { DebugService, Model } from "set-piece";
+import { DebugUtil, Model } from "set-piece";
 import { CardModel } from ".";
 import { CardType } from "../../types/card";
-import { MinionRoleModel } from "../role/minion";
+import { RoleModel } from "../role";
 
 export namespace MinionCardModel {
     export type Event = Partial<CardModel.Event>;
     export type State = Partial<CardModel.State> & {};
     export type Child = Partial<CardModel.Child> & {
-        readonly role: MinionRoleModel;
+        readonly role: RoleModel;
     };
     export type Refer = Partial<CardModel.Refer>;
 }
 
 export abstract class MinionCardModel<
-    P extends CardModel.Parent = CardModel.Parent,
-    E extends Partial<MinionCardModel.Event> = {},
-    S extends Partial<MinionCardModel.State> = {},
+    E extends Partial<MinionCardModel.Event> & Model.Event = {},
+    S extends Partial<MinionCardModel.State> & Model.State = {},
     C extends Partial<MinionCardModel.Child> & Model.Child = {},
     R extends Partial<MinionCardModel.Refer> & Model.Refer = {}
 > extends CardModel<
-    P,
     E & MinionCardModel.Event, 
     S & MinionCardModel.State,  
     C & MinionCardModel.Child,
@@ -42,11 +40,11 @@ export abstract class MinionCardModel<
         });
     }
 
-    @DebugService.log()
-    public async preparePlay() {
+    @DebugUtil.log()
+    public async toPlay() {
         const registry: Map<Model, Model[]> = new Map();
         for (const feat of this.child.battlecries) {
-            const accessors = feat.preparePlay();
+            const accessors = feat.toPlay();
             if (!accessors) continue;
             const params: Model[] = [];
             for (const item of accessors) {
@@ -59,12 +57,9 @@ export abstract class MinionCardModel<
         this.play(registry);
     }
 
-    @DebugService.log()
+    @DebugUtil.log()
     private async play(registry: Map<Model, Model[]>) {
-        this.event.onPlayBefore({});
-        const hand = this.route.hand;
-        if (!hand) return;
-        hand.use(this);
+        this.route.owner?.play(this);
         this.event.onPlay({});
         await this.battlecry(registry);
         this.child.role.summon();

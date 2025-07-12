@@ -1,4 +1,4 @@
-import { Model } from "set-piece";
+import { Model, Props } from "set-piece";
 
 export namespace FeatureModel {
     export type Event = {}
@@ -11,13 +11,11 @@ export namespace FeatureModel {
 }
 
 export abstract class FeatureModel<
-    P extends Model = Model,
-    E extends Partial<FeatureModel.Event> = {},
-    S extends Partial<FeatureModel.State> = {},
+    E extends Partial<FeatureModel.Event> & Model.Event = {},
+    S extends Partial<FeatureModel.State> & Model.State = {},
     C extends Partial<FeatureModel.Child> & Model.Child = {},
     R extends Partial<FeatureModel.Refer> & Model.Refer = {}
 > extends Model<
-    P,
     E & FeatureModel.Event,
     S & FeatureModel.State,
     C & FeatureModel.Child,
@@ -31,16 +29,23 @@ export abstract class FeatureModel<
         return result;
     }
 
-    constructor(props: FeatureModel['props'] & {
-        state: S & FeatureModel.State;
-        child: C;
-        refer: R;
-    }) {
+    constructor(props: FeatureModel['props'] & Props<
+        S & FeatureModel.State,
+        C,
+        R
+    >) {
         super({
             uuid: props.uuid,
             state: { ...props.state },
             child: { ...props.child },
             refer: { ...props.refer },
         });
+    }
+
+    public debug(): void {
+        super.debug();
+        // console.log(this.state.xxx?.aaa);
+        // console.log(this.child.xxx)
+        // this.event.xxx?.(undefined);
     }
 }

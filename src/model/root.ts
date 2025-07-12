@@ -1,4 +1,4 @@
-import { DebugService, Model, StoreService } from "set-piece";
+import { DebugUtil, Model, StoreUtil } from "set-piece";
 import { GameModel } from "./game";
 
 export namespace RootModel {
@@ -10,10 +10,8 @@ export namespace RootModel {
     export type Refer = {};
 }
 
-
-@StoreService.is('root')
+@StoreUtil.is('root')
 export class RootModel extends Model<
-    never,
     RootModel.Event, 
     RootModel.State, 
     RootModel.Child,
@@ -28,14 +26,14 @@ export class RootModel extends Model<
         });
     }
 
-    @DebugService.log()
-    public start(game: GameModel) {
+    @DebugUtil.log()
+    public startGame(game: GameModel) {
         this.draft.child.game = game;
-        console.log(this.status, this.child.game?.status)
+        game.nextTurn();
     }
 
-    @DebugService.log()
-    public end() {
+    @DebugUtil.log()
+    public endGame() {
         delete this.draft.child.game;
     }
 }
