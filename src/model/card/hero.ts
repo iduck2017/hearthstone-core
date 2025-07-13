@@ -44,6 +44,6 @@ export abstract class HeroCardModel<
         });
     }
 
-    public async play() {
+    public async play(): Promise<void> {
     }
 }

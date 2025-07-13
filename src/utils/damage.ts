@@ -1,5 +1,6 @@
 import { Callback, TranxUtil } from "set-piece";
 import { DamageReq, DamageRes } from "../types/request";
+import { DeathUtil } from "./death";
 
 export class DamageUtil {
     private constructor() {}
@@ -43,6 +44,7 @@ export class DamageUtil {
         }
     }
 
+    @DeathUtil.span()
     @DamageUtil.span()
     public static run(queue: DamageReq[]) {
         queue.forEach(item => {

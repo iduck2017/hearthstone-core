@@ -25,11 +25,17 @@ export class DevineSheildModel extends FeatureModel<
             state: {
                 isActive: false,
                 name: "Devine Shield",
-                desc: "",
+                desc: "The first time this takes damage, ignore it.",
                 ...props.state,
             },
             child: {},
             refer: {}
         })
+    }
+
+    public check(): boolean {
+        if (!this.state.isActive) return false;
+        this.draft.state.isActive = false;
+        return true;
     }
 }

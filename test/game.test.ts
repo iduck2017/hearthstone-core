@@ -69,14 +69,10 @@ describe('game', () => {
         }
     });
 
-
-    test('start-game', () => {
+    test('next-turn', () => {
         expect(game.state.turn).toBe(0);
         boot(game);
         expect(game.state.turn).toBe(1);
-    })
-
-    test('next-turn', () => {
         game.nextTurn();
         expect(game.state.turn).toBe(2);
     })

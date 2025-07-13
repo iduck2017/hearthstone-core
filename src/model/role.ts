@@ -8,6 +8,10 @@ import { SelectUtil } from "../utils/select";
 import { DamageUtil } from "../utils/damage";
 import { DamageMode } from "../types/enums";
 import { DamageReq, DamageRes } from "../types/request";
+import { DevineSheildModel } from "./feature/devine-sheild";
+import { DeathModel } from "./death";
+import { MinionCardModel } from "./card/minion";
+import { HeroCardModel } from "./card/hero";
 
 export namespace RoleModel {
     export type State = {
@@ -24,9 +28,12 @@ export namespace RoleModel {
         onAttack: { target: RoleModel };
         toRecvDamage: DamageReq
         onRecvDamage: DamageRes
+        onDie: { death: DeathModel };
     };
     export type Child = {
-        readonly effect: EffectModel[];
+        readonly effects: EffectModel[];
+        readonly death: DeathModel;
+        readonly devineSheild: DevineSheildModel;
     };
     export type Refer = {};
 }
@@ -56,16 +63,12 @@ export abstract class RoleModel<
                 refHealth: props.state.health,
                 damage: 0,
                 action: 0,
-                isDestroy: false,
-                isDead: false,
-                isRush: false,
-                isTaunt: false,
-                isShield: false,
                 ...props.state 
             },
             child: { 
-                features: [],
-                effect: [],
+                effects: [],
+                death: new DeathModel({}),
+                devineSheild: new DevineSheildModel({}),
                 ...props.child,
             },
             refer: { ...props.refer },
@@ -89,14 +92,17 @@ export abstract class RoleModel<
     public get route(): Readonly<Partial<{
         parent: Model;
         root: RootModel;
-        card: CardModel;
+        card: MinionCardModel | HeroCardModel;
         game: GameModel;
         owner: PlayerModel,
         opponent: PlayerModel,
     }>> {
         const route = super.route;
         const root = route.root instanceof RootModel ? route.root : undefined;
-        const card = route.parent instanceof CardModel ? route.parent : undefined;
+        const card = 
+            route.parent instanceof MinionCardModel || 
+            route.parent instanceof HeroCardModel ? 
+            route.parent : undefined;
         const owner = card?.route.owner;
         const opponent = card?.route.opponent;
         const game = root?.child.game;
@@ -111,7 +117,7 @@ export abstract class RoleModel<
     }
 
     public affect(effect: EffectModel) {
-        this.draft.child.effect.push(effect);
+        this.draft.child.effects.push(effect);
         return effect;
     }
 
@@ -170,25 +176,30 @@ export abstract class RoleModel<
     @DebugUtil.log()
     @TranxUtil.span()
     public recvDamage(req: DamageReq): DamageRes {
-        const { dealDamage } = req;
-        // if (this.state.isShield) {
-        //     this.draft.state.isShield = false;
-        //     return 0
-        // }
+        const { damage } = req;
+        if (damage <= 0) return {
+            ...req,
+            recvDamage: 0,
+            prevState: { ...this.state },
+            nextState: { ...this.state },
+        }
+        const isAbort = this.child.devineSheild.check();
+        if (isAbort) return {
+            ...req,
+            recvDamage: 0,
+            prevState: { ...this.state },
+            nextState: { ...this.state },
+        }
         const prevState = { ...this.state };
-        this.draft.state.damage += dealDamage;
+        this.draft.state.damage += damage;
         const nextState = { ...this.state };
-        // if (this.state.curHealth <= 0) {
-        //     this.draft.state.isDead = true;
-        // }
         return {
             ...req,
-            recvDamage: dealDamage,
+            recvDamage: damage,
             prevState,
             nextState,
         };
     }
-
     public onDealDamage(res: DamageRes) {
         if (res.mode === DamageMode.ATTACK) {
             this.event.onAttack(res);
