@@ -2,11 +2,11 @@ import { EventUtil, Model } from "set-piece";
 import { FeatureModel } from ".";
 import { CardModel } from "../card";
 import { RootModel } from "../root";
-import { SelectCmd } from "../../utils/select";
+import { SelectReq } from "../../types/request";
 
 export namespace BattlecryModel {
     export type Event = Partial<FeatureModel.Event> & {
-        battlecry: {};
+        onBattlecry: {};
     };
     export type State = Partial<FeatureModel.State> & {};
     export type Child = Partial<FeatureModel.Child> & {};
@@ -54,13 +54,12 @@ export abstract class BattlecryModel<
         }
     }
 
-    public abstract toPlay(): { [K in keyof T]: SelectCmd<T[K]> } | undefined;
+    public abstract toPlay(): { [K in keyof T]: SelectReq<T[K]> } | undefined;
     
-    @EventUtil.next(self => self.event.battlecry, 'async')
-    public async toRun(...target: T) {
-        await this.run(...target);
-        return {}
+    public async run(...target: T) {
+        await this._run(...target);
+        await this.event.onBattlecry({});
     }
 
-    protected abstract run(...target: T): Promise<void>;
+    protected abstract _run(...target: T): Promise<void>;
 }

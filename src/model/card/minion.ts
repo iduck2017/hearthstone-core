@@ -1,10 +1,14 @@
-import { DebugUtil, Model } from "set-piece";
+import { DebugUtil, Model, TranxUtil } from "set-piece";
 import { CardModel } from ".";
-import { CardType, RaceType } from "../../types/card";
+import { CardType, RaceType } from "../../types/enums";
 import { RoleModel } from "../role";
+import { SelectUtil } from "../../utils/select";
+import { DamageRes } from "../../types/request";
 
 export namespace MinionCardModel {
-    export type Event = Partial<CardModel.Event>;
+    export type Event = Partial<CardModel.Event> & {
+        onSummon: {};
+    }
     export type State = Partial<CardModel.State> & {
         readonly races: RaceType[];
     };
@@ -43,27 +47,60 @@ export abstract class MinionCardModel<
     }
 
     @DebugUtil.log()
-    public async toPlay() {
-        // const registry: Map<Model, Model[]> = new Map();
-        // for (const feat of this.child.battlecries) {
-        //     const accessors = feat.toPlay();
-        //     if (!accessors) continue;
-        //     const params: Model[] = [];
-        //     for (const item of accessors) {
-        //         const result = await item.get();
-        //         if (!result) return;
-        //         params.push(result);
-        //     }
-        //     registry.set(feat, params);
-        // }
-        // this.play(registry);
+    private async toPlay(): Promise<{
+        dep: Map<Model, Model[]>,
+        pos: number
+    } | undefined> {
+        const player = this.route.owner;
+        if (!player) return;
+        const board = player.child.board;
+        const size = board.child.cards.length;
+        const pos = await SelectUtil.get({
+            candidates: new Array(size + 1).fill(0).map((item, index) => index),
+        })
+        if (pos === undefined) return;
+        const dep: Map<Model, Model[]> = new Map();
+        for (const feat of this.child.battlecries) {
+            const selectors = feat.toPlay();
+            if (!selectors) continue;
+            const params: Model[] = [];
+            for (const item of selectors) {
+                const result = await SelectUtil.get(item);
+                if (result === undefined) return;
+                params.push(result);
+            }
+            dep.set(feat, params);
+        }        
+        const isAbort = this.event.toPlay({});
+        if (isAbort) return;
+        return { dep, pos };
     }
 
     @DebugUtil.log()
-    private async play(registry: Map<Model, Model[]>) {
-        // this.route.owner?.play(this);
-        // this.event.onPlay({});
-        // await this.battlecry(registry);
-        // this.child.role.summon();
+    public async play() {
+        const options = await this.toPlay();
+        if (!options) return;
+        const { dep, pos } = options;
+        this._play(pos);
+        await this.onPlay(dep);
+    }
+
+    @TranxUtil.span()
+    private _play(pos: number) {
+        const player = this.route.owner;
+        if (!player) return;
+        const card = player.child.hand.del(this);
+        if (!card) return;
+        player.child.board.add(card, pos); 
+    }
+
+    protected async onPlay(dep: Map<Model, Model[]>) {
+        await super.onPlay(dep);
+        this.event.onSummon({});
+    }
+
+    public onDealDamage(res: DamageRes) {
+        super.onDealDamage(res);
+        this.child.role.onDealDamage(res);
     }
 }

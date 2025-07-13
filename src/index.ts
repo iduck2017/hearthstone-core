@@ -14,12 +14,11 @@ export { RoleModel } from "./model/role";
 export { MageCardModel } from "./model/heroes/mage/card";
 export { MageRoleModel } from "./model/heroes/mage/role";
 export { MageSkillModel } from "./model/heroes/mage/skill";
-export { DemoCardModel } from "./model/wisp/card"; 
-export { DemoRoleModel } from "./model/wisp/role";
+export { WispRoleModel as DemoRoleModel } from "../test/wisp/role";
 
 export { DamageUtil } from "./utils/damage";
 export { SelectUtil } from "./utils/select";
 export { TimeUtil } from "./utils/time";
 
 export { CardQuery } from "./types/query";
-export { CardType, RaceType } from "./types/card";
+export { CardType, RaceType } from "./types/enums";

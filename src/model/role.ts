@@ -6,6 +6,8 @@ import { PlayerModel } from "./player";
 import { CardModel } from "./card";
 import { SelectUtil } from "../utils/select";
 import { DamageUtil } from "../utils/damage";
+import { DamageMode } from "../types/enums";
+import { DamageReq, DamageRes } from "../types/request";
 
 export namespace RoleModel {
     export type State = {
@@ -16,24 +18,12 @@ export namespace RoleModel {
         readonly modHealth: number;
         readonly modAttack: number;
         refHealth: number;
-        isDestroy: boolean;
-        isDead: boolean;
-        isRush: boolean;
-        isTaunt: boolean;
-        isShield: boolean;
     };
     export type Event = {
-        toAttack: RoleModel;
-        onAttack: RoleModel;
-        onSummon: {},
-        onDealDamage: {
-            target: RoleModel;
-            damage: number;
-        };
-        onRecvDamage: {
-            source: Model;
-            damage: number;
-        };
+        toAttack: { target: RoleModel };
+        onAttack: { target: RoleModel };
+        toRecvDamage: DamageReq
+        onRecvDamage: DamageRes
     };
     export type Child = {
         readonly effect: EffectModel[];
@@ -88,13 +78,11 @@ export abstract class RoleModel<
         const refHealth = Math.max(state.refHealth, maxHealth);
         const curHealth = Math.min(refHealth - state.damage, maxHealth);
         const curAttack = state.attack + state.modAttack;
-        const isDead = state.isDestroy ? false : state.isDead
         return {
             ...state,
             maxHealth,
             curHealth,
             curAttack,
-            isDead,
         };
     }
 
@@ -135,57 +123,84 @@ export abstract class RoleModel<
     @TranxUtil.span()
     public endTurn() {
         this.draft.state.action = 0;
-        this.draft.state.isRush = false;
+        // this.draft.state.isRush = false;
     }
 
     @DebugUtil.log()
-    public async toAttack() {
-        // if (this.state.action <= 0) return;
-        // const candidates = this.route.game?.query({
-        //     isTaunt: true,
-        //     isRush: this.state.isRush,
-        //     side: this.route.opponent
-        // });
-        // if (!candidates) return;
-        // const selector = new SelectUtil(candidates, 'target');
-        // const target = await selector.get();
-        // if (!target) return;
-        // this.event.toAttack(target);
-        // this.attack(target);
+    private async toAttack() {
+        if (this.state.action <= 0) return;
+        const game = this.route.game;
+        if (!game) return;
+        const candidates = game.query({
+            side: this.route.opponent
+        });
+        if (!candidates.length) return;
+        const card = await SelectUtil.get({ candidates })
+        const target = card?.child.role;
+        if (!target) return;
+        const isAbort = this.event.toAttack({ target });
+        if (isAbort) return;
+        return target;
+    }
+
+    @DebugUtil.log()
+    public async attack() {
+        const target = await this.toAttack();
+        if (!target) return;
+        if (this.state.action <= 0) return;
+        DamageUtil.run([
+            {
+                target,
+                source: this.route.card,
+                damage: this.state.curAttack,
+                dealDamage: this.state.curAttack,
+                mode: DamageMode.ATTACK
+            },
+            { 
+                target: this, 
+                source: target.route.card, 
+                damage: target.state.curAttack,
+                dealDamage: target.state.curAttack,
+                mode: DamageMode.DEFEND
+            }
+        ])
+        this.draft.state.action -= 1;
     }
     
     @DebugUtil.log()
     @TranxUtil.span()
-    public attack(target: RoleModel) {
-        this.draft.state.action -= 1;
-        DamageUtil.toRun([
-            { target, source: this, damage: this.state.curAttack },
-            { target: this, source: target, damage: target.state.curAttack }
-        ])
-        this.event.onAttack(target);
+    public recvDamage(req: DamageReq): DamageRes {
+        const { dealDamage } = req;
+        // if (this.state.isShield) {
+        //     this.draft.state.isShield = false;
+        //     return 0
+        // }
+        const prevState = { ...this.state };
+        this.draft.state.damage += dealDamage;
+        const nextState = { ...this.state };
+        // if (this.state.curHealth <= 0) {
+        //     this.draft.state.isDead = true;
+        // }
+        return {
+            ...req,
+            recvDamage: dealDamage,
+            prevState,
+            nextState,
+        };
     }
 
-    @DebugUtil.log()
-    @TranxUtil.span()
-    public recvDamage(options: { damage: number, source: RoleModel }) {
-        const { damage, source } = options;
-        if (this.state.isShield) {
-            this.draft.state.isShield = false;
-            return 0
+    public onDealDamage(res: DamageRes) {
+        if (res.mode === DamageMode.ATTACK) {
+            this.event.onAttack(res);
         }
-        this.draft.state.damage += damage;
-        if (this.state.curHealth <= 0) {
-            this.draft.state.isDead = true;
-        }
-        return damage;
     }
 
-    public onDealDamage(options: { damage: number,  target: RoleModel }) {
-        this.event.onDealDamage(options)
+    public toRecvDamage(req: DamageReq) {
+        this.event.toRecvDamage(req);
     }
 
-    public onRecvDamage(options: { damage: number, source: RoleModel }) {
-        this.event.onRecvDamage(options);
+    public onRecvDamage(res: DamageRes) {
+        this.event.onRecvDamage(res);
     }
 
     @DebugUtil.log()
@@ -197,13 +212,5 @@ export abstract class RoleModel<
         if (dltHealth !== 0) console.warn('imbalance', refHealth, maxHealth);
         if (dltHealth > 0) this.draft.state.damage -= Math.min(damage, dltHealth);
         if (dltHealth !== 0) that.draft.state.refHealth = maxHealth;
-    }
-
-    public summon() {
-        // const card = this.route.card;
-        // const owner = this.route.owner;
-        // if (!card || !owner) return;
-        // owner.summon(card);
-        // this.event.onSummon({});
     }
 }

@@ -1,19 +1,20 @@
-import { DebugUtil, Model, TranxUtil } from "set-piece";
+import { DebugUtil, Model } from "set-piece";
 import { GameModel } from "./game";
 import { RootModel } from "./root";
-import { CardModel } from "./card";
-import { MinionCardModel } from "./card/minion";
 import { HeroCardModel } from "./card/hero";
 import { HandModel } from "./hand";
 import { BoardModel } from "./board";
+import { DeckModel } from "./deck";
 
 export namespace PlayerModel {
     export type State = {};
-    export type Event = {};
+    export type Event = {
+    };
     export type Child = {
         readonly board: BoardModel;
         readonly hero: HeroCardModel;
         readonly hand: HandModel;
+        readonly deck: DeckModel;
     };
     export type Refer = {};
 }
@@ -33,6 +34,7 @@ export class PlayerModel extends Model<
             child: {
                 board: new BoardModel({}),
                 hand: new HandModel({}),
+                deck: new DeckModel({}),
                 ...props.child
             },
             refer: { ...props.refer },

@@ -24,6 +24,7 @@
     "utility-types": "^3.11.0"
   },
   "scripts": {
+    "test": "jest",
     "build:cjs": "tsc -p tsconfig.cjs.json",
     "build:esm": "tsc -p tsconfig.esm.json",
     "watch:cjs": "tsc -p tsconfig.cjs.json --watch",

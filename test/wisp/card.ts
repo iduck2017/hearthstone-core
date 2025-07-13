@@ -1,16 +1,14 @@
-import { CardModel } from "../card";
-import { MinionCardModel } from "../card/minion";
-import { RoleModel } from "../role";
+import { CardModel, MinionCardModel } from "../../src";
 
-export class DemoCardModel extends MinionCardModel {
-    constructor(props: DemoCardModel['props'] & {
+export class WispCardModel extends MinionCardModel {
+    constructor(props: WispCardModel['props'] & {
         state: Pick<CardModel.State, 'mana'>;
         child: Pick<MinionCardModel.Child, 'role'>;
     }) {
         super({
             uuid: props.uuid,
             state: {
-                name: 'Demo',
+                name: 'Wisp',
                 desc: '',
                 races: [],
                 ...props.state,

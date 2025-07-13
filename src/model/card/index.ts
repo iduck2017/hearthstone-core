@@ -1,11 +1,12 @@
-import { Model } from "set-piece";
-import { CardType } from "../../types/card";
+import { Model, TranxUtil } from "set-piece";
+import { CardType } from "../../types/enums";
 import { RootModel } from "../root";
 import { PlayerModel } from "../player";
 import { BattlecryModel } from "../feature/battlecry";
 import { GameModel } from "../game";
 import { RoleModel } from "../role";
 import { MemoryModel } from "../memory";
+import { DamageReq, DamageRes } from "../../types/request";
 
 export namespace CardModel {
     export type State = {
@@ -17,9 +18,12 @@ export namespace CardModel {
     export type Event = {
         onPlay: {};
         toPlay: {};
+        toDraw: {};
+        onDraw: { card: CardModel },
+        onDealDamage: DamageRes;
+        toDealDamage: DamageReq;
     };
     export type Child = {
-        readonly role?: RoleModel;
         readonly battlecries: BattlecryModel[];
     };
     export type Refer = {};
@@ -86,13 +90,40 @@ export abstract class CardModel<
         }
     }
 
-    public abstract toPlay(): void;
+    public abstract play(): void;
 
-    protected async battlecry(registry: Map<Model, Model[]>) {
+    protected async onPlay(dep: Map<Model, Model[]>) {
+        this.event.onPlay({});
         for (const item of this.child.battlecries) {
-            const params = registry.get(item);
+            const params = dep.get(item);
             if (!params) return;
-            await item.toRun(...params);
+            await item.run(...params);
         }
+    }
+    
+    public draw() {
+        const isAbort = this.event.toDraw({});
+        if (isAbort) return;
+        const card = this._draw();
+        if (!card) return;
+        this.event.onDraw({ card });
+    }
+
+    @TranxUtil.span()
+    private _draw(): CardModel | undefined {
+        const player = this.route.owner;
+        if (!player) return;
+        const card = player.child.deck.del(this);
+        if (!card) return;
+        player.child.hand.add(card);
+        return card;
+    }
+
+    public toDealDamage(req: DamageReq) {
+        this.event.toDealDamage(req);
+    }
+
+    public onDealDamage(res: DamageRes) {
+        this.event.onDealDamage(res);
     }
 }

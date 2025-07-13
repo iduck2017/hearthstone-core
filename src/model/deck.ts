@@ -1,8 +1,7 @@
 import { Model } from "set-piece";
-import { PlayerModel } from "./player";
 import { CardModel } from "./card";
 
-export namespace HandModel {
+export namespace DeckModel {
     export type Event = {}
     export type State = {}
     export type Child = {
@@ -11,13 +10,13 @@ export namespace HandModel {
     export type Refer = {}
 }
 
-export class HandModel extends Model<
-    HandModel.Event,
-    HandModel.State,
-    HandModel.Child,
-    HandModel.Refer
+export class DeckModel extends Model<
+    DeckModel.Event,
+    DeckModel.State,
+    DeckModel.Child,
+    DeckModel.Refer
 > {
-    constructor(props: HandModel['props']) {
+    constructor(props: DeckModel['props']) {
         super({
             uuid: props.uuid,
             child: { 
@@ -29,11 +28,11 @@ export class HandModel extends Model<
         })
     }
 
-    public add(card: CardModel) {
-        this.draft.child.cards.push(card);
+    public get(options: {}): CardModel | undefined {
+        return this.child.cards[0];
     }
 
-    public del<T extends CardModel>(card: T): T | undefined {
+    public del(card: CardModel): CardModel | undefined {
         const index = this.draft.child.cards.indexOf(card);
         if (index === -1) return;
         this.draft.child.cards.splice(index, 1);

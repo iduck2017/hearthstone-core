@@ -27,4 +27,8 @@ export class BoardModel extends Model<
             refer: { ...props.refer }
         })  
     }
+
+    public add(card: MinionCardModel, pos: number) {
+        this.draft.child.cards.splice(pos, 0, card);
+    }
 }

@@ -1,9 +1,12 @@
 import { DebugUtil, Model, StoreUtil } from "set-piece";
 import { PlayerModel } from "./player";
-import { GameQuery } from "../types/query";
+import { CardQuery, RoleQuery } from "../types/query";
 import { RoleModel } from "./role";
 import { RootModel } from "./root";
 import { CardModel } from "./card";
+import { QueryMode } from "../types/enums";
+import { HeroCardModel } from "./card/hero";
+import { MinionCardModel } from "./card/minion";
 
 export namespace GameModel {
     export type State = {
@@ -44,19 +47,32 @@ export class GameModel extends Model<
         });
     }
 
-    public query(options: GameQuery): CardModel[] {
-        // let result: RoleModel[] = [];
-        // const { playerA, playerB } = this.child;
-        // const { side, isTaunt, isHero, isRush } = options;
-        // const boardA = playerA.child.board;
-        // const boardB = playerB.child.board;
-        // if (!isRush && side !== playerA) result.push(playerB.child.hero.child.role);
-        // if (!isRush && side !== playerB) result.push(playerA.child.hero.child.role);
-        // if (side !== playerA) result.push(...boardB.map(item => item.child.role));
-        // if (side !== playerB) result.push(...boardA.map(item => item.child.role));
-        // if (isTaunt && result.find(item => item.state.isTaunt)) result = result.filter(item => item.state.isTaunt);
-        // return result;
-        return [];  
+
+    private pipe<T>(mode: QueryMode | undefined, result: T[], filter: (item: T) => boolean) {
+        return result.filter(item => {
+            const isMatch = filter(item);
+            if (mode === QueryMode.REQUIRED && !isMatch) return false;
+            if (mode === QueryMode.EXCLUDE && isMatch) return false;
+            return true;
+        });
+    }
+
+    public query(options: RoleQuery) {
+        const playerA = this.child.playerA;
+        const playerB = this.child.playerB;
+        const boardA = playerA.child.board;
+        const boardB = playerB.child.board;
+        const { side, isHero, isMinion } = options;
+        let result = [
+            ...boardA.child.cards,
+            ...boardB.child.cards,
+            playerA.child.hero,
+            playerB.child.hero,
+        ];
+        result = this.pipe(isHero, result, item => item instanceof HeroCardModel);
+        result = this.pipe(isMinion, result, item => item instanceof MinionCardModel);
+        result = result.filter(item => item.route.owner === side);
+        return result;
     }
 
 

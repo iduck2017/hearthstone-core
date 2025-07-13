@@ -1,7 +1,8 @@
 import { Model } from "set-piece";
 import { CardModel } from ".";
 import { SkillModel } from "../skill";
-import { CardType } from "../../types/card";
+import { CardType } from "../../types/enums";
+import { RoleModel } from "../role";
 
 export namespace HeroCardModel {
     export type Event = Partial<CardModel.Event> & {};
@@ -9,6 +10,7 @@ export namespace HeroCardModel {
         armor: number;
     };
     export type Child = Partial<CardModel.Child> & {
+        role?: RoleModel;
         skill: SkillModel
     };
     export type Refer = Partial<CardModel.Refer>;
@@ -42,6 +44,6 @@ export abstract class HeroCardModel<
         });
     }
 
-    public toPlay() {
+    public async play() {
     }
 }

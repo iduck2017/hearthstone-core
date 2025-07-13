@@ -1,7 +1,7 @@
-import { RoleModel } from "../role";
+import { RoleModel } from "../../src/model/role";
 
-export class DemoRoleModel extends RoleModel {
-    constructor(props: DemoRoleModel['props'] & {
+export class WispRoleModel extends RoleModel {
+    constructor(props: WispRoleModel['props'] & {
         state: Pick<RoleModel.State, 'attack' | 'health'>;
     }) {
         super({
