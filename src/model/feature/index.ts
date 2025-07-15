@@ -1,4 +1,4 @@
-import { Model } from "set-piece";
+import { Callback, Model } from "set-piece";
 
 export namespace FeatureModel {
     export type Event = {}
@@ -28,6 +28,8 @@ export abstract class FeatureModel<
         })
         return result;
     }
+
+    protected abstract check(): boolean;
 
     constructor(props: FeatureModel['props'] & {
         uuid: string | undefined;

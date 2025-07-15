@@ -6,7 +6,8 @@ import { BattlecryModel } from "../feature/battlecry";
 import { GameModel } from "../game";
 import { RoleModel } from "../role";
 import { MemoryModel } from "../memory";
-import { DamageReq, DamageRes } from "../../types/request";
+import { DamageReq, DamageRes } from "../../types/damage";
+import { DeathrattleModel } from "../feature/deathrattle";
 
 export namespace CardModel {
     export type State = {
@@ -25,6 +26,7 @@ export namespace CardModel {
     };
     export type Child = {
         readonly battlecries: BattlecryModel[];
+        readonly deathrattles: DeathrattleModel[];
     };
     export type Refer = {};
 }
@@ -51,6 +53,7 @@ export abstract class CardModel<
             state: { ...props.state },
             child: {
                 battlecries: [],
+                deathrattles: [],
                 ...props.child,
             },
             refer: { ...props.refer },
@@ -125,5 +128,9 @@ export abstract class CardModel<
 
     public onDealDamage(res: DamageRes) {
         this.event.onDealDamage(res);
+    }
+
+    public dispose() {
+
     }
 }

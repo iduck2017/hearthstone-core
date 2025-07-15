@@ -32,11 +32,11 @@ export class DeathUtil {
                     if (result instanceof Promise) {
                         result.then(() => {
                             DeathUtil._isLock = false;
-                            DeathUtil.close();
+                            DeathUtil.end();
                         })
                     } else {
                         DeathUtil._isLock = false;
-                        DeathUtil.close();
+                        DeathUtil.end();
                     }
                     return result;
                 }
@@ -46,13 +46,12 @@ export class DeathUtil {
         }
     }
 
-    public static close() {
+    public static end() {
         this.queue.forEach(card => {
             const role = card.child.role;
             if (!role) return;
             const death = role.child.death;
             if (!death.state.isDead) return;
-            death.run();
         })
     }
 }

@@ -1,10 +1,10 @@
 import { Model, TranxUtil } from "set-piece";
 import { CardModel } from "./card";
 import { RoleModel } from "./role";
-import { DamageRes } from "../types/request";
 import { DeathUtil } from "../utils/death";
 import { HeroCardModel } from "./card/hero";
 import { MinionCardModel } from "./card/minion";
+import { DamageRes } from "../utils/damage";
 
 export namespace DeathModel {
     export type Event = {};
@@ -64,9 +64,5 @@ export class DeathModel extends Model<
         this.draft.state.isDead = true;
         this.draft.refer.murderer = res.source;
         DeathUtil.check(this.route.card);
-    }
-
-    public run() {
-        
     }
 }

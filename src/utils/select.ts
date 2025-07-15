@@ -1,5 +1,5 @@
 import { Callback } from "set-piece";
-import { SelectReq } from "../types/request";
+import { SelectReq } from "../types/damage";
 
 
 export class SelectUtil {

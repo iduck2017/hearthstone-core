@@ -17,10 +17,3 @@ export enum QueryMode {
     REQUIRED = 1,
     EXCLUDE,
 }
-
-export enum DamageMode {
-    ATTACK = 1,
-    DEFEND,
-    SPELL,
-    SKILL,
-}

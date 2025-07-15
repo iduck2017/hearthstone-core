@@ -1,6 +1,22 @@
 import { Callback, TranxUtil } from "set-piece";
-import { DamageReq, DamageRes } from "../types/request";
 import { DeathUtil } from "./death";
+import { RoleModel } from "../model/role";
+import { CardModel } from "../model/card";
+
+export type DamageReq = {
+    target: RoleModel;
+    source?: CardModel;
+    damage: number;
+    dealDamage: number;
+    isAttack: boolean;
+}
+
+export type DamageRes = DamageReq & {
+    prevState: RoleModel['props'];
+    nextState: RoleModel['props'];
+    recvDamage: number;
+    isDevineShield: boolean;
+}
 
 export class DamageUtil {
     private constructor() {}

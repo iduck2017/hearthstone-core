@@ -4,7 +4,7 @@ import { CardModel } from "../card";
 import { RootModel } from "../root";
 import { SelectReq } from "../../types/damage";
 
-export namespace BattlecryModel {
+export namespace DeathrattleModel {
     export type Event = Partial<FeatureModel.Event> & {
         onBattlecry: {};
     };
@@ -13,19 +13,19 @@ export namespace BattlecryModel {
     export type Refer = Partial<FeatureModel.Refer> & {};
 }
 
-export abstract class BattlecryModel<
+export abstract class DeathrattleModel<
     T extends Model[] = Model[],
-    E extends Partial<BattlecryModel.Event> & Model.Event = {},
-    S extends Partial<BattlecryModel.State> & Model.State = {},
-    C extends Partial<BattlecryModel.Child> & Model.Child = {},
-    R extends Partial<BattlecryModel.Refer> & Model.Refer = {}
+    E extends Partial<DeathrattleModel.Event> & Model.Event = {},
+    S extends Partial<DeathrattleModel.State> & Model.State = {},
+    C extends Partial<DeathrattleModel.Child> & Model.Child = {},
+    R extends Partial<DeathrattleModel.Refer> & Model.Refer = {}
 > extends FeatureModel<
-    E & BattlecryModel.Event, 
-    S & BattlecryModel.State, 
-    C & BattlecryModel.Child, 
-    R & BattlecryModel.Refer
+    E & DeathrattleModel.Event, 
+    S & DeathrattleModel.State, 
+    C & DeathrattleModel.Child, 
+    R & DeathrattleModel.Refer
 > {
-    constructor(props: BattlecryModel['props'] & {
+    constructor(props: DeathrattleModel['props'] & {
         uuid: string | undefined;
         state: S & FeatureModel.State;
         child: C;
@@ -54,10 +54,7 @@ export abstract class BattlecryModel<
         }
     }
 
-    public abstract toPlay(): { [K in keyof T]: SelectReq<T[K]> } | undefined;
-    
     public async run(...target: T) {
-        if (!this.check()) return;
         await this._run(...target);
         await this.event.onBattlecry({});
     }

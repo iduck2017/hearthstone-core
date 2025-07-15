@@ -3,7 +3,7 @@ import { CardModel } from ".";
 import { CardType, RaceType } from "../../types/enums";
 import { RoleModel } from "../role";
 import { SelectUtil } from "../../utils/select";
-import { DamageRes } from "../../types/request";
+import { DamageRes } from "../../types/damage";
 
 export namespace MinionCardModel {
     export type Event = Partial<CardModel.Event> & {

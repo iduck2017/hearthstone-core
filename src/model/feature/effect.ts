@@ -1,4 +1,4 @@
-import { Model, StateUtil, TranxUtil } from "set-piece";
+import { Callback, Model, StateUtil, TranxUtil } from "set-piece";
 import { FeatureModel } from ".";
 import { CardModel } from "../card";
 import { RoleModel } from "../role";
@@ -16,7 +16,7 @@ export namespace EffectModel {
     export type Refer = Partial<FeatureModel.Refer> & {};
 }
 
-export class EffectModel<
+export abstract class EffectModel<
     E extends Partial<EffectModel.Event> & Model.Event = {},
     S extends Partial<EffectModel.State> & Model.State = {},
     C extends Partial<EffectModel.Child> & Model.Child = {},
@@ -61,8 +61,9 @@ export class EffectModel<
     }
 
     @StateUtil.on(self => self.route.role?.proxy.decor)
-    private onRoleCheck(that: RoleModel, state: DeepReadonly<RoleModel.State>): DeepReadonly<RoleModel.State> {
+    protected onRoleCheck(that: RoleModel, state: DeepReadonly<RoleModel.State>): DeepReadonly<RoleModel.State> {
         if (!this.state.isEnable) return state;
+        if (!this.check()) return state;
         return {
             ...state,
             modAttack: state.modAttack + this.state.modAttack,

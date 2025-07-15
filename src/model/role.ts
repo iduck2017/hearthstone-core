@@ -7,7 +7,7 @@ import { CardModel } from "./card";
 import { SelectUtil } from "../utils/select";
 import { DamageUtil } from "../utils/damage";
 import { DamageMode } from "../types/enums";
-import { DamageReq, DamageRes } from "../types/request";
+import { DamageReq, DamageRes } from "../types/damage";
 import { DevineSheildModel } from "./feature/devine-sheild";
 import { DeathModel } from "./death";
 import { MinionCardModel } from "./card/minion";
@@ -160,14 +160,14 @@ export abstract class RoleModel<
                 source: this.route.card,
                 damage: this.state.curAttack,
                 dealDamage: this.state.curAttack,
-                mode: DamageMode.ATTACK
+                isAttack: true,
             },
             { 
                 target: this, 
                 source: target.route.card, 
                 damage: target.state.curAttack,
                 dealDamage: target.state.curAttack,
-                mode: DamageMode.DEFEND
+                isAttack: false,
             }
         ])
         this.draft.state.action -= 1;
@@ -182,13 +182,15 @@ export abstract class RoleModel<
             recvDamage: 0,
             prevState: { ...this.state },
             nextState: { ...this.state },
+            isDevineShield: false,
         }
-        const isAbort = this.child.devineSheild.check();
+        const isAbort = this.child.devineSheild.use();
         if (isAbort) return {
             ...req,
             recvDamage: 0,
             prevState: { ...this.state },
             nextState: { ...this.state },
+            isDevineShield: true,
         }
         const prevState = { ...this.state };
         this.draft.state.damage += damage;
@@ -198,6 +200,7 @@ export abstract class RoleModel<
             recvDamage: damage,
             prevState,
             nextState,
+            isDevineShield: false,
         };
     }
     public onDealDamage(res: DamageRes) {
