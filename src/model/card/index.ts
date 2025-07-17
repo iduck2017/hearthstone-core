@@ -6,8 +6,8 @@ import { BattlecryModel } from "../feature/battlecry";
 import { GameModel } from "../game";
 import { RoleModel } from "../role";
 import { MemoryModel } from "../memory";
-import { DamageReq, DamageRes } from "../../types/damage";
 import { DeathrattleModel } from "../feature/deathrattle";
+import { DamageConsumer, DamageProvider } from "../../utils/damage";
 
 export namespace CardModel {
     export type State = {
@@ -21,8 +21,8 @@ export namespace CardModel {
         toPlay: {};
         toDraw: {};
         onDraw: { card: CardModel },
-        onDealDamage: DamageRes;
-        toDealDamage: DamageReq;
+        onDealDamage: DamageProvider;
+        toDealDamage: DamageConsumer;
     };
     export type Child = {
         readonly battlecries: BattlecryModel[];
@@ -121,6 +121,7 @@ export abstract class CardModel<
         player.child.hand.add(card);
         return card;
     }
+
 
     public toDealDamage(req: DamageReq) {
         this.event.toDealDamage(req);

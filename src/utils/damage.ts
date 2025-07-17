@@ -1,9 +1,9 @@
-import { Callback, TranxUtil } from "set-piece";
+import { Callback, EventUtil, TranxUtil } from "set-piece";
 import { DeathUtil } from "./death";
 import { RoleModel } from "../model/role";
 import { CardModel } from "../model/card";
 
-export type DamageReq = {
+export type DamageProvider = {
     target: RoleModel;
     source?: CardModel;
     damage: number;
@@ -11,7 +11,7 @@ export type DamageReq = {
     isAttack: boolean;
 }
 
-export type DamageRes = DamageReq & {
+export type DamageConsumer = DamageProvider & {
     prevState: RoleModel['props'];
     nextState: RoleModel['props'];
     recvDamage: number;
@@ -26,8 +26,9 @@ export class DamageUtil {
         return this._isLock;
     }
 
-    private static queue: DamageRes[] = [];
+    private static queue: DamageConsumer[] = [];
 
+    @EventUtil.span()
     public static span() {
         return function(
             prototype: unknown,
@@ -46,11 +47,11 @@ export class DamageUtil {
                     if (result instanceof Promise) {
                         result.then(() => {
                             DamageUtil._isLock = false;
-                            DamageUtil.close();
+                            DamageUtil.end();
                         })
                     } else {
                         DamageUtil._isLock = false;
-                        DamageUtil.close();
+                        DamageUtil.end();
                     }
                     return result;
                 }
@@ -60,26 +61,16 @@ export class DamageUtil {
         }
     }
 
-    @DeathUtil.span()
-    @DamageUtil.span()
-    public static run(queue: DamageReq[]) {
-        queue.forEach(item => {
-            item.source?.toDealDamage(item);
-            item.target.toRecvDamage(item);
-        })
-        DamageUtil._run(queue);
-    }
-
     @TranxUtil.span()
-    private static _run(queue: DamageReq[]) {
-        const result: DamageRes[] = queue.map(item => {
+    private static run(queue: DamageProvider[]) {
+        const result: DamageConsumer[] = queue.map(item => {
             return item.target.recvDamage(item)
         })
         DamageUtil.queue.push(...result);
         return result;
     }
 
-    private static close() {
+    private static end() {
         const queue = [...DamageUtil.queue];
         DamageUtil.queue = [];
         queue.forEach(item => {

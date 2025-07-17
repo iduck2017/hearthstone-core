@@ -4,7 +4,7 @@ import { RoleModel } from "./role";
 import { DeathUtil } from "../utils/death";
 import { HeroCardModel } from "./card/hero";
 import { MinionCardModel } from "./card/minion";
-import { DamageRes } from "../utils/damage";
+import { DamageConsumer } from "../utils/damage";
 
 export namespace DeathModel {
     export type Event = {};
@@ -55,7 +55,7 @@ export class DeathModel extends Model<
     }
 
     @TranxUtil.span()
-    public check(res: DamageRes) {
+    public check(res: DamageConsumer) {
         if (res.target !== this.route.role) return;
         if (res.prevState.curHealth <= 0) return;
         if (res.nextState.curHealth > 0) return;

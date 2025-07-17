@@ -5,9 +5,7 @@ import { GameModel } from "./game";
 import { PlayerModel } from "./player";
 import { CardModel } from "./card";
 import { SelectUtil } from "../utils/select";
-import { DamageUtil } from "../utils/damage";
-import { DamageMode } from "../types/enums";
-import { DamageReq, DamageRes } from "../types/damage";
+import { DamageConsumer, DamageProvider, DamageUtil } from "../utils/damage";
 import { DevineSheildModel } from "./feature/devine-sheild";
 import { DeathModel } from "./death";
 import { MinionCardModel } from "./card/minion";
@@ -26,8 +24,8 @@ export namespace RoleModel {
     export type Event = {
         toAttack: { target: RoleModel };
         onAttack: { target: RoleModel };
-        toRecvDamage: DamageReq
-        onRecvDamage: DamageRes
+        toRecvDamage: DamageProvider
+        onRecvDamage: DamageConsumer
         onDie: { death: DeathModel };
     };
     export type Child = {
@@ -175,7 +173,7 @@ export abstract class RoleModel<
     
     @DebugUtil.log()
     @TranxUtil.span()
-    public recvDamage(req: DamageReq): DamageRes {
+    public recvDamage(req: DamageProvider): DamageConsumer {
         const { damage } = req;
         if (damage <= 0) return {
             ...req,

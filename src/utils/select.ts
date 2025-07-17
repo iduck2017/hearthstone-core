@@ -1,11 +1,14 @@
 import { Callback } from "set-piece";
-import { SelectReq } from "../types/damage";
 
+export type SelectQuery<T = any> = {
+    candidates: T[];
+    hint?: string;
+}
 
 export class SelectUtil {
 
-    private static queue: [SelectReq, Callback][] = [];
-    public static get current(): SelectReq | undefined {
+    private static queue: [SelectQuery, Callback][] = [];
+    public static get current(): SelectQuery | undefined {
         const [selector] = SelectUtil.queue[0] ?? [];
         return selector;
     }
@@ -17,7 +20,7 @@ export class SelectUtil {
 
     private constructor() {}
 
-    public static async get<T>(command: SelectReq<T>): Promise<T | undefined> {
+    public static async get<T>(command: SelectQuery<T>): Promise<T | undefined> {
         return new Promise<T>((resolve) => {
             SelectUtil.queue.push([command, resolve]);
         })

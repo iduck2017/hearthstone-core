@@ -13,7 +13,6 @@ export enum RaceType {
 }
 
 export enum QueryMode {
-    OPTIONAL,
-    REQUIRED = 1,
+    INCLUDE = 1,
     EXCLUDE,
 }

@@ -51,7 +51,7 @@ export class GameModel extends Model<
     private pipe<T>(mode: QueryMode | undefined, result: T[], filter: (item: T) => boolean) {
         return result.filter(item => {
             const isMatch = filter(item);
-            if (mode === QueryMode.REQUIRED && !isMatch) return false;
+            if (mode === QueryMode.INCLUDE && !isMatch) return false;
             if (mode === QueryMode.EXCLUDE && isMatch) return false;
             return true;
         });
