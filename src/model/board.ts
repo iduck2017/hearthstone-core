@@ -31,4 +31,11 @@ export class BoardModel extends Model<
     public add(card: MinionCardModel, pos: number) {
         this.draft.child.cards.splice(pos, 0, card);
     }
+
+    public del(card: MinionCardModel) {
+        const index = this.draft.child.cards.indexOf(card);
+        if (index === -1) return;
+        this.draft.child.cards.splice(index, 1);
+        return card;
+    }
 }

@@ -1,18 +1,13 @@
 import { HeroCardModel } from "../../card/hero";
+import { HeroModel } from "../../hero";
 import { MageRoleModel } from "./role";
 import { MageSkillModel } from "./skill";
 
-export class MageCardModel extends HeroCardModel {
-    constructor(props: MageCardModel['props']) {
+export class MageModel extends HeroModel {
+    constructor(props: MageModel['props']) {
         super({
             uuid: props.uuid,
-            state: { 
-                name: 'Mage',
-                desc: '',
-                armor: 0,
-                mana: 0,
-                ...props.state,
-            },
+            state: { ...props.state },
             child: {
                 role: new MageRoleModel({}),
                 skill: new MageSkillModel({}),

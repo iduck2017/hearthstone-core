@@ -1,14 +1,14 @@
 import { Callback } from "set-piece";
 
-export type SelectQuery<T = any> = {
+export type SelectOption<T = any> = {
     candidates: T[];
     hint?: string;
 }
 
 export class SelectUtil {
 
-    private static queue: [SelectQuery, Callback][] = [];
-    public static get current(): SelectQuery | undefined {
+    private static queue: [SelectOption, Callback][] = [];
+    public static get current(): SelectOption | undefined {
         const [selector] = SelectUtil.queue[0] ?? [];
         return selector;
     }
@@ -20,7 +20,7 @@ export class SelectUtil {
 
     private constructor() {}
 
-    public static async get<T>(command: SelectQuery<T>): Promise<T | undefined> {
+    public static async get<T>(command: SelectOption<T>): Promise<T | undefined> {
         return new Promise<T>((resolve) => {
             SelectUtil.queue.push([command, resolve]);
         })

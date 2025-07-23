@@ -1,16 +1,15 @@
 import { Model } from "set-piece";
 import { CardModel } from ".";
 import { SkillModel } from "../skill";
-import { CardType } from "../../types/enums";
-import { RoleModel } from "../role";
+import { CardType } from "../../types";
 
 export namespace HeroCardModel {
+    export type Route = Partial<CardModel.Route> & {}
     export type Event = Partial<CardModel.Event> & {};
     export type State = Partial<CardModel.State> & {
         armor: number;
     };
     export type Child = Partial<CardModel.Child> & {
-        role?: RoleModel;
         skill: SkillModel
     };
     export type Refer = Partial<CardModel.Refer>;

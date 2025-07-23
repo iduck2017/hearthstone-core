@@ -100,6 +100,7 @@ describe('game', () => {
         const player = game.child.playerA;
         const board = player.child.board;
         const hand = player.child.hand;
+        const deck = player.child.deck;
         let card = hand.child.cards[0];
         expect(board.child.cards.length).toBe(1);
         expect(hand.child.cards.length).toBe(2);

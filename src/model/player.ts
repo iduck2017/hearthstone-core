@@ -1,10 +1,11 @@
 import { DebugUtil, Model } from "set-piece";
 import { GameModel } from "./game";
 import { RootModel } from "./root";
-import { HeroCardModel } from "./card/hero";
 import { HandModel } from "./hand";
 import { BoardModel } from "./board";
 import { DeckModel } from "./deck";
+import { HeroModel } from "./hero";
+import { GraveyardModel } from "./graveyard";
 
 export namespace PlayerModel {
     export type State = {};
@@ -12,9 +13,10 @@ export namespace PlayerModel {
     };
     export type Child = {
         readonly board: BoardModel;
-        readonly hero: HeroCardModel;
+        readonly hero: HeroModel;
         readonly hand: HandModel;
         readonly deck: DeckModel;
+        readonly graveyard: GraveyardModel;
     };
     export type Refer = {};
 }
@@ -35,27 +37,24 @@ export class PlayerModel extends Model<
                 board: new BoardModel({}),
                 hand: new HandModel({}),
                 deck: new DeckModel({}),
+                graveyard: new GraveyardModel({}),
                 ...props.child
             },
             refer: { ...props.refer },
         });
     }
 
-    public get route(): Readonly<Partial<{
-        parent: Model;
-        root: RootModel;
+    public get route(): Model['route'] & Readonly<Partial<{
         game: GameModel;
         opponent: PlayerModel;
     }>> {
-        const route = super.route;;
-        const root = route.root instanceof RootModel ? route.root : undefined;
-        const game = root?.child.game;
+        const { root, parent } = super.route;
+        const game = root instanceof RootModel ? root.child.game : undefined;
         const playerA = game?.child.playerA;
         const playerB = game?.child.playerB;
         const opponent = playerA === this ? playerB : playerA;
         return {
-            ...route,
-            root,
+            ...super.route,
             game,
             opponent,
         }

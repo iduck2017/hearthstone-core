@@ -1,9 +1,8 @@
 import { DebugUtil, Model, TranxUtil } from "set-piece";
 import { CardModel } from ".";
-import { CardType, RaceType } from "../../types/enums";
+import { CardType, RaceType } from "../../types";
 import { RoleModel } from "../role";
 import { SelectUtil } from "../../utils/select";
-import { DamageRes } from "../../types/damage";
 
 export namespace MinionCardModel {
     export type Event = Partial<CardModel.Event> & {
@@ -71,8 +70,8 @@ export abstract class MinionCardModel<
             }
             dep.set(feat, params);
         }        
-        const isAbort = this.event.toPlay({});
-        if (isAbort) return;
+        const signal = this.event.toPlay({ isAbort: false });
+        if (signal?.isAbort) return;
         return { dep, pos };
     }
 
@@ -98,9 +97,22 @@ export abstract class MinionCardModel<
         await super.onPlay(dep);
         this.event.onSummon({});
     }
+    
+    @TranxUtil.span()
+    public remove() {
+        const player = this.route.owner;
+        if (!player) return;
+        const card = player.child.board.del(this);
+        if (!card) return;
+        player.child.graveyard.add(card);
+    }
 
-    public onDealDamage(res: DamageRes) {
-        super.onDealDamage(res);
-        this.child.role.onDealDamage(res);
+    public onRemove() {
+        this.deathrattle();
+        this.event.onRemove({});
+    }
+
+    private deathrattle() {
+        this.child.deathrattles.forEach(feat => feat.run());
     }
 }

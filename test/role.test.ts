@@ -61,7 +61,6 @@ describe('role', () => {
     });
     boot(game)
 
-
     test('action', () => {
         const playerA = game.child.playerA;
         const playerB = game.child.playerB;
@@ -81,8 +80,7 @@ describe('role', () => {
         expect(roleB.state.action).toBe(1);
     })
 
-    
-    test('attr', () => {
+    test('attribute', () => {
         const player = game.child.playerA;
         const board = player.child.board;
         const card = board.child.cards.find(item => item instanceof WispCardModel);
@@ -107,15 +105,15 @@ describe('role', () => {
         const playerB = game.child.playerB;
         const boardA = playerA.child.board;
         const boardB = playerB.child.board;
-        const cardA = boardA.child.cards.find(item => item instanceof WispCardModel);
-        const cardB = boardB.child.cards.find(item => item instanceof WispCardModel);
-        const roleA = cardA?.child.role;
-        const roleB = cardB?.child.role;
-        expect(roleA).toBeDefined();
-        expect(roleB).toBeDefined();
-        if (!roleA || !roleB) return;
+        const wispA = boardA.child.cards.find(item => item instanceof WispCardModel);
+        const wispB = boardB.child.cards.find(item => item instanceof WispCardModel);
+        const heroA = playerA.child.hero;
+        const heroB = playerB.child.hero;
+        expect(wispA).toBeDefined();
+        expect(wispB).toBeDefined();
+        if (!wispA || !wispB) return;
 
-        expect(roleA.state).toMatchObject({
+        expect(wispA.child.role.state).toMatchObject({
             health: 3,
             action: 0,
             damage: 0,
@@ -123,7 +121,7 @@ describe('role', () => {
             curHealth: 3,
             curAttack: 1,
         })
-        expect(roleB.state).toMatchObject({
+        expect(wispB.child.role.state).toMatchObject({
             health: 3,
             action: 1,
             damage: 0,
@@ -132,18 +130,18 @@ describe('role', () => {
             curAttack: 1,
         })
 
-        const promise = roleB.attack();
+        const promise = wispB.child.role.attack();
         await TimeUtil.sleep();
         const selector = SelectUtil.current;
         expect(selector).toBeDefined();
         if (!selector) return;
-        expect(selector.candidates).toContain(playerA.child.hero);
-        expect(selector?.candidates).toContain(cardA);
+        expect(selector.candidates).toContain(heroA.child.role);
+        expect(selector?.candidates).toContain(wispA.child.role);
         expect(selector?.candidates.length).toBe(2);
-        SelectUtil.set(cardA);
+        SelectUtil.set(wispA.child.role);
         await promise;
 
-        expect(roleA.state).toMatchObject({
+        expect(wispA.child.role.state).toMatchObject({
             health: 3,
             action: 0,
             damage: 1,
@@ -152,7 +150,7 @@ describe('role', () => {
             curHealth: 2,
             curAttack: 1,
         })
-        expect(roleB.state).toMatchObject({
+        expect(wispB.child.role.state).toMatchObject({
             health: 3,
             action: 0,
             damage: 1,
