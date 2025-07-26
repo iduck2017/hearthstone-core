@@ -12,7 +12,7 @@ export namespace SkillModel {
 }
 
 export abstract class SkillModel<
-    P extends SkillModel.Route & Model.Route = SkillModel.Route,
+    P extends Model.Route = SkillModel.Route,
     E extends Partial<SkillModel.Event> & Model.Event = {},
     S extends Partial<SkillModel.State> & Model.State = {},
     C extends Partial<SkillModel.Child> & Model.Child = {},
@@ -29,7 +29,7 @@ export abstract class SkillModel<
         state: S;
         child: C;
         refer: R;
-        route: { [K in keyof P]: [number, Constructor<P[K]>]; };
+        route: { [K in keyof P]: [number, P[K]]; };
     }) {
         super({
             uuid: props.uuid,
@@ -38,7 +38,7 @@ export abstract class SkillModel<
             refer: { ...props.refer },
             route: { 
                 ...props.route,
-                hero: [1, HeroModel],
+                hero: [1, HeroModel.prototype],
             }
         });
     }
