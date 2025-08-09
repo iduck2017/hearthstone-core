@@ -1,5 +1,5 @@
 import { HeroCardModel } from "../../card/hero";
-import { HeroModel } from "../../hero";
+import { HeroModel } from "..";
 import { WarriorRoleModel } from "./role";
 import { WarriorSkillModel } from "./skill";
 

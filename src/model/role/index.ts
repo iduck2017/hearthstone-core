@@ -1,51 +1,46 @@
-import { DebugUtil, Event, EventUtil, Model, TranxUtil } from "set-piece";
-import { EffectModel } from "../effect";
-import { RootModel } from "../root";
+import { Model } from "set-piece";
+import { RoleFeatureModel } from "./feature";
 import { GameModel } from "../game";
 import { PlayerModel } from "../player";
-import { SelectUtil } from "../../utils/select";
-import { DevineSheildModel } from "../devine-sheild";
 import { DeathModel } from "./death";
 import { MinionCardModel } from "../card/minion";
-import { DamageCmd, DamageType, DamageModel } from "../damage";
+import { DamageForm } from "../card/damage";
 import { HeroModel } from "../hero";
 import { FilterType } from "../../types";
-import { BoardModel } from "../board";
-import { HandModel } from "../hand";
-import { DeckModel } from "../deck";
+import { BoardModel } from "../player/board";
+import { HandModel } from "../player/hand";
+import { DeckModel } from "../player/deck";
+import { AttackModel } from "./attack";
+import { HealthModel } from "./health";
+import { ActionModel } from "./action";
+import { RoleEntriesModel } from "./entries";
 
-export type CheckOption = {
-    isAlive?: FilterType;
-    onBoard?: FilterType;
+export type RoleCheckInfo = {
     onHand?: FilterType;
     onDeck?: FilterType;
+    onBoard?: FilterType;
+    isAlive?: FilterType;
 }
 
 export namespace RoleModel {
-    export type State = {
-        damage: number;
-        action: number;
-        readonly attack: number;
-        readonly health: number;
-        readonly modHealth: number;
-        readonly modAttack: number;
-        refHealth: number;
-    };
+    export type State = {};
     export type Event = {
         toAttack: { target: RoleModel, isAbort: boolean };
         onAttack: { target: RoleModel };
-        toRecvDamage: DamageCmd
-        onRecvDamage: DamageCmd
+        toRecvDamage: DamageForm
+        onRecvDamage: DamageForm
         onDie: { death: DeathModel };
     };
     export type Child = {
-        readonly effects: EffectModel[];
+        readonly features: RoleFeatureModel[];
         readonly death: DeathModel;
-        readonly devineSheild: DevineSheildModel;
+        readonly attack: AttackModel;
+        readonly health: HealthModel;
+        readonly action: ActionModel;
+        readonly entries: RoleEntriesModel;
     };
     export type Refer = {};
 }
-
 
 export abstract class RoleModel<
     E extends Partial<RoleModel.Event> = {},
@@ -58,177 +53,60 @@ export abstract class RoleModel<
     C & RoleModel.Child,
     R & RoleModel.Refer
 > {
+    public get route() {
+        const path = super.route.path;
+        const game = path.find(item => item instanceof GameModel);
+        const player = path.find(item => item instanceof PlayerModel);
+        const hero: HeroModel | undefined = path.find(item => item instanceof HeroModel);
+        const card: MinionCardModel | undefined = path.find(item => item instanceof MinionCardModel);
+        return { ...super.route, hero, card, game, player };
+    }
+
+    public get refer() {
+        const hero = this.route.hero;
+        const card = this.route.card;
+        const damage = hero?.child.damage ?? card?.child.damage;
+        return { ...super.refer, damage }
+    }
+
     public constructor(props: RoleModel['props'] & {
         uuid: string | undefined;
-        state: S & Pick<RoleModel.State, 'attack' | 'health'>,
-        child: C,
+        state: S,
+        child: C & Pick<RoleModel.Child, 'attack' | 'health'>,
         refer: R
     }) {
         super({
             uuid: props.uuid,
-            state: {
-                modHealth: 0,
-                modAttack: 0,
-                refHealth: props.state.health,
-                damage: 0,
-                action: 0,
-                ...props.state 
-            },
+            state: { ...props.state },
             child: { 
-                effects: [],
+                features: [],
                 death: new DeathModel({}),
-                devineSheild: new DevineSheildModel({}),
+                action: new ActionModel({}),
+                entries: new RoleEntriesModel({}),
                 ...props.child,
             },
             refer: { ...props.refer },
         })
     }
 
-    public get state() {
-        const state = super.state;
-        const maxHealth = state.health + state.modHealth;
-        const refHealth = Math.max(state.refHealth, maxHealth);
-        const curHealth = Math.min(refHealth - state.damage, maxHealth);
-        const curAttack = state.attack + state.modAttack;
-        return {
-            ...state,
-            maxHealth,
-            curHealth,
-            curAttack,
-        };
+    public set(feature: RoleFeatureModel) {
+        this.draft.child.features.push(feature);
+        return feature;
     }
 
-
-    public check(options: CheckOption) {
+    public check(options: RoleCheckInfo) {
         const { isAlive, onBoard, onHand, onDeck } = options;
         const flag =   
-            this._check(isAlive, this.child.death.state.isDead) &&
-            this._check(onBoard, this.route.parent instanceof BoardModel) &&
-            this._check(onHand, this.route.parent instanceof HandModel) &&
-            this._check(onDeck, this.route.parent instanceof DeckModel)
+            this.pipe(isAlive, this.child.death.state.isDead) &&
+            this.pipe(onBoard, this.route.parent instanceof BoardModel) &&
+            this.pipe(onHand, this.route.parent instanceof HandModel) &&
+            this.pipe(onDeck, this.route.parent instanceof DeckModel)
         return flag;
     }
-
-    private _check(mode: FilterType | undefined, flag: boolean) {
+    
+    private pipe(mode: FilterType | undefined, flag: boolean) {
         if (mode === FilterType.INCLUDE && !flag) return false;
         if (mode === FilterType.EXCLUDE && flag) return false;
         return true;
-    }
-
-    public get route(): Model['route'] & Readonly<Partial<{
-        card: MinionCardModel;
-        hero: HeroModel;
-        game: GameModel;
-        damage: DamageModel;
-        owner: PlayerModel,
-        opponent: PlayerModel,
-    }>> {
-        const { parent, root } = super.route;
-        const card = parent instanceof MinionCardModel ? parent : undefined;
-        const hero = parent instanceof HeroModel ? parent : undefined;
-        const opponent = card?.route.opponent;
-        const game = root instanceof RootModel ? root.child.game : undefined;
-        const damage = hero?.child.damage ?? card?.child.damage;
-        const owner = card?.route.owner ?? hero?.route.owner;
-        return {
-            ...super.route,
-            game,
-            card,
-            hero,
-            owner,
-            opponent,
-            damage,
-        }
-    }
-
-    public affect(effect: EffectModel) {
-        this.draft.child.effects.push(effect);
-        return effect;
-    }
-
-    public startTurn() {
-        this.resetAction();
-    }
-
-    private resetAction() {
-        this.draft.state.action = 1 + bonus;
-    }
-
-    public endTurn() {
-        this.draft.state.action = 0;
-        // this.draft.state.isRush = false;
-    }
-
-    @DebugUtil.log()
-    private async toAttack() {
-        if (this.state.action <= 0) return;
-        const game = this.route.game;
-        if (!game) return;
-        const candidates = game.query({
-            side: this.route.opponent
-        });
-        if (!candidates.length) return;
-        const role = await SelectUtil.get({ candidates })
-        if (!role) return;
-        const signal = this.event.toAttack({ target: role, isAbort: false });
-        if (signal?.isAbort) return;
-        return role;
-    }
-
-    @DebugUtil.log()
-    public async attack() {
-        const target = await this.toAttack();
-        if (!this.route.damage) return;
-        if (!target?.route.damage) return;
-        if (this.state.action <= 0) return;
-        this.draft.state.action -= 1;
-        DamageModel.dealDamage([
-            {
-                target,
-                source: this.route.damage,
-                damage: this.state.curAttack,
-                result: this.state.curAttack,
-                type: DamageType.ATTACK,
-            },
-            { 
-                target: this, 
-                source: target.route.damage, 
-                damage: target.state.curAttack,
-                result: target.state.curAttack,
-                type: DamageType.DEFEND,
-            }
-        ])
-        this.event.onAttack({ target });
-    }
-
-    public toRecvDamage(cmd: DamageCmd): DamageCmd | void {
-        return this.event.toRecvDamage(cmd);
-    }
-    
-    @DebugUtil.log()
-    public recvDamage(cmd: DamageCmd): DamageCmd {
-        const { result } = cmd;
-        if (result <= 0) return { ...cmd, result: 0 }
-        const isSheild = this.child.devineSheild.check(cmd);
-        if (isSheild) return { ...cmd, result: 0 }
-        this.draft.state.damage += result;
-        this.onRecvDamage(cmd);
-        return { ...cmd, result };
-    }
-
-    private onRecvDamage(cmd: DamageCmd) {
-        this.child.death.check(cmd);
-        this.event.onRecvDamage(cmd);
-    }
-
-    @DebugUtil.log()
-    @EventUtil.on((self: RoleModel) => self.proxy.event.onStateChange)
-    @TranxUtil.span()
-    private onHealthChange(that: RoleModel, event: Event.OnStateChange<RoleModel>) {
-        const { refHealth, maxHealth, damage } = event.next;
-        const dltHealth = refHealth - maxHealth;
-        if (dltHealth !== 0) console.warn('imbalance', refHealth, maxHealth);
-        if (dltHealth > 0) this.draft.state.damage -= Math.min(damage, dltHealth);
-        if (dltHealth !== 0) that.draft.state.refHealth = maxHealth;
     }
 }

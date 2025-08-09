@@ -1,6 +1,6 @@
-import { EventUtil, Model } from "set-piece";
-import { CardModel } from "./card";
-import { RootModel } from "./root";
+import { Model } from "set-piece";
+import { CardModel } from "..";
+import { RoleModel } from "../../role";
 
 export namespace DeathrattleModel {
     export type Event = {
@@ -12,7 +12,6 @@ export namespace DeathrattleModel {
 }
 
 export abstract class DeathrattleModel<
-    T extends Model[] = Model[],
     E extends Partial<DeathrattleModel.Event> & Model.Event = {},
     S extends Partial<DeathrattleModel.State> & Model.State = {},
     C extends Partial<DeathrattleModel.Child> & Model.Child = {},
@@ -23,6 +22,13 @@ export abstract class DeathrattleModel<
     C & DeathrattleModel.Child, 
     R & DeathrattleModel.Refer
 > {
+    public get route() {
+        const route = super.route;
+        const card: CardModel | undefined = route.path.find(item => item instanceof CardModel);
+        const role: RoleModel | undefined = route.path.find(item => item instanceof RoleModel);
+        return { ...route, card, role };
+    }
+
     constructor(props: DeathrattleModel['props'] & {
         uuid: string | undefined;
         state: S;
@@ -37,25 +43,13 @@ export abstract class DeathrattleModel<
         });
     }
 
-    public get route(): Readonly<Partial<{
-        root: RootModel;
-        parent: Model;
-        card: CardModel;
-    }>> {
-        const route = super.route;
-        const root = route.root instanceof RootModel ? route.root : undefined;
-        const card = route.parent instanceof CardModel ? route.parent : undefined;
-        return {
-            ...route,
-            root,
-            card,
-        }
+    public async run() {
+        if (!this.toRun()) return;
+        await this.doRun();
+        this.event.onRun({});
     }
 
-    public async run(...target: T) {
-        await this._run(...target);
-        await this.event.onRun({});
-    }
+    protected abstract toRun(): boolean;
 
-    protected abstract _run(...target: T): Promise<void>;
+    protected abstract doRun(): Promise<void>;
 }

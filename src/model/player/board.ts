@@ -1,5 +1,7 @@
 import { Model } from "set-piece";
-import { MinionCardModel } from "./card/minion";
+import { MinionCardModel } from "../card/minion";
+import { GameModel } from "../game";
+import { PlayerModel } from ".";
 
 export namespace BoardModel {
     export type Event = {};
@@ -16,6 +18,15 @@ export class BoardModel extends Model<
     BoardModel.Child,
     BoardModel.Refer
 > {
+    public get route() {
+        const route = super.route;
+        return { 
+            ...route,
+            game: route.path.find(item => item instanceof GameModel),
+            player: route.path.find(item => item instanceof PlayerModel),
+        }
+    }
+
     constructor(props: BoardModel['props']) {
         super({
             uuid: props.uuid,

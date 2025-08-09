@@ -1,10 +1,11 @@
 import { DebugUtil, LogLevel, RouteUtil } from "set-piece";
-import { GameModel, RootModel } from "../src";
+import { GameModel, AppModel } from "../src";
 
 export function boot(game: GameModel) {
     DebugUtil.level = LogLevel.ERROR;
-    const root = new RootModel({});
+    const root = new AppModel({});
     RouteUtil.boot(root);
-    root.startGame(game);
+    root.set(game);
+    game.child.turn.next();
     return root;
 }

@@ -1,5 +1,7 @@
 import { Model } from "set-piece";
-import { CardModel } from "./card";
+import { CardModel } from "../card";
+import { GameModel } from "../game";
+import { PlayerModel } from ".";
 
 export namespace DeckModel {
     export type Event = {}
@@ -16,6 +18,15 @@ export class DeckModel extends Model<
     DeckModel.Child,
     DeckModel.Refer
 > {
+    public get route() {
+        const route = super.route;
+        return { 
+            ...route,
+            game: route.path.find(item => item instanceof GameModel),
+            player: route.path.find(item => item instanceof PlayerModel),
+        }
+    }
+
     constructor(props: DeckModel['props']) {
         super({
             uuid: props.uuid,

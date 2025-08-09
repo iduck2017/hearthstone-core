@@ -1,4 +1,4 @@
-import { DebugUtil, Model } from "set-piece";
+import { DebugUtil, Model, Route, TranxUtil } from "set-piece";
 import { PlayerModel } from "../player";
 import { GameModel } from ".";
 
@@ -12,7 +12,7 @@ export namespace TurnModel {
     };
     export type Child = {};
     export type Refer = {
-        player?: PlayerModel;
+        current?: PlayerModel;
     };
 }
 
@@ -22,6 +22,14 @@ export class TurnModel extends Model<
     TurnModel.Child,
     TurnModel.Refer
 > {
+    public get route() {
+        const path = super.route.path;
+        return { 
+            ...super.route,
+            game: path.find(item => item instanceof GameModel),
+        } 
+    }
+
     constructor(props: TurnModel['props']) {
         super({
             uuid: props.uuid,
@@ -33,23 +41,26 @@ export class TurnModel extends Model<
             refer: { ...props.refer },
         });
     }
-
-    public get route(): Model['route'] & { game?: GameModel } {
-        return {
-            ...super.route,
-            game: this.assert(1, GameModel),
-        }
-    }
     
     @DebugUtil.log()
     public next() {
-        const player = this.refer.player;
-        const nextPlayer = player?.route.opponent ?? this.route.game?.child.playerA;
-        player?.endTurn();
+        let player = this.refer.current;
+        let board = player?.child.board;
+        let roles = board?.child.cards.map(item => item.child.role);
         this.event.onEnd({});
-        this.draft.state.count ++;
-        this.draft.refer.player = nextPlayer;
-        nextPlayer?.startTurn();
+        this.doNext();
+        player = this.refer.current;
+        board = player?.child.board;
+        roles = board?.child.cards.map(item => item.child.role);
+        roles?.forEach(role => role.child.action.reset());
         this.event.onStart({});
     }
+
+    @TranxUtil.span()
+    private doNext() {
+        const game = this.route.game;
+        this.draft.state.count ++;
+        this.draft.refer.current = this.refer.current?.refer.opponent ?? game?.child.playerA;
+    }
+
 }

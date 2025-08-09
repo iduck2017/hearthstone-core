@@ -1,10 +1,9 @@
 import { Model } from "set-piece";
 import { CardModel } from ".";
-import { SkillModel } from "../skill";
+import { SkillModel } from "../hero/skill";
 import { CardType } from "../../types";
 
 export namespace HeroCardModel {
-    export type Route = Partial<CardModel.Route> & {}
     export type Event = Partial<CardModel.Event> & {};
     export type State = Partial<CardModel.State> & {
         armor: number;
@@ -41,8 +40,5 @@ export abstract class HeroCardModel<
             child: { ...props.child },
             refer: { ...props.refer },
         });
-    }
-
-    public async play(): Promise<void> {
     }
 }

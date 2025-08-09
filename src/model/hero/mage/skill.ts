@@ -1,7 +1,7 @@
-import { SkillModel } from "../../skill";
+import { SkillModel } from "../skill";
 
-export class WarriorSkillModel extends SkillModel {
-    constructor(props: WarriorSkillModel['props']) {
+export class MageSkillModel extends SkillModel {
+    constructor(props: MageSkillModel['props']) {
         super({
             uuid: props.uuid,
             state: { ...props.state },

@@ -3,28 +3,24 @@ import { PlayerModel } from "../player";
 import { RoleModel } from "../role";
 import { FilterType } from "../../types";
 import { TurnModel } from "./turn";
+import { AppModel } from "..";
 
 export type QueryOption = {
     side?: PlayerModel;
     isHero?: FilterType;
-    isMinion?: FilterType;
     isTaunt?: FilterType;
+    isMinion?: FilterType;
 }
 
 export namespace GameModel {
     export type State = {};
-    export type Event = {
-        onEndTurn: void;
-        onStartTurn: void;
-    };
+    export type Event = {};
     export type Child = {
+        readonly turn: TurnModel;
         readonly playerA: PlayerModel;
         readonly playerB: PlayerModel;
-        readonly turn: TurnModel;
     };
-    export type Refer = {
-        curPlayer?: PlayerModel;
-    };
+    export type Refer = {};
 }
 
 
@@ -36,22 +32,16 @@ export class GameModel extends Model<
     GameModel.Refer
 > {
     constructor(props: GameModel['props'] & {
-        child: GameModel.Child;
+        child: Pick<GameModel.Child, 'playerA' | 'playerB'>;
     }) {
         super({
             uuid: props.uuid,
             state: { ...props.state },
-            child: { ...props.child },
+            child: {
+                turn: new TurnModel({}),
+                ...props.child,
+            },
             refer: { ...props.refer },
-        });
-    }
-
-    private _query<T>(mode: FilterType | undefined, result: T[], filter: (item: T) => boolean) {
-        return result.filter(item => {
-            const isMatch = filter(item);
-            if (mode === FilterType.INCLUDE && !isMatch) return false;
-            if (mode === FilterType.EXCLUDE && isMatch) return false;
-            return true;
         });
     }
 
@@ -67,9 +57,18 @@ export class GameModel extends Model<
             playerA.child.hero.child.role,
             playerB.child.hero.child.role,
         ];
-        result = this._query(isHero, result, item => Boolean(item.route.hero));
-        result = this._query(isMinion, result, item => Boolean(item.route.card));
-        result = result.filter(item => item.route.owner === side);
+        result = this.pipe(isHero, result, item => Boolean(item.route.hero));
+        result = this.pipe(isMinion, result, item => Boolean(item.route.card));
+        result = result.filter(item => item.route.player === side);
         return result;
+    }
+    
+    private pipe<T>(mode: FilterType | undefined, result: T[], filter: (item: T) => boolean) {
+        return result.filter(item => {
+            const isMatch = filter(item);
+            if (mode === FilterType.INCLUDE && !isMatch) return false;
+            if (mode === FilterType.EXCLUDE && isMatch) return false;
+            return true;
+        });
     }
 }

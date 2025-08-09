@@ -1,5 +1,7 @@
-import { BoardModel, GameModel, HandModel, MageCardModel, PlayerModel, SelectUtil, TimeUtil } from "../src";
-import { DeckModel } from "../src/model/deck";
+import { BoardModel, GameModel, HandModel, MageModel, PlayerModel, SelectUtil, TimeUtil } from "../src";
+import { DeckModel } from "../src/model/player/deck";
+import { AttackModel } from "../src/model/role/attack";
+import { HealthModel } from "../src/model/role/health";
 import { boot } from "./boot";
 import { WispCardModel } from "./wisp/card";
 import { WispRoleModel } from "./wisp/role";
@@ -9,7 +11,7 @@ describe('game', () => {
         child: {
             playerA: new PlayerModel({
                 child: {
-                    hero: new MageCardModel({}),
+                    hero: new MageModel({}),
                     hand: new HandModel({}),
                     deck: new DeckModel({
                         child: {
@@ -18,9 +20,9 @@ describe('game', () => {
                                     state: { mana: 1 },
                                     child: {
                                         role: new WispRoleModel({
-                                            state: {
-                                                attack: 1,
-                                                health: 1,
+                                            child: {
+                                                attack: new AttackModel({ state: { origin: 1 } }),
+                                                health: new HealthModel({ state: { origin: 1 } }),
                                             }
                                         })
                                     }
@@ -29,9 +31,9 @@ describe('game', () => {
                                     state: { mana: 1 },
                                     child: {
                                         role: new WispRoleModel({
-                                            state: {
-                                                attack: 1,
-                                                health: 1,
+                                            child: {
+                                                attack: new AttackModel({ state: { origin: 1 } }),
+                                                health: new HealthModel({ state: { origin: 1 } }),
                                             }
                                         })
                                     }
@@ -46,9 +48,9 @@ describe('game', () => {
                                     state: { mana: 1 },
                                     child: {
                                         role: new WispRoleModel({
-                                            state: {
-                                                attack: 1,
-                                                health: 1,
+                                            child: {
+                                                attack: new AttackModel({ state: { origin: 1 } }),
+                                                health: new HealthModel({ state: { origin: 1 } }),
                                             }
                                         })
                                     }
@@ -60,7 +62,7 @@ describe('game', () => {
             }),
             playerB: new PlayerModel({
                 child: {
-                    hero: new MageCardModel({}),
+                    hero: new MageModel({}),
                     hand: new HandModel({}),
                     deck: new DeckModel({}),
                     board: new BoardModel({}),
@@ -70,11 +72,12 @@ describe('game', () => {
     });
 
     test('next-turn', () => {
-        expect(game.state.turn).toBe(0);
+        const turn = game.child.turn;
+        expect(turn.state.count).toBe(0);
         boot(game);
-        expect(game.state.turn).toBe(1);
-        game.nextTurn();
-        expect(game.state.turn).toBe(2);
+        expect(turn.state.count).toBe(1);
+        turn.next();
+        expect(turn.state.count).toBe(2);
     })
 
     test('draw-card', async () => {
@@ -101,6 +104,7 @@ describe('game', () => {
         const board = player.child.board;
         const hand = player.child.hand;
         const deck = player.child.deck;
+
         let card = hand.child.cards[0];
         expect(board.child.cards.length).toBe(1);
         expect(hand.child.cards.length).toBe(2);
@@ -110,9 +114,9 @@ describe('game', () => {
         await TimeUtil.sleep()
         let selector = SelectUtil.current;
         expect(selector).toBeDefined();
-        expect(selector?.candidates).toContain(0);
-        expect(selector?.candidates).toContain(1);
-        expect(selector?.candidates.length).toBe(2);
+        expect(selector?.list).toContain(0);
+        expect(selector?.list).toContain(1);
+        expect(selector?.list.length).toBe(2);
         SelectUtil.set(0);
         await promise;
         expect(board.child.cards.length).toBe(2);
@@ -124,7 +128,7 @@ describe('game', () => {
         await TimeUtil.sleep();
         selector = SelectUtil.current;
         expect(selector).toBeDefined();
-        expect(selector?.candidates.length).toBe(3);
+        expect(selector?.list.length).toBe(3);
         SelectUtil.set(1);
         await promise;
         expect(board.child.cards[1]).toBe(card);

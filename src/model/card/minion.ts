@@ -1,5 +1,5 @@
-import { DebugUtil, Model, TranxUtil } from "set-piece";
-import { CardModel } from ".";
+import { Model, TranxUtil } from "set-piece";
+import { CardModel, PlayForm } from ".";
 import { CardType, RaceType } from "../../types";
 import { RoleModel } from "../role";
 import { SelectUtil } from "../../utils/select";
@@ -7,6 +7,7 @@ import { SelectUtil } from "../../utils/select";
 export namespace MinionCardModel {
     export type Event = Partial<CardModel.Event> & {
         onSummon: {};
+        onRemove: {};
     }
     export type State = Partial<CardModel.State> & {
         readonly races: RaceType[];
@@ -45,22 +46,20 @@ export abstract class MinionCardModel<
         });
     }
 
-    @DebugUtil.log()
-    private async toPlay(): Promise<{
-        dep: Map<Model, Model[]>,
-        pos: number
-    } | undefined> {
-        const player = this.route.owner;
+    public async play() {
+        const player = this.route.player;
         if (!player) return;
         const board = player.child.board;
         const size = board.child.cards.length;
-        const pos = await SelectUtil.get({
-            candidates: new Array(size + 1).fill(0).map((item, index) => index),
-        })
-        if (pos === undefined) return;
-        const dep: Map<Model, Model[]> = new Map();
-        for (const feat of this.child.battlecries) {
-            const selectors = feat.toPlay();
+        const list = new Array(size + 1).fill(0).map((item, index) => index);
+        const position = await SelectUtil.get({ list });
+        if (position === undefined) return;
+        const hooks = this.child.hooks;
+        const form: PlayForm = {
+            battlecry: new Map(),
+        };
+        for (const feature of hooks.child.battlecry) {
+            const selectors = feature.toPlay();
             if (!selectors) continue;
             const params: Model[] = [];
             for (const item of selectors) {
@@ -68,51 +67,33 @@ export abstract class MinionCardModel<
                 if (result === undefined) return;
                 params.push(result);
             }
-            dep.set(feat, params);
-        }        
-        const signal = this.event.toPlay({ isAbort: false });
-        if (signal?.isAbort) return;
-        return { dep, pos };
-    }
-
-    @DebugUtil.log()
-    public async play() {
-        const options = await this.toPlay();
-        if (!options) return;
-        const { dep, pos } = options;
-        this._play(pos);
-        await this.onPlay(dep);
+            form.battlecry.set(feature, params);
+        }
+        this.doPlay(position);
+        this.onPlay(form);
     }
 
     @TranxUtil.span()
-    private _play(pos: number) {
-        const player = this.route.owner;
+    private doPlay(pos: number) {
+        const player = this.route.player;
         if (!player) return;
         const card = player.child.hand.del(this);
         if (!card) return;
         player.child.board.add(card, pos); 
     }
 
-    protected async onPlay(dep: Map<Model, Model[]>) {
-        await super.onPlay(dep);
+    protected async onPlay(form: PlayForm) {
+        await super.onPlay(form);
         this.event.onSummon({});
     }
-    
+
+
     @TranxUtil.span()
-    public remove() {
-        const player = this.route.owner;
+    public doRemove() {
+        const player = this.route.player;
         if (!player) return;
         const card = player.child.board.del(this);
         if (!card) return;
         player.child.graveyard.add(card);
-    }
-
-    public onRemove() {
-        this.deathrattle();
-        this.event.onRemove({});
-    }
-
-    private deathrattle() {
-        this.child.deathrattles.forEach(feat => feat.run());
     }
 }

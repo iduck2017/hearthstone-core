@@ -1,7 +1,7 @@
 import { DebugUtil, Model, StoreUtil } from "set-piece";
 import { GameModel } from "./game";
 
-export namespace RootModel {
+export namespace AppModel {
     export type State = {};
     export type Event = {};
     export type Child = {
@@ -11,13 +11,13 @@ export namespace RootModel {
 }
 
 @StoreUtil.is('root')
-export class RootModel extends Model<
-    RootModel.Event, 
-    RootModel.State, 
-    RootModel.Child,
-    RootModel.Refer
+export class AppModel extends Model<
+    AppModel.Event, 
+    AppModel.State, 
+    AppModel.Child,
+    AppModel.Refer
 > {
-    constructor(props: RootModel['props']) {
+    constructor(props: AppModel['props']) {
         super({
             uuid: props.uuid,
             state: { ...props?.state },
@@ -27,13 +27,7 @@ export class RootModel extends Model<
     }
 
     @DebugUtil.log()
-    public startGame(game: GameModel) {
+    public set(game?: GameModel) {
         this.draft.child.game = game;
-        game.nextTurn();
-    }
-
-    @DebugUtil.log()
-    public endGame() {
-        delete this.draft.child.game;
     }
 }

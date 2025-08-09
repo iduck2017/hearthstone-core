@@ -1,9 +1,9 @@
 import { Model } from "set-piece";
-import { RoleModel } from "./role";
-import { DamageModel } from "./damage";
+import { RoleModel } from "../role";
+import { DamageModel } from "../card/damage";
+import { PlayerModel } from "../player";
+import { GameModel } from "../game";
 import { SkillModel } from "./skill";
-import { PlayerModel } from "./player";
-import { RootModel } from "./root";
 
 export namespace HeroModel {
     export type State = {
@@ -30,6 +30,15 @@ export abstract class HeroModel<
     C & HeroModel.Child,
     R & HeroModel.Refer
 > {
+    public get route() {
+        const route = super.route;
+        return { 
+            ...route,
+            game: route.path.find(item => item instanceof GameModel),
+            player: route.path.find(item => item instanceof PlayerModel),
+        }
+    }
+
     constructor(props: HeroModel['props'] & {
         uuid: string | undefined;
         state: S;
@@ -51,15 +60,4 @@ export abstract class HeroModel<
     }
 
 
-    public get route(): Model['route'] & Readonly<Partial<{
-        owner: PlayerModel;
-    }>> {
-        const { root, parent } = super.route;
-        const owner = parent instanceof PlayerModel ? parent : undefined;
-        return {
-            root,
-            owner,
-            parent
-        }
-    }
 }

@@ -1,5 +1,8 @@
 import { Model } from "set-piece";
-import { CardModel } from "./card";
+import { CardModel } from "../card";
+import { AppModel } from "..";
+import { GameModel } from "../game";
+import { PlayerModel } from ".";
 
 export namespace GraveyardModel {
     export type State = {};
@@ -16,6 +19,15 @@ export class GraveyardModel extends Model<
     GraveyardModel.Child,
     GraveyardModel.Refer
 > {
+    public get route() {
+        const route = super.route;
+        return { 
+            ...route,
+            game: route.path.find(item => item instanceof GameModel),
+            player: route.path.find(item => item instanceof PlayerModel),
+        }
+    }
+
     constructor(props: GraveyardModel['props']) {
         super({
             uuid: props.uuid,
@@ -27,10 +39,9 @@ export class GraveyardModel extends Model<
             refer: { ...props.refer },
         });
     }
-
+    
     public add(card: CardModel) {
         this.draft.child.cards.push(card);
         return card;
     }
-
 }

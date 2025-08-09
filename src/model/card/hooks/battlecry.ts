@@ -1,15 +1,16 @@
 import { Model } from "set-piece";
-import { CardModel } from "./card";
-import { RootModel } from "./root";
-import { SelectOption } from "../utils/select";
+import { CardModel } from "..";
+import { SelectForm } from "../../../utils/select";
+import { RoleModel } from "../../role";
 
 export namespace BattlecryModel {
     export type Event = {
-        name: string;
-        desc: string;
-        onUse: {};
+        onRun: { params: any[] };
     };
-    export type State = {};
+    export type State = {
+        readonly name: string;
+        readonly desc: string;
+    };
     export type Child = {};
     export type Refer = {};
 }
@@ -26,9 +27,16 @@ export abstract class BattlecryModel<
     C & BattlecryModel.Child, 
     R & BattlecryModel.Refer
 > {
+    public get route() {
+        const route = super.route;
+        const card: CardModel | undefined = route.path.find(item => item instanceof CardModel);
+        const role: RoleModel | undefined = route.path.find(item => item instanceof RoleModel);
+        return { ...route, card, role };
+    }
+
     constructor(props: BattlecryModel['props'] & {
         uuid: string | undefined;
-        state: S;
+        state: S & Pick<BattlecryModel.State, 'desc' | 'name'>;
         child: C;
         refer: R;
     }) {
@@ -40,28 +48,15 @@ export abstract class BattlecryModel<
         });
     }
 
-    public get route(): Model['route'] & Readonly<Partial<{
-        card: CardModel;
-    }>> {
-        const route = super.route;
-        const root = route.root instanceof RootModel ? route.root : undefined;
-        const card = route.parent instanceof CardModel ? route.parent : undefined;
-        return {
-            ...route,
-            root,
-            card,
-        }
+    public async run(...params: T) {
+        if (!this.toRun()) return;
+        await this.doRun(...params);
+        this.event.onRun({ params });
     }
 
-    public abstract toPlay(): { [K in keyof T]: SelectOption<T[K]> } | undefined;
-    
-    protected abstract check(): boolean;
+    protected abstract toRun(): boolean;
 
-    public async run(...target: T) {
-        if (!this.check()) return;
-        await this._run(...target);
-        await this.event.onUse({});
-    }
+    protected abstract doRun(...params: T): Promise<void>;
 
-    protected abstract _run(...target: T): Promise<void>;
+    public abstract toPlay(): { [K in keyof T]: SelectForm<T[K]> } | undefined;
 }

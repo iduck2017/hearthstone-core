@@ -1,16 +1,16 @@
 import { Model } from "set-piece";
-import { DamageCmd } from "./damage";
-import { RoleModel } from "./role";
-import { FilterType } from "../types";
+import { DamageForm } from "../../card/damage";
+import { RoleModel } from "..";
+import { FilterType } from "../../../types";
 
 export namespace DevineSheildModel {
     export type State = {
+        readonly name: string;
+        readonly desc: string;
         isActive: boolean;
-        name: string;
-        desc: string;
     };
     export type Event = {
-        onUse: DamageCmd;
+        onUse: DamageForm;
         onGet: {};
     };
     export type Refer = {};
@@ -23,13 +23,21 @@ export class DevineSheildModel extends Model<
     DevineSheildModel.Child,
     DevineSheildModel.Refer
 > {
+    public get route(): Model['route'] & Readonly<Partial<{
+        role: RoleModel;
+    }>> {
+        const parent = super.route.parent;
+        const role = parent instanceof RoleModel ? parent : undefined;
+        return { ...super.route, role }
+    }
+
     constructor(props: DevineSheildModel['props']) {
         super({
             uuid: props.uuid,
             state: {
-                isActive: false,
                 name: "Devine Shield",
                 desc: "The first time this takes damage, ignore it.",
+                isActive: false,
                 ...props.state,
             },
             child: {},
@@ -37,18 +45,8 @@ export class DevineSheildModel extends Model<
         })
     }
 
-    public get route(): Model['route'] & Readonly<Partial<{
-        role: RoleModel;
-    }>> {
-        const parent = super.route.parent;
-        const role = parent instanceof RoleModel ? parent : undefined;
-        return {
-            ...super.route,
-            role,
-        }
-    }
 
-    public check(cmd: DamageCmd): boolean {
+    public check(cmd: DamageForm): boolean {
         if (!this.state.isActive) return false;
         if (!this.route.role?.check({
             isAlive: FilterType.INCLUDE,

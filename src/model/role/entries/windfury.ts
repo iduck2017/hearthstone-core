@@ -1,8 +1,9 @@
-import { Model } from "set-piece";
+import { Model, Route } from "set-piece";
 
 export namespace WindfuryModel {
-    export type Route = {}
     export type State = {
+        readonly name: string;
+        readonly desc: string;
         isActive: boolean;
         isSuper: boolean;
     };
@@ -12,7 +13,6 @@ export namespace WindfuryModel {
 }
 
 export class WindfuryModel extends Model<
-    WindfuryModel.Route,
     WindfuryModel.Event,
     WindfuryModel.State,
     WindfuryModel.Child,
@@ -24,15 +24,16 @@ export class WindfuryModel extends Model<
             state: {
                 isActive: false,
                 isSuper: false,
+                name: "Windfury",
+                desc: "Can attack twice each turn.",
                 ...props.state,
             },
             child: { ...props.child },
             refer: { ...props.refer },
-            route: {}
         });
     }
 
-    public check(): number {
+    public use(): number {
         if (!this.state.isActive) return 0;
         if (this.state.isSuper) return 3;
         return 1;

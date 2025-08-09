@@ -1,6 +1,7 @@
-import { Model } from "set-piece";
-import { PlayerModel } from "./player";
-import { CardModel } from "./card";
+import { Model, TranxUtil } from "set-piece";
+import { PlayerModel } from ".";
+import { CardModel } from "../card";
+import { GameModel } from "../game";
 
 export namespace HandModel {
     export type Event = {}
@@ -17,6 +18,15 @@ export class HandModel extends Model<
     HandModel.Child,
     HandModel.Refer
 > {
+    public get route() {
+        const route = super.route;
+        return { 
+            ...route,
+            game: route.path.find(item => item instanceof GameModel),
+            player: route.path.find(item => item instanceof PlayerModel),
+        }
+    }
+
     constructor(props: HandModel['props']) {
         super({
             uuid: props.uuid,
@@ -29,10 +39,13 @@ export class HandModel extends Model<
         })
     }
 
+    @TranxUtil.span()
     public add(card: CardModel) {
         this.draft.child.cards.push(card);
+        return card;
     }
 
+    @TranxUtil.span()
     public del<T extends CardModel>(card: T): T | undefined {
         const index = this.draft.child.cards.indexOf(card);
         if (index === -1) return;

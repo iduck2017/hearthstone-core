@@ -1,5 +1,5 @@
 import { HeroCardModel } from "../../card/hero";
-import { HeroModel } from "../../hero";
+import { HeroModel } from "..";
 import { MageRoleModel } from "./role";
 import { MageSkillModel } from "./skill";
 

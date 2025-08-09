@@ -1,6 +1,6 @@
 import { Callback, Model, TranxUtil } from "set-piece";
 import { RoleModel } from ".";
-import { DamageCmd, DamageModel } from "../damage";
+import { DamageForm, DamageModel } from "../card/damage";
 
 export namespace DeathModel {
     export type Event = {
@@ -70,8 +70,13 @@ export class DeathModel extends Model<
     @TranxUtil.span()
     private static _dispose(tasks: RoleModel[]) {
         tasks.forEach(role => role.route.card?.remove());
-        tasks.forEach(role => role.route.card?.onRemove());
         tasks.forEach(role => role.child.death.event.onDie({}));
+    }
+
+    public get route() {
+        const path = super.route.path;
+        const role: RoleModel | undefined = path.find(item => item instanceof RoleModel);
+        return { ...super.route, role }
     }
 
     constructor(props: DeathModel['props']) {
@@ -87,23 +92,12 @@ export class DeathModel extends Model<
         })
     }
 
-    public get route(): Model['route'] & Readonly<Partial<{
-        role: RoleModel;
-    }>> {
-        const route = super.route
-        const role = route.parent instanceof RoleModel ? route.parent : undefined;
-        return {
-            ...route,
-            role,
-        }
-    }
-
-    public check(cmd: DamageCmd) {
-        if (cmd.target !== this.route.role) return;
+    public check(cmd: DamageForm) {
+        if (cmd.target !== this.route.role) return false;
         this.draft.state.damage = cmd.result;
         this.draft.state.isDead = true;
         this.draft.refer.reason = cmd.source;
         DeathModel.tasks.push(this.route.role);
+        return true;
     }
-    
 }
