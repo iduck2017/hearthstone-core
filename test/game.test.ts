@@ -1,7 +1,5 @@
 import { BoardModel, GameModel, HandModel, MageModel, PlayerModel, SelectUtil, TimeUtil } from "../src";
 import { DeckModel } from "../src/model/player/deck";
-import { AttackModel } from "../src/model/role/attack";
-import { HealthModel } from "../src/model/role/health";
 import { boot } from "./boot";
 import { WispCardModel } from "./wisp/card";
 import { WispRoleModel } from "./wisp/role";
@@ -20,9 +18,9 @@ describe('game', () => {
                                     state: { mana: 1 },
                                     child: {
                                         role: new WispRoleModel({
-                                            child: {
-                                                attack: new AttackModel({ state: { origin: 1 } }),
-                                                health: new HealthModel({ state: { origin: 1 } }),
+                                            state: {
+                                                rawAttack: 1,
+                                                rawHealth: 1,
                                             }
                                         })
                                     }
@@ -31,9 +29,9 @@ describe('game', () => {
                                     state: { mana: 1 },
                                     child: {
                                         role: new WispRoleModel({
-                                            child: {
-                                                attack: new AttackModel({ state: { origin: 1 } }),
-                                                health: new HealthModel({ state: { origin: 1 } }),
+                                            state: {
+                                                rawAttack: 1,
+                                                rawHealth: 1,
                                             }
                                         })
                                     }
@@ -48,9 +46,9 @@ describe('game', () => {
                                     state: { mana: 1 },
                                     child: {
                                         role: new WispRoleModel({
-                                            child: {
-                                                attack: new AttackModel({ state: { origin: 1 } }),
-                                                health: new HealthModel({ state: { origin: 1 } }),
+                                            state: {
+                                                rawAttack: 1,
+                                                rawHealth: 1,
                                             }
                                         })
                                     }
@@ -72,12 +70,11 @@ describe('game', () => {
     });
 
     test('next-turn', () => {
-        const turn = game.child.turn;
-        expect(turn.state.count).toBe(0);
+        expect(game.state.turn).toBe(0);
         boot(game);
-        expect(turn.state.count).toBe(1);
-        turn.next();
-        expect(turn.state.count).toBe(2);
+        expect(game.state.turn).toBe(1);
+        game.nextTurn();
+        expect(game.state.turn).toBe(2);
     })
 
     test('draw-card', async () => {
@@ -114,9 +111,9 @@ describe('game', () => {
         await TimeUtil.sleep()
         let selector = SelectUtil.current;
         expect(selector).toBeDefined();
-        expect(selector?.list).toContain(0);
-        expect(selector?.list).toContain(1);
-        expect(selector?.list.length).toBe(2);
+        expect(selector?.targets).toContain(0);
+        expect(selector?.targets).toContain(1);
+        expect(selector?.targets.length).toBe(2);
         SelectUtil.set(0);
         await promise;
         expect(board.child.cards.length).toBe(2);
@@ -128,10 +125,9 @@ describe('game', () => {
         await TimeUtil.sleep();
         selector = SelectUtil.current;
         expect(selector).toBeDefined();
-        expect(selector?.list.length).toBe(3);
+        expect(selector?.targets.length).toBe(3);
         SelectUtil.set(1);
         await promise;
         expect(board.child.cards[1]).toBe(card);
     })
-
 })

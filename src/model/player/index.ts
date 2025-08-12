@@ -3,9 +3,8 @@ import { GameModel } from "../game";
 import { HandModel } from "./hand";
 import { BoardModel } from "./board";
 import { DeckModel } from "./deck";
-import { HeroModel } from "../hero";
+import { HeroModel } from "../heroes";
 import { GraveyardModel } from "./graveyard";
-import { AppModel } from "..";
 
 export namespace PlayerModel {
     export type State = {};

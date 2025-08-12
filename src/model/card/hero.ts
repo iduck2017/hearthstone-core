@@ -1,7 +1,6 @@
 import { Model } from "set-piece";
 import { CardModel } from ".";
-import { SkillModel } from "../hero/skill";
-import { CardType } from "../../types";
+import { SkillModel } from "../skill";
 
 export namespace HeroCardModel {
     export type Event = Partial<CardModel.Event> & {};
@@ -33,10 +32,7 @@ export abstract class HeroCardModel<
     }) {
         super({
             uuid: props.uuid,
-            state: {
-                type: CardType.HERO,
-                ...props.state,
-            },
+            state: { ...props.state },
             child: { ...props.child },
             refer: { ...props.refer },
         });

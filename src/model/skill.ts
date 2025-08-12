@@ -1,5 +1,4 @@
-import { Constructor, Model } from "set-piece";
-import { HeroModel } from ".";
+import { Model } from "set-piece";
 
 export namespace SkillModel {
     export type Event = {};

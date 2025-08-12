@@ -1,4 +1,4 @@
-import { Model } from "set-piece";
+import { DebugUtil, Model } from "set-piece";
 import { CardModel } from "../card";
 import { GameModel } from "../game";
 import { PlayerModel } from ".";
@@ -48,5 +48,10 @@ export class DeckModel extends Model<
         if (index === -1) return;
         this.draft.child.cards.splice(index, 1);
         return card;
+    }
+
+    @DebugUtil.log()
+    public draw() {
+        
     }
 }

@@ -1,16 +1,15 @@
 import { Model } from "set-piece";
 import { RoleModel } from "../role";
-import { DamageModel } from "../card/damage";
 import { PlayerModel } from "../player";
 import { GameModel } from "../game";
-import { SkillModel } from "./skill";
+import { SkillModel } from "../skill";
+import { DamageModel } from "../damage";
 
 export namespace HeroModel {
     export type State = {
         armor: number;
     };
-    export type Event = {
-    };
+    export type Event = {};
     export type Child = {
         role: RoleModel;
         skill: SkillModel;
@@ -51,13 +50,11 @@ export abstract class HeroModel<
                 armor: 0,
                 ...props.state,
             },
-            child: {
+            child: { 
                 damage: new DamageModel({}),
                 ...props.child,
             },
             refer: { ...props.refer },
         });
     }
-
-
 }

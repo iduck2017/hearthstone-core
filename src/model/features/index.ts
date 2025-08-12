@@ -1,10 +1,13 @@
 import { Model } from "set-piece";
-import { RoleModel } from ".";
+import { RoleModel } from "../role";
 import { BuffModel } from "./buff";
 import { CardModel } from "../card";
 
-export namespace RoleFeatureModel {
-    export type State = {}
+export namespace FeatureModel {
+    export type State = {
+        name: string;
+        desc: string;
+    }
     export type Event = {};
     export type Child = {
         buff?: BuffModel;
@@ -12,16 +15,16 @@ export namespace RoleFeatureModel {
     export type Refer = {};
 }
 
-export abstract class RoleFeatureModel<
-    E extends Partial<RoleFeatureModel.Event> & Model.Event = {},
-    S extends Partial<RoleFeatureModel.State> & Model.State = {},
-    C extends Partial<RoleFeatureModel.Child> & Model.Child = {},
-    R extends Partial<RoleFeatureModel.Refer> & Model.Refer = {}
+export abstract class FeatureModel<
+    E extends Partial<FeatureModel.Event> & Model.Event = {},
+    S extends Partial<FeatureModel.State> & Model.State = {},
+    C extends Partial<FeatureModel.Child> & Model.Child = {},
+    R extends Partial<FeatureModel.Refer> & Model.Refer = {}
 > extends Model<
-    E & RoleFeatureModel.Event,
-    S & RoleFeatureModel.State,
-    C & RoleFeatureModel.Child,
-    R & RoleFeatureModel.Refer
+    E & FeatureModel.Event,
+    S & FeatureModel.State,
+    C & FeatureModel.Child,
+    R & FeatureModel.Refer
 > {
     public get route() {
         const path = super.route.path;
@@ -30,9 +33,9 @@ export abstract class RoleFeatureModel<
         return { ...super.route, role, card }
     }
 
-    constructor(props: RoleFeatureModel['props'] & {
+    constructor(props: FeatureModel['props'] & {
         uuid: string | undefined;
-        state: S
+        state: S & Pick<FeatureModel.State, 'name' | 'desc'>;
         child: C,
         refer: R,
     }) {
@@ -43,6 +46,4 @@ export abstract class RoleFeatureModel<
             refer: { ...props.refer },
         })
     }
-
-    protected abstract check(): boolean;
 }

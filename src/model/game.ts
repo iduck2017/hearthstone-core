@@ -1,9 +1,7 @@
-import { Model, StoreUtil } from "set-piece";
-import { PlayerModel } from "../player";
-import { RoleModel } from "../role";
-import { FilterType } from "../../types";
-import { TurnModel } from "./turn";
-import { AppModel } from "..";
+import { DebugUtil, Model, StoreUtil, TranxUtil } from "set-piece";
+import { PlayerModel } from "./player";
+import { RoleModel } from "./role";
+import { FilterType } from "../types";
 
 export type QueryOption = {
     side?: PlayerModel;
@@ -13,14 +11,20 @@ export type QueryOption = {
 }
 
 export namespace GameModel {
-    export type State = {};
-    export type Event = {};
+    export type State = {
+        turn: number;
+    };
+    export type Event = {
+        onEndTurn: {};
+        onStartTurn: {};
+    };
     export type Child = {
-        readonly turn: TurnModel;
         readonly playerA: PlayerModel;
         readonly playerB: PlayerModel;
     };
-    export type Refer = {};
+    export type Refer = {
+        current?: PlayerModel;
+    };
 }
 
 
@@ -36,11 +40,11 @@ export class GameModel extends Model<
     }) {
         super({
             uuid: props.uuid,
-            state: { ...props.state },
-            child: {
-                turn: new TurnModel({}),
-                ...props.child,
+            state: { 
+                turn: 0,
+                ...props.state 
             },
+            child: { ...props.child },
             refer: { ...props.refer },
         });
     }
@@ -71,4 +75,25 @@ export class GameModel extends Model<
             return true;
         });
     }
+    
+    @DebugUtil.log()
+    public nextTurn() {
+        let player = this.refer.current;
+        let board = player?.child.board;
+        let roles = board?.child.cards.map(item => item.child.role);
+        this.event.onEndTurn({});
+        this.doNextTurn();
+        player = this.refer.current;
+        board = player?.child.board;
+        roles = board?.child.cards.map(item => item.child.role);
+        roles?.forEach(role => role.startTurn());
+        this.event.onStartTurn({});
+    }
+
+    @TranxUtil.span()
+    private doNextTurn() {
+        this.draft.state.turn ++;
+        this.draft.refer.current = this.refer.current?.refer.opponent ?? this.child.playerA;
+    }
+
 }

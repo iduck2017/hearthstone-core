@@ -1,14 +1,16 @@
 import { DebugUtil, Model, TranxUtil } from "set-piece";
-import { CardType } from "../../types";
 import { PlayerModel } from "../player";
-import { DamageModel } from "./damage";
 import { GameModel } from "../game";
-import { CardHooksModel } from "./hooks";
-import { BattlecryModel } from "./hooks/battlecry";
+import { BattlecryModel } from "../hooks/battlecry";
 import { HandModel } from "../player/hand";
 import { DeckModel } from "../player/deck";
 import { BoardModel } from "../player/board";
 import { GraveyardModel } from "../player/graveyard";
+import { DeathrattleModel } from "../hooks/deathrattle";
+import { StartTurnHookModel } from "../hooks/start-turn";
+import { EndTurnHookModel } from "../hooks/end-turn";
+import { DamageModel } from "../damage";
+import { SelectUtil } from "../../utils/select";
 
 export type PlayForm = {
     battlecry: Map<BattlecryModel, Model[]>;
@@ -19,18 +21,20 @@ export namespace CardModel {
         readonly name: string;
         readonly desc: string;
         readonly mana: number;
-        readonly type: CardType;
     };
     export type Event = {
         toPlay: { isAbort: boolean };
         toDraw: { isAbort: boolean };
         onPlay: {};
         onDraw: { card: CardModel },
-        onRemove: {};
+        onDispose: {};
     };
     export type Child = {
+        readonly battlecryHooks: BattlecryModel[];
+        readonly deathrattleHooks: DeathrattleModel[];
+        readonly startTurnHooks: StartTurnHookModel[];
+        readonly endTurnHooks: EndTurnHookModel[];
         readonly damage: DamageModel;
-        readonly hooks: CardHooksModel;
     };
     export type Refer = {};
 }
@@ -80,20 +84,53 @@ export abstract class CardModel<
             uuid: props.uuid,
             state: { ...props.state },
             child: {
+                battlecryHooks: [],
+                deathrattleHooks: [],
+                startTurnHooks: [],
+                endTurnHooks: [],
                 damage: new DamageModel({}),
-                hooks: new CardHooksModel({}),
                 ...props.child,
             },
             refer: { ...props.refer },
         });
     }
 
+
+    /**  play card */
     public abstract play(): Promise<void>;
 
+    protected async onPlay(form: PlayForm) {
+        this.event.onPlay({});
+        for (const item of this.child.battlecryHooks) {
+            const params = form.battlecry.get(item);
+            if (!params) return;
+            await item.run(...params);
+        }
+    }
+
+    protected async toPlay(): Promise<PlayForm | undefined> {
+        const form: PlayForm = {
+            battlecry: new Map(),
+        };
+        for (const feature of this.child.battlecryHooks) {
+            const selectors = feature.toRun();
+            if (!selectors) continue;
+            const params: Model[] = [];
+            for (const item of selectors) {
+                const result = await SelectUtil.get(item);
+                if (result === undefined) return;
+                params.push(result);
+            }
+            form.battlecry.set(feature, params);
+        }
+        return form;
+    }
+
+    /** draw card */
     @DebugUtil.log()
     public draw() {
-        const { isAbort } = this.event.toDraw({ isAbort: false });
-        if (isAbort) return;
+        const signal = this.event.toDraw({ isAbort: false });
+        if (signal.isAbort) return;
         const card = this.doDraw();
         if (!card) return;
         this.event.onDraw({ card });
@@ -101,7 +138,7 @@ export abstract class CardModel<
 
     @TranxUtil.span()
     protected doDraw() {
-        const { player } = this.route;
+        const player = this.route.player;
         if (!player) return;
         let result = player.child.deck.del(this);
         if (!result) return;
@@ -109,27 +146,15 @@ export abstract class CardModel<
         return result;
     }
 
-
+    /** dispose */
     @DebugUtil.log()
-    public async remove() {
-        this.doRemove();
-        this.event.onRemove({});
-        const hooks = this.child.hooks;
-        for (const item of hooks.child.deathrattle) {
+    public async dispose() {
+        this.doDispose();
+        this.event.onDispose({});
+        for (const item of this.child.deathrattleHooks) {
             await item.run();
         }
     }
-
-    public abstract doRemove(): void;
-
     
-    protected async onPlay(form: PlayForm) {
-        this.event.onPlay({});
-        const hooks = this.child.hooks;
-        for (const item of hooks.child.battlecry) {
-            const params = form.battlecry.get(item);
-            if (!params) return;
-            await item.run(...params);
-        }
-    }
+    public abstract doDispose(): void;
 }

@@ -1,9 +1,10 @@
 import { Model } from "set-piece";
-import { CardModel } from "..";
-import { RoleModel } from "../../role";
+import { CardModel } from "../card";
+import { RoleModel } from "../role";
 
 export namespace DeathrattleModel {
     export type Event = {
+        toRun: { isAbort: boolean };
         onRun: {};
     };
     export type State = {};
@@ -44,12 +45,11 @@ export abstract class DeathrattleModel<
     }
 
     public async run() {
-        if (!this.toRun()) return;
+        const signal = this.event.toRun({ isAbort: false });
+        if (signal.isAbort) return;
         await this.doRun();
         this.event.onRun({});
     }
-
-    protected abstract toRun(): boolean;
 
     protected abstract doRun(): Promise<void>;
 }

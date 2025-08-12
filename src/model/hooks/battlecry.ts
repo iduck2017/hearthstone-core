@@ -1,11 +1,14 @@
 import { Model } from "set-piece";
-import { CardModel } from "..";
-import { SelectForm } from "../../../utils/select";
-import { RoleModel } from "../../role";
+import { CardModel } from "../card";
+import { SelectForm } from "../../utils/select";
+import { RoleModel } from "../role";
+import { GameModel } from "../game";
+import { PlayerModel } from "../player";
 
 export namespace BattlecryModel {
     export type Event = {
         onRun: { params: any[] };
+        toRun: { isAbort: boolean };
     };
     export type State = {
         readonly name: string;
@@ -31,7 +34,21 @@ export abstract class BattlecryModel<
         const route = super.route;
         const card: CardModel | undefined = route.path.find(item => item instanceof CardModel);
         const role: RoleModel | undefined = route.path.find(item => item instanceof RoleModel);
-        return { ...route, card, role };
+        return { 
+            ...route, 
+            card, 
+            role,
+            player: route.path.find(item => item instanceof PlayerModel),
+            game: route.path.find(item => item instanceof GameModel)
+        };
+    }
+
+    public get refer() {
+        const route = this.route;
+        return {
+            ...super.refer,
+            damage: route.card?.child.damage,
+        }
     }
 
     constructor(props: BattlecryModel['props'] & {
@@ -49,14 +66,13 @@ export abstract class BattlecryModel<
     }
 
     public async run(...params: T) {
-        if (!this.toRun()) return;
+        const signal = this.event.toRun({ isAbort: false });
+        if (signal.isAbort) return;
         await this.doRun(...params);
         this.event.onRun({ params });
     }
 
-    protected abstract toRun(): boolean;
-
     protected abstract doRun(...params: T): Promise<void>;
 
-    public abstract toPlay(): { [K in keyof T]: SelectForm<T[K]> } | undefined;
+    public abstract toRun(): { [K in keyof T]: SelectForm<T[K]> } | undefined;
 }

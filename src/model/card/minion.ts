@@ -1,6 +1,6 @@
-import { Model, TranxUtil } from "set-piece";
+import { DebugUtil, Model, TranxUtil } from "set-piece";
 import { CardModel, PlayForm } from ".";
-import { CardType, RaceType } from "../../types";
+import { RaceType } from "../../types";
 import { RoleModel } from "../role";
 import { SelectUtil } from "../../utils/select";
 
@@ -37,40 +37,27 @@ export abstract class MinionCardModel<
     }) {
         super({
             uuid: props.uuid,
-            state: {
-                type: CardType.MINION,
-                ...props.state,
-            },
+            state: { ...props.state },
             child: { ...props.child },
             refer: { ...props.refer },
         });
     }
 
+    /** play */
+    @DebugUtil.log()
     public async play() {
         const player = this.route.player;
         if (!player) return;
         const board = player.child.board;
         const size = board.child.cards.length;
         const list = new Array(size + 1).fill(0).map((item, index) => index);
-        const position = await SelectUtil.get({ list });
+        const position = await SelectUtil.get({ targets: list });
         if (position === undefined) return;
-        const hooks = this.child.hooks;
-        const form: PlayForm = {
-            battlecry: new Map(),
-        };
-        for (const feature of hooks.child.battlecry) {
-            const selectors = feature.toPlay();
-            if (!selectors) continue;
-            const params: Model[] = [];
-            for (const item of selectors) {
-                const result = await SelectUtil.get(item);
-                if (result === undefined) return;
-                params.push(result);
-            }
-            form.battlecry.set(feature, params);
-        }
+        const form = await this.toPlay();
+        if (!form) return;
         this.doPlay(position);
-        this.onPlay(form);
+        await this.onPlay(form);
+        this.event.onSummon({})
     }
 
     @TranxUtil.span()
@@ -82,14 +69,9 @@ export abstract class MinionCardModel<
         player.child.board.add(card, pos); 
     }
 
-    protected async onPlay(form: PlayForm) {
-        await super.onPlay(form);
-        this.event.onSummon({});
-    }
-
-
+    /** dispose */
     @TranxUtil.span()
-    public doRemove() {
+    public doDispose() {
         const player = this.route.player;
         if (!player) return;
         const card = player.child.board.del(this);
