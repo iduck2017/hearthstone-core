@@ -1,8 +1,8 @@
 import { Model, Route, TranxUtil } from "set-piece";
-import { RoleModel } from "./role";
-import { CardModel } from "../model/card";
-import { HeroModel } from "./heroes";
-import { DeathUtil } from "../utils/death";
+import { RoleModel } from "../role";
+import { CardModel } from "../card";
+import { HeroModel } from ".";
+import { DeathUtil } from "../../utils/death";
 
 export enum DamageType {
     ATTACK = 1,

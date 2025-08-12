@@ -7,7 +7,7 @@ import { FilterType } from "../types";
 import { BoardModel } from "./player/board";
 import { HandModel } from "./player/hand";
 import { DeckModel } from "./player/deck";
-import { DamageForm, DamageModel, DamageType } from "./damage";
+import { DamageForm, DamageModel, DamageType } from "./heroes/damage";
 import { CardModel } from "./card";
 import { DeathUtil } from "../utils/death";
 import { GraveyardModel } from "./player/graveyard";

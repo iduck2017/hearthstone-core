@@ -1,6 +1,6 @@
 import { Model } from "set-piece";
 import { CardModel } from ".";
-import { SkillModel } from "../skill";
+import { SkillModel } from "../heroes/skill";
 
 export namespace HeroCardModel {
     export type Event = Partial<CardModel.Event> & {};

@@ -1,4 +1,4 @@
-export { DamageType } from "./model/damage";
+export { DamageType } from "./model/heroes/damage";
 export { FilterType } from "./types";
 export { RaceType } from "./types";
 

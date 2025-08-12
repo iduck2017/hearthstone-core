@@ -1,4 +1,4 @@
-import { SkillModel } from "../../skill";
+import { SkillModel } from "../skill";
 
 export class WarriorSkillModel extends SkillModel {
     constructor(props: WarriorSkillModel['props']) {

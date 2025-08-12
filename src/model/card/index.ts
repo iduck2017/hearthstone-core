@@ -9,7 +9,7 @@ import { GraveyardModel } from "../player/graveyard";
 import { DeathrattleModel } from "../hooks/deathrattle";
 import { StartTurnHookModel } from "../hooks/start-turn";
 import { EndTurnHookModel } from "../hooks/end-turn";
-import { DamageModel } from "../damage";
+import { DamageModel } from "../heroes/damage";
 import { SelectUtil } from "../../utils/select";
 
 export type PlayForm = {

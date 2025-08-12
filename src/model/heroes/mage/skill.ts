@@ -1,4 +1,4 @@
-import { SkillModel } from "../../skill";
+import { SkillModel } from "../skill";
 
 export class MageSkillModel extends SkillModel {
     constructor(props: MageSkillModel['props']) {
