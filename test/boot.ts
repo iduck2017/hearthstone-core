@@ -6,6 +6,6 @@ export function boot(game: GameModel) {
     const root = new AppModel({});
     RouteUtil.boot(root);
     root.set(game);
-    game.nextTurn();
+    game.child.turn.next();
     return root;
 }

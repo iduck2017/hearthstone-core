@@ -43,7 +43,6 @@ export abstract class MinionCardModel<
         });
     }
 
-    /** play */
     @DebugUtil.log()
     public async play() {
         const player = this.route.player;
@@ -68,10 +67,9 @@ export abstract class MinionCardModel<
         if (!card) return;
         player.child.board.add(card, pos); 
     }
-
-    /** dispose */
+    
     @TranxUtil.span()
-    public doDispose() {
+    public doClear() {
         const player = this.route.player;
         if (!player) return;
         const card = player.child.board.del(this);

@@ -5,6 +5,8 @@ import { WispCardModel } from "./wisp/card";
 import { HandModel } from "../src/model/player/hand";
 import { DeckModel } from "../src/model/player/deck";
 import { BoardModel } from "../src/model/player/board";
+import { HealthModel } from "../src/model/role/health";
+import { AttackModel } from "../src/model/role/attack";
 
 describe('role', () => {
     const game = new GameModel({
@@ -15,21 +17,19 @@ describe('role', () => {
                     hand: new HandModel({}),
                     deck: new DeckModel({}),
                     board: new BoardModel({
-                        child: {
-                            cards: [
-                                new WispCardModel({
-                                    state: { mana: 1 },
-                                    child: {
-                                        role: new WispRoleModel({
-                                            state: {
-                                                rawAttack: 1,
-                                                rawHealth: 2,
-                                            }
-                                        })
-                                    }
-                                })
-                            ]
-                        }
+                        child: { cards: [
+                            new WispCardModel({
+                                state: { mana: 1 },
+                                child: {
+                                    role: new WispRoleModel({
+                                        child: {
+                                            health: new HealthModel({ state: { origin: 2 } }),
+                                            attack: new AttackModel({ state: { origin: 1 } }),
+                                        }
+                                    })
+                                }
+                            })
+                        ]}
                     }),
                 },
             }),
@@ -39,21 +39,19 @@ describe('role', () => {
                     hand: new HandModel({}),
                     deck: new DeckModel({}),
                     board: new BoardModel({
-                        child: {
-                            cards: [
-                                new WispCardModel({
-                                    state: { mana: 1 },
-                                    child: {
-                                        role: new WispRoleModel({
-                                            state: {
-                                                rawAttack: 1,
-                                                rawHealth: 2,
-                                            }
-                                        })
-                                    }
-                                })
-                            ]
-                        }
+                        child: { cards: [
+                            new WispCardModel({
+                                state: { mana: 1 },
+                                child: {
+                                    role: new WispRoleModel({
+                                        child: {
+                                            health: new HealthModel({ state: { origin: 2 } }),
+                                            attack: new AttackModel({ state: { origin: 1 } }),
+                                        }
+                                    })
+                                }
+                            })
+                        ]}
                     }),
                 },
             }),
@@ -73,11 +71,11 @@ describe('role', () => {
         expect(roleA).toBeDefined();
         expect(roleB).toBeDefined();
         if (!roleA || !roleB) return;
-        expect(roleA.state.action).toBe(1);
-        expect(roleB.state.action).toBe(0);
-        game.nextTurn();
-        expect(roleA.state.action).toBe(1);
-        expect(roleB.state.action).toBe(1);
+        expect(roleA.child.action.state.count).toBe(1);
+        expect(roleB.child.action.state.count).toBe(0);
+        game.child.turn.next();
+        expect(roleA.child.action.state.count).toBe(1);
+        expect(roleB.child.action.state.count).toBe(1);
     })
 
     test('attack-health', () => {
@@ -87,12 +85,12 @@ describe('role', () => {
         const role = card?.child.role;
         expect(role).toBeDefined();
         if (!role) return;
-        expect(role.state.health).toBe(2);
-        expect(role.state.damage).toBe(0);
-        expect(role.state.maxHealth).toBe(2);
-        expect(role.state.attack).toBe(1);
-        expect(role.state.isDead).toBe(false);
-        expect(role.state.action).toBe(1);
+        expect(role.child.health.state.current).toBe(2);
+        expect(role.child.health.state.damage).toBe(0);
+        expect(role.child.health.state.limit).toBe(2);
+        expect(role.child.attack.state.current).toBe(1);
+        expect(role.child.death.state.isDying).toBe(false);
+        expect(role.child.action.state.count).toBe(1);
     })
 
     test('attack', async () => {
@@ -100,40 +98,40 @@ describe('role', () => {
         const playerB = game.child.playerB;
         const boardA = playerA.child.board;
         const boardB = playerB.child.board;
-        const wispA = boardA.child.cards.find(item => item instanceof WispCardModel);
-        const wispB = boardB.child.cards.find(item => item instanceof WispCardModel);
+        const cardA = boardA.child.cards.find(item => item instanceof WispCardModel);
+        const cardB = boardB.child.cards.find(item => item instanceof WispCardModel);
         const heroA = playerA.child.hero;
         const heroB = playerB.child.hero;
-        expect(wispA).toBeDefined();
-        expect(wispB).toBeDefined();
-        if (!wispA || !wispB) return;
+        expect(cardA).toBeDefined();
+        expect(cardB).toBeDefined();
+        if (!cardA || !cardB) return;
 
-        const promise = wispB.child.role.attack();
+        const promise = cardB.child.role.child.attack.attack();
         await TimeUtil.sleep();
         const selector = SelectUtil.current;
         expect(selector).toBeDefined();
         if (!selector) return;
         expect(selector.targets).toContain(heroA.child.role);
-        expect(selector?.targets).toContain(wispA.child.role);
+        expect(selector?.targets).toContain(cardA.child.role);
         expect(selector?.targets.length).toBe(2);
-        SelectUtil.set(wispA.child.role);
+        SelectUtil.set(cardA.child.role);
         await promise;
         
-        const roleA = wispA.child.role;
-        const roleB = wispB.child.role;
+        const roleA = cardA.child.role;
+        const roleB = cardB.child.role;
         expect(roleA.state.health).toBe(1);
-        expect(roleA.state.damage).toBe(1);
-        expect(roleA.state.maxHealth).toBe(2);
-        expect(roleA.state.attack).toBe(1);
-        expect(roleA.state.isDead).toBe(false);
-        expect(roleA.state.action).toBe(1);
+        expect(roleA.child.health.state.damage).toBe(1);
+        expect(roleA.child.health.state.limit).toBe(2);
+        expect(roleA.child.attack.state.current).toBe(1);
+        expect(roleA.child.death.state.isDying).toBe(false);
+        expect(roleA.child.action.state.count).toBe(1);
 
         expect(roleB.state.health).toBe(1);
-        expect(roleB.state.damage).toBe(1);
-        expect(roleB.state.maxHealth).toBe(2);
-        expect(roleB.state.attack).toBe(1);
-        expect(roleB.state.isDead).toBe(false);
-        expect(roleB.state.action).toBe(0);
+        expect(roleB.child.health.state.damage).toBe(1);
+        expect(roleB.child.health.state.limit).toBe(2);
+        expect(roleB.child.attack.state.current).toBe(1);
+        expect(roleB.child.death.state.isDying).toBe(false);
+        expect(roleB.child.action.state.count).toBe(0);
     })
 
 
@@ -144,46 +142,45 @@ describe('role', () => {
         const boardB = playerB.child.board;
         const graveyardA = playerA.child.graveyard;
         const graveyardB = playerB.child.graveyard;
-        const wispA = boardA.child.cards.find(item => item instanceof WispCardModel);
-        const wispB = boardB.child.cards.find(item => item instanceof WispCardModel);
-        expect(wispA).toBeDefined();
-        expect(wispB).toBeDefined();
-        if (!wispA || !wispB) return;
+        const cardA = boardA.child.cards.find(item => item instanceof WispCardModel);
+        const cardB = boardB.child.cards.find(item => item instanceof WispCardModel);
+        expect(cardA).toBeDefined();
+        expect(cardB).toBeDefined();
+        if (!cardA || !cardB) return;
 
-        game.nextTurn();
-        const promise = wispA.child.role.attack();
+        game.child.turn.next();
+        const promise = cardA.child.role.child.attack.attack();
         await TimeUtil.sleep();
         const selector = SelectUtil.current;
         if (!selector) return;
-        expect(selector?.targets).toContain(wispB.child.role);
+        expect(selector?.targets).toContain(cardB.child.role);
         expect(selector?.targets.length).toBe(2);
-        SelectUtil.set(wispB.child.role);
+        SelectUtil.set(cardB.child.role);
         await promise;
-
         
-        const roleA = wispA.child.role;
-        const roleB = wispB.child.role;
+        const roleA = cardA.child.role;
+        const roleB = cardB.child.role;
         expect(roleA.state.health).toBe(0);
-        expect(roleA.state.damage).toBe(2);
-        expect(roleA.state.maxHealth).toBe(2);
-        expect(roleA.state.attack).toBe(1);
-        expect(roleA.state.isDead).toBe(true);
-        expect(roleA.state.action).toBe(0);
+        expect(roleA.child.health.state.damage).toBe(2);
+        expect(roleA.child.health.state.limit).toBe(2);
+        expect(roleA.child.attack.state.current).toBe(1);
+        expect(roleA.child.death.state.isDying).toBe(true);
+        expect(roleA.child.action.state.count).toBe(0);
 
-        expect(roleB.state.health).toBe(0);
-        expect(roleB.state.damage).toBe(2);
-        expect(roleB.state.maxHealth).toBe(2);
-        expect(roleB.state.attack).toBe(1);
-        expect(roleB.state.isDead).toBe(true);
-        expect(roleB.state.action).toBe(0);
+        expect(roleB.child.health.state.current).toBe(0);
+        expect(roleB.child.health.state.damage).toBe(2);
+        expect(roleB.child.health.state.limit).toBe(2);
+        expect(roleB.child.attack.state.current).toBe(1);
+        expect(roleB.child.death.state.isDying).toBe(true);
+        expect(roleB.child.action.state.count).toBe(0);
 
         expect(boardA.child.cards.length).toBe(0);
         expect(boardB.child.cards.length).toBe(0);
         expect(graveyardA.child.cards.length).toBe(1);
         expect(graveyardB.child.cards.length).toBe(1);
-        expect(wispA.route.board).not.toBeDefined();
-        expect(wispB.route.board).not.toBeDefined();
-        expect(wispA.route.graveyard).toBeDefined();
-        expect(wispB.route.graveyard).toBeDefined();
+        expect(cardA.route.board).not.toBeDefined();
+        expect(cardB.route.board).not.toBeDefined();
+        expect(cardA.route.graveyard).toBeDefined();
+        expect(cardB.route.graveyard).toBeDefined();
     })
 })

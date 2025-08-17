@@ -9,7 +9,7 @@ import { GraveyardModel } from "../player/graveyard";
 import { DeathrattleModel } from "../hooks/deathrattle";
 import { StartTurnHookModel } from "../hooks/start-turn";
 import { EndTurnHookModel } from "../hooks/end-turn";
-import { DamageModel } from "../heroes/damage";
+import { DamageModel } from "../damage";
 import { SelectUtil } from "../../utils/select";
 
 export type PlayForm = {
@@ -23,11 +23,10 @@ export namespace CardModel {
         readonly mana: number;
     };
     export type Event = {
-        toPlay: { isAbort: boolean };
-        toDraw: { isAbort: boolean };
+        toPlay: { isAbort?: boolean };
+        toDraw: { isAbort?: boolean };
         onPlay: {};
         onDraw: { card: CardModel },
-        onDispose: {};
     };
     export type Child = {
         readonly battlecryHooks: BattlecryModel[];
@@ -96,9 +95,8 @@ export abstract class CardModel<
     }
 
 
-    /**  play card */
     public abstract play(): Promise<void>;
-
+    
     protected async onPlay(form: PlayForm) {
         this.event.onPlay({});
         for (const item of this.child.battlecryHooks) {
@@ -126,10 +124,10 @@ export abstract class CardModel<
         return form;
     }
 
-    /** draw card */
+
     @DebugUtil.log()
     public draw() {
-        const signal = this.event.toDraw({ isAbort: false });
+        const signal = this.event.toDraw({});
         if (signal.isAbort) return;
         const card = this.doDraw();
         if (!card) return;
@@ -140,21 +138,20 @@ export abstract class CardModel<
     protected doDraw() {
         const player = this.route.player;
         if (!player) return;
-        let result = player.child.deck.del(this);
-        if (!result) return;
-        result = player.child.hand.add(result);
-        return result;
+        let card = player.child.deck.del(this);
+        if (!card) return;
+        card = player.child.hand.add(card);
+        return card;
     }
 
-    /** dispose */
+
     @DebugUtil.log()
-    public async dispose() {
-        this.doDispose();
-        this.event.onDispose({});
+    public async clear() {
+        this.doClear();
         for (const item of this.child.deathrattleHooks) {
             await item.run();
         }
     }
     
-    public abstract doDispose(): void;
+    public abstract doClear(): void;
 }

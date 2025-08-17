@@ -4,7 +4,7 @@ import { RoleModel } from "../role";
 
 export namespace DeathrattleModel {
     export type Event = {
-        toRun: { isAbort: boolean };
+        toRun: { isAbort?: boolean };
         onRun: {};
     };
     export type State = {};
@@ -45,7 +45,7 @@ export abstract class DeathrattleModel<
     }
 
     public async run() {
-        const signal = this.event.toRun({ isAbort: false });
+        const signal = this.event.toRun({});
         if (signal.isAbort) return;
         await this.doRun();
         this.event.onRun({});

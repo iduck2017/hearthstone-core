@@ -7,8 +7,8 @@ import { PlayerModel } from "../player";
 
 export namespace BattlecryModel {
     export type Event = {
+        toRun: { isAbort?: boolean };
         onRun: { params: any[] };
-        toRun: { isAbort: boolean };
     };
     export type State = {
         readonly name: string;
@@ -66,7 +66,7 @@ export abstract class BattlecryModel<
     }
 
     public async run(...params: T) {
-        const signal = this.event.toRun({ isAbort: false });
+        const signal = this.event.toRun({});
         if (signal.isAbort) return;
         await this.doRun(...params);
         this.event.onRun({ params });

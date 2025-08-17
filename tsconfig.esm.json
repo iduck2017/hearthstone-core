@@ -1,20 +1,8 @@
 {
+  "extends": "./tsconfig.json",
   "compilerOptions": {
-    "noImplicitAny": true,
     "outDir": "./dist/esm",
-    "module": "ESNext",
-    "lib": ["ES2018", "DOM"],
-    "target": "ESNext",
-    "jsx": "react",
-    "declaration": true,
-    "declarationDir": "./dist/type",
-    "allowJs": true,
-    "allowSyntheticDefaultImports": true,
-    "moduleResolution": "node",
-    "strict": true,
-    "experimentalDecorators": true,
-    "strictFunctionTypes": false,
-    "noUncheckedIndexedAccess": true
+    "module": "ESNext"
   },
   "include": ["src/**/*"],
   "exclude": ["test/**/*"]

@@ -1,5 +1,5 @@
 import { Callback } from "set-piece";
-import { RoleModel } from "../model/role";
+import { DeathModel } from "../model/role/death";
 
 export class DeathUtil {
     private static _isLock = false;
@@ -7,9 +7,9 @@ export class DeathUtil {
         return DeathUtil._isLock;
     }
 
-    private static tasks: Array<RoleModel> = [];
+    private static tasks: Array<DeathModel> = [];
 
-    public static add(task: RoleModel) {
+    public static add(task: DeathModel) {
         DeathUtil.tasks.push(task);
     }
 
@@ -44,10 +44,10 @@ export class DeathUtil {
     }
 
     public static end() {
-        const tasks = DeathUtil.tasks.filter(item => item.state.isDead);
+        const tasks = DeathUtil.tasks.filter(item => item.state.isDying);
         // console.log('death tranx', tasks)
         DeathUtil.tasks = [];
-        tasks.forEach(item => item.route.card?.dispose());
+        tasks.forEach(item => item.route.card?.clear());
         tasks.forEach(item => item.onDie());
     }
 

@@ -2,16 +2,21 @@ import { Model } from "set-piece";
 import { RoleModel } from "../role";
 import { BuffModel } from "./buff";
 import { CardModel } from "../card";
+import { PlayerModel } from "../player";
+import { GameModel } from "../game";
+import { BoardModel } from "../player/board";
 
 export namespace FeatureModel {
     export type State = {
         name: string;
         desc: string;
+        isSilence: boolean;
     }
-    export type Event = {};
-    export type Child = {
-        buff?: BuffModel;
+    export type Event = {
+        toSilence: { isAbort?: boolean };
+        onSilence: {};
     };
+    export type Child = {};
     export type Refer = {};
 }
 
@@ -27,10 +32,17 @@ export abstract class FeatureModel<
     R & FeatureModel.Refer
 > {
     public get route() {
-        const path = super.route.path;
-        const role: RoleModel | undefined = path.find(item => item instanceof RoleModel);
-        const card: CardModel | undefined = path.find(item => item instanceof CardModel);
-        return { ...super.route, role, card }
+        const route = super.route;
+        const role: RoleModel | undefined = route.path.find(item => item instanceof RoleModel);
+        const card: CardModel | undefined = route.path.find(item => item instanceof CardModel);
+        return { 
+            ...route, 
+            role, 
+            card,
+            game: route.path.find(item => item instanceof GameModel),
+            board: route.path.find(item => item instanceof BoardModel),
+            player: route.path.find(item => item instanceof PlayerModel)
+        }
     }
 
     constructor(props: FeatureModel['props'] & {
@@ -41,9 +53,23 @@ export abstract class FeatureModel<
     }) {
         super({
             uuid: props.uuid,
-            state: { ...props.state },
+            state: { 
+                isSilence: false,
+                ...props.state,
+            },
             child: { ...props.child },
             refer: { ...props.refer },
         })
     }
+
+    public silence() {
+        const signal = this.event.toSilence({});
+        if (signal.isAbort) return;
+        this.draft.state.isSilence = true;
+        this.disable();
+        this.event.onSilence({});
+        return true;
+    }
+
+    protected abstract disable(): void;
 }

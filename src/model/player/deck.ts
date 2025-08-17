@@ -39,7 +39,7 @@ export class DeckModel extends Model<
         })
     }
 
-    public get(options: {}): CardModel | undefined {
+    public query(form: {}): CardModel | undefined {
         return this.child.cards[0];
     }
 
@@ -50,8 +50,4 @@ export class DeckModel extends Model<
         return card;
     }
 
-    @DebugUtil.log()
-    public draw() {
-        
-    }
 }

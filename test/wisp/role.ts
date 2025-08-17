@@ -2,7 +2,7 @@ import { RoleModel } from "../../src/model/role";
 
 export class WispRoleModel extends RoleModel {
     constructor(props: WispRoleModel['props'] & {
-        state: Pick<RoleModel.State, 'rawAttack' | 'rawHealth'>
+        child: Pick<RoleModel.Child, 'health' | 'attack'>
     }) {
         super({
             uuid: props.uuid,

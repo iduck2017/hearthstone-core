@@ -35,6 +35,6 @@ export abstract class EndTurnHookModel<
         await this.doRun();
         this.event.onRun({});
     }
-    
+
     protected abstract doRun(): Promise<void>;
 }

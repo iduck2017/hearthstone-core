@@ -1,8 +1,8 @@
 import { Model, Route, TranxUtil } from "set-piece";
-import { RoleModel } from "../role";
-import { CardModel } from "../card";
-import { HeroModel } from ".";
-import { DeathUtil } from "../../utils/death";
+import { RoleModel } from "./role";
+import { CardModel } from "./card";
+import { HeroModel } from "./heroes";
+import { DeathUtil } from "../utils/death";
 
 export enum DamageType {
     ATTACK = 1,
@@ -59,15 +59,20 @@ export class DamageModel extends Model<
     @DeathUtil.span()
     public static deal(tasks: DamageForm[]) {
         tasks = tasks.map(item => item.source.event.toDeal(item) ?? item);
-        tasks = tasks.map(item => item.target.toHurt(item) ?? item);
+        tasks = tasks.map(item => item.target.child.health.toHurt(item) ?? item);
         tasks = DamageModel.doDeal(tasks);
-        tasks.forEach(item => item.target.onHurt(item));
-        tasks.forEach(item => item.source.event.onDeal(item));
+        tasks.forEach(item => item.target.child.health.onHurt(item));
+        tasks.forEach(item => {
+            item.source.event.onDeal(item)
+            item.source.route.hero?.child.damage.event.onDeal(item);
+            item.source.route.card?.child.damage.event.onDeal(item);
+            item.source.route.role?.child.damage.event.onDeal(item);
+        });
     }
 
     @TranxUtil.span()
     private static doDeal(tasks: DamageForm[]) {
-        return tasks.map(item => item.target.doHurt(item));
+        return tasks.map(item => item.target.child.health.doHurt(item));
     }
 
 }

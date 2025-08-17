@@ -3,7 +3,7 @@ import { RoleModel } from "../role";
 import { PlayerModel } from "../player";
 import { GameModel } from "../game";
 import { SkillModel } from "./skill";
-import { DamageModel } from "./damage";
+import { DamageModel } from "../damage";
 
 export namespace HeroModel {
     export type State = {

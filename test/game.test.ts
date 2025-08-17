@@ -1,5 +1,7 @@
 import { BoardModel, GameModel, HandModel, MageModel, PlayerModel, SelectUtil, TimeUtil } from "../src";
 import { DeckModel } from "../src/model/player/deck";
+import { AttackModel } from "../src/model/role/attack";
+import { HealthModel } from "../src/model/role/health";
 import { boot } from "./boot";
 import { WispCardModel } from "./wisp/card";
 import { WispRoleModel } from "./wisp/role";
@@ -12,49 +14,45 @@ describe('game', () => {
                     hero: new MageModel({}),
                     hand: new HandModel({}),
                     deck: new DeckModel({
-                        child: {
-                            cards: [
-                                new WispCardModel({
-                                    state: { mana: 1 },
-                                    child: {
-                                        role: new WispRoleModel({
-                                            state: {
-                                                rawAttack: 1,
-                                                rawHealth: 1,
-                                            }
-                                        })
-                                    }
-                                }),
-                                new WispCardModel({
-                                    state: { mana: 1 },
-                                    child: {
-                                        role: new WispRoleModel({
-                                            state: {
-                                                rawAttack: 1,
-                                                rawHealth: 1,
-                                            }
-                                        })
-                                    }
-                                })
-                            ]
-                        }
+                        child: { cards: [
+                            new WispCardModel({
+                                state: { mana: 1 },
+                                child: {
+                                    role: new WispRoleModel({
+                                        child: {
+                                            health: new HealthModel({ state: { origin: 1 } }),
+                                            attack: new AttackModel({ state: { origin: 1 } }),
+                                        }
+                                    })
+                                }
+                            }),
+                            new WispCardModel({
+                                state: { mana: 1 },
+                                child: {
+                                    role: new WispRoleModel({
+                                        child: {
+                                            health: new HealthModel({ state: { origin: 1 } }),
+                                            attack: new AttackModel({ state: { origin: 1 } }),
+                                        }
+                                    })
+                                }
+                            })
+                        ]}
                     }),
                     board: new BoardModel({
-                        child: {
-                            cards: [
-                                new WispCardModel({
-                                    state: { mana: 1 },
-                                    child: {
-                                        role: new WispRoleModel({
-                                            state: {
-                                                rawAttack: 1,
-                                                rawHealth: 1,
-                                            }
-                                        })
-                                    }
-                                })
-                            ]
-                        }
+                        child: { cards: [
+                            new WispCardModel({
+                                state: { mana: 1 },
+                                child: {
+                                    role: new WispRoleModel({
+                                        child: {
+                                            health: new HealthModel({ state: { origin: 1 } }),
+                                            attack: new AttackModel({ state: { origin: 1 } }),
+                                        }
+                                    })
+                                }
+                            })
+                        ]}
                     }),
                 },
             }),
@@ -70,11 +68,11 @@ describe('game', () => {
     });
 
     test('next-turn', () => {
-        expect(game.state.turn).toBe(0);
+        expect(game.child.turn.state.count).toBe(0);
         boot(game);
-        expect(game.state.turn).toBe(1);
-        game.nextTurn();
-        expect(game.state.turn).toBe(2);
+        expect(game.child.turn.state.count).toBe(1);
+        game.child.turn.next();
+        expect(game.child.turn.state.count).toBe(2);
     })
 
     test('draw-card', async () => {
@@ -82,7 +80,7 @@ describe('game', () => {
         const hand = player.child.hand;
         const deck = player.child.deck;
 
-        let card = deck.get({});
+        let card = deck.query({});
         expect(deck.child.cards.length).toBe(2);
         expect(hand.child.cards.length).toBe(0);
         expect(card).toBeDefined();
@@ -90,7 +88,7 @@ describe('game', () => {
         expect(deck.child.cards.length).toBe(1);
         expect(hand.child.cards.length).toBe(1);
 
-        card = deck.get({});
+        card = deck.query({});
         card?.draw();
         expect(deck.child.cards.length).toBe(0);
         expect(hand.child.cards.length).toBe(2);

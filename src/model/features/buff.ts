@@ -4,16 +4,18 @@ import { FeatureModel } from ".";
 import { PlayerModel } from "../player";
 import { GameModel } from "../game";
 import { BoardModel } from "../player/board";
+import { AttackModel } from "../role/attack";
+import { HealthModel } from "../role/health";
 
 export namespace BuffModel {
-    export type State = FeatureModel.State & {
-        modAttack: number;
-        modHealth: number;
+    export type State = Partial<FeatureModel.State> & {
+        attack: number;
+        health: number;
         isActive: boolean;
     };
-    export type Event = FeatureModel.Event & {};
-    export type Child = FeatureModel.Child & {};
-    export type Refer = FeatureModel.Refer & {};
+    export type Event = Partial<FeatureModel.Event> & {};
+    export type Child = Partial<FeatureModel.Child> & {};
+    export type Refer = Partial<FeatureModel.Refer> & {};
 }
 
 export abstract class BuffModel<
@@ -42,7 +44,7 @@ export abstract class BuffModel<
     constructor(props: BuffModel['props'] & {
         uuid: string | undefined;
         state: S & 
-            Pick<BuffModel.State, 'modAttack' | 'modHealth'> & 
+            Pick<BuffModel.State, 'attack' | 'health'> & 
             Pick<FeatureModel.State, 'name' | 'desc'>,
         child: C,
         refer: R,
@@ -63,13 +65,21 @@ export abstract class BuffModel<
         this.reload();
     }
 
-    @StateUtil.on(self => self.route.role?.proxy.decor)
-    protected onStateCheck(that: RoleModel, state: RoleModel.State) {
+    @StateUtil.on(self => self.route.role?.proxy.child.attack.decor)
+    protected buffAttack(that: AttackModel, state: AttackModel.State) {
         if (!this.state.isActive) return state;
         return {
             ...state,
-            modAttack: state.modAttack + this.state.modAttack,
-            modHealth: state.modHealth + this.state.modHealth,
+            offset: state.offset + this.state.attack,
+        }
+    }
+
+    @StateUtil.on(self => self.route.role?.proxy.child.health.decor)
+    protected buffHealth(that: HealthModel, state: HealthModel.State) {
+        if (!this.state.isActive) return state;
+        return {
+            ...state,
+            offset: state.offset + this.state.health,
         }
     }
 }

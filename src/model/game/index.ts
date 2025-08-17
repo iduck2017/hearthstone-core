@@ -1,7 +1,8 @@
 import { DebugUtil, Model, StoreUtil, TranxUtil } from "set-piece";
-import { PlayerModel } from "./player";
-import { RoleModel } from "./role";
-import { FilterType } from "../types";
+import { PlayerModel } from "../player";
+import { RoleModel } from "../role";
+import { FilterType } from "../../types";
+import { TurnModel } from "./turn";
 
 export type QueryOption = {
     side?: PlayerModel;
@@ -11,20 +12,14 @@ export type QueryOption = {
 }
 
 export namespace GameModel {
-    export type State = {
-        turn: number;
-    };
-    export type Event = {
-        onEndTurn: {};
-        onStartTurn: {};
-    };
+    export type State = {};
+    export type Event = {};
     export type Child = {
+        readonly turn: TurnModel;
         readonly playerA: PlayerModel;
         readonly playerB: PlayerModel;
     };
-    export type Refer = {
-        current?: PlayerModel;
-    };
+    export type Refer = {};
 }
 
 
@@ -44,7 +39,10 @@ export class GameModel extends Model<
                 turn: 0,
                 ...props.state 
             },
-            child: { ...props.child },
+            child: { 
+                turn: new TurnModel({}),
+                ...props.child
+            },
             refer: { ...props.refer },
         });
     }
@@ -54,7 +52,10 @@ export class GameModel extends Model<
         const playerB = this.child.playerB;
         const boardA = playerA.child.board;
         const boardB = playerB.child.board;
-        const { side, isHero, isMinion } = options;
+        const side = options.side;
+        const isHero = options.isHero;
+        const isMinion = options.isMinion;
+        const isTaunt = options.isTaunt;
         let result: RoleModel[] = [
             ...boardA.child.cards.map(item => item.child.role),
             ...boardB.child.cards.map(item => item.child.role),
@@ -63,7 +64,8 @@ export class GameModel extends Model<
         ];
         result = this.pipe(isHero, result, item => Boolean(item.route.hero));
         result = this.pipe(isMinion, result, item => Boolean(item.route.card));
-        result = result.filter(item => item.route.player === side);
+        // result = this.pipe(isTaunt, result, item => Boolean(item.child.));
+        if (side) result = result.filter(item => item.route.player === side);
         return result;
     }
     
@@ -75,25 +77,4 @@ export class GameModel extends Model<
             return true;
         });
     }
-    
-    @DebugUtil.log()
-    public nextTurn() {
-        let player = this.refer.current;
-        let board = player?.child.board;
-        let roles = board?.child.cards.map(item => item.child.role);
-        this.event.onEndTurn({});
-        this.doNextTurn();
-        player = this.refer.current;
-        board = player?.child.board;
-        roles = board?.child.cards.map(item => item.child.role);
-        roles?.forEach(role => role.startTurn());
-        this.event.onStartTurn({});
-    }
-
-    @TranxUtil.span()
-    private doNextTurn() {
-        this.draft.state.turn ++;
-        this.draft.refer.current = this.refer.current?.refer.opponent ?? this.child.playerA;
-    }
-
 }
