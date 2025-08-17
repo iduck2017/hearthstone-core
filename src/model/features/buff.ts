@@ -11,7 +11,6 @@ export namespace BuffModel {
     export type State = Partial<FeatureModel.State> & {
         attack: number;
         health: number;
-        isActive: boolean;
     };
     export type Event = Partial<FeatureModel.Event> & {};
     export type Child = Partial<FeatureModel.Child> & {};
@@ -61,7 +60,6 @@ export abstract class BuffModel<
     }
 
     public disable() {
-        this.draft.state.isActive = false;
         this.reload();
     }
 

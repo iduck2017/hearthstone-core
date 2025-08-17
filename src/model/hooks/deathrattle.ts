@@ -1,6 +1,7 @@
 import { Model } from "set-piece";
 import { CardModel } from "../card";
 import { RoleModel } from "../role";
+import { FeatureModel } from "../features";
 
 export namespace DeathrattleModel {
     export type Event = {
@@ -17,7 +18,7 @@ export abstract class DeathrattleModel<
     S extends Partial<DeathrattleModel.State> & Model.State = {},
     C extends Partial<DeathrattleModel.Child> & Model.Child = {},
     R extends Partial<DeathrattleModel.Refer> & Model.Refer = {}
-> extends Model<
+> extends FeatureModel<
     E & DeathrattleModel.Event, 
     S & DeathrattleModel.State, 
     C & DeathrattleModel.Child, 
@@ -32,7 +33,7 @@ export abstract class DeathrattleModel<
 
     constructor(props: DeathrattleModel['props'] & {
         uuid: string | undefined;
-        state: S;
+        state: S & Pick<FeatureModel.State, 'desc' | 'name'>;
         child: C;
         refer: R;
     }) {
@@ -45,6 +46,7 @@ export abstract class DeathrattleModel<
     }
 
     public async run() {
+        if (!this.state.isActive) return;
         const signal = this.event.toRun({});
         if (signal.isAbort) return;
         await this.doRun();

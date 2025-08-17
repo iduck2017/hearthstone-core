@@ -4,16 +4,14 @@ import { SelectForm } from "../../utils/select";
 import { RoleModel } from "../role";
 import { GameModel } from "../game";
 import { PlayerModel } from "../player";
+import { FeatureModel } from "../features";
 
 export namespace BattlecryModel {
     export type Event = {
         toRun: { isAbort?: boolean };
         onRun: { params: any[] };
     };
-    export type State = {
-        readonly name: string;
-        readonly desc: string;
-    };
+    export type State = {};
     export type Child = {};
     export type Refer = {};
 }
@@ -24,7 +22,7 @@ export abstract class BattlecryModel<
     S extends Partial<BattlecryModel.State> & Model.State = {},
     C extends Partial<BattlecryModel.Child> & Model.Child = {},
     R extends Partial<BattlecryModel.Refer> & Model.Refer = {}
-> extends Model<
+> extends FeatureModel<
     E & BattlecryModel.Event, 
     S & BattlecryModel.State, 
     C & BattlecryModel.Child, 
@@ -53,19 +51,23 @@ export abstract class BattlecryModel<
 
     constructor(props: BattlecryModel['props'] & {
         uuid: string | undefined;
-        state: S & Pick<BattlecryModel.State, 'desc' | 'name'>;
+        state: S & Pick<FeatureModel.State, 'desc' | 'name'>;
         child: C;
         refer: R;
     }) {
         super({
             uuid: props.uuid,
-            state: { ...props.state },
+            state: { 
+                isActive: true,
+                ...props.state,
+            },
             child: { ...props.child },
             refer: { ...props.refer },
         });
     }
 
     public async run(...params: T) {
+        if (!this.state.isActive) return;
         const signal = this.event.toRun({});
         if (signal.isAbort) return;
         await this.doRun(...params);

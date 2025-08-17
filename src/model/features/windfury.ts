@@ -6,7 +6,6 @@ export namespace WindfuryModel {
         onGet: {};
     };
     export type State = {
-        isEnable: boolean;
         level: number;
     };
     export type Child = {};
@@ -25,7 +24,7 @@ export class WindfuryModel extends FeatureModel<
             state: {
                 name: 'Windfury',
                 desc: 'Can attack twice each turn.',
-                isEnable: false,
+                isActive: false,
                 level: 0,
                 ...props.state,
             },
@@ -35,14 +34,14 @@ export class WindfuryModel extends FeatureModel<
     }
 
     public get(): boolean {
-        if (this.state.isEnable) return false;
-        this.draft.state.isEnable = true;
+        if (this.state.isActive) return false;
+        this.draft.state.isActive = true;
         this.event.onGet({});
         return true;
     }
     
     protected disable(): void {
-        this.draft.state.isEnable = false;
+        this.draft.state.isActive = false;
         this.draft.state.level = 0;
     }
 }

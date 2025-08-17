@@ -7,7 +7,6 @@ export namespace DevineSheildModel {
         onUse: {};
     };
     export type State = {
-        isActive: boolean;
         level: number;
     };
     export type Child = {};

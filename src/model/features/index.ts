@@ -8,9 +8,9 @@ import { BoardModel } from "../player/board";
 
 export namespace FeatureModel {
     export type State = {
+        isActive: boolean;
         name: string;
         desc: string;
-        isSilence: boolean;
     }
     export type Event = {
         toSilence: { isAbort?: boolean };
@@ -54,7 +54,7 @@ export abstract class FeatureModel<
         super({
             uuid: props.uuid,
             state: { 
-                isSilence: false,
+                isActive: true,
                 ...props.state,
             },
             child: { ...props.child },
@@ -65,7 +65,7 @@ export abstract class FeatureModel<
     public silence() {
         const signal = this.event.toSilence({});
         if (signal.isAbort) return;
-        this.draft.state.isSilence = true;
+        this.draft.state.isActive = false;
         this.disable();
         this.event.onSilence({});
         return true;

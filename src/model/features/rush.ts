@@ -5,7 +5,6 @@ export namespace RushModel {
         onGet: {};
     };
     export type State = {
-        isActive: boolean;
         isCurrent: boolean;
     }
     export type Child = {};

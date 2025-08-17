@@ -31,6 +31,7 @@ export abstract class EndTurnHookModel<
     }
 
     public async run() {
+        if (!this.state.isActive) return;
         this.event.toRun({});
         await this.doRun();
         this.event.onRun({});
