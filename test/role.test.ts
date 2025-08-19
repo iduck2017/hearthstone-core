@@ -71,11 +71,11 @@ describe('role', () => {
         expect(roleA).toBeDefined();
         expect(roleB).toBeDefined();
         if (!roleA || !roleB) return;
-        expect(roleA.child.action.state.count).toBe(1);
-        expect(roleB.child.action.state.count).toBe(0);
+        expect(roleA.child.action.state.current).toBe(1);
+        expect(roleB.child.action.state.current).toBe(1);
         game.child.turn.next();
-        expect(roleA.child.action.state.count).toBe(1);
-        expect(roleB.child.action.state.count).toBe(1);
+        expect(roleA.child.action.state.current).toBe(1);
+        expect(roleB.child.action.state.current).toBe(1);
     })
 
     test('attack-health', () => {
@@ -90,7 +90,7 @@ describe('role', () => {
         expect(role.child.health.state.limit).toBe(2);
         expect(role.child.attack.state.current).toBe(1);
         expect(role.child.death.state.isDying).toBe(false);
-        expect(role.child.action.state.count).toBe(1);
+        expect(role.child.action.state.current).toBe(1);
     })
 
     test('attack', async () => {
@@ -106,14 +106,14 @@ describe('role', () => {
         expect(cardB).toBeDefined();
         if (!cardA || !cardB) return;
 
-        const promise = cardB.child.role.child.attack.attack();
+        const promise = cardB.child.role.child.attack.run();
         await TimeUtil.sleep();
         const selector = SelectUtil.current;
         expect(selector).toBeDefined();
         if (!selector) return;
-        expect(selector.targets).toContain(heroA.child.role);
-        expect(selector?.targets).toContain(cardA.child.role);
-        expect(selector?.targets.length).toBe(2);
+        expect(selector.options).toContain(heroA.child.role);
+        expect(selector?.options).toContain(cardA.child.role);
+        expect(selector?.options.length).toBe(2);
         SelectUtil.set(cardA.child.role);
         await promise;
         
@@ -124,14 +124,14 @@ describe('role', () => {
         expect(roleA.child.health.state.limit).toBe(2);
         expect(roleA.child.attack.state.current).toBe(1);
         expect(roleA.child.death.state.isDying).toBe(false);
-        expect(roleA.child.action.state.count).toBe(1);
+        expect(roleA.child.action.state.current).toBe(1);
 
         expect(roleB.state.health).toBe(1);
         expect(roleB.child.health.state.damage).toBe(1);
         expect(roleB.child.health.state.limit).toBe(2);
         expect(roleB.child.attack.state.current).toBe(1);
         expect(roleB.child.death.state.isDying).toBe(false);
-        expect(roleB.child.action.state.count).toBe(0);
+        expect(roleB.child.action.state.current).toBe(0);
     })
 
 
@@ -149,12 +149,12 @@ describe('role', () => {
         if (!cardA || !cardB) return;
 
         game.child.turn.next();
-        const promise = cardA.child.role.child.attack.attack();
+        const promise = cardA.child.role.child.attack.run();
         await TimeUtil.sleep();
         const selector = SelectUtil.current;
         if (!selector) return;
-        expect(selector?.targets).toContain(cardB.child.role);
-        expect(selector?.targets.length).toBe(2);
+        expect(selector?.options).toContain(cardB.child.role);
+        expect(selector?.options.length).toBe(2);
         SelectUtil.set(cardB.child.role);
         await promise;
         
@@ -165,14 +165,17 @@ describe('role', () => {
         expect(roleA.child.health.state.limit).toBe(2);
         expect(roleA.child.attack.state.current).toBe(1);
         expect(roleA.child.death.state.isDying).toBe(true);
-        expect(roleA.child.action.state.count).toBe(0);
+        
+        expect(roleA.child.action.state.current).toBe(0);
+        expect(roleA.child.action.state.cost).toBe(1);
+        expect(roleA.child.action.state.origin).toBe(1);
 
         expect(roleB.child.health.state.current).toBe(0);
         expect(roleB.child.health.state.damage).toBe(2);
         expect(roleB.child.health.state.limit).toBe(2);
         expect(roleB.child.attack.state.current).toBe(1);
         expect(roleB.child.death.state.isDying).toBe(true);
-        expect(roleB.child.action.state.count).toBe(0);
+        expect(roleB.child.action.state.current).toBe(0);
 
         expect(boardA.child.cards.length).toBe(0);
         expect(boardB.child.cards.length).toBe(0);

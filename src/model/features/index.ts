@@ -1,6 +1,5 @@
 import { Model } from "set-piece";
 import { RoleModel } from "../role";
-import { BuffModel } from "./buff";
 import { CardModel } from "../card";
 import { PlayerModel } from "../player";
 import { GameModel } from "../game";
@@ -8,7 +7,6 @@ import { BoardModel } from "../player/board";
 
 export namespace FeatureModel {
     export type State = {
-        isActive: boolean;
         name: string;
         desc: string;
     }
@@ -53,10 +51,7 @@ export abstract class FeatureModel<
     }) {
         super({
             uuid: props.uuid,
-            state: { 
-                isActive: true,
-                ...props.state,
-            },
+            state: { ...props.state },
             child: { ...props.child },
             refer: { ...props.refer },
         })
@@ -65,7 +60,6 @@ export abstract class FeatureModel<
     public silence() {
         const signal = this.event.toSilence({});
         if (signal.isAbort) return;
-        this.draft.state.isActive = false;
         this.disable();
         this.event.onSilence({});
         return true;

@@ -41,14 +41,6 @@ export abstract class BattlecryModel<
         };
     }
 
-    public get refer() {
-        const route = this.route;
-        return {
-            ...super.refer,
-            damage: route.card?.child.damage,
-        }
-    }
-
     constructor(props: BattlecryModel['props'] & {
         uuid: string | undefined;
         state: S & Pick<FeatureModel.State, 'desc' | 'name'>;
@@ -77,4 +69,6 @@ export abstract class BattlecryModel<
     protected abstract doRun(...params: T): Promise<void>;
 
     public abstract toRun(): { [K in keyof T]: SelectForm<T[K]> } | undefined;
+
+    protected disable(): void {}
 }

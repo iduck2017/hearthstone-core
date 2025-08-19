@@ -1,6 +1,9 @@
 import { DebugUtil, Event, EventUtil, Model, TranxUtil } from "set-piece";
 import { DamageForm } from "../damage";
 import { RoleModel } from ".";
+import { MinionCardModel } from "../card/minion";
+import { GameModel } from "../game";
+import { PlayerModel } from "../player";
 
 export namespace HealthModel {
     export type Event = {
@@ -27,9 +30,15 @@ export class HealthModel extends Model<
     public get route() {
         const route = super.route;
         const role: RoleModel | undefined = route.path.find(item => item instanceof RoleModel);
-        return { ...route, role };
+        const card: MinionCardModel | undefined = route.path.find(item => item instanceof MinionCardModel);
+        return { 
+            ...route, 
+            role,
+            card,
+            game: route.path.find(item => item instanceof GameModel),
+            player: route.path.find(item => item instanceof PlayerModel),
+        }
     }
-
 
     public get state() {
         const state = super.state;
@@ -45,15 +54,12 @@ export class HealthModel extends Model<
     constructor(props: HealthModel['props'] & {
         state: Pick<HealthModel.State, 'origin'>
     }) {
-        const memory = 
-            props.state?.memory ?? 
-            props.state.origin + (props.state?.offset ?? 0);
         super({
             uuid: props.uuid,
             state: { 
                 offset: 0,
                 damage: 0,
-                memory,
+                memory: props.state.origin + (props.state?.offset ?? 0),
                 ...props.state,
             },
             child: { ...props.child },
@@ -75,7 +81,7 @@ export class HealthModel extends Model<
         const death = role.child.death;
         if (result <= 0) return { ...form, result: 0 }
         if (devineShield.state.isActive) {
-            devineShield.use();
+            devineShield.deactive();
             return { ...form, result: 0 }
         }
         this.draft.state.damage += result;

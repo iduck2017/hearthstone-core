@@ -7,9 +7,8 @@ import { FilterType } from "../../types";
 import { BoardModel } from "../player/board";
 import { HandModel } from "../player/hand";
 import { DeckModel } from "../player/deck";
-import { DamageForm, DamageModel, DamageType } from "../damage";
+import { DamageForm, DamageModel } from "../damage";
 import { GraveyardModel } from "../player/graveyard";
-import { SelectUtil } from "../../utils/select";
 import { MinionCardModel } from "../card/minion";
 import { DevineSheildModel } from "../features/devine-shield";
 import { WindfuryModel } from "../features/windfury";
@@ -19,6 +18,9 @@ import { RushModel } from "../features/rush";
 import { ChargeModel } from "../features/charge";
 import { AttackModel } from "./attack";
 import { HealthModel } from "./health";
+import { TauntModel } from "../features/taunt";
+import { SleepModel } from "./sleep";
+import { FrozenModel } from "../features/frozen";
 
 export type RoleCheckInfo = {
     onHand?: FilterType;
@@ -34,10 +36,14 @@ export namespace RoleModel {
         onAttack: { target: RoleModel };
         toHurt: DamageForm;
         onHurt: DamageForm;
+        onSummon: {};
     };
     export type Child = {
         rush: RushModel;
         death: DeathModel;
+        sleep: SleepModel;
+        taunt: TauntModel;
+        frozen: FrozenModel;
         health: HealthModel;
         attack: AttackModel;
         action: ActionModel;
@@ -85,7 +91,7 @@ export abstract class RoleModel<
             ...state,
             health: this.child.health.state.current,
             attack: this.child.attack.state.current,
-            action: this.child.action.state.count,
+            action: this.child.action.state.current,
         }
     }
 
@@ -101,7 +107,10 @@ export abstract class RoleModel<
             child: { 
                 features: [],
                 rush: new RushModel({}),
+                taunt: new TauntModel({}),
                 death: new DeathModel({}),
+                sleep: new SleepModel({}),
+                frozen: new FrozenModel({}),
                 action: new ActionModel({}),
                 charge: new ChargeModel({}),
                 damage: new DamageModel({}),
@@ -133,4 +142,7 @@ export abstract class RoleModel<
         return true;
     }
 
+    public summon() {
+        this.event.onSummon({});
+    }
 }

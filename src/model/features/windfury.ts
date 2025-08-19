@@ -1,11 +1,13 @@
-import { Model } from "set-piece";
+import { Model, StateUtil, TranxUtil } from "set-piece";
 import { FeatureModel } from ".";
+import { ActionModel } from "../role/action";
 
 export namespace WindfuryModel {
     export type Event = {
         onGet: {};
     };
     export type State = {
+        isActive: boolean;
         level: number;
     };
     export type Child = {};
@@ -40,8 +42,19 @@ export class WindfuryModel extends FeatureModel<
         return true;
     }
     
+    @TranxUtil.span()
     protected disable(): void {
         this.draft.state.isActive = false;
         this.draft.state.level = 0;
+        this.reload();
+    }
+
+    @StateUtil.on(self => self.route.role?.proxy.child.action.decor)
+    protected onCheck(that: ActionModel, state: ActionModel.State) {
+        if (!this.state.isActive) return state;
+        return {
+            ...state,
+            origin: state.origin + this.state.level,
+        }
     }
 }

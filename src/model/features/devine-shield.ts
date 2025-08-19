@@ -3,10 +3,11 @@ import { FeatureModel } from ".";
 
 export namespace DevineSheildModel {
     export type Event = {
-        onGet: {};
-        onUse: {};
+        onActive: {};
+        onDeactive: {};
     };
     export type State = {
+        isActive: boolean;
         level: number;
     };
     export type Child = {};
@@ -34,18 +35,19 @@ export class DevineSheildModel extends FeatureModel<
         });
     }
 
-    public get(): boolean {
+    public active(): boolean {
         if (this.state.isActive) return false; 
         this.draft.state.isActive = true;
         this.draft.state.level = 1;
-        this.event.onGet({});
+        this.event.onActive({});
         return true;
     }
 
-    public async use() {
+    public async deactive() {
+        if (!this.state.isActive) return false;
         this.draft.state.isActive = false;
         this.draft.state.level =- 1;
-        this.event.onUse({});
+        this.event.onDeactive({});
     }
 
     protected disable(): void {

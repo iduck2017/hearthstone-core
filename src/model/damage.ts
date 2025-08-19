@@ -3,6 +3,7 @@ import { RoleModel } from "./role";
 import { CardModel } from "./card";
 import { HeroModel } from "./heroes";
 import { DeathUtil } from "../utils/death";
+import { MinionCardModel } from "./card/minion";
 
 export enum DamageType {
     ATTACK = 1,
@@ -38,14 +39,13 @@ export class DamageModel extends Model<
     public get route(): Route & {
         card?: CardModel;
         hero?: HeroModel;
-        role?: RoleModel;
     } {
         const path = super.route.path;
         const card = path.find(item => item instanceof CardModel);
         const hero = path.find(item => item instanceof HeroModel);
-        const role = path.find(item => item instanceof RoleModel);
-        return { ...super.route, card, hero, role }
+        return { ...super.route, card, hero }
     }
+
 
     constructor(props: DamageModel['props']) {
         super({
@@ -66,7 +66,6 @@ export class DamageModel extends Model<
             item.source.event.onDeal(item)
             item.source.route.hero?.child.damage.event.onDeal(item);
             item.source.route.card?.child.damage.event.onDeal(item);
-            item.source.route.role?.child.damage.event.onDeal(item);
         });
     }
 

@@ -1,6 +1,8 @@
 import { Model } from "set-piece";
 import { CardModel } from "../card";
 import { RoleModel } from "../role";
+import { EndTurnHookModel } from "./end-turn";
+import { FeatureModel } from "../features";
 
 export namespace StartTurnHookModel {
     export type Event = {
@@ -28,6 +30,23 @@ export abstract class StartTurnHookModel<
         const card: CardModel | undefined = route.path.find(item => item instanceof CardModel);
         const role: RoleModel | undefined = route.path.find(item => item instanceof RoleModel);
         return { ...route, card, role };
+    }
+
+    constructor(props: EndTurnHookModel['props'] & {
+        uuid: string | undefined;
+        state: S & Pick<FeatureModel.State, 'desc' | 'name'>;
+        child: C;
+        refer: R;
+    }) {
+        super({
+            uuid: props.uuid,
+            state: {
+                isActive: true,
+                ...props.state,
+            },
+            child: { ...props.child },
+            refer: { ...props.refer },
+        })
     }
     
     public async run() {

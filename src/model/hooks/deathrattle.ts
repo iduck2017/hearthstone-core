@@ -39,7 +39,10 @@ export abstract class DeathrattleModel<
     }) {
         super({
             uuid: props.uuid,
-            state: { ...props.state },
+            state: {
+                isActive: true,
+                ...props.state,
+            },
             child: { ...props.child },
             refer: { ...props.refer },
         });

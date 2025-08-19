@@ -1,10 +1,15 @@
-import { Model } from "set-piece";
+import { Model, TranxUtil } from "set-piece";
 import { CardModel } from "../card";
 import { RoleModel } from ".";
+import { GameModel } from "../game";
+import { PlayerModel } from "../player";
+
 
 export namespace ActionModel {
     export type State = {
-        count: number;
+        readonly origin: number;
+        cost: number;
+        isActive: boolean;
     };
     export type Event = {};
     export type Child = {};
@@ -21,14 +26,30 @@ export class ActionModel extends Model<
         const route = super.route;
         const role: RoleModel | undefined = route.path.find(item => item instanceof RoleModel);
         const card: CardModel | undefined = route.path.find(item => item instanceof CardModel);
-        return { ...route, role, card }
+        return { 
+            ...route, 
+            role, 
+            card,
+            game: route.path.find(item => item instanceof GameModel),
+            player: route.path.find(item => item instanceof PlayerModel),
+        }
+    }
+
+    public get state() {
+        const state = super.state;
+        return {
+            ...state,
+            current: state.origin - state.cost,
+        }
     }
 
     constructor(props: ActionModel['props']) {
         super({
             uuid: props.uuid,
             state: {
-                count: 0,
+                origin: 1,
+                cost: 0,
+                isActive: true,
                 ...props.state,
             },
             child: { ...props.child },
@@ -36,16 +57,27 @@ export class ActionModel extends Model<
         });
     }
 
+    @TranxUtil.span()
     public reset() {
-        const role = this.route.role;
-        if (!role) return;
-        const windfury = role.child.windfury;
-        this.draft.state.count = 1 + windfury.state.level;
+        this.draft.state.cost = 0;
     }
 
-    public use() {
-        if (this.state.count <= 0) return false;
-        this.draft.state.count --;
+    public consume() {
+        const role = this.route.role;
+        const game = this.route.game;
+        const player = this.route.player;
+        if (!player) return false;
+        if (!game) return false;
+        if (!role) return false;
+        const turn = game.child.turn;
+        if (turn.refer.current !== player) return false;
+        const sleep = role.child.sleep;
+        const frozen = role.child.frozen;
+        if (frozen.state.isActive) return false;
+        if (sleep.state.isActive) return false;
+        if (!this.state.isActive) return false;
+        if (this.state.current <= 0) return false;
+        this.draft.state.cost ++;
         return true;
     }
 }

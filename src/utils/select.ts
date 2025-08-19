@@ -1,7 +1,7 @@
 import { Callback } from "set-piece";
 
 export type SelectForm<T = any> = {
-    targets: T[];
+    options: T[];
     hint?: string;
 }
 
@@ -21,7 +21,7 @@ export class SelectUtil {
 
     public static async get<T>(option: SelectForm<T>): Promise<T | undefined> {
         return new Promise<T | undefined>((resolve) => {
-            if (!option.targets) resolve(undefined);
+            if (!option.options) resolve(undefined);
             SelectUtil.queue.push([option, resolve]);
         })
     }

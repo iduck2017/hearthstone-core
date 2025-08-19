@@ -5,10 +5,7 @@ import { RoleModel } from "../role";
 import { SelectUtil } from "../../utils/select";
 
 export namespace MinionCardModel {
-    export type Event = Partial<CardModel.Event> & {
-        onSummon: {};
-        onRemove: {};
-    }
+    export type Event = Partial<CardModel.Event> & {}
     export type State = Partial<CardModel.State> & {
         readonly races: RaceType[];
     };
@@ -50,13 +47,12 @@ export abstract class MinionCardModel<
         const board = player.child.board;
         const size = board.child.cards.length;
         const list = new Array(size + 1).fill(0).map((item, index) => index);
-        const position = await SelectUtil.get({ targets: list });
+        const position = await SelectUtil.get({ options: list });
         if (position === undefined) return;
         const form = await this.toPlay();
         if (!form) return;
         this.doPlay(position);
         await this.onPlay(form);
-        this.event.onSummon({})
     }
 
     @TranxUtil.span()

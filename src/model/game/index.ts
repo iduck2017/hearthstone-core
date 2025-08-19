@@ -64,7 +64,7 @@ export class GameModel extends Model<
         ];
         result = this.pipe(isHero, result, item => Boolean(item.route.hero));
         result = this.pipe(isMinion, result, item => Boolean(item.route.card));
-        // result = this.pipe(isTaunt, result, item => Boolean(item.child.));
+        result = this.pipe(isTaunt, result, item => Boolean(item.child.taunt.state.isActive));
         if (side) result = result.filter(item => item.route.player === side);
         return result;
     }

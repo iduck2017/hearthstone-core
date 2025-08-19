@@ -1,6 +1,8 @@
 export { DamageType } from "./model/damage";
 export { FilterType } from "./types";
 export { RaceType } from "./types";
+export { DamageForm } from "./model/damage";
+export { SelectForm } from "./utils/select";
 
 export { TimeUtil } from "./utils/time";
 export { DeathUtil } from './utils/death';
@@ -14,11 +16,23 @@ export { HandModel } from "./model/player/hand";
 export { BuffModel } from './model/features/buff';
 export { PlayerModel } from "./model/player";
 export { BoardModel } from "./model/player/board";
+export { DamageModel } from "./model/damage";
 export { FeatureModel } from './model/features'
 export { HeroCardModel } from "./model/card/hero";
 export { ExtensionModel } from "./model/extension";
 export { MinionCardModel } from "./model/card/minion";
 export { BattlecryModel } from "./model/hooks/battlecry";
+export { AttackModel } from "./model/role/attack";
+export { DeathrattleModel } from "./model/hooks/deathrattle";
+export { EndTurnHookModel } from "./model/hooks/end-turn";
+export { StartTurnHookModel } from "./model/hooks/start-turn";
+export { HealthModel } from "./model/role/health";
+export { ActionModel } from "./model/role/action";
+export { WindfuryModel } from "./model/features/windfury";
+export { RushModel } from "./model/features/rush";
+export { DevineSheildModel } from "./model/features/devine-shield";
+export { TauntModel } from "./model/features/taunt";
+export { TurnModel } from "./model/game/turn";
 
 export { MageModel } from "./model/heroes/mage/card";
 export { MageRoleModel } from "./model/heroes/mage/role";

@@ -60,7 +60,12 @@ export class TurnModel extends Model<
         const board = player?.child.board;
         if (!board) return;
         const cards = board.child.cards;
-        cards.forEach(card => card.child.role.child.action.reset());
+        cards.forEach(card => {
+            card.child.role.child.action.reset();
+            card.child.role.child.rush.deactive();
+            card.child.role.child.sleep.deactive();
+            card.child.role.child.frozen.deactive();
+        });
         cards.forEach(card => card.child.startTurnHooks.forEach(hook => hook.run()));
         this.event.onStart({});
     }

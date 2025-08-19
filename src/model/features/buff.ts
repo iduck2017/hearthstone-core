@@ -1,4 +1,4 @@
-import { Model, StateUtil } from "set-piece";
+import { Model, StateUtil, TranxUtil } from "set-piece";
 import { RoleModel } from "../role";
 import { FeatureModel } from ".";
 import { PlayerModel } from "../player";
@@ -9,8 +9,9 @@ import { HealthModel } from "../role/health";
 
 export namespace BuffModel {
     export type State = Partial<FeatureModel.State> & {
-        attack: number;
-        health: number;
+        isActive: boolean;
+        isOverride: boolean;
+        offset: [number, number]
     };
     export type Event = Partial<FeatureModel.Event> & {};
     export type Child = Partial<FeatureModel.Child> & {};
@@ -43,7 +44,7 @@ export abstract class BuffModel<
     constructor(props: BuffModel['props'] & {
         uuid: string | undefined;
         state: S & 
-            Pick<BuffModel.State, 'attack' | 'health'> & 
+            Pick<BuffModel.State, 'offset'> & 
             Pick<FeatureModel.State, 'name' | 'desc'>,
         child: C,
         refer: R,
@@ -52,6 +53,7 @@ export abstract class BuffModel<
             uuid: props.uuid,
             state: {
                 isActive: true,
+                isOverride: false,
                 ...props.state,
             },
             child: { ...props.child },
@@ -59,25 +61,34 @@ export abstract class BuffModel<
         });
     }
 
-    public disable() {
+    public override() {
+        this.draft.state.isOverride = true;
+        this.reload();
+    }
+
+    @TranxUtil.span()
+    protected disable() {
+        this.draft.state.isActive = false;
         this.reload();
     }
 
     @StateUtil.on(self => self.route.role?.proxy.child.attack.decor)
-    protected buffAttack(that: AttackModel, state: AttackModel.State) {
+    protected onAttackCheck(that: AttackModel, state: AttackModel.State) {
         if (!this.state.isActive) return state;
+        if (this.state.isOverride) return state;
         return {
             ...state,
-            offset: state.offset + this.state.attack,
+            offset: state.offset + this.state.offset[0],
         }
     }
 
     @StateUtil.on(self => self.route.role?.proxy.child.health.decor)
-    protected buffHealth(that: HealthModel, state: HealthModel.State) {
+    protected onHealthCheck(that: HealthModel, state: HealthModel.State) {
         if (!this.state.isActive) return state;
+        if (this.state.isOverride) return state;
         return {
             ...state,
-            offset: state.offset + this.state.health,
+            offset: state.offset + this.state.offset[1],
         }
     }
 }
