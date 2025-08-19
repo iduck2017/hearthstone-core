@@ -77,7 +77,7 @@ export class AttackModel extends Model<
         const opponent = player.refer.opponent;
         const minions = game.query({ side: opponent, isMinion: FilterType.INCLUDE });
         const heros = game.query({ side: opponent, isHero: FilterType.INCLUDE });
-        const isRush = rush?.state.isActive === RushStatus.PENDING;
+        const isRush = rush?.state.isActive === RushStatus.ACTIVE;
         let options = isRush ? minions : [...minions, ...heros];
         const taunt = options.filter(item => item.child.taunt.state.isActive);
         options = taunt.length ? taunt : options;

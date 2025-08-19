@@ -3,6 +3,7 @@ export { FilterType } from "./types";
 export { RaceType } from "./types";
 export { DamageForm } from "./model/damage";
 export { SelectForm } from "./utils/select";
+export { RushStatus } from "./model/features/rush";
 
 export { TimeUtil } from "./utils/time";
 export { DeathUtil } from './utils/death';

@@ -49,12 +49,12 @@ export class WindfuryModel extends FeatureModel<
         this.reload();
     }
 
-    @StateUtil.on(self => self.route.role?.proxy.child.action.decor)
-    protected onCheck(that: ActionModel, state: ActionModel.State) {
-        if (!this.state.isActive) return state;
-        return {
-            ...state,
-            origin: state.origin + this.state.level,
-        }
-    }
+    // @StateUtil.on(self => self.route.role?.proxy.child.action.decor)
+    // protected onCheck(that: ActionModel, state: ActionModel.State) {
+    //     if (!this.state.isActive) return state;
+    //     return {
+    //         ...state,
+    //         origin: state.origin + this.state.level,
+    //     }
+    // }
 }

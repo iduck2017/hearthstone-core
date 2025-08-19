@@ -41,22 +41,22 @@ export class ChargeModel extends FeatureModel<
         this.reload();
     }
 
-    @StateUtil.on(self => self.route.role?.proxy.child.sleep.decor)
-    protected onSleepCheck(that: SleepModel, state: SleepModel.State) {
-        if (!this.state.isActive) return state;
-        return {
-            ...state,
-            isActive: false,
-        }
-    }
+    // @StateUtil.on(self => self.route.role?.proxy.child.sleep.decor)
+    // protected onSleepCheck(that: SleepModel, state: SleepModel.State) {
+    //     if (!this.state.isActive) return state;
+    //     return {
+    //         ...state,
+    //         isActive: false,
+    //     }
+    // }
 
-    @StateUtil.on(self => self.route.role?.proxy.child.rush.decor)
-    protected onRushCheck(that: RushModel, state: RushModel.State & FeatureModel.State) {
-        if (!this.state.isActive) return state;
-        return {
-            ...state,
-            isActive: RushStatus.NONE,
-        }
-    }
+    // @StateUtil.on(self => self.route.role?.proxy.child.rush.decor)
+    // protected onRushCheck(that: RushModel, state: RushModel.State & FeatureModel.State) {
+    //     if (!this.state.isActive) return state;
+    //     return {
+    //         ...state,
+    //         isActive: RushStatus.INACTIVE,
+    //     }
+    // }
 
 }

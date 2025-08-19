@@ -1,4 +1,3 @@
-import { Model } from "set-piece";
 import { FeatureModel } from ".";
 
 export namespace DevineSheildModel {
