@@ -12,7 +12,9 @@ export enum MinionRaceType {
 }
 
 export namespace MinionCardModel {
-    export type Event = Partial<CardModel.Event> & {}
+    export type Event = Partial<CardModel.Event> & {
+        onSummon: {};
+    }
     export type State = Partial<CardModel.State> & {
         readonly races: MinionRaceType[];
     };
@@ -58,12 +60,22 @@ export abstract class MinionCardModel<
         if (position === undefined) return;
         const event = await this.toPlay();
         if (!event) return;
-        this.doPlay(position);
+        this.doSummon(position);
         await this.onPlay(event);
     }
 
+    public summon(pos?: number) {
+        const player = this.route.player;
+        if (!player) return;
+        const board = player.child.board;
+        const size = board.child.cards.length;
+        if (pos === undefined) pos = size;
+        this.doSummon(pos);
+        this.event.onSummon({});
+    }
+
     @TranxUtil.span()
-    private doPlay(pos: number) {
+    private doSummon(pos: number) {
         const player = this.route.player;
         if (!player) return;
         const card = player.child.hand.del(this);

@@ -39,6 +39,14 @@ export class AnchorModel<
         const hero = path.find(item => item instanceof HeroModel);
         return { ...super.route, card, hero }
     }
+
+    public get refer() {
+        const route = this.route;
+        return { 
+            ...super.refer,
+            role: route.card?.child.role ?? route.hero?.child.role,
+        }
+    }
     
     constructor(props: AnchorModel['props']) {
         super({

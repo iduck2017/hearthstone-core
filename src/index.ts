@@ -62,11 +62,12 @@ export { WindfuryModel } from "./model/entries/windfury";
 export { DivineSheildModel } from "./model/entries/divine-shield";
 
 export { HeroModel } from './model/heroes';
-export { SkillModel } from './model/heroes/skill';
+export { MageModel } from "./model/heroes/mage";
+export { WarriorModel } from "./model/heroes/warrior";
 
-export { MageModel } from "./model/heroes/mage/card";
-export { MageRoleModel } from "./model/heroes/mage/role";
+export { SkillModel } from './model/heroes/skill';
 export { MageSkillModel } from "./model/heroes/mage/skill";
+export { WarriorSkillModel } from "./model/heroes/warrior/skill";
 
 export { AnchorModel } from "./model/anchor";
 export { AppModel } from "./model";

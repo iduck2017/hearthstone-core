@@ -18,9 +18,7 @@ import { AnchorModel } from "../..";
 
 export namespace RoleModel {
     export type State = {};
-    export type Event = {
-        onSummon: {};
-    };
+    export type Event = {};
     export type Child = {
         death: DeathModel;
         sleep: SleepModel;
@@ -57,7 +55,6 @@ export class RoleModel extends Model<
         };
     }
 
-
     public get state() {
         const state = super.state;
         return {
@@ -85,9 +82,5 @@ export class RoleModel extends Model<
             },
             refer: { ...props.refer },
         })
-    }
-
-    public summon() {
-        this.event.onSummon({});
     }
 }

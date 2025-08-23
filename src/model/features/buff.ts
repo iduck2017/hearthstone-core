@@ -11,7 +11,8 @@ export namespace BuffModel {
     export type State = Partial<FeatureModel.State> & {
         isActive: boolean;
         isOverride: boolean;
-        offset: [number, number]
+        attack: number;
+        health: number;
     };
     export type Event = Partial<FeatureModel.Event> & {};
     export type Child = Partial<FeatureModel.Child> & {};
@@ -44,7 +45,7 @@ export abstract class BuffModel<
     constructor(props: BuffModel['props'] & {
         uuid: string | undefined;
         state: S & 
-            Pick<BuffModel.State, 'offset'> & 
+            Pick<BuffModel.State, 'attack' | 'health'> & 
             Pick<FeatureModel.State, 'name' | 'desc'>,
         child: C,
         refer: R,
@@ -78,7 +79,7 @@ export abstract class BuffModel<
         if (this.state.isOverride) return state;
         return {
             ...state,
-            offset: state.offset + this.state.offset[0],
+            offset: state.offset + this.state.attack,
         }
     }
 
@@ -88,7 +89,7 @@ export abstract class BuffModel<
         if (this.state.isOverride) return state;
         return {
             ...state,
-            offset: state.offset + this.state.offset[1],
+            offset: state.offset + this.state.health,
         }
     }
 }
