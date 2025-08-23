@@ -1,8 +1,15 @@
 import { DebugUtil, Model, TranxUtil } from "set-piece";
-import { CardModel, PlayForm } from ".";
-import { RaceType } from "../../types";
+import { CardModel, PlayEvent } from ".";
 import { RoleModel } from "../role";
 import { SelectUtil } from "../../utils/select";
+
+export enum RaceType {
+    UNDEAD = 1,
+    BEAST,
+    ELEMENTAL,
+    MURLOC,
+    DRAENEI,
+}
 
 export namespace MinionCardModel {
     export type Event = Partial<CardModel.Event> & {}
@@ -49,10 +56,10 @@ export abstract class MinionCardModel<
         const list = new Array(size + 1).fill(0).map((item, index) => index);
         const position = await SelectUtil.get({ options: list });
         if (position === undefined) return;
-        const form = await this.toPlay();
-        if (!form) return;
+        const event = await this.toPlay();
+        if (!event) return;
         this.doPlay(position);
-        await this.onPlay(form);
+        await this.onPlay(event);
     }
 
     @TranxUtil.span()

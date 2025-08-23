@@ -1,20 +1,23 @@
 import { Model } from "set-piece";
-import { DamageForm, DamageModel } from "../damage";
+import { DamageEvent } from "../..";
 import { DeathUtil } from "../../utils/death";
 import { RoleModel } from ".";
 import { CardModel } from "../card";
+import type { AnchorEvent, AnchorModel } from "../anchor";
 
 export namespace DeathModel {
     export type Event = {
-        onDie: {};
+        onActive: {};
+        toDestroy: AnchorEvent;
+        onDestroy: {};
     }
     export type State = {
-        isDying: boolean;
+        isActive: boolean;
         isDestroy: boolean;
     }
     export type Child = {}
     export type Refer = {
-        reason?: DamageModel;
+        reason?: AnchorModel;
     }
 }
 
@@ -39,7 +42,7 @@ export class DeathModel extends Model<
         super({
             uuid: props.uuid,
             state: { 
-                isDying: false,
+                isActive: false,
                 isDestroy: false,
                 ...props.state,
             },
@@ -48,14 +51,37 @@ export class DeathModel extends Model<
         });
     }
 
-    public toDie(form: DamageForm) {
-        if (this.state.isDying) return false;
-        this.draft.refer.reason = form.source;
-        this.draft.state.isDying = true;
+    @DeathUtil.span()
+    public destroy(event: AnchorEvent) {
+        if (event.isAbort) return false;
+        event = this.event.toDestroy(event);
+        if (event.isAbort) return false;
+        if (this.state.isDestroy) return false;
+        this.draft.state.isDestroy = true;
+        this.draft.refer.reason = event.source;
+        this.draft.state.isActive = true;
+        DeathUtil.add(this);
+        return true;
+    }
+
+    public active(event: DamageEvent) {
+        if (this.state.isActive) return false;
+        this.draft.refer.reason = event.source;
+        this.draft.state.isActive = true;
         DeathUtil.add(this);
     }
 
-    public onDie() {
-        this.event.onDie({});
+    public cancel() {
+        if (!this.state.isActive) return false
+        if (this.state.isDestroy) return false;
+        this.draft.refer.reason = undefined;
+        this.draft.state.isActive = false;
+    }
+    
+    public onActive() {
+        if (!this.state.isActive) return;
+        this.event.onActive({});
+        if (!this.state.isDestroy) return;
+        this.event.onDestroy({});
     }
 }

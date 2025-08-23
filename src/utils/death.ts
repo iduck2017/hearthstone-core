@@ -1,5 +1,5 @@
 import { Callback } from "set-piece";
-import { DeathModel } from "../model/role/death";
+import type { DeathModel } from "../model/role/death";
 
 export class DeathUtil {
     private static _isLock = false;
@@ -44,11 +44,11 @@ export class DeathUtil {
     }
 
     public static end() {
-        const tasks = DeathUtil.tasks.filter(item => item.state.isDying);
+        const tasks = DeathUtil.tasks.filter(item => item.state.isActive);
         // console.log('death tranx', tasks)
         DeathUtil.tasks = [];
         tasks.forEach(item => item.route.card?.clear());
-        tasks.forEach(item => item.onDie());
+        tasks.forEach(item => item.onActive());
     }
 
     private constructor() {}

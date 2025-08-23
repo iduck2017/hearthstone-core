@@ -39,7 +39,7 @@ export class DeckModel extends Model<
         })
     }
 
-    public query(form: {}): CardModel | undefined {
+    public query(event: {}): CardModel | undefined {
         return this.child.cards[0];
     }
 

@@ -61,12 +61,17 @@ export class TurnModel extends Model<
         if (!board) return;
         const cards = board.child.cards;
         cards.forEach(card => {
-            card.child.role.child.action.reset();
-            card.child.role.child.rush.deactive();
-            card.child.role.child.sleep.deactive();
-            card.child.role.child.frozen.deactive();
+            const role = card.child.role;
+            const entries = role.child.entries;
+            role.child.action.reset();
+            role.child.sleep.deactive();
+            entries.child.rush.deactive();
+            entries.child.frozen.deactive();
         });
-        cards.forEach(card => card.child.startTurnHooks.forEach(hook => hook.run()));
+        cards.forEach(card => {
+            const hooks = card.child.hooks;
+            hooks.child.startTurn.forEach(hook => hook.run());
+        });
         this.event.onStart({});
     }
     
@@ -76,7 +81,10 @@ export class TurnModel extends Model<
         const board = player?.child.board;
         if (!board) return;
         const cards = board.child.cards;
-        cards?.forEach(card => card.child.endTurnHooks.forEach(hook => hook.run()));
+        cards?.forEach(card => {
+            const hooks = card.child.hooks;
+            hooks.child.endTurn.forEach(hook => hook.run());
+        });
         this.event.onEnd({});
     }
 }

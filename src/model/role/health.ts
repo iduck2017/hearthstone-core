@@ -1,14 +1,17 @@
 import { DebugUtil, Event, EventUtil, Model, TranxUtil } from "set-piece";
-import { DamageForm } from "../damage";
+import { DamageEvent } from "../../utils/damage";
 import { RoleModel } from ".";
 import { MinionCardModel } from "../card/minion";
 import { GameModel } from "../game";
 import { PlayerModel } from "../player";
+import { RestoreEvent } from "../..";
 
 export namespace HealthModel {
     export type Event = {
-        toHurt: DamageForm;
-        onHurt: DamageForm;
+        toHurt: DamageEvent;
+        onHurt: DamageEvent;
+        toHeal: RestoreEvent;
+        onHeal: RestoreEvent;
     };
     export type State = {
         origin: number;
@@ -68,29 +71,78 @@ export class HealthModel extends Model<
     }
 
 
-    public toHurt(form: DamageForm) {
-        return this.event.toHurt(form);
+    public toHurt(event: DamageEvent) {
+        const result = this.event.toHurt(event);
+        return result;
     }
 
     @TranxUtil.span()
-    public doHurt(form: DamageForm): DamageForm {
-        const result = form.result;
+    public doHurt(event: DamageEvent): DamageEvent {
+        const result = event.result;
         const role = this.route.role;
-        if (!role) return form;
-        const devineShield = role.child.devineShield;
+        if (!role) return event;
+        const entries = role.child.entries;
+        const divineSheild = entries.child.divineShield;
         const death = role.child.death;
-        if (result <= 0) return { ...form, result: 0 }
-        if (devineShield.state.isActive) {
-            devineShield.deactive();
-            return { ...form, result: 0 }
+        const health = this.state.current;
+        if (result <= 0) {
+            event.result = 0;
+            return event;
+        }
+        if (divineSheild.state.isActive) {
+            divineSheild.deactive();
+            event.result = 0;
+            return event;
         }
         this.draft.state.damage += result;
-        if (this.state.current <= result) death.toDie(form);
-        return { ...form, result };
+        if (health <= result) death.active(event);
+        event.result = result;
+        return event;
     }
 
-    public onHurt(form: DamageForm) {
-        return this.event.onHurt(form);
+    public onHurt(event: DamageEvent) {
+        const role = this.route.role;
+        if (!role) return;
+        if (event.isAbort) return;
+        if (event.isBlock) {
+            const entries = role.child.entries;
+            const divineSheild = entries.child.divineShield;
+            divineSheild.onDeactive(event);
+            return;
+        }
+        return this.event.onHurt(event);
+    }
+
+
+
+    public toHeal(event: RestoreEvent) {
+        const result = this.event.toHeal(event);
+        return result;
+    }
+
+    public doHeal(event: RestoreEvent): RestoreEvent {
+        let result = event.result;
+        const role = this.route.role;
+        if (!role) return event;
+        const death = role.child.death;
+        if (result <= 0) {
+            event.result = 0;
+            return event;
+        }
+        const damage = this.draft.state.damage;
+        const health = this.state.current;
+        if (damage < result) result = damage;
+        this.draft.state.damage -= result;
+        if (health + result > 0) death.cancel(); 
+        event.result = result;
+        return event;
+    }
+
+    public onHeal(event: RestoreEvent) {
+        const role = this.route.role;
+        if (!role) return;
+        if (event.isAbort) return;
+        return this.event.onHeal(event);
     }
 
 

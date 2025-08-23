@@ -36,10 +36,16 @@ export class PlayerModel extends Model<
 
     public get refer() {
         const game = this.route.game;
+        const board = this.child.board;
         let opponent: PlayerModel | undefined;
         if (game?.child.playerA === this) opponent = game.child.playerB;
         if (game?.child.playerB === this) opponent = game.child.playerA;
-        return { ...super.refer, opponent }
+        return { 
+            ...super.refer, 
+            opponent, 
+            minions: board.child.cards.map(item => item.child.role), 
+            hero: this.child.hero.child.role,
+        }
     }
 
     constructor(props: PlayerModel['props'] & {

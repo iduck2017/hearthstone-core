@@ -2,13 +2,16 @@ import { Model } from "set-piece";
 import { CardModel } from "../card";
 import { RoleModel } from "../role";
 import { FeatureModel } from "../features";
+import { AbortEvent } from "../../utils/abort";
 
 export namespace DeathrattleModel {
     export type Event = {
-        toRun: { isAbort?: boolean };
+        toRun: AbortEvent;
         onRun: {};
     };
-    export type State = {};
+    export type State = {
+        isActive: boolean;
+    };
     export type Child = {};
     export type Refer = {};
 }
@@ -50,11 +53,15 @@ export abstract class DeathrattleModel<
 
     public async run() {
         if (!this.state.isActive) return;
-        const signal = this.event.toRun({});
-        if (signal.isAbort) return;
+        const event = this.event.toRun(new AbortEvent());
+        if (event.isAbort) return;
         await this.doRun();
         this.event.onRun({});
     }
 
     protected abstract doRun(): Promise<void>;
+
+    protected disable(): void {
+        this.draft.state.isActive = false;
+    }
 }

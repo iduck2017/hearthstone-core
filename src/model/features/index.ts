@@ -1,9 +1,9 @@
 import { Model } from "set-piece";
-import { RoleModel } from "../role";
-import { CardModel } from "../card";
-import { PlayerModel } from "../player";
-import { GameModel } from "../game";
-import { BoardModel } from "../player/board";
+import { AbortEvent, RoleModel } from "../..";
+import { CardModel } from "../..";
+import { PlayerModel } from "../..";
+import { GameModel } from "../..";
+import { BoardModel } from "../..";
 
 export namespace FeatureModel {
     export type State = {
@@ -11,7 +11,7 @@ export namespace FeatureModel {
         desc: string;
     }
     export type Event = {
-        toSilence: { isAbort?: boolean };
+        toSilence: AbortEvent;
         onSilence: {};
     };
     export type Child = {};
@@ -41,7 +41,7 @@ export abstract class FeatureModel<
             board: route.path.find(item => item instanceof BoardModel),
             player: route.path.find(item => item instanceof PlayerModel)
         }
-    }
+    } 
 
     constructor(props: FeatureModel['props'] & {
         uuid: string | undefined;
@@ -58,8 +58,8 @@ export abstract class FeatureModel<
     }
 
     public silence() {
-        const signal = this.event.toSilence({});
-        if (signal.isAbort) return;
+        const event = this.event.toSilence(new AbortEvent());
+        if (event.isAbort) return;
         this.disable();
         this.event.onSilence({});
         return true;

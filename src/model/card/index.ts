@@ -6,13 +6,12 @@ import { HandModel } from "../player/hand";
 import { DeckModel } from "../player/deck";
 import { BoardModel } from "../player/board";
 import { GraveyardModel } from "../player/graveyard";
-import { DeathrattleModel } from "../hooks/deathrattle";
-import { StartTurnHookModel } from "../hooks/start-turn";
-import { EndTurnHookModel } from "../hooks/end-turn";
-import { DamageModel } from "../damage";
 import { SelectUtil } from "../../utils/select";
+import { CardHooksModel } from "./hooks";
+import { AnchorModel } from "../..";
+import { AbortEvent } from "../../utils/abort";
 
-export type PlayForm = {
+export type PlayEvent = {
     battlecry: Map<BattlecryModel, Model[]>;
 }
 
@@ -23,17 +22,14 @@ export namespace CardModel {
         readonly mana: number;
     };
     export type Event = {
-        toPlay: { isAbort?: boolean };
-        toDraw: { isAbort?: boolean };
+        toPlay: AbortEvent;
+        toDraw: AbortEvent;
         onPlay: {};
         onDraw: { card: CardModel },
     };
     export type Child = {
-        readonly battlecryHooks: BattlecryModel[];
-        readonly deathrattleHooks: DeathrattleModel[];
-        readonly startTurnHooks: StartTurnHookModel[];
-        readonly endTurnHooks: EndTurnHookModel[];
-        readonly damage: DamageModel;
+        readonly hooks: CardHooksModel;
+        readonly anchor: AnchorModel;
     };
     export type Refer = {};
 }
@@ -83,11 +79,8 @@ export abstract class CardModel<
             uuid: props.uuid,
             state: { ...props.state },
             child: {
-                battlecryHooks: [],
-                deathrattleHooks: [],
-                startTurnHooks: [],
-                endTurnHooks: [],
-                damage: new DamageModel({}),
+                hooks: new CardHooksModel({}),
+                anchor: new AnchorModel({}),
                 ...props.child,
             },
             refer: { ...props.refer },
@@ -97,20 +90,24 @@ export abstract class CardModel<
 
     public abstract play(): Promise<void>;
     
-    protected async onPlay(form: PlayForm) {
+    protected async onPlay(event: PlayEvent) {
         this.event.onPlay({});
-        for (const item of this.child.battlecryHooks) {
-            const params = form.battlecry.get(item);
+        const hooks = this.child.hooks;
+        const battlecry = hooks.child.battlecry;
+        for (const item of battlecry) {
+            const params = event.battlecry.get(item);
             if (!params) return;
             await item.run(...params);
         }
     }
 
-    protected async toPlay(): Promise<PlayForm | undefined> {
-        const form: PlayForm = {
+    protected async toPlay(): Promise<PlayEvent | undefined> {
+        const event: PlayEvent = {
             battlecry: new Map(),
         };
-        for (const feature of this.child.battlecryHooks) {
+        const hooks = this.child.hooks;
+        const battlecry = hooks.child.battlecry;
+        for (const feature of battlecry) {
             const selectors = feature.toRun();
             if (!selectors) continue;
             const params: Model[] = [];
@@ -119,16 +116,16 @@ export abstract class CardModel<
                 if (result === undefined) return;
                 params.push(result);
             }
-            form.battlecry.set(feature, params);
+            event.battlecry.set(feature, params);
         }
-        return form;
+        return event;
     }
 
 
     @DebugUtil.log()
     public draw() {
-        const signal = this.event.toDraw({});
-        if (signal.isAbort) return;
+        const event = this.event.toDraw(new AbortEvent());
+        if (event.isAbort) return;
         const card = this.doDraw();
         if (!card) return;
         this.event.onDraw({ card });
@@ -148,7 +145,9 @@ export abstract class CardModel<
     @DebugUtil.log()
     public async clear() {
         this.doClear();
-        for (const item of this.child.deathrattleHooks) {
+        const hooks = this.child.hooks;
+        const deathrattle = hooks.child.deathrattle;
+        for (const item of deathrattle) {
             await item.run();
         }
     }

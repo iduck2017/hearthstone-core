@@ -1,14 +1,15 @@
 import { Model } from "set-piece";
 import { CardModel } from "../card";
-import { SelectForm } from "../../utils/select";
+import { SelectEvent } from "../../utils/select";
 import { RoleModel } from "../role";
 import { GameModel } from "../game";
 import { PlayerModel } from "../player";
 import { FeatureModel } from "../features";
+import { AbortEvent } from "../../utils/abort";
 
 export namespace BattlecryModel {
     export type Event = {
-        toRun: { isAbort?: boolean };
+        toRun: AbortEvent;
         onRun: { params: any[] };
     };
     export type State = {};
@@ -60,15 +61,15 @@ export abstract class BattlecryModel<
 
     public async run(...params: T) {
         if (!this.state.isActive) return;
-        const signal = this.event.toRun({});
-        if (signal.isAbort) return;
+        const event = this.event.toRun(new AbortEvent());
+        if (event.isAbort) return;
         await this.doRun(...params);
         this.event.onRun({ params });
     }
 
     protected abstract doRun(...params: T): Promise<void>;
 
-    public abstract toRun(): { [K in keyof T]: SelectForm<T[K]> } | undefined;
+    public abstract toRun(): { [K in keyof T]: SelectEvent<T[K]> } | undefined;
 
     protected disable(): void {}
 }

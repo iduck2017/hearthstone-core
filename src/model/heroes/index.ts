@@ -3,7 +3,7 @@ import { RoleModel } from "../role";
 import { PlayerModel } from "../player";
 import { GameModel } from "../game";
 import { SkillModel } from "./skill";
-import { DamageModel } from "../damage";
+import { AnchorModel } from "../..";
 
 export namespace HeroModel {
     export type State = {
@@ -13,7 +13,7 @@ export namespace HeroModel {
     export type Child = {
         role: RoleModel;
         skill: SkillModel;
-        damage: DamageModel;
+        anchor: AnchorModel;
     };
     export type Refer = {};
 }
@@ -51,7 +51,7 @@ export abstract class HeroModel<
                 ...props.state,
             },
             child: { 
-                damage: new DamageModel({}),
+                anchor: new AnchorModel({}),
                 ...props.child,
             },
             refer: { ...props.refer },

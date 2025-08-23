@@ -1,13 +1,21 @@
 import { Callback } from "set-piece";
 
-export type SelectForm<T = any> = {
-    options: T[];
-    hint?: string;
+export class SelectEvent<T = any> {
+    public readonly options: T[];
+    public readonly hint?: string;
+
+    constructor(
+        options: T[],
+        hint?: string,
+    ) {
+        this.options = options;
+        this.hint = hint;
+    }
 }
 
 export class SelectUtil {
-    private static queue: [SelectForm, Callback][] = [];
-    public static get current(): SelectForm | undefined {
+    private static queue: [SelectEvent, Callback][] = [];
+    public static get current(): SelectEvent | undefined {
         const [selector] = SelectUtil.queue[0] ?? [];
         return selector;
     }
@@ -19,7 +27,7 @@ export class SelectUtil {
 
     private constructor() {}
 
-    public static async get<T>(option: SelectForm<T>): Promise<T | undefined> {
+    public static async get<T>(option: SelectEvent<T>): Promise<T | undefined> {
         return new Promise<T | undefined>((resolve) => {
             if (!option.options) resolve(undefined);
             SelectUtil.queue.push([option, resolve]);

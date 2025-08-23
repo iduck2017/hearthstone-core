@@ -3,6 +3,7 @@ import { CardModel } from "../card";
 import { RoleModel } from ".";
 import { GameModel } from "../game";
 import { PlayerModel } from "../player";
+import { BoardModel } from "../..";
 
 
 export namespace ActionModel {
@@ -30,6 +31,7 @@ export class ActionModel extends Model<
             ...route, 
             role, 
             card,
+            board: route.path.find(item => item instanceof BoardModel),
             game: route.path.find(item => item instanceof GameModel),
             player: route.path.find(item => item instanceof PlayerModel),
         }
@@ -62,21 +64,29 @@ export class ActionModel extends Model<
         this.draft.state.cost = 0;
     }
 
-    public consume() {
+    public check(): boolean {
         const role = this.route.role;
         const game = this.route.game;
+        const board = this.route.board;
         const player = this.route.player;
-        if (!player) return false;
         if (!game) return false;
         if (!role) return false;
+        if (!board) return false;
+        if (!player) return false;
         const turn = game.child.turn;
         if (turn.refer.current !== player) return false;
         const sleep = role.child.sleep;
-        const frozen = role.child.frozen;
+        const entries = role.child.entries;
+        const frozen = entries.child.frozen;
         if (frozen.state.isActive) return false;
         if (sleep.state.isActive) return false;
         if (!this.state.isActive) return false;
         if (this.state.current <= 0) return false;
+        return true;
+    }
+
+    public consume() {
+        if (!this.check()) return false;
         this.draft.state.cost ++;
         return true;
     }

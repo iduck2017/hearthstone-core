@@ -89,7 +89,7 @@ describe('role', () => {
         expect(role.child.health.state.damage).toBe(0);
         expect(role.child.health.state.limit).toBe(2);
         expect(role.child.attack.state.current).toBe(1);
-        expect(role.child.death.state.isDying).toBe(false);
+        expect(role.child.death.state.isActive).toBe(false);
         expect(role.child.action.state.current).toBe(1);
     })
 
@@ -123,14 +123,14 @@ describe('role', () => {
         expect(roleA.child.health.state.damage).toBe(1);
         expect(roleA.child.health.state.limit).toBe(2);
         expect(roleA.child.attack.state.current).toBe(1);
-        expect(roleA.child.death.state.isDying).toBe(false);
+        expect(roleA.child.death.state.isActive).toBe(false);
         expect(roleA.child.action.state.current).toBe(1);
 
         expect(roleB.state.health).toBe(1);
         expect(roleB.child.health.state.damage).toBe(1);
         expect(roleB.child.health.state.limit).toBe(2);
         expect(roleB.child.attack.state.current).toBe(1);
-        expect(roleB.child.death.state.isDying).toBe(false);
+        expect(roleB.child.death.state.isActive).toBe(false);
         expect(roleB.child.action.state.current).toBe(0);
     })
 
@@ -164,7 +164,7 @@ describe('role', () => {
         expect(roleA.child.health.state.damage).toBe(2);
         expect(roleA.child.health.state.limit).toBe(2);
         expect(roleA.child.attack.state.current).toBe(1);
-        expect(roleA.child.death.state.isDying).toBe(true);
+        expect(roleA.child.death.state.isActive).toBe(true);
         
         expect(roleA.child.action.state.current).toBe(0);
         expect(roleA.child.action.state.cost).toBe(1);
@@ -174,7 +174,7 @@ describe('role', () => {
         expect(roleB.child.health.state.damage).toBe(2);
         expect(roleB.child.health.state.limit).toBe(2);
         expect(roleB.child.attack.state.current).toBe(1);
-        expect(roleB.child.death.state.isDying).toBe(true);
+        expect(roleB.child.death.state.isActive).toBe(true);
         expect(roleB.child.action.state.current).toBe(0);
 
         expect(boardA.child.cards.length).toBe(0);
