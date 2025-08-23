@@ -68,7 +68,7 @@ export abstract class BuffModel<
 
     @StateUtil.on(self => self.route.role?.proxy.child.attack.decor)
     protected onAttackCheck(that: AttackModel, state: AttackModel.State) {
-        if (!this.state.isActive) return state;
+        if (!this.state.status) return state;
         if (this.state.isOverride) return state;
         return {
             ...state,
@@ -78,7 +78,7 @@ export abstract class BuffModel<
 
     @StateUtil.on(self => self.route.role?.proxy.child.health.decor)
     protected onHealthCheck(that: HealthModel, state: HealthModel.State) {
-        if (!this.state.isActive) return state;
+        if (!this.state.status) return state;
         if (this.state.isOverride) return state;
         return {
             ...state,

@@ -5,7 +5,6 @@ import { GameModel } from "../game";
 import { PlayerModel } from "../player";
 import { AbortEvent, BoardModel, RushStatus, SelectEvent, SelectUtil } from "../..";
 
-
 export namespace ActionModel {
     export type State = {
         readonly origin: number;

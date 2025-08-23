@@ -53,7 +53,7 @@ export abstract class StartTurnHookModel<
     }
     
     public async run() {
-        if (!this.state.isActive) return;
+        if (!this.state.status) return;
         this.event.toRun({});
         await this.doRun();
         this.event.onRun({});

@@ -52,7 +52,7 @@ export abstract class DeathrattleModel<
     }
 
     public async run() {
-        if (!this.state.isActive) return;
+        if (!this.state.status) return;
         const event = this.event.toRun(new AbortEvent());
         if (event.isAbort) return;
         await this.doRun();

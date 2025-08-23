@@ -62,7 +62,7 @@ export abstract class BattlecryModel<
     }
 
     public async run(...params: T) {
-        if (!this.state.isActive) return;
+        if (!this.state.status) return;
         const event = this.event.toRun(new AbortEvent());
         if (event.isAbort) return;
         await this.doRun(...params);
