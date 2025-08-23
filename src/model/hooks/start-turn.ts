@@ -60,4 +60,6 @@ export abstract class StartTurnHookModel<
     }
 
     protected abstract doRun(): Promise<void>;
+    
+    protected doDisable(): void {}
 }

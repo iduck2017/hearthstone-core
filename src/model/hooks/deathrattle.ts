@@ -1,6 +1,5 @@
 import { Model } from "set-piece";
 import { CardModel } from "../card";
-import { RoleModel } from "../role";
 import { FeatureModel } from "../features";
 import { AbortEvent } from "../../utils/abort";
 import { AnchorModel } from "../anchor";
@@ -10,9 +9,7 @@ export namespace DeathrattleModel {
         toRun: AbortEvent;
         onRun: {};
     };
-    export type State = {
-        isActive: boolean;
-    };
+    export type State = {};
     export type Child = {};
     export type Refer = {};
 }
@@ -64,7 +61,5 @@ export abstract class DeathrattleModel<
 
     protected abstract doRun(): Promise<void>;
 
-    protected disable(): void {
-        this.draft.state.isActive = false;
-    }
+    protected doDisable(): void {}
 }

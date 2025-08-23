@@ -75,13 +75,14 @@ export class ActionModel extends Model<
         const action = role.child.action;
         const entries = role.child.entries;
         const rush = entries.child.rush;
+        const charge = entries.child.charge;
         if (!game) return;
         if (!action) return;
         if (!player) return;
         const opponent = player.refer.opponent;
         if (!opponent) return;
         let options: RoleModel[] = opponent.refer.roles
-        if (rush.state.status == RushStatus.ACTIVE) {
+        if (rush.state.status === RushStatus.ACTIVE && !charge.state.isActive) {
             options = opponent.refer.minions;
         }
         const tauntOptions = options.filter(item => {

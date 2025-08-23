@@ -1,11 +1,11 @@
 import { Model } from "set-piece";
 import { ChargeModel } from "../entries/charge";
 import { DivineSheildModel } from "../entries/divine-shield";
-import { RushModel } from "../entries/rush";
+import { RushModel, RushStatus } from "../entries/rush";
 import { FrozenModel } from "../entries/frozen";
 import { StealthModel } from "../entries/stealth";
 import { TauntModel } from "../entries/taunt";
-import { WindfuryModel } from "../entries/windfury";
+import { WindfuryModel, WindfuryStatus } from "../entries/windfury";
 
 export namespace RoleEntriesModel {
     export type Event = {};
@@ -33,13 +33,13 @@ export class RoleEntriesModel extends Model<
             uuid: props.uuid,
             state: { ...props.state },
             child: { 
-                rush: new RushModel({}),
-                charge: new ChargeModel({}),
-                frozen: new FrozenModel({}),
-                stealth: new StealthModel({}),
-                taunt: new TauntModel({}),
-                windfury: new WindfuryModel({}),
-                divineShield: new DivineSheildModel({}),
+                rush: new RushModel({ state: { isActive: false, status: RushStatus.INACTIVE }}),
+                taunt: new TauntModel({ state: { isActive: false }}),
+                charge: new ChargeModel({ state: { isActive: false }}),
+                frozen: new FrozenModel({ state: { isActive: false }}),
+                stealth: new StealthModel({ state: { isActive: false }}),
+                windfury: new WindfuryModel({ state: { isActive: false, status: WindfuryStatus.INACTIVE }}),
+                divineShield: new DivineSheildModel({ state: { isActive: false, count: 0 }}),
                 ...props.child 
             },
             refer: { ...props.refer }

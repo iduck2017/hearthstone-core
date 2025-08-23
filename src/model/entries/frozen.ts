@@ -24,7 +24,7 @@ export class FrozenModel extends FeatureModel<
             state: {
                 name: 'Frozen',
                 desc: 'Frozen charactoers lose their next attack.',
-                isActive: false,
+                isActive: true,
                 ...props.state,
             },
             child: { ...props.child },
@@ -32,9 +32,7 @@ export class FrozenModel extends FeatureModel<
         });
     }
 
-    protected disable(): void {
-        this.draft.state.isActive = false;
-    }
+    protected doDisable(): void {}
 
     public active(): boolean {
         if (this.state.isActive) return false;
@@ -48,7 +46,7 @@ export class FrozenModel extends FeatureModel<
         if (!role) return false;
         const action = role.child.action;
         if (action.state.current <= 0) return false;
-        this.draft.state.isActive = false;
+        this.disable();
         this.event.onDeactive({});
         return true;
     }

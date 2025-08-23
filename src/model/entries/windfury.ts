@@ -31,7 +31,8 @@ export class WindfuryModel extends FeatureModel<
             state: {
                 name: 'Windfury',
                 desc: 'Can attack twice each turn.',
-                status: WindfuryStatus.INACTIVE,
+                status: WindfuryStatus.ACTIVE,
+                isActive: true,
                 ...props.state,
             },
             child: { ...props.child },
@@ -47,9 +48,8 @@ export class WindfuryModel extends FeatureModel<
     }
     
     @TranxUtil.span()
-    protected disable(): void {
+    protected doDisable(): void {
         this.draft.state.status = WindfuryStatus.INACTIVE;
-        this.reload();
     }
 
     @StateUtil.on(self => self.route.role?.proxy.child.action.decor)

@@ -59,4 +59,6 @@ export abstract class EndTurnHookModel<
     }
 
     protected abstract doRun(): Promise<void>;
+    
+    protected doDisable(): void {}
 }

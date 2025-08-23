@@ -4,9 +4,7 @@ export namespace TauntModel {
     export type Event = {
         onActive: {};
     };
-    export type State = {
-        isActive: boolean;
-    };
+    export type State = {};
     export type Child = {};
     export type Refer = {};
 }
@@ -23,7 +21,7 @@ export class TauntModel extends FeatureModel<
             state: {
                 name: 'Taunt',
                 desc: 'Taunt',
-                isActive: false,
+                isActive: true,
                 ...props.state,
             },
             child: { ...props.child },
@@ -31,11 +29,7 @@ export class TauntModel extends FeatureModel<
         })
     }
 
-    protected disable(): boolean {
-        if (!this.state.isActive) return false;
-        this.draft.state.isActive = false;
-        return true;
-    }
+    protected doDisable(): void {}
 
     public get(): boolean {
         if (this.state.isActive) return false;

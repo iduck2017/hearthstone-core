@@ -73,5 +73,5 @@ export abstract class BattlecryModel<
 
     public abstract toRun(): { [K in keyof T]: SelectEvent<T[K]> } | undefined;
 
-    protected disable(): void {}
+    protected doDisable(): void {}
 }

@@ -3,11 +3,10 @@ import { DamageEvent } from "../../utils/damage";
 
 export namespace DivineSheildModel {
     export type Event = {
-        onActive: {};
-        onDeactive: DamageEvent;
+        onGet: {};
+        onBreak: DamageEvent;
     };
     export type State = {
-        isActive: boolean;
         count: number;
     };
     export type Child = {};
@@ -26,8 +25,8 @@ export class DivineSheildModel extends FeatureModel<
             state: {
                 name: 'Divine Shield',
                 desc: 'The first time you take damage, ignore it.',
-                isActive: false,
-                count: 0,
+                isActive: true,
+                count: 1,
                 ...props.state,
             },
             child: { ...props.child },
@@ -35,26 +34,25 @@ export class DivineSheildModel extends FeatureModel<
         });
     }
 
-    public active(): boolean {
+    public get(): boolean {
         if (this.state.isActive) return false; 
         this.draft.state.isActive = true;
         this.draft.state.count = 1;
-        this.event.onActive({});
+        this.event.onGet({});
         return true;
     }
 
-    public async deactive() {
+    public async break() {
         if (!this.state.isActive) return false;
-        this.draft.state.isActive = false;
+        if (this.draft.state.count <= 1) this.draft.state.isActive = false;
         this.draft.state.count =- 1;
     }
 
-    public onDeactive(event: DamageEvent) {
-        this.event.onDeactive(event);
+    public onBreak(event: DamageEvent) {
+        this.event.onBreak(event);
     }
 
-    protected disable(): void {
-        this.draft.state.isActive = false;
+    protected doDisable(): void {
         this.draft.state.count = 0;
     }
 }

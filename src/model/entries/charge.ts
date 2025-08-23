@@ -7,9 +7,7 @@ export namespace ChargeModel {
     export type Event = {
         onActive: {};
     };
-    export type State = {
-        isActive: boolean;
-    }
+    export type State = {};
     export type Child = {};
     export type Refer = {};
 }
@@ -26,7 +24,7 @@ export class ChargeModel extends FeatureModel<
             state: {
                 name: 'Charge',
                 desc: 'Can attack immediately.',
-                isActive: false,
+                isActive: true,
                 ...props.state,
             },
             child: { ...props.child },
@@ -34,9 +32,7 @@ export class ChargeModel extends FeatureModel<
         })
     }
 
-    @TranxUtil.span()
-    protected disable(): void {
-        this.draft.state.isActive = false;
+    protected doDisable(): void {
         this.reload();
     }
 
@@ -48,14 +44,4 @@ export class ChargeModel extends FeatureModel<
             isActive: false,
         }
     }
-
-    @StateUtil.on(self => self.route.role?.proxy.child.entries.child.rush.decor)
-    protected onRushCheck(that: RushModel, state: RushModel.State & FeatureModel.State) {
-        if (!this.state.isActive) return state;
-        return {
-            ...state,
-            isActive: RushStatus.INACTIVE,
-        }
-    }
-
 }

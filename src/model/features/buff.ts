@@ -68,7 +68,7 @@ export abstract class BuffModel<
     }
 
     @TranxUtil.span()
-    protected disable() {
+    protected doDisable() {
         this.draft.state.isActive = false;
         this.reload();
     }

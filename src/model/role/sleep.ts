@@ -1,5 +1,4 @@
 import { Model } from "set-piece";
-import { FeatureModel } from "../features";
 
 export namespace SleepModel {
     export type Event = {

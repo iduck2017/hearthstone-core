@@ -1,4 +1,4 @@
-import { Model } from "set-piece";
+import { Model, TranxUtil } from "set-piece";
 import { AbortEvent, AnchorModel, RoleModel } from "../..";
 import { CardModel } from "../..";
 import { PlayerModel } from "../..";
@@ -9,6 +9,7 @@ export namespace FeatureModel {
     export type State = {
         name: string;
         desc: string;
+        isActive: boolean;
     }
     export type Event = {
         toSilence: AbortEvent;
@@ -47,7 +48,7 @@ export abstract class FeatureModel<
 
     constructor(props: FeatureModel['props'] & {
         uuid: string | undefined;
-        state: S & Pick<FeatureModel.State, 'name' | 'desc'>;
+        state: S & Pick<FeatureModel.State, 'name' | 'desc' | 'isActive'>;
         child: C,
         refer: R,
     }) {
@@ -70,5 +71,11 @@ export abstract class FeatureModel<
         return true;
     }
 
-    protected abstract disable(): void;
+    @TranxUtil.span()
+    public disable() {
+        this.draft.state.isActive = false;
+        this.doDisable();
+    }
+
+    protected abstract doDisable(): void;
 }

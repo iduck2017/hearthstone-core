@@ -5,7 +5,7 @@ import { SleepModel } from "../role/sleep";
 export enum RushStatus {
     INACTIVE = 0,
     ACTIVE = 1,
-    ACTIVE_DONE = 2,
+    ACTIVE_ONCE = 2,
 }
 
 export namespace RushModel {
@@ -31,7 +31,8 @@ export class RushModel extends FeatureModel<
             state: {
                 name: 'Rush',
                 desc: 'Can attack minions immediately.',
-                status: RushStatus.INACTIVE,
+                status: RushStatus.ACTIVE,
+                isActive: true,
                 ...props.state,
             },
             child: { ...props.child },
@@ -48,12 +49,12 @@ export class RushModel extends FeatureModel<
 
     public deactive(): boolean {
         if (!this.state.status) return false;
-        this.draft.state.status = RushStatus.ACTIVE_DONE;
+        this.draft.state.status = RushStatus.ACTIVE_ONCE;
         return true;
     }
 
     @TranxUtil.span()
-    protected disable(): void {
+    protected doDisable(): void {
         this.draft.state.status = RushStatus.INACTIVE;
         this.reload();
     }

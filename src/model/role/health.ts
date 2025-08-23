@@ -90,7 +90,7 @@ export class HealthModel extends Model<
             return event;
         }
         if (divineSheild.state.isActive) {
-            divineSheild.deactive();
+            divineSheild.break();
             event.result = 0;
             return event;
         }
@@ -107,7 +107,7 @@ export class HealthModel extends Model<
         if (event.isBlock) {
             const entries = role.child.entries;
             const divineSheild = entries.child.divineShield;
-            divineSheild.onDeactive(event);
+            divineSheild.onBreak(event);
             return;
         }
         return this.event.onHurt(event);
@@ -142,6 +142,7 @@ export class HealthModel extends Model<
         const role = this.route.role;
         if (!role) return;
         if (event.isAbort) return;
+        if (event.result <= 0) return;
         return this.event.onHeal(event);
     }
 

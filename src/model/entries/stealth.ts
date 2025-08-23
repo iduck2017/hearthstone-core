@@ -5,9 +5,7 @@ export namespace StealthModel {
         onActive: {};
         onDeactive: {};
     };
-    export type State = {
-        isActive: boolean;
-    };
+    export type State = {};
     export type Child = {};
     export type Refer = {};
 }
@@ -24,7 +22,7 @@ export class StealthModel extends FeatureModel<
             state: {
                 name: 'Stealth',
                 desc: '',
-                isActive: false,
+                isActive: true,
                 ...props.state,
             },
             child: { ...props.child },
@@ -44,7 +42,5 @@ export class StealthModel extends FeatureModel<
         this.event.onDeactive({});
     }
 
-    public disable() {
-        this.draft.state.isActive = false;
-    }
+    public doDisable() {}
 }
