@@ -81,7 +81,7 @@ export class ActionModel extends Model<
         const opponent = player.refer.opponent;
         if (!opponent) return;
         let options: RoleModel[] = opponent.refer.roles
-        if (rush.state.isActive == RushStatus.ACTIVE) {
+        if (rush.state.status == RushStatus.ACTIVE) {
             options = opponent.refer.minions;
         }
         const tauntOptions = options.filter(item => {
@@ -132,12 +132,14 @@ export class ActionModel extends Model<
         const turn = game.child.turn;
         if (turn.refer.current !== player) return false;
         const sleep = role.child.sleep;
+        const attack = role.child.attack;
         const entries = role.child.entries;
         const frozen = entries.child.frozen;
         if (frozen.state.isActive) return false;
         if (sleep.state.isActive) return false;
         if (!this.state.isActive) return false;
         if (this.state.current <= 0) return false;
+        if (!attack.check()) return false;
         return true;
     }
 

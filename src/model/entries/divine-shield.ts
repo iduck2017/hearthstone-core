@@ -8,7 +8,7 @@ export namespace DivineSheildModel {
     };
     export type State = {
         isActive: boolean;
-        level: number;
+        count: number;
     };
     export type Child = {};
     export type Refer = {};
@@ -27,7 +27,7 @@ export class DivineSheildModel extends FeatureModel<
                 name: 'Divine Shield',
                 desc: 'The first time you take damage, ignore it.',
                 isActive: false,
-                level: 0,
+                count: 0,
                 ...props.state,
             },
             child: { ...props.child },
@@ -38,7 +38,7 @@ export class DivineSheildModel extends FeatureModel<
     public active(): boolean {
         if (this.state.isActive) return false; 
         this.draft.state.isActive = true;
-        this.draft.state.level = 1;
+        this.draft.state.count = 1;
         this.event.onActive({});
         return true;
     }
@@ -46,7 +46,7 @@ export class DivineSheildModel extends FeatureModel<
     public async deactive() {
         if (!this.state.isActive) return false;
         this.draft.state.isActive = false;
-        this.draft.state.level =- 1;
+        this.draft.state.count =- 1;
     }
 
     public onDeactive(event: DamageEvent) {
@@ -55,6 +55,6 @@ export class DivineSheildModel extends FeatureModel<
 
     protected disable(): void {
         this.draft.state.isActive = false;
-        this.draft.state.level = 0;
+        this.draft.state.count = 0;
     }
 }

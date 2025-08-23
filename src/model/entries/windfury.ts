@@ -5,7 +5,7 @@ import { ActionModel } from "../role/action";
 export enum WindfuryStatus {
     INACTIVE = 0,
     ACTIVE = 1,
-    SUPER_ACTIVE = 2,
+    ACTIVE_SUPER = 2,
 }
 
 export namespace WindfuryModel {
@@ -13,7 +13,7 @@ export namespace WindfuryModel {
         onGet: {};
     };
     export type State = {
-        isActive: WindfuryStatus;
+        status: WindfuryStatus;
     };
     export type Child = {};
     export type Refer = {};
@@ -31,7 +31,7 @@ export class WindfuryModel extends FeatureModel<
             state: {
                 name: 'Windfury',
                 desc: 'Can attack twice each turn.',
-                isActive: WindfuryStatus.INACTIVE,
+                status: WindfuryStatus.INACTIVE,
                 ...props.state,
             },
             child: { ...props.child },
@@ -40,22 +40,22 @@ export class WindfuryModel extends FeatureModel<
     }
 
     public active(status: WindfuryStatus): boolean {
-        if (this.state.isActive) return false;
-        this.draft.state.isActive = status;
+        if (this.state.status) return false;
+        this.draft.state.status = status;
         this.event.onGet({});
         return true;
     }
     
     @TranxUtil.span()
     protected disable(): void {
-        this.draft.state.isActive = WindfuryStatus.INACTIVE;
+        this.draft.state.status = WindfuryStatus.INACTIVE;
         this.reload();
     }
 
     @StateUtil.on(self => self.route.role?.proxy.child.action.decor)
     protected onCheck(that: ActionModel, state: ActionModel.State) {
-        if (!this.state.isActive) return state;
-        const offset = this.state.isActive === WindfuryStatus.SUPER_ACTIVE ? 3 : 1;
+        if (!this.state.status) return state;
+        const offset = this.state.status === WindfuryStatus.ACTIVE_SUPER ? 3 : 1;
         return {
             ...state,
             origin: state.origin + offset,

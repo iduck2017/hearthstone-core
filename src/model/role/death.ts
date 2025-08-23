@@ -5,6 +5,12 @@ import { RoleModel } from ".";
 import { CardModel } from "../card";
 import type { AnchorEvent, AnchorModel } from "../anchor";
 
+export enum DeathStatus {
+    INACTIVE = 0,
+    ACTIVE_PREV = 1,
+    ACTIVE = 2,
+}
+
 export namespace DeathModel {
     export type Event = {
         onActive: {};
@@ -12,7 +18,7 @@ export namespace DeathModel {
         onDestroy: {};
     }
     export type State = {
-        isActive: boolean;
+        status: DeathStatus;
         isDestroy: boolean;
     }
     export type Child = {}
@@ -42,7 +48,7 @@ export class DeathModel extends Model<
         super({
             uuid: props.uuid,
             state: { 
-                isActive: false,
+                status: DeathStatus.INACTIVE,
                 isDestroy: false,
                 ...props.state,
             },
@@ -59,27 +65,28 @@ export class DeathModel extends Model<
         if (this.state.isDestroy) return false;
         this.draft.state.isDestroy = true;
         this.draft.refer.reason = event.source;
-        this.draft.state.isActive = true;
+        this.draft.state.status = DeathStatus.ACTIVE_PREV;
         DeathUtil.add(this);
         return true;
     }
 
     public active(event: DamageEvent) {
-        if (this.state.isActive) return false;
+        if (this.state.status) return false;
         this.draft.refer.reason = event.source;
-        this.draft.state.isActive = true;
+        this.draft.state.status = DeathStatus.ACTIVE_PREV;
         DeathUtil.add(this);
     }
 
     public cancel() {
-        if (!this.state.isActive) return false
+        if (!this.state.status) return false
         if (this.state.isDestroy) return false;
         this.draft.refer.reason = undefined;
-        this.draft.state.isActive = false;
+        this.draft.state.status = DeathStatus.INACTIVE;
     }
     
     public onActive() {
-        if (!this.state.isActive) return;
+        if (!this.state.status) return;
+        this.draft.state.status = DeathStatus.ACTIVE;
         this.event.onActive({});
         if (!this.state.isDestroy) return;
         this.event.onDestroy({});

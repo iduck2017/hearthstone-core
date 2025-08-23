@@ -33,11 +33,9 @@ export abstract class BattlecryModel<
     public get route() {
         const route = super.route;
         const card: CardModel | undefined = route.path.find(item => item instanceof CardModel);
-        const role: RoleModel | undefined = route.path.find(item => item instanceof RoleModel);
         return { 
             ...route, 
             card, 
-            role,
             player: route.path.find(item => item instanceof PlayerModel),
             game: route.path.find(item => item instanceof GameModel)
         };

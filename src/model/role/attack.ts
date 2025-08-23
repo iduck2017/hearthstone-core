@@ -72,8 +72,7 @@ export class AttackModel extends Model<
         })
     }
 
-
-    private check(): boolean {
+    public check(): boolean {
         if (!this.state.current) return false;
         return true;
     }

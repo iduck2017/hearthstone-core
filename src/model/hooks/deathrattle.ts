@@ -31,8 +31,7 @@ export abstract class DeathrattleModel<
     public get route() {
         const route = super.route;
         const card: CardModel | undefined = route.path.find(item => item instanceof CardModel);
-        const role: RoleModel | undefined = route.path.find(item => item instanceof RoleModel);
-        return { ...route, card, role };
+        return { ...route, card };
     }
 
     constructor(props: DeathrattleModel['props'] & {

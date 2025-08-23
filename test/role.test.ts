@@ -1,4 +1,4 @@
-import { GameModel, MageModel, PlayerModel, RoleModel, SelectUtil, TimeUtil } from "../src";
+import { GameModel, MageModel, PlayerModel, SelectUtil, TimeUtil } from "../src";
 import { boot } from "./boot";
 import { WispRoleModel } from "./wisp/role";
 import { WispCardModel } from "./wisp/card";
@@ -7,6 +7,7 @@ import { DeckModel } from "../src/model/player/deck";
 import { BoardModel } from "../src/model/player/board";
 import { HealthModel } from "../src/model/role/health";
 import { AttackModel } from "../src/model/role/attack";
+import { DeathStatus } from "../src/model/role/death";
 
 describe('role', () => {
     const game = new GameModel({
@@ -89,7 +90,7 @@ describe('role', () => {
         expect(role.child.health.state.damage).toBe(0);
         expect(role.child.health.state.limit).toBe(2);
         expect(role.child.attack.state.current).toBe(1);
-        expect(role.child.death.state.isActive).toBe(false);
+        expect(role.child.death.state.status).toBe(DeathStatus.INACTIVE);
         expect(role.child.action.state.current).toBe(1);
     })
 
@@ -123,14 +124,14 @@ describe('role', () => {
         expect(roleA.child.health.state.damage).toBe(1);
         expect(roleA.child.health.state.limit).toBe(2);
         expect(roleA.child.attack.state.current).toBe(1);
-        expect(roleA.child.death.state.isActive).toBe(false);
+        expect(roleA.child.death.state.status).toBe(DeathStatus.INACTIVE);
         expect(roleA.child.action.state.current).toBe(1);
 
         expect(roleB.state.health).toBe(1);
         expect(roleB.child.health.state.damage).toBe(1);
         expect(roleB.child.health.state.limit).toBe(2);
         expect(roleB.child.attack.state.current).toBe(1);
-        expect(roleB.child.death.state.isActive).toBe(false);
+        expect(roleB.child.death.state.status).toBe(DeathStatus.INACTIVE);
         expect(roleB.child.action.state.current).toBe(0);
     })
 
@@ -164,7 +165,7 @@ describe('role', () => {
         expect(roleA.child.health.state.damage).toBe(2);
         expect(roleA.child.health.state.limit).toBe(2);
         expect(roleA.child.attack.state.current).toBe(1);
-        expect(roleA.child.death.state.isActive).toBe(true);
+        expect(roleA.child.death.state.status).toBe(DeathStatus.ACTIVE);
         
         expect(roleA.child.action.state.current).toBe(0);
         expect(roleA.child.action.state.cost).toBe(1);
@@ -174,7 +175,7 @@ describe('role', () => {
         expect(roleB.child.health.state.damage).toBe(2);
         expect(roleB.child.health.state.limit).toBe(2);
         expect(roleB.child.attack.state.current).toBe(1);
-        expect(roleB.child.death.state.isActive).toBe(true);
+        expect(roleB.child.death.state.status).toBe(DeathStatus.ACTIVE);
         expect(roleB.child.action.state.current).toBe(0);
 
         expect(boardA.child.cards.length).toBe(0);

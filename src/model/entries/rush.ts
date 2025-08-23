@@ -5,7 +5,7 @@ import { SleepModel } from "../role/sleep";
 export enum RushStatus {
     INACTIVE = 0,
     ACTIVE = 1,
-    FINISH = 2,
+    ACTIVE_DONE = 2,
 }
 
 export namespace RushModel {
@@ -13,7 +13,7 @@ export namespace RushModel {
         onActive: {};
     };
     export type State = {
-        isActive: RushStatus;
+        status: RushStatus;
     }
     export type Child = {};
     export type Refer = {};
@@ -31,7 +31,7 @@ export class RushModel extends FeatureModel<
             state: {
                 name: 'Rush',
                 desc: 'Can attack minions immediately.',
-                isActive: RushStatus.INACTIVE,
+                status: RushStatus.INACTIVE,
                 ...props.state,
             },
             child: { ...props.child },
@@ -40,27 +40,27 @@ export class RushModel extends FeatureModel<
     }
 
     public active(): boolean {
-        if (this.state.isActive) return false;
-        this.draft.state.isActive = RushStatus.ACTIVE;
+        if (this.state.status) return false;
+        this.draft.state.status = RushStatus.ACTIVE;
         this.event.onActive({});
         return true;
     }
 
     public deactive(): boolean {
-        if (!this.state.isActive) return false;
-        this.draft.state.isActive = RushStatus.FINISH;
+        if (!this.state.status) return false;
+        this.draft.state.status = RushStatus.ACTIVE_DONE;
         return true;
     }
 
     @TranxUtil.span()
     protected disable(): void {
-        this.draft.state.isActive = RushStatus.INACTIVE;
+        this.draft.state.status = RushStatus.INACTIVE;
         this.reload();
     }
 
     @StateUtil.on(self => self.route.role?.proxy.child.sleep.decor)
     protected onCheck(that: SleepModel, state: SleepModel.State) {
-        if (!this.state.isActive) return state;
+        if (!this.state.status) return state;
         return {
             ...state,
             isActive: false,

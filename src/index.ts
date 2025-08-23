@@ -6,6 +6,7 @@ export { DamageType } from "./utils/damage";
 
 export { RushStatus } from "./model/entries/rush";
 export { WindfuryStatus } from "./model/entries/windfury";
+export { DeathStatus } from "./model/role/death";
 
 export { AttackEvent } from "./model/role/attack";
 export { AnchorEvent } from "./model/anchor";

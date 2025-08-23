@@ -19,7 +19,7 @@ export abstract class EndTurnHookModel<
     S extends Partial<EndTurnHookModel.State> & Model.State = {},
     C extends Partial<EndTurnHookModel.Child> & Model.Child = {},
     R extends Partial<EndTurnHookModel.Refer> & Model.Refer = {}
-> extends Model<
+> extends FeatureModel<
     E & EndTurnHookModel.Event,
     S & EndTurnHookModel.State,
     C & EndTurnHookModel.Child,
@@ -28,8 +28,7 @@ export abstract class EndTurnHookModel<
     public get route() {
         const route = super.route;
         const card: CardModel | undefined = route.path.find(item => item instanceof CardModel);
-        const role: RoleModel | undefined = route.path.find(item => item instanceof RoleModel);
-        return { ...route, card, role };
+        return { ...route, card };
     }
 
     constructor(props: EndTurnHookModel['props'] & {

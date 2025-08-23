@@ -44,7 +44,7 @@ export class DeathUtil {
     }
 
     public static end() {
-        const tasks = DeathUtil.tasks.filter(item => item.state.isActive);
+        const tasks = DeathUtil.tasks.filter(item => item.state.status);
         // console.log('death tranx', tasks)
         DeathUtil.tasks = [];
         tasks.forEach(item => item.route.card?.clear());

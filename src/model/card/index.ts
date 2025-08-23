@@ -8,7 +8,7 @@ import { BoardModel } from "../player/board";
 import { GraveyardModel } from "../player/graveyard";
 import { SelectUtil } from "../../utils/select";
 import { CardHooksModel } from "./hooks";
-import { AnchorModel } from "../..";
+import { AnchorModel, RoleModel } from "../..";
 import { AbortEvent } from "../../utils/abort";
 
 export type PlayEvent = {
@@ -28,6 +28,7 @@ export namespace CardModel {
         onDraw: { card: CardModel },
     };
     export type Child = {
+        readonly role?: RoleModel;
         readonly hooks: CardHooksModel;
         readonly anchor: AnchorModel;
     };
