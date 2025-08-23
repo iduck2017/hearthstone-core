@@ -50,7 +50,7 @@ export abstract class BattlecryModel<
         super({
             uuid: props.uuid,
             state: { 
-                isActive: true,
+                status: 1,
                 ...props.state,
             },
             child: {
@@ -72,6 +72,4 @@ export abstract class BattlecryModel<
     protected abstract doRun(...params: T): Promise<void>;
 
     public abstract toRun(): { [K in keyof T]: SelectEvent<T[K]> } | undefined;
-
-    protected doDisable(): void {}
 }

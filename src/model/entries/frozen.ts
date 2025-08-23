@@ -5,9 +5,7 @@ export namespace FrozenModel {
         onActive: {};
         onDeactive: {};
     };
-    export type State = {
-        isActive: boolean;
-    };
+    export type State = {};
     export type Child = {};
     export type Refer = {};
 }
@@ -24,7 +22,7 @@ export class FrozenModel extends FeatureModel<
             state: {
                 name: 'Frozen',
                 desc: 'Frozen charactoers lose their next attack.',
-                isActive: true,
+                status: 1,
                 ...props.state,
             },
             child: { ...props.child },
@@ -32,11 +30,9 @@ export class FrozenModel extends FeatureModel<
         });
     }
 
-    protected doDisable(): void {}
-
     public active(): boolean {
-        if (this.state.isActive) return false;
-        this.draft.state.isActive = true;
+        if (this.state.status) return false;
+        this.draft.state.status = 1;
         this.event.onActive({});
         return true;
     }

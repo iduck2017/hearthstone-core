@@ -24,7 +24,7 @@ export class ChargeModel extends FeatureModel<
             state: {
                 name: 'Charge',
                 desc: 'Can attack immediately.',
-                isActive: true,
+                status: 1,
                 ...props.state,
             },
             child: { ...props.child },
@@ -32,16 +32,13 @@ export class ChargeModel extends FeatureModel<
         })
     }
 
-    protected doDisable(): void {
-        this.reload();
-    }
 
     @StateUtil.on(self => self.route.role?.proxy.child.sleep.decor)
     protected onSleepCheck(that: SleepModel, state: SleepModel.State) {
-        if (!this.state.isActive) return state;
+        if (!this.state.status) return state;
         return {
             ...state,
-            isActive: false,
+            status: 0,
         }
     }
 }

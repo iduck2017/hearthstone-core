@@ -25,7 +25,7 @@ export class DivineSheildModel extends FeatureModel<
             state: {
                 name: 'Divine Shield',
                 desc: 'The first time you take damage, ignore it.',
-                isActive: true,
+                status: 1,
                 count: 1,
                 ...props.state,
             },
@@ -35,24 +35,26 @@ export class DivineSheildModel extends FeatureModel<
     }
 
     public get(): boolean {
-        if (this.state.isActive) return false; 
-        this.draft.state.isActive = true;
+        if (this.state.status) return false; 
+        this.draft.state.status = 1;
         this.draft.state.count = 1;
         this.event.onGet({});
         return true;
     }
 
     public async break() {
-        if (!this.state.isActive) return false;
-        if (this.draft.state.count <= 1) this.draft.state.isActive = false;
+        if (!this.state.status) return false;
+        if (this.draft.state.count <= 1) this.draft.state.status = 0;
         this.draft.state.count =- 1;
+        return true;
     }
 
     public onBreak(event: DamageEvent) {
         this.event.onBreak(event);
     }
 
-    protected doDisable(): void {
+    public disable() {
+        super.disable();
         this.draft.state.count = 0;
     }
 }

@@ -41,7 +41,7 @@ export abstract class StartTurnHookModel<
         super({
             uuid: props.uuid,
             state: {
-                isActive: true,
+                status: 1,
                 ...props.state,
             },
             child: {
@@ -60,6 +60,4 @@ export abstract class StartTurnHookModel<
     }
 
     protected abstract doRun(): Promise<void>;
-    
-    protected doDisable(): void {}
 }

@@ -8,7 +8,9 @@ import { BoardModel } from "../src/model/player/board";
 import { HealthModel } from "../src/model/role/health";
 import { AttackModel } from "../src/model/role/attack";
 import { DeathStatus } from "../src/model/role/death";
+import { DebugUtil, LogLevel } from "set-piece";
 
+DebugUtil.level = LogLevel.ERROR;
 describe('role', () => {
     const game = new GameModel({
         child: {
@@ -108,6 +110,7 @@ describe('role', () => {
         if (!cardA || !cardB) return;
 
         const promise = cardB.child.role.child.action.run();
+        
         await TimeUtil.sleep();
         const selector = SelectUtil.current;
         expect(selector).toBeDefined();
@@ -117,7 +120,7 @@ describe('role', () => {
         expect(selector?.options.length).toBe(2);
         SelectUtil.set(cardA.child.role);
         await promise;
-        
+
         const roleA = cardA.child.role;
         const roleB = cardB.child.role;
         expect(roleA.state.health).toBe(1);

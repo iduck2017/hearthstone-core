@@ -89,11 +89,12 @@ export class HealthModel extends Model<
             event.result = 0;
             return event;
         }
-        if (divineSheild.state.isActive) {
+        if (divineSheild.state.status) {
             divineSheild.break();
             event.result = 0;
             return event;
         }
+        console.log('doHurt');
         this.draft.state.damage += result;
         if (health <= result) death.active(event);
         event.result = result;

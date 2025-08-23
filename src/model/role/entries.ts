@@ -33,13 +33,13 @@ export class RoleEntriesModel extends Model<
             uuid: props.uuid,
             state: { ...props.state },
             child: { 
-                rush: new RushModel({ state: { isActive: false, status: RushStatus.INACTIVE }}),
-                taunt: new TauntModel({ state: { isActive: false }}),
-                charge: new ChargeModel({ state: { isActive: false }}),
-                frozen: new FrozenModel({ state: { isActive: false }}),
-                stealth: new StealthModel({ state: { isActive: false }}),
-                windfury: new WindfuryModel({ state: { isActive: false, status: WindfuryStatus.INACTIVE }}),
-                divineShield: new DivineSheildModel({ state: { isActive: false, count: 0 }}),
+                rush: new RushModel({ state: { status: RushStatus.INACTIVE }}),
+                taunt: new TauntModel({ state: { status: 0 }}),
+                charge: new ChargeModel({ state: { status: 0 }}),
+                frozen: new FrozenModel({ state: { status: 0 }}),
+                stealth: new StealthModel({ state: { status: 0 }}),
+                windfury: new WindfuryModel({ state: { status: WindfuryStatus.INACTIVE }}),
+                divineShield: new DivineSheildModel({ state: { count: 0, status: 0 }}),
                 ...props.child 
             },
             refer: { ...props.refer }

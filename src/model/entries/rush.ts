@@ -32,7 +32,6 @@ export class RushModel extends FeatureModel<
                 name: 'Rush',
                 desc: 'Can attack minions immediately.',
                 status: RushStatus.ACTIVE,
-                isActive: true,
                 ...props.state,
             },
             child: { ...props.child },
@@ -53,11 +52,6 @@ export class RushModel extends FeatureModel<
         return true;
     }
 
-    @TranxUtil.span()
-    protected doDisable(): void {
-        this.draft.state.status = RushStatus.INACTIVE;
-        this.reload();
-    }
 
     @StateUtil.on(self => self.route.role?.proxy.child.sleep.decor)
     protected onCheck(that: SleepModel, state: SleepModel.State) {

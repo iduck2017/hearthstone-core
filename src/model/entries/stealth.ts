@@ -22,7 +22,7 @@ export class StealthModel extends FeatureModel<
             state: {
                 name: 'Stealth',
                 desc: '',
-                isActive: true,
+                status: 1,
                 ...props.state,
             },
             child: { ...props.child },
@@ -31,8 +31,8 @@ export class StealthModel extends FeatureModel<
     }
 
     public active() {
-        if (this.state.isActive) return false; 
-        this.draft.state.isActive = true;
+        if (this.state.status) return false; 
+        this.draft.state.status = 1;
         this.event.onActive({});
         return true;
     }
@@ -42,5 +42,4 @@ export class StealthModel extends FeatureModel<
         this.event.onDeactive({});
     }
 
-    public doDisable() {}
 }

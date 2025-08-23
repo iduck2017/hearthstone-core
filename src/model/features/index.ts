@@ -9,7 +9,7 @@ export namespace FeatureModel {
     export type State = {
         name: string;
         desc: string;
-        isActive: boolean;
+        status: number;
     }
     export type Event = {
         toSilence: AbortEvent;
@@ -48,7 +48,7 @@ export abstract class FeatureModel<
 
     constructor(props: FeatureModel['props'] & {
         uuid: string | undefined;
-        state: S & Pick<FeatureModel.State, 'name' | 'desc' | 'isActive'>;
+        state: S & Pick<FeatureModel.State, 'name' | 'desc' | 'status'>;
         child: C,
         refer: R,
     }) {
@@ -73,9 +73,7 @@ export abstract class FeatureModel<
 
     @TranxUtil.span()
     public disable() {
-        this.draft.state.isActive = false;
-        this.doDisable();
+        this.draft.state.status = 0;
+        this.reload();
     }
-
-    protected abstract doDisable(): void;
 }

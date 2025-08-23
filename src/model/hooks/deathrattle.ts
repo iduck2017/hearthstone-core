@@ -40,7 +40,7 @@ export abstract class DeathrattleModel<
         super({
             uuid: props.uuid,
             state: {
-                isActive: true,
+                status: 1,
                 ...props.state,
             },
             child: {
@@ -60,6 +60,4 @@ export abstract class DeathrattleModel<
     }
 
     protected abstract doRun(): Promise<void>;
-
-    protected doDisable(): void {}
 }

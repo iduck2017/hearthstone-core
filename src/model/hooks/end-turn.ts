@@ -40,7 +40,7 @@ export abstract class EndTurnHookModel<
         super({
             uuid: props.uuid,
             state: {
-                isActive: true,
+                status: 1,
                 ...props.state,
             },
             child: {
@@ -59,6 +59,4 @@ export abstract class EndTurnHookModel<
     }
 
     protected abstract doRun(): Promise<void>;
-    
-    protected doDisable(): void {}
 }

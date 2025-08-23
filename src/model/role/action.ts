@@ -82,20 +82,20 @@ export class ActionModel extends Model<
         const opponent = player.refer.opponent;
         if (!opponent) return;
         let options: RoleModel[] = opponent.refer.roles
-        if (rush.state.status === RushStatus.ACTIVE && !charge.state.isActive) {
+        if (rush.state.status === RushStatus.ACTIVE && !charge.state.status) {
             options = opponent.refer.minions;
         }
         const tauntOptions = options.filter(item => {
             const entries = item.child.entries;
             const taunt = entries.child.taunt;
             const stealth = entries.child.stealth;
-            return taunt.state.isActive && !stealth.state.isActive;
+            return taunt.state.status && !stealth.state.status;
         });
         if (tauntOptions.length) options = tauntOptions;
         options = options.filter(item => {
             const entries = item.child.entries;
             const stealth = entries.child.stealth;
-            return !stealth.state.isActive;
+            return !stealth.state.status;
         })
         const result = await SelectUtil.get(new SelectEvent(options));
         return result;
@@ -136,7 +136,7 @@ export class ActionModel extends Model<
         const attack = role.child.attack;
         const entries = role.child.entries;
         const frozen = entries.child.frozen;
-        if (frozen.state.isActive) return false;
+        if (frozen.state.status) return false;
         if (sleep.state.isActive) return false;
         if (!this.state.isActive) return false;
         if (this.state.current <= 0) return false;

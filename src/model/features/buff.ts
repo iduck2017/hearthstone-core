@@ -1,4 +1,4 @@
-import { Model, StateUtil, TranxUtil } from "set-piece";
+import { Model, StateUtil } from "set-piece";
 import { RoleModel } from "../role";
 import { FeatureModel } from ".";
 import { PlayerModel } from "../player";
@@ -9,7 +9,6 @@ import { HealthModel } from "../role/health";
 
 export namespace BuffModel {
     export type State = Partial<FeatureModel.State> & {
-        isActive: boolean;
         isOverride: boolean;
         attack: number;
         health: number;
@@ -53,7 +52,7 @@ export abstract class BuffModel<
         super({
             uuid: props.uuid,
             state: {
-                isActive: true,
+                status: 1,
                 isOverride: false,
                 ...props.state,
             },
@@ -64,12 +63,6 @@ export abstract class BuffModel<
 
     public override() {
         this.draft.state.isOverride = true;
-        this.reload();
-    }
-
-    @TranxUtil.span()
-    protected doDisable() {
-        this.draft.state.isActive = false;
         this.reload();
     }
 

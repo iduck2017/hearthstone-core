@@ -21,7 +21,7 @@ export class TauntModel extends FeatureModel<
             state: {
                 name: 'Taunt',
                 desc: 'Taunt',
-                isActive: true,
+                status: 1,
                 ...props.state,
             },
             child: { ...props.child },
@@ -29,11 +29,9 @@ export class TauntModel extends FeatureModel<
         })
     }
 
-    protected doDisable(): void {}
-
     public get(): boolean {
-        if (this.state.isActive) return false;
-        this.draft.state.isActive = true;
+        if (this.state.status) return false;
+        this.draft.state.status = 1;
         this.event.onActive({});
         return true;
     }
