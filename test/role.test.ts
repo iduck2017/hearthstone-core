@@ -13,14 +13,13 @@ DebugUtil.level = LogLevel.ERROR;
 describe('role', () => {
     const game = new GameModel({
         child: {
-            playerA: new PlayerModel({
+            playerA: new MageModel({
                 child: {
-                    hero: new MageModel({}),
                     hand: new HandModel({}),
                     deck: new DeckModel({}),
                     board: new BoardModel({
-                        child: { cards: [
-                            new WispModel({
+                        child: { 
+                            cards: [new WispModel({
                                 state: { mana: 1 },
                                 child: {
                                     role: new RoleModel({
@@ -30,19 +29,18 @@ describe('role', () => {
                                         }
                                     })
                                 }
-                            })
-                        ]}
+                            })]
+                        }
                     }),
                 },
             }),
-            playerB: new PlayerModel({
+            playerB: new MageModel({
                 child: {
-                    hero: new MageModel({}),
                     hand: new HandModel({}),
                     deck: new DeckModel({}),
                     board: new BoardModel({
-                        child: { cards: [
-                            new WispModel({
+                        child: { 
+                            cards: [new WispModel({
                                 state: { mana: 1 },
                                 child: {
                                     role: new RoleModel({
@@ -52,8 +50,8 @@ describe('role', () => {
                                         }
                                     })
                                 }
-                            })
-                        ]}
+                            })]
+                        }
                     }),
                 },
             }),
@@ -102,8 +100,6 @@ describe('role', () => {
         const boardB = playerB.child.board;
         const cardA = boardA.child.cards.find(item => item instanceof WispModel);
         const cardB = boardB.child.cards.find(item => item instanceof WispModel);
-        const heroA = playerA.child.hero;
-        const heroB = playerB.child.hero;
         expect(cardA).toBeDefined();
         expect(cardB).toBeDefined();
         if (!cardA || !cardB) return;
@@ -114,7 +110,7 @@ describe('role', () => {
         const selector = SelectUtil.current;
         expect(selector).toBeDefined();
         if (!selector) return;
-        expect(selector.options).toContain(heroA.child.role);
+        expect(selector.options).toContain(playerA.child.role);
         expect(selector?.options).toContain(cardA.child.role);
         expect(selector?.options.length).toBe(2);
         SelectUtil.set(cardA.child.role);

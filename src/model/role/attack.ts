@@ -4,7 +4,7 @@ import { RoleModel } from ".";
 import { GameModel } from "../game";
 import { PlayerModel } from "../player";
 import { SelectEvent, SelectUtil } from "../../utils/select";
-import { MinionCardModel } from "../card/minion";
+import { MinionModel } from "../card/minion";
 import { RushStatus } from "../entries/rush";
 import { AbortEvent } from "../../utils/abort";
 
@@ -40,7 +40,7 @@ export class AttackModel extends Model<
     public get route() {
         const route = super.route;
         const role: RoleModel | undefined = route.path.find(item => item instanceof RoleModel);
-        const card: MinionCardModel | undefined = route.path.find(item => item instanceof MinionCardModel);
+        const card: MinionModel | undefined = route.path.find(item => item instanceof MinionModel);
         return { 
             ...route, 
             role,

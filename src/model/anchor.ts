@@ -1,5 +1,5 @@
 import { Model, Route } from "set-piece";
-import { CardModel, HeroModel } from "..";
+import { CardModel, PlayerModel } from "..";
 import { AbortEvent } from "../utils/abort";
 
 export namespace AnchorModel {
@@ -32,19 +32,22 @@ export class AnchorModel<
 
     public get route(): Route & {
         card?: CardModel;
-        hero?: HeroModel;
+        player?: PlayerModel;
     } {
         const path = super.route.path;
         const card = path.find(item => item instanceof CardModel);
-        const hero = path.find(item => item instanceof HeroModel);
-        return { ...super.route, card, hero }
+        return { 
+            ...super.route, 
+            card,
+            player: path.find(item => item instanceof PlayerModel),
+        }
     }
 
     public get refer() {
         const route = this.route;
         return { 
             ...super.refer,
-            role: route.card?.child.role ?? route.hero?.child.role,
+            role: route.card?.child.role ?? route.player?.child.role,
         }
     }
     

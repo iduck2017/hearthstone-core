@@ -1,7 +1,7 @@
 import { Model } from "set-piece";
 import { CardModel, SkillModel } from "../..";
 
-export namespace HeroCardModel {
+export namespace HeroModel {
     export type Event = Partial<CardModel.Event> & {};
     export type State = Partial<CardModel.State> & {
         armor: number;
@@ -12,21 +12,23 @@ export namespace HeroCardModel {
     export type Refer = Partial<CardModel.Refer>;
 }
 
-export abstract class HeroCardModel<
-    E extends Partial<HeroCardModel.Event> & Model.Event = {},
-    S extends Partial<HeroCardModel.State> & Model.State = {},
-    C extends Partial<HeroCardModel.Child> & Model.Child = {},
-    R extends Partial<HeroCardModel.Refer> & Model.Refer = {}
+export abstract class HeroModel<
+    E extends Partial<HeroModel.Event> & Model.Event = {},
+    S extends Partial<HeroModel.State> & Model.State = {},
+    C extends Partial<HeroModel.Child> & Model.Child = {},
+    R extends Partial<HeroModel.Refer> & Model.Refer = {}
 > extends CardModel<
-    E & HeroCardModel.Event,
-    S & HeroCardModel.State,
-    C & HeroCardModel.Child,
-    R & HeroCardModel.Refer
+    E & HeroModel.Event,
+    S & HeroModel.State,
+    C & HeroModel.Child,
+    R & HeroModel.Refer
 > {
-    constructor(props: HeroCardModel['props'] & {
+    constructor(props: HeroModel['props'] & {
         uuid: string | undefined;
-        state: S & Pick<HeroCardModel.State, 'armor'> & Pick<CardModel.State, 'name' | 'desc' | 'mana'>, 
-        child: C & Pick<HeroCardModel.Child, 'skill'>,
+        state: S & 
+            Pick<HeroModel.State, 'armor'> & 
+            Pick<CardModel.State, 'name' | 'desc' | 'mana' | 'flavorDesc' | 'rarity' | 'class'>, 
+        child: C & Pick<HeroModel.Child, 'skill'>,
         refer: R
     }) {
         super({

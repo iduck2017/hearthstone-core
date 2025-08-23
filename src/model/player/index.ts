@@ -1,17 +1,21 @@
-import { Model, Route, TranxUtil } from "set-piece";
+import { Model } from "set-piece";
 import { GameModel } from "../game";
 import { HandModel } from "./hand";
 import { BoardModel } from "./board";
 import { DeckModel } from "./deck";
-import { HeroModel } from "../heroes";
 import { GraveyardModel } from "./graveyard";
+import { RoleModel } from "../role";
+import { SkillModel } from "../skill/skill";
+import { AnchorModel } from "../anchor";
 
 export namespace PlayerModel {
     export type State = {};
     export type Event = {
     };
     export type Child = {
-        readonly hero: HeroModel;
+        readonly role: RoleModel;
+        readonly skill: SkillModel;
+        readonly anchor: AnchorModel;
         readonly hand: HandModel;
         readonly deck: DeckModel;
         readonly board: BoardModel;
@@ -20,7 +24,7 @@ export namespace PlayerModel {
     export type Refer = {}
 }
 
-export class PlayerModel extends Model<
+export abstract class PlayerModel extends Model<
     PlayerModel.Event, 
     PlayerModel.State, 
     PlayerModel.Child,
@@ -45,12 +49,12 @@ export class PlayerModel extends Model<
             ...super.refer, 
             opponent, 
             minions, 
-            roles: [ ...minions, this.child.hero.child.role ],
+            roles: [ ...minions, this.child.role ],
         }
     }
 
     constructor(props: PlayerModel['props'] & {
-        child: Pick<PlayerModel.Child, 'hero'>;
+        child: Pick<PlayerModel.Child, 'role' | 'skill'>;
     }) {
         super({
             uuid: props.uuid,
@@ -59,6 +63,7 @@ export class PlayerModel extends Model<
                 hand: new HandModel({}),
                 deck: new DeckModel({}),
                 board: new BoardModel({}),
+                anchor: new AnchorModel({}),
                 graveyard: new GraveyardModel({}),
                 ...props.child
             },

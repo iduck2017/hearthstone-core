@@ -51,7 +51,7 @@ export class DamageUtil {
         tasks.forEach(item => item.target.child.health.onHurt(item));
         tasks.forEach(item => {
             item.source.onRun(item);
-            item.source.route.hero?.child.anchor.onRun(item);
+            item.source.route.player?.child.anchor.onRun(item);
             item.source.route.card?.child.anchor.onRun(item);
             item.source.refer.role?.child.anchor.onRun(item);
             if (item.result > 0) item.source.refer.role?.child.entries.child.stealth.deactive();

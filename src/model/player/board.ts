@@ -1,5 +1,5 @@
 import { Model } from "set-piece";
-import { MinionCardModel } from "../card/minion";
+import { MinionModel } from "../card/minion";
 import { GameModel } from "../game";
 import { PlayerModel } from ".";
 
@@ -7,7 +7,7 @@ export namespace BoardModel {
     export type Event = {};
     export type State = {};
     export type Child = {
-        cards: MinionCardModel[]
+        cards: MinionModel[]
     };
     export type Refer = {};
 }
@@ -39,11 +39,11 @@ export class BoardModel extends Model<
         })  
     }
 
-    public add(card: MinionCardModel, pos: number) {
+    public add(card: MinionModel, pos: number) {
         this.draft.child.cards.splice(pos, 0, card);
     }
 
-    public del(card: MinionCardModel) {
+    public del(card: MinionModel) {
         const index = this.draft.child.cards.indexOf(card);
         if (index === -1) return;
         this.draft.child.cards.splice(index, 1);

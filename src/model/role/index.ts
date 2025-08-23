@@ -1,12 +1,11 @@
 import { Model } from "set-piece";
 import { GameModel } from "../game";
 import { PlayerModel } from "../player";
-import { HeroModel } from "../heroes";
 import { BoardModel } from "../player/board";
 import { HandModel } from "../player/hand";
 import { DeckModel } from "../player/deck";
 import { GraveyardModel } from "../player/graveyard";
-import { MinionCardModel } from "../card/minion";
+import { MinionModel } from "../card/minion";
 import { DeathModel } from "../..";
 import { ActionModel } from "./action";
 import { AttackModel } from "./attack";
@@ -40,11 +39,9 @@ export class RoleModel extends Model<
 > {
     public get route() {
         const route = super.route;
-        const hero: HeroModel | undefined = route.path.find(item => item instanceof HeroModel);
-        const card: MinionCardModel | undefined = route.path.find(item => item instanceof MinionCardModel);
+        const card: MinionModel | undefined = route.path.find(item => item instanceof MinionModel);
         return { 
             ...super.route, 
-            hero, 
             card, 
             hand: route.path.find(item => item instanceof HandModel),
             deck: route.path.find(item => item instanceof DeckModel),

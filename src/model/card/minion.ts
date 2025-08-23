@@ -2,8 +2,9 @@ import { DebugUtil, Model, TranxUtil } from "set-piece";
 import { CardModel } from ".";
 import { RoleModel } from "../role";
 import { SelectEvent, SelectUtil } from "../../utils/select";
+import { BoardModel } from "../player/board";
 
-export enum MinionRaceType {
+export enum RaceType {
     UNDEAD = 1,
     BEAST,
     ELEMENTAL,
@@ -11,12 +12,12 @@ export enum MinionRaceType {
     DRAENEI,
 }
 
-export namespace MinionCardModel {
+export namespace MinionModel {
     export type Event = Partial<CardModel.Event> & {
         onSummon: {};
     }
     export type State = Partial<CardModel.State> & {
-        readonly races: MinionRaceType[];
+        readonly races: RaceType[];
     };
     export type Child = Partial<CardModel.Child> & {
         readonly role: RoleModel;
@@ -24,21 +25,23 @@ export namespace MinionCardModel {
     export type Refer = Partial<CardModel.Refer>;
 }
 
-export abstract class MinionCardModel<
-    E extends Partial<MinionCardModel.Event> & Model.Event = {},
-    S extends Partial<MinionCardModel.State> & Model.State = {},
-    C extends Partial<MinionCardModel.Child> & Model.Child = {},
-    R extends Partial<MinionCardModel.Refer> & Model.Refer = {}
+export abstract class MinionModel<
+    E extends Partial<MinionModel.Event> & Model.Event = {},
+    S extends Partial<MinionModel.State> & Model.State = {},
+    C extends Partial<MinionModel.Child> & Model.Child = {},
+    R extends Partial<MinionModel.Refer> & Model.Refer = {}
 > extends CardModel<
-    E & MinionCardModel.Event, 
-    S & MinionCardModel.State,  
-    C & MinionCardModel.Child,
-    R & MinionCardModel.Refer
+    E & MinionModel.Event, 
+    S & MinionModel.State,  
+    C & MinionModel.Child,
+    R & MinionModel.Refer
 > {
-    constructor(props: MinionCardModel['props'] & {
+    constructor(props: MinionModel['props'] & {
         uuid: string | undefined;
-        state: S & Pick<MinionCardModel.State, 'races'> & Pick<CardModel.State, 'name' | 'desc' | 'mana'>,
-        child: C & Pick<MinionCardModel.Child, 'role'>,
+        state: S & 
+            Pick<MinionModel.State, 'races'> & 
+            Pick<CardModel.State, 'name' | 'desc' | 'mana' | 'flavorDesc' | 'rarity' | 'class'>,
+        child: C & Pick<MinionModel.Child, 'role'>,
         refer: R
     }) {
         super({
@@ -60,27 +63,24 @@ export abstract class MinionCardModel<
         if (position === undefined) return;
         const event = await this.toPlay();
         if (!event) return;
-        this.doSummon(position);
+        this.summon(board, position);
         await this.onPlay(event);
     }
 
-    public summon(pos?: number) {
-        const player = this.route.player;
-        if (!player) return;
-        const board = player.child.board;
+    public summon(board: BoardModel, position?: number) {
         const size = board.child.cards.length;
-        if (pos === undefined) pos = size;
-        this.doSummon(pos);
+        if (position === undefined) position = size;
+        if (position < 0) position = size;
+        this.doSummon(board, position);
         this.event.onSummon({});
     }
 
     @TranxUtil.span()
-    private doSummon(pos: number) {
+    private doSummon(board: BoardModel, position: number) {
         const player = this.route.player;
-        if (!player) return;
-        const card = player.child.hand.del(this);
-        if (!card) return;
-        player.child.board.add(card, pos); 
+        const hand = player?.child.hand;
+        if (hand) hand.del(this);
+        board.add(this, position); 
     }
     
     @TranxUtil.span()

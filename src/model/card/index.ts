@@ -15,11 +15,27 @@ export type PlayEvent = {
     battlecry: Map<BattlecryModel, Model[]>;
 }
 
+export enum RarityType {
+    COMMON = 1,
+    RARE,
+    EPIC,
+    LEGENDARY,
+}
+
+export enum ClassType {
+    WARRIOR = 1,
+    MAGE,
+    NEUTRAL,
+}
+
 export namespace CardModel {
     export type State = {
         readonly name: string;
         readonly desc: string;
+        readonly flavorDesc: string;
         readonly mana: number;
+        readonly rarity: RarityType;
+        readonly class: ClassType;
     };
     export type Event = {
         toPlay: AbortEvent;

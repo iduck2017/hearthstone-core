@@ -1,11 +1,11 @@
-import { HeroCardModel } from "../../card/hero";
-import { HeroModel } from "..";
-import { MageSkillModel } from "./skill";
-import { RoleModel } from "../../role";
-import { AttackModel } from "../../role/attack";
-import { HealthModel } from "../../role/health";
+import { PlayerModel } from ".";
+import { HeroModel } from "../card/hero";
+import { RoleModel } from "../role";
+import { AttackModel } from "../role/attack";
+import { HealthModel } from "../role/health";
+import { MageSkillModel } from "../skill/mage/skill";
 
-export class MageModel extends HeroModel {
+export class MageModel extends PlayerModel {
     constructor(props: MageModel['props']) {
         super({
             uuid: props.uuid,

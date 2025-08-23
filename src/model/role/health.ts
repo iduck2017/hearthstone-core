@@ -1,7 +1,7 @@
 import { DebugUtil, Event, EventUtil, Model, TranxUtil } from "set-piece";
 import { DamageEvent } from "../../utils/damage";
 import { RoleModel } from ".";
-import { MinionCardModel } from "../card/minion";
+import { MinionModel } from "../card/minion";
 import { GameModel } from "../game";
 import { PlayerModel } from "../player";
 import { RestoreEvent } from "../..";
@@ -33,7 +33,7 @@ export class HealthModel extends Model<
     public get route() {
         const route = super.route;
         const role: RoleModel | undefined = route.path.find(item => item instanceof RoleModel);
-        const card: MinionCardModel | undefined = route.path.find(item => item instanceof MinionCardModel);
+        const card: MinionModel | undefined = route.path.find(item => item instanceof MinionModel);
         return { 
             ...route, 
             role,

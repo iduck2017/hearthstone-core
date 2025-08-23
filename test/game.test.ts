@@ -8,9 +8,8 @@ import { WispModel } from "./card";
 describe('game', () => {
     const game = new GameModel({
         child: {
-            playerA: new PlayerModel({
+            playerA: new MageModel({
                 child: {
-                    hero: new MageModel({}),
                     hand: new HandModel({}),
                     deck: new DeckModel({
                         child: { cards: [
@@ -55,9 +54,8 @@ describe('game', () => {
                     }),
                 },
             }),
-            playerB: new PlayerModel({
+            playerB: new MageModel({
                 child: {
-                    hero: new MageModel({}),
                     hand: new HandModel({}),
                     deck: new DeckModel({}),
                     board: new BoardModel({}),

@@ -29,7 +29,7 @@ export class RestoreUtil {
         tasks.forEach(item => item.target.child.health.onHeal(item));
         tasks.forEach(item => {
             item.source.onRun(item);
-            item.source.route.hero?.child.anchor.onRun(item);
+            item.source.route.player?.child.anchor.onRun(item);
             item.source.route.card?.child.anchor.onRun(item);
         });
     }

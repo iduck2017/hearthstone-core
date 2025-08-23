@@ -1,8 +1,10 @@
 
 
 
-export { MinionRaceType as RaceType } from "./model/card/minion";
+export { RaceType } from "./model/card/minion";
 export { DamageType } from "./utils/damage";
+export { RarityType } from "./model/card";
+export { ClassType } from "./model/card";
 
 export { RushStatus } from "./model/entries/rush";
 export { WindfuryStatus } from "./model/entries/windfury";
@@ -32,8 +34,8 @@ export { GameModel } from "./model/game";
 export { TurnModel } from "./model/game/turn";
 
 export { CardModel } from "./model/card";
-export { HeroCardModel } from "./model/card/hero";
-export { MinionCardModel } from "./model/card/minion";
+export { HeroModel as HeroCardModel } from "./model/card/hero";
+export { MinionModel as MinionCardModel } from "./model/card/minion";
 
 export { HandModel } from "./model/player/hand";
 export { BoardModel } from "./model/player/board";
@@ -61,13 +63,12 @@ export { StealthModel } from './model/entries/stealth';
 export { WindfuryModel } from "./model/entries/windfury";
 export { DivineSheildModel } from "./model/entries/divine-shield";
 
-export { HeroModel } from './model/heroes';
-export { MageModel } from "./model/heroes/mage";
-export { WarriorModel } from "./model/heroes/warrior";
+export { MageModel } from "./model/player/mage";
+export { WarriorModel } from "./model/player/warrior";
 
-export { SkillModel } from './model/heroes/skill';
-export { MageSkillModel } from "./model/heroes/mage/skill";
-export { WarriorSkillModel } from "./model/heroes/warrior/skill";
+export { SkillModel } from './model/skill/skill';
+export { MageSkillModel } from "./model/skill/mage/skill";
+export { WarriorSkillModel } from "./model/skill/warrior/skill";
 
 export { AnchorModel } from "./model/anchor";
 export { AppModel } from "./model";
