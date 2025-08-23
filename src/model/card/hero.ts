@@ -27,8 +27,10 @@ export abstract class HeroModel<
         uuid: string | undefined;
         state: S & 
             Pick<HeroModel.State, 'armor'> & 
-            Pick<CardModel.State, 'name' | 'desc' | 'mana' | 'flavorDesc' | 'rarity' | 'class'>, 
-        child: C & Pick<HeroModel.Child, 'skill'>,
+            CardModel.State, 
+        child: C & 
+            Pick<HeroModel.Child, 'skill'> & 
+            Pick<CardModel.Child, 'cost'>,
         refer: R
     }) {
         super({

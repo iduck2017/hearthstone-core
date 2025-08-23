@@ -70,19 +70,17 @@ export abstract class BuffModel<
     protected onAttackCheck(that: AttackModel, state: AttackModel.State) {
         if (!this.state.status) return state;
         if (this.state.isOverride) return state;
-        return {
-            ...state,
-            offset: state.offset + this.state.attack,
-        }
+        const result = { ...state };
+        result.offset = state.offset + this.state.attack;
+        return result;
     }
 
     @StateUtil.on(self => self.route.role?.proxy.child.health.decor)
     protected onHealthCheck(that: HealthModel, state: HealthModel.State) {
         if (!this.state.status) return state;
         if (this.state.isOverride) return state;
-        return {
-            ...state,
-            offset: state.offset + this.state.health,
-        }
+        const result = { ...state };
+        result.offset = state.offset + this.state.health;
+        return result;
     }
 }

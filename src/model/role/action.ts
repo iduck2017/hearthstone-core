@@ -9,7 +9,7 @@ export namespace ActionModel {
     export type State = {
         readonly origin: number;
         cost: number;
-        isActive: boolean;
+        status: boolean;
     };
     export type Event = {
         toRun: AbortEvent;
@@ -53,7 +53,7 @@ export class ActionModel extends Model<
             state: {
                 origin: 1,
                 cost: 0,
-                isActive: true,
+                status: true,
                 ...props.state,
             },
             child: { ...props.child },
@@ -136,8 +136,8 @@ export class ActionModel extends Model<
         const entries = role.child.entries;
         const frozen = entries.child.frozen;
         if (frozen.state.status) return false;
-        if (sleep.state.isActive) return false;
-        if (!this.state.isActive) return false;
+        if (sleep.state.status) return false;
+        if (!this.state.status) return false;
         if (this.state.current <= 0) return false;
         if (!attack.check()) return false;
         return true;

@@ -54,11 +54,10 @@ export class RushModel extends FeatureModel<
 
 
     @StateUtil.on(self => self.route.role?.proxy.child.sleep.decor)
-    protected onCheck(that: SleepModel, state: SleepModel.State) {
+    protected onSleepCheck(that: SleepModel, state: SleepModel.State) {
         if (!this.state.status) return state;
-        return {
-            ...state,
-            isActive: false,
-        }
+        const result = { ...state };
+        result.status = false;
+        return result;
     }
 }

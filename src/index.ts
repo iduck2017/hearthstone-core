@@ -1,6 +1,3 @@
-
-
-
 export { RaceType } from "./model/card/minion";
 export { DamageType } from "./utils/damage";
 export { RarityType } from "./model/card";
@@ -33,15 +30,15 @@ export { DeathModel } from "./model/role/death";
 export { GameModel } from "./model/game";
 export { TurnModel } from "./model/game/turn";
 
+export { CostModel } from "./model/card/cost";
 export { CardModel } from "./model/card";
-export { HeroModel as HeroCardModel } from "./model/card/hero";
-export { MinionModel as MinionCardModel } from "./model/card/minion";
+export { HeroModel } from "./model/card/hero";
+export { MinionModel } from "./model/card/minion";
 
 export { HandModel } from "./model/player/hand";
 export { BoardModel } from "./model/player/board";
 export { DeckModel } from "./model/player/deck";
 export { GraveyardModel } from "./model/player/graveyard";
-
 
 export { RoleEntriesModel } from "./model/role/entries";
 
@@ -61,6 +58,7 @@ export { ChargeModel } from "./model/entries/charge";
 export { TauntModel } from "./model/entries/taunt";
 export { StealthModel } from './model/entries/stealth';
 export { WindfuryModel } from "./model/entries/windfury";
+export { SpellDamageModel } from "./model/entries/spell-damage";
 export { DivineSheildModel } from "./model/entries/divine-shield";
 
 export { MageModel } from "./model/player/mage";
@@ -72,5 +70,7 @@ export { WarriorSkillModel } from "./model/skill/warrior/skill";
 
 export { AnchorModel } from "./model/anchor";
 export { AppModel } from "./model";
+
+export { ArmorModel } from "./model/player/armor";
 export { PlayerModel } from "./model/player";
 export { ExtensionModel } from "./model/extension";

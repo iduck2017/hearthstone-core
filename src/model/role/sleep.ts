@@ -6,7 +6,7 @@ export namespace SleepModel {
         onDeactive: {};
     };
     export type State = {
-        isActive: boolean;
+        status: boolean;
     }
     export type Child = {};
     export type Refer = {}
@@ -22,7 +22,7 @@ export class SleepModel extends Model<
         super({
             uuid: props.uuid,
             state: {
-                isActive: true,
+                status: true,
                 ...props.state
             },
             child: { ...props.child },
@@ -31,12 +31,12 @@ export class SleepModel extends Model<
     }
 
     public active() {
-        this.draft.state.isActive = true;
+        this.draft.state.status = true;
         this.event.onActive({});
     }
 
     public deactive(): void {
-        this.draft.state.isActive = false;
+        this.draft.state.status = false;
         this.event.onDeactive({});
     }
 }

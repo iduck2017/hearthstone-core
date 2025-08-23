@@ -39,8 +39,11 @@ export class DeckModel extends Model<
         })
     }
 
-    public query(event: {}): CardModel | undefined {
-        return this.child.cards[0];
+    @DebugUtil.log()
+    public draw() {
+        const card = this.child.cards[0];
+        if (!card) return;
+        card.draw();
     }
 
     public del(card: CardModel): CardModel | undefined {

@@ -1,9 +1,8 @@
-import { CardModel, ClassType, MinionCardModel, RarityType } from "../src";
+import { CardModel, ClassType, MinionModel, RarityType } from "../src";
 
-export class WispModel extends MinionCardModel {
+export class WispModel extends MinionModel {
     constructor(props: WispModel['props'] & {
-        state: Pick<CardModel.State, 'mana'>;
-        child: Pick<MinionCardModel.Child, 'role'>;
+        child: Pick<MinionModel.Child, 'role'> & Pick<CardModel.Child, 'cost'>;
     }) {
         super({
             uuid: props.uuid,

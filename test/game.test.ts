@@ -1,4 +1,5 @@
 import { BoardModel, GameModel, HandModel, MageModel, PlayerModel, RoleModel, SelectUtil, TimeUtil } from "../src";
+import { CostModel } from "../src/model/card/cost";
 import { DeckModel } from "../src/model/player/deck";
 import { AttackModel } from "../src/model/role/attack";
 import { HealthModel } from "../src/model/role/health";
@@ -14,8 +15,8 @@ describe('game', () => {
                     deck: new DeckModel({
                         child: { cards: [
                             new WispModel({
-                                state: { mana: 1 },
                                 child: {
+                                    cost: new CostModel({ state: { origin: 0 } }),
                                     role: new RoleModel({
                                         child: {
                                             health: new HealthModel({ state: { origin: 1 } }),
@@ -25,8 +26,8 @@ describe('game', () => {
                                 }
                             }),
                             new WispModel({
-                                state: { mana: 1 },
                                 child: {
+                                    cost: new CostModel({ state: { origin: 0 } }),
                                     role: new RoleModel({
                                         child: {
                                             health: new HealthModel({ state: { origin: 1 } }),
@@ -40,8 +41,8 @@ describe('game', () => {
                     board: new BoardModel({
                         child: { cards: [
                             new WispModel({
-                                state: { mana: 1 },
                                 child: {
+                                    cost: new CostModel({ state: { origin: 0 } }),
                                     role: new RoleModel({
                                         child: {
                                             health: new HealthModel({ state: { origin: 1 } }),
@@ -77,16 +78,14 @@ describe('game', () => {
         const hand = player.child.hand;
         const deck = player.child.deck;
 
-        let card = deck.query({});
         expect(deck.child.cards.length).toBe(2);
         expect(hand.child.cards.length).toBe(0);
+        let card = deck.draw();
         expect(card).toBeDefined();
-        card?.draw();
         expect(deck.child.cards.length).toBe(1);
         expect(hand.child.cards.length).toBe(1);
 
-        card = deck.query({});
-        card?.draw();
+        card = deck.draw();
         expect(deck.child.cards.length).toBe(0);
         expect(hand.child.cards.length).toBe(2);
     })

@@ -3,6 +3,7 @@ import { CardModel } from "../card";
 import { FeatureModel } from "../features";
 import { AbortEvent } from "../../utils/abort";
 import { AnchorModel } from "../anchor";
+import { PlayerModel } from "../player";
 
 export namespace DeathrattleModel {
     export type Event = {
@@ -28,7 +29,11 @@ export abstract class DeathrattleModel<
     public get route() {
         const route = super.route;
         const card: CardModel | undefined = route.path.find(item => item instanceof CardModel);
-        return { ...route, card };
+        return { 
+            ...route, 
+            card,
+            player: route.path.find(item => item instanceof PlayerModel),
+        };
     }
 
     constructor(props: DeathrattleModel['props'] & {

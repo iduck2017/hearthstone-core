@@ -51,12 +51,12 @@ export abstract class EndTurnHookModel<
         })
     }
 
-    public async run() {
+    public run() {
         if (!this.state.status) return;
         this.event.toRun({});
-        await this.doRun();
+        this.doRun();
         this.event.onRun({});
     }
 
-    protected abstract doRun(): Promise<void>;
+    protected abstract doRun(): void;
 }

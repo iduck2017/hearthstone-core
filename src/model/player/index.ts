@@ -7,6 +7,7 @@ import { GraveyardModel } from "./graveyard";
 import { RoleModel } from "../role";
 import { SkillModel } from "../skill/skill";
 import { AnchorModel } from "../anchor";
+import { ArmorModel } from "./armor";
 
 export namespace PlayerModel {
     export type State = {};
@@ -14,6 +15,7 @@ export namespace PlayerModel {
     };
     export type Child = {
         readonly role: RoleModel;
+        readonly armor: ArmorModel;
         readonly skill: SkillModel;
         readonly anchor: AnchorModel;
         readonly hand: HandModel;
@@ -60,6 +62,7 @@ export abstract class PlayerModel extends Model<
             uuid: props.uuid,
             state: { ...props.state },
             child: {
+                armor: new ArmorModel({}),
                 hand: new HandModel({}),
                 deck: new DeckModel({}),
                 board: new BoardModel({}),

@@ -47,12 +47,11 @@ export class WindfuryModel extends FeatureModel<
     }
 
     @StateUtil.on(self => self.route.role?.proxy.child.action.decor)
-    protected onCheck(that: ActionModel, state: ActionModel.State) {
+    protected onActionCheck(that: ActionModel, state: ActionModel.State) {
         if (!this.state.status) return state;
         const offset = this.state.status === WindfuryStatus.ACTIVE_SUPER ? 3 : 1;
-        return {
-            ...state,
-            origin: state.origin + offset,
-        }
+        const result = { ...state };
+        result.origin = state.origin + offset;
+        return result;
     }
 }

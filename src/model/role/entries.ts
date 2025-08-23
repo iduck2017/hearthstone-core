@@ -6,6 +6,7 @@ import { FrozenModel } from "../entries/frozen";
 import { StealthModel } from "../entries/stealth";
 import { TauntModel } from "../entries/taunt";
 import { WindfuryModel, WindfuryStatus } from "../entries/windfury";
+import { SpellDamageModel } from "../entries/spell-damage";
 
 export namespace RoleEntriesModel {
     export type Event = {};
@@ -17,6 +18,7 @@ export namespace RoleEntriesModel {
         readonly stealth: StealthModel;
         readonly taunt: TauntModel;
         readonly windfury: WindfuryModel;
+        readonly spellDamage: SpellDamageModel;
         readonly divineShield: DivineSheildModel;
     };
     export type Refer = {};
@@ -39,6 +41,7 @@ export class RoleEntriesModel extends Model<
                 frozen: new FrozenModel({ state: { status: 0 }}),
                 stealth: new StealthModel({ state: { status: 0 }}),
                 windfury: new WindfuryModel({ state: { status: WindfuryStatus.INACTIVE }}),
+                spellDamage: new SpellDamageModel({ state: { origin: 0, status: 0 }}),
                 divineShield: new DivineSheildModel({ state: { count: 0, status: 0 }}),
                 ...props.child 
             },

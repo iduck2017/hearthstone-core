@@ -10,6 +10,7 @@ export enum RaceType {
     ELEMENTAL,
     MURLOC,
     DRAENEI,
+    PIRATE,
 }
 
 export namespace MinionModel {
@@ -40,8 +41,10 @@ export abstract class MinionModel<
         uuid: string | undefined;
         state: S & 
             Pick<MinionModel.State, 'races'> & 
-            Pick<CardModel.State, 'name' | 'desc' | 'mana' | 'flavorDesc' | 'rarity' | 'class'>,
-        child: C & Pick<MinionModel.Child, 'role'>,
+            CardModel.State,
+        child: C & 
+            Pick<MinionModel.Child, 'role'> & 
+            Pick<CardModel.Child, 'cost'>,
         refer: R
     }) {
         super({

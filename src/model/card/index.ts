@@ -10,6 +10,7 @@ import { SelectUtil } from "../../utils/select";
 import { CardHooksModel } from "./hooks";
 import { AnchorModel, RoleModel } from "../..";
 import { AbortEvent } from "../../utils/abort";
+import { CostModel } from "./cost";
 
 export type PlayEvent = {
     battlecry: Map<BattlecryModel, Model[]>;
@@ -33,7 +34,6 @@ export namespace CardModel {
         readonly name: string;
         readonly desc: string;
         readonly flavorDesc: string;
-        readonly mana: number;
         readonly rarity: RarityType;
         readonly class: ClassType;
     };
@@ -44,6 +44,7 @@ export namespace CardModel {
         onDraw: { card: CardModel },
     };
     export type Child = {
+        readonly cost: CostModel;
         readonly role?: RoleModel;
         readonly hooks: CardHooksModel;
         readonly anchor: AnchorModel;
@@ -89,7 +90,7 @@ export abstract class CardModel<
     constructor(props: CardModel['props'] & {
         uuid: string | undefined;
         state: S & CardModel.State;
-        child: C;
+        child: C & Pick<CardModel.Child, 'cost'>;
         refer: R;
     }) {
         super({

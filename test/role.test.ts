@@ -8,6 +8,7 @@ import { AttackModel } from "../src/model/role/attack";
 import { DeathStatus } from "../src/model/role/death";
 import { DebugUtil, LogLevel } from "set-piece";
 import { WispModel } from "./card";
+import { CostModel } from "../src/model/card/cost";
 
 DebugUtil.level = LogLevel.ERROR;
 describe('role', () => {
@@ -20,8 +21,8 @@ describe('role', () => {
                     board: new BoardModel({
                         child: { 
                             cards: [new WispModel({
-                                state: { mana: 1 },
                                 child: {
+                                    cost: new CostModel({ state: { origin: 0 } }),
                                     role: new RoleModel({
                                         child: {
                                             health: new HealthModel({ state: { origin: 2 } }),
@@ -41,8 +42,8 @@ describe('role', () => {
                     board: new BoardModel({
                         child: { 
                             cards: [new WispModel({
-                                state: { mana: 1 },
                                 child: {
+                                    cost: new CostModel({ state: { origin: 0 } }),
                                     role: new RoleModel({
                                         child: {
                                             health: new HealthModel({ state: { origin: 2 } }),
