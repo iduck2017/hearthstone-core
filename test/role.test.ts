@@ -1,7 +1,5 @@
-import { GameModel, MageModel, PlayerModel, SelectUtil, TimeUtil } from "../src";
+import { GameModel, MageModel, PlayerModel, RoleModel, SelectUtil, TimeUtil } from "../src";
 import { boot } from "./boot";
-import { WispRoleModel } from "./wisp/role";
-import { WispCardModel } from "./wisp/card";
 import { HandModel } from "../src/model/player/hand";
 import { DeckModel } from "../src/model/player/deck";
 import { BoardModel } from "../src/model/player/board";
@@ -9,6 +7,7 @@ import { HealthModel } from "../src/model/role/health";
 import { AttackModel } from "../src/model/role/attack";
 import { DeathStatus } from "../src/model/role/death";
 import { DebugUtil, LogLevel } from "set-piece";
+import { WispModel } from "./card";
 
 DebugUtil.level = LogLevel.ERROR;
 describe('role', () => {
@@ -21,10 +20,10 @@ describe('role', () => {
                     deck: new DeckModel({}),
                     board: new BoardModel({
                         child: { cards: [
-                            new WispCardModel({
+                            new WispModel({
                                 state: { mana: 1 },
                                 child: {
-                                    role: new WispRoleModel({
+                                    role: new RoleModel({
                                         child: {
                                             health: new HealthModel({ state: { origin: 2 } }),
                                             attack: new AttackModel({ state: { origin: 1 } }),
@@ -43,10 +42,10 @@ describe('role', () => {
                     deck: new DeckModel({}),
                     board: new BoardModel({
                         child: { cards: [
-                            new WispCardModel({
+                            new WispModel({
                                 state: { mana: 1 },
                                 child: {
-                                    role: new WispRoleModel({
+                                    role: new RoleModel({
                                         child: {
                                             health: new HealthModel({ state: { origin: 2 } }),
                                             attack: new AttackModel({ state: { origin: 1 } }),
@@ -67,8 +66,8 @@ describe('role', () => {
         const playerB = game.child.playerB;
         const boardA = playerA.child.board;
         const boardB = playerB.child.board;
-        const cardA = boardA.child.cards.find(item => item instanceof WispCardModel);
-        const cardB = boardB.child.cards.find(item => item instanceof WispCardModel);
+        const cardA = boardA.child.cards.find(item => item instanceof WispModel);
+        const cardB = boardB.child.cards.find(item => item instanceof WispModel);
         const roleA = cardA?.child.role;
         const roleB = cardB?.child.role;
         expect(roleA).toBeDefined();
@@ -84,7 +83,7 @@ describe('role', () => {
     test('attack-health', () => {
         const player = game.child.playerA;
         const board = player.child.board;
-        const card = board.child.cards.find(item => item instanceof WispCardModel);
+        const card = board.child.cards.find(item => item instanceof WispModel);
         const role = card?.child.role;
         expect(role).toBeDefined();
         if (!role) return;
@@ -101,8 +100,8 @@ describe('role', () => {
         const playerB = game.child.playerB;
         const boardA = playerA.child.board;
         const boardB = playerB.child.board;
-        const cardA = boardA.child.cards.find(item => item instanceof WispCardModel);
-        const cardB = boardB.child.cards.find(item => item instanceof WispCardModel);
+        const cardA = boardA.child.cards.find(item => item instanceof WispModel);
+        const cardB = boardB.child.cards.find(item => item instanceof WispModel);
         const heroA = playerA.child.hero;
         const heroB = playerB.child.hero;
         expect(cardA).toBeDefined();
@@ -146,8 +145,8 @@ describe('role', () => {
         const boardB = playerB.child.board;
         const graveyardA = playerA.child.graveyard;
         const graveyardB = playerB.child.graveyard;
-        const cardA = boardA.child.cards.find(item => item instanceof WispCardModel);
-        const cardB = boardB.child.cards.find(item => item instanceof WispCardModel);
+        const cardA = boardA.child.cards.find(item => item instanceof WispModel);
+        const cardB = boardB.child.cards.find(item => item instanceof WispModel);
         expect(cardA).toBeDefined();
         expect(cardB).toBeDefined();
         if (!cardA || !cardB) return;

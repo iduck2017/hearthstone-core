@@ -1,10 +1,9 @@
-import { BoardModel, GameModel, HandModel, MageModel, PlayerModel, SelectUtil, TimeUtil } from "../src";
+import { BoardModel, GameModel, HandModel, MageModel, PlayerModel, RoleModel, SelectUtil, TimeUtil } from "../src";
 import { DeckModel } from "../src/model/player/deck";
 import { AttackModel } from "../src/model/role/attack";
 import { HealthModel } from "../src/model/role/health";
 import { boot } from "./boot";
-import { WispCardModel } from "./wisp/card";
-import { WispRoleModel } from "./wisp/role";
+import { WispModel } from "./card";
 
 describe('game', () => {
     const game = new GameModel({
@@ -15,10 +14,10 @@ describe('game', () => {
                     hand: new HandModel({}),
                     deck: new DeckModel({
                         child: { cards: [
-                            new WispCardModel({
+                            new WispModel({
                                 state: { mana: 1 },
                                 child: {
-                                    role: new WispRoleModel({
+                                    role: new RoleModel({
                                         child: {
                                             health: new HealthModel({ state: { origin: 1 } }),
                                             attack: new AttackModel({ state: { origin: 1 } }),
@@ -26,10 +25,10 @@ describe('game', () => {
                                     })
                                 }
                             }),
-                            new WispCardModel({
+                            new WispModel({
                                 state: { mana: 1 },
                                 child: {
-                                    role: new WispRoleModel({
+                                    role: new RoleModel({
                                         child: {
                                             health: new HealthModel({ state: { origin: 1 } }),
                                             attack: new AttackModel({ state: { origin: 1 } }),
@@ -41,10 +40,10 @@ describe('game', () => {
                     }),
                     board: new BoardModel({
                         child: { cards: [
-                            new WispCardModel({
+                            new WispModel({
                                 state: { mana: 1 },
                                 child: {
-                                    role: new WispRoleModel({
+                                    role: new RoleModel({
                                         child: {
                                             health: new HealthModel({ state: { origin: 1 } }),
                                             attack: new AttackModel({ state: { origin: 1 } }),

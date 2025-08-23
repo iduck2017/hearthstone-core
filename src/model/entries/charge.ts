@@ -38,7 +38,7 @@ export class ChargeModel extends FeatureModel<
         if (!this.state.status) return state;
         return {
             ...state,
-            status: 0,
+            isActive: false,
         }
     }
 }

@@ -58,7 +58,7 @@ export class RushModel extends FeatureModel<
         if (!this.state.status) return state;
         return {
             ...state,
-            status: false,
+            isActive: false,
         }
     }
 }
