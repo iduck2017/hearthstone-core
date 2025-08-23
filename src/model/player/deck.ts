@@ -44,6 +44,7 @@ export class DeckModel extends Model<
         const card = this.child.cards[0];
         if (!card) return;
         card.draw();
+        return card;
     }
 
     public del(card: CardModel): CardModel | undefined {

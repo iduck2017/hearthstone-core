@@ -4,7 +4,7 @@ import { RoleModel } from ".";
 import { MinionModel } from "../card/minion";
 import { GameModel } from "../game";
 import { PlayerModel } from "../player";
-import { RestoreEvent } from "../..";
+import { CardModel, RestoreEvent } from "../..";
 
 export namespace HealthModel {
     export type Event = {
@@ -33,7 +33,7 @@ export class HealthModel extends Model<
     public get route() {
         const route = super.route;
         const role: RoleModel | undefined = route.path.find(item => item instanceof RoleModel);
-        const card: MinionModel | undefined = route.path.find(item => item instanceof MinionModel);
+        const card: CardModel | undefined = route.path.find(item => item instanceof CardModel);
         return { 
             ...route, 
             role,

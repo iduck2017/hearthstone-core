@@ -1,4 +1,4 @@
-import { Model } from "set-piece";
+import { Model, Route } from "set-piece";
 import { GameModel } from "../game";
 import { PlayerModel } from "../player";
 import { BoardModel } from "../player/board";
@@ -6,7 +6,7 @@ import { HandModel } from "../player/hand";
 import { DeckModel } from "../player/deck";
 import { GraveyardModel } from "../player/graveyard";
 import { MinionModel } from "../card/minion";
-import { DeathModel } from "../..";
+import { CardModel, DeathModel } from "../..";
 import { ActionModel } from "./action";
 import { AttackModel } from "./attack";
 import { HealthModel } from "./health";
@@ -37,10 +37,18 @@ export class RoleModel extends Model<
     RoleModel.Child,
     RoleModel.Refer
 > {
-    public get route() {
+    public get route(): Route & {
+        card?: CardModel;
+        hand?: HandModel;
+        deck?: DeckModel;
+        game?: GameModel;
+        player?: PlayerModel;
+        board?: BoardModel;
+        graveyard?: GraveyardModel;
+    } {
         const route = super.route;
-        const card: MinionModel | undefined = route.path.find(item => item instanceof MinionModel);
-        return { 
+        const card: CardModel | undefined = route.path.find(item => item instanceof CardModel);
+        return {
             ...super.route, 
             card, 
             hand: route.path.find(item => item instanceof HandModel),

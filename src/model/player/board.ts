@@ -2,12 +2,13 @@ import { Model } from "set-piece";
 import { MinionModel } from "../card/minion";
 import { GameModel } from "../game";
 import { PlayerModel } from ".";
+import { CardModel } from "../card";
 
 export namespace BoardModel {
     export type Event = {};
     export type State = {};
     export type Child = {
-        cards: MinionModel[]
+        cards: CardModel[]
     };
     export type Refer = {};
 }

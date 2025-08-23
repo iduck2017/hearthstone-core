@@ -8,6 +8,7 @@ import { RoleModel } from "../role";
 import { SkillModel } from "../skill/skill";
 import { AnchorModel } from "../anchor";
 import { ArmorModel } from "./armor";
+import { MinionModel } from "../card/minion";
 
 export namespace PlayerModel {
     export type State = {};
@@ -46,7 +47,10 @@ export abstract class PlayerModel extends Model<
         let opponent: PlayerModel | undefined;
         if (game?.child.playerA === this) opponent = game.child.playerB;
         if (game?.child.playerB === this) opponent = game.child.playerA;
-        const minions = board.child.cards.map(item => item.child.role);
+        const minions: RoleModel[] = [];
+        board.child.cards.forEach(item => {
+            if (item.child.role) minions.push(item.child.role);
+        })
         return { 
             ...super.refer, 
             opponent, 

@@ -1,5 +1,5 @@
 import { DebugUtil, Model } from "set-piece";
-import { DamageUtil, DamageType, DamageEvent } from "../..";
+import { DamageUtil, DamageType, DamageEvent, CardModel } from "../..";
 import { RoleModel } from ".";
 import { GameModel } from "../game";
 import { PlayerModel } from "../player";
@@ -40,7 +40,7 @@ export class AttackModel extends Model<
     public get route() {
         const route = super.route;
         const role: RoleModel | undefined = route.path.find(item => item instanceof RoleModel);
-        const card: MinionModel | undefined = route.path.find(item => item instanceof MinionModel);
+        const card: CardModel | undefined = route.path.find(item => item instanceof CardModel);
         return { 
             ...route, 
             role,
