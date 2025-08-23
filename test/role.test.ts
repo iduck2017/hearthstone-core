@@ -106,7 +106,7 @@ describe('role', () => {
         expect(cardB).toBeDefined();
         if (!cardA || !cardB) return;
 
-        const promise = cardB.child.role.child.attack.run();
+        const promise = cardB.child.role.child.action.run();
         await TimeUtil.sleep();
         const selector = SelectUtil.current;
         expect(selector).toBeDefined();
@@ -149,7 +149,7 @@ describe('role', () => {
         if (!cardA || !cardB) return;
 
         game.child.turn.next();
-        const promise = cardA.child.role.child.attack.run();
+        const promise = cardA.child.role.child.action.run();
         await TimeUtil.sleep();
         const selector = SelectUtil.current;
         if (!selector) return;

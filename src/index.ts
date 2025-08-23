@@ -1,7 +1,7 @@
 
 
 
-export { RaceType } from "./model/card/minion";
+export { MinionRaceType as RaceType } from "./model/card/minion";
 export { DamageType } from "./utils/damage";
 
 export { RushStatus } from "./model/entries/rush";

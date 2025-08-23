@@ -1,9 +1,9 @@
-import { Model, TranxUtil } from "set-piece";
+import { DebugUtil, Model, TranxUtil } from "set-piece";
 import { CardModel } from "../card";
 import { RoleModel } from ".";
 import { GameModel } from "../game";
 import { PlayerModel } from "../player";
-import { BoardModel } from "../..";
+import { AbortEvent, BoardModel, RushStatus, SelectEvent, SelectUtil } from "../..";
 
 
 export namespace ActionModel {
@@ -12,7 +12,10 @@ export namespace ActionModel {
         cost: number;
         isActive: boolean;
     };
-    export type Event = {};
+    export type Event = {
+        toRun: AbortEvent;
+        onRun: {};
+    };
     export type Child = {};
     export type Refer = {};
 }
@@ -62,6 +65,59 @@ export class ActionModel extends Model<
     @TranxUtil.span()
     public reset() {
         this.draft.state.cost = 0;
+    }
+
+    private async select(): Promise<RoleModel | undefined> {
+        const game = this.route.game;
+        const role = this.route.role;
+        const player = this.route.player;
+        if (!role) return;
+        const action = role.child.action;
+        const entries = role.child.entries;
+        const rush = entries.child.rush;
+        if (!game) return;
+        if (!action) return;
+        if (!player) return;
+        const opponent = player.refer.opponent;
+        if (!opponent) return;
+        let options: RoleModel[] = opponent.refer.roles
+        if (rush.state.isActive == RushStatus.ACTIVE) {
+            options = opponent.refer.minions;
+        }
+        const tauntOptions = options.filter(item => {
+            const entries = item.child.entries;
+            const taunt = entries.child.taunt;
+            const stealth = entries.child.stealth;
+            return taunt.state.isActive && !stealth.state.isActive;
+        });
+        if (tauntOptions.length) options = tauntOptions;
+        options = options.filter(item => {
+            const entries = item.child.entries;
+            const stealth = entries.child.stealth;
+            return !stealth.state.isActive;
+        })
+        const result = await SelectUtil.get(new SelectEvent(options));
+        return result;
+    }
+
+    @DebugUtil.log()
+    public async run() {
+        const game = this.route.game;
+        const roleA = this.route.role;
+        const player = this.route.player;
+        const action = roleA?.child.action;
+        if (!game) return;
+        if (!action) return;
+        if (!player) return;
+        if (!action.check()) return;
+        const roleB = await this.select();
+        if (!roleB) return;
+        const event = this.event.toRun(new AbortEvent())
+        if (event.isAbort) return;
+        if (!action.consume()) return;
+        const attack = roleA.child.attack;
+        await attack.run(roleB);
+        this.event.onRun({});
     }
 
     public check(): boolean {

@@ -107,8 +107,8 @@ export abstract class CardModel<
         };
         const hooks = this.child.hooks;
         const battlecry = hooks.child.battlecry;
-        for (const feature of battlecry) {
-            const selectors = feature.toRun();
+        for (const item of battlecry) {
+            const selectors = item.toRun();
             if (!selectors) continue;
             const params: Model[] = [];
             for (const item of selectors) {
@@ -116,7 +116,7 @@ export abstract class CardModel<
                 if (result === undefined) return;
                 params.push(result);
             }
-            event.battlecry.set(feature, params);
+            event.battlecry.set(item, params);
         }
         return event;
     }

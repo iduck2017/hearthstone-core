@@ -6,6 +6,7 @@ import { GameModel } from "../game";
 import { PlayerModel } from "../player";
 import { FeatureModel } from "../features";
 import { AbortEvent } from "../../utils/abort";
+import { AnchorModel } from "../anchor";
 
 export namespace BattlecryModel {
     export type Event = {
@@ -18,7 +19,7 @@ export namespace BattlecryModel {
 }
 
 export abstract class BattlecryModel<
-    T extends Model[] = Model[],
+    T extends any[] = any[],
     E extends Partial<BattlecryModel.Event> & Model.Event = {},
     S extends Partial<BattlecryModel.State> & Model.State = {},
     C extends Partial<BattlecryModel.Child> & Model.Child = {},
@@ -54,7 +55,10 @@ export abstract class BattlecryModel<
                 isActive: true,
                 ...props.state,
             },
-            child: { ...props.child },
+            child: {
+                anchor: new AnchorModel({}),
+                ...props.child,
+            },
             refer: { ...props.refer },
         });
     }

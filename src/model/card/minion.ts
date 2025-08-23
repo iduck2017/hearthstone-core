@@ -1,9 +1,9 @@
 import { DebugUtil, Model, TranxUtil } from "set-piece";
-import { CardModel, PlayEvent } from ".";
+import { CardModel } from ".";
 import { RoleModel } from "../role";
-import { SelectUtil } from "../../utils/select";
+import { SelectEvent, SelectUtil } from "../../utils/select";
 
-export enum RaceType {
+export enum MinionRaceType {
     UNDEAD = 1,
     BEAST,
     ELEMENTAL,
@@ -14,7 +14,7 @@ export enum RaceType {
 export namespace MinionCardModel {
     export type Event = Partial<CardModel.Event> & {}
     export type State = Partial<CardModel.State> & {
-        readonly races: RaceType[];
+        readonly races: MinionRaceType[];
     };
     export type Child = Partial<CardModel.Child> & {
         readonly role: RoleModel;
@@ -53,8 +53,8 @@ export abstract class MinionCardModel<
         if (!player) return;
         const board = player.child.board;
         const size = board.child.cards.length;
-        const list = new Array(size + 1).fill(0).map((item, index) => index);
-        const position = await SelectUtil.get({ options: list });
+        const options = new Array(size + 1).fill(0).map((item, index) => index);
+        const position = await SelectUtil.get(new SelectEvent(options));
         if (position === undefined) return;
         const event = await this.toPlay();
         if (!event) return;

@@ -6,10 +6,17 @@ export class SelectEvent<T = any> {
 
     constructor(
         options: T[],
-        hint?: string,
+        props?: {
+            hint?: string;
+        }
     ) {
         this.options = options;
-        this.hint = hint;
+        this.hint = props?.hint;
+    }
+
+    public get random(): T | undefined {
+        const index = Math.floor(Math.random() * this.options.length);
+        return this.options[index];
     }
 }
 

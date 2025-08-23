@@ -3,7 +3,7 @@ import { DamageUtil, DamageType, DamageEvent } from "../..";
 import { RoleModel } from ".";
 import { GameModel } from "../game";
 import { PlayerModel } from "../player";
-import { SelectUtil } from "../../utils/select";
+import { SelectEvent, SelectUtil } from "../../utils/select";
 import { MinionCardModel } from "../card/minion";
 import { RushStatus } from "../entries/rush";
 import { AbortEvent } from "../../utils/abort";
@@ -72,52 +72,17 @@ export class AttackModel extends Model<
         })
     }
 
-    private async select(): Promise<RoleModel | undefined> {
-        const game = this.route.game;
-        const role = this.route.role;
-        const player = this.route.player;
-        if (!role) return;
-        const action = role.child.action;
-        const entries = role.child.entries;
-        const rush = entries.child.rush;
-        if (!game) return;
-        if (!action) return;
-        if (!player) return;
-        const opponent = player.refer.opponent;
-        if (!opponent) return;
-        const minions = opponent.refer.minions;
-        const hero = opponent.refer.hero;
-        let options: RoleModel[] = []
-        if (rush.state.isActive == RushStatus.ACTIVE) options = minions;
-        else options = [...minions, hero];
-        const tauntOptions = options.filter(item => {
-            const entries = item.child.entries;
-            const taunt = entries.child.taunt;
-            const stealth = entries.child.stealth;
-            return taunt.state.isActive && !stealth.state.isActive;
-        });
-        if (tauntOptions.length) options = tauntOptions;
-        options = options.filter(item => {
-            const entries = item.child.entries;
-            const stealth = entries.child.stealth;
-            return !stealth.state.isActive;
-        })
-        const result = await SelectUtil.get({ options });
-        return result;
+
+    private check(): boolean {
+        if (!this.state.current) return false;
+        return true;
     }
 
     @DebugUtil.log()
-    public async run() {
-        const game = this.route.game;
+    public async run(roleB: RoleModel) {
         const roleA = this.route.role;
-        const player = this.route.player;
-        const action = roleA?.child.action;
-        if (!game) return;
-        if (!action) return;
-        if (!player) return;
-        if (!action.check()) return;
-        const roleB = await this.select();
-        if (!roleB) return;
+        if (!roleA) return;
+        if (!this.check()) return;
         const attackB = roleB.child.attack.state.current;
         const event = this.event.toRun(new AttackEvent({ target: roleB }))
         if (event.isAbort) return;
@@ -127,7 +92,6 @@ export class AttackModel extends Model<
         const anchorB = roleB.child.anchor;
         if (!anchorA) return;
         if (!anchorB) return;
-        if (!action.consume()) return;
         DamageUtil.run([
             new DamageEvent({
                 target: roleB,
@@ -142,6 +106,6 @@ export class AttackModel extends Model<
                 origin: attackB,
             }),
         ])
-        this.event.onRun({ target: roleB }) 
+        this.event.onRun({ target: roleB }); 
     }
 }

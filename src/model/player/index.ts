@@ -40,11 +40,12 @@ export class PlayerModel extends Model<
         let opponent: PlayerModel | undefined;
         if (game?.child.playerA === this) opponent = game.child.playerB;
         if (game?.child.playerB === this) opponent = game.child.playerA;
+        const minions = board.child.cards.map(item => item.child.role);
         return { 
             ...super.refer, 
             opponent, 
-            minions: board.child.cards.map(item => item.child.role), 
-            hero: this.child.hero.child.role,
+            minions, 
+            roles: [ ...minions, this.child.hero.child.role ],
         }
     }
 

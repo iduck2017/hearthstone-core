@@ -1,5 +1,5 @@
 import { Model } from "set-piece";
-import { AbortEvent, RoleModel } from "../..";
+import { AbortEvent, AnchorModel, RoleModel } from "../..";
 import { CardModel } from "../..";
 import { PlayerModel } from "../..";
 import { GameModel } from "../..";
@@ -14,7 +14,9 @@ export namespace FeatureModel {
         toSilence: AbortEvent;
         onSilence: {};
     };
-    export type Child = {};
+    export type Child = {
+        anchor: AnchorModel;
+    };
     export type Refer = {};
 }
 
@@ -52,7 +54,10 @@ export abstract class FeatureModel<
         super({
             uuid: props.uuid,
             state: { ...props.state },
-            child: { ...props.child },
+            child: {
+                anchor: new AnchorModel({}),
+                ...props.child,
+            },
             refer: { ...props.refer },
         })
     }

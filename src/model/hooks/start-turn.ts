@@ -3,6 +3,7 @@ import { CardModel } from "../card";
 import { RoleModel } from "../role";
 import { EndTurnHookModel } from "./end-turn";
 import { FeatureModel } from "../features";
+import { AnchorModel } from "../anchor";
 
 export namespace StartTurnHookModel {
     export type Event = {
@@ -44,7 +45,10 @@ export abstract class StartTurnHookModel<
                 isActive: true,
                 ...props.state,
             },
-            child: { ...props.child },
+            child: {
+                anchor: new AnchorModel({}),
+                ...props.child,
+            },
             refer: { ...props.refer },
         })
     }

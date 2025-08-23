@@ -3,6 +3,7 @@ import { CardModel } from "../card";
 import { RoleModel } from "../role";
 import { FeatureModel } from "../features";
 import { AbortEvent } from "../../utils/abort";
+import { AnchorModel } from "../anchor";
 
 export namespace DeathrattleModel {
     export type Event = {
@@ -46,7 +47,10 @@ export abstract class DeathrattleModel<
                 isActive: true,
                 ...props.state,
             },
-            child: { ...props.child },
+            child: {
+                anchor: new AnchorModel({}),
+                ...props.child,
+            },
             refer: { ...props.refer },
         });
     }
