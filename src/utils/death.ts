@@ -1,5 +1,5 @@
 import { Callback } from "set-piece";
-import type { DeathModel } from "../model/rules/death";
+import type { DeathModel } from "../models/rules/death";
 
 export class DeathUtil {
     private static _isLock = false;

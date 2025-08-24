@@ -1,7 +1,7 @@
 import { TranxUtil } from "set-piece";
-import { AnchorEvent, AnchorModel } from "../model/rules/anchor";
+import { AnchorEvent, AnchorModel } from "../models/rules/anchor";
 import { DeathUtil } from "./death";
-import type { RoleModel } from "../model/role";
+import type { RoleModel } from "../models/role";
 
 export enum DamageType {
     DEFAULT = 0,

@@ -1,14 +1,14 @@
-export { RaceType } from "./model/minion";
+export { RaceType } from "./models/minion";
 export { DamageType } from "./utils/damage";
-export { RarityType } from "./model/card";
-export { ClassType } from "./model/card";
+export { RarityType } from "./models/card";
+export { ClassType } from "./models/card";
 
-export { RushStatus } from "./model/entries/rush";
-export { WindfuryStatus } from "./model/entries/windfury";
-export { DeathStatus } from "./model/rules/death";
+export { RushStatus } from "./models/entries/rush";
+export { WindfuryStatus } from "./models/entries/windfury";
+export { DeathStatus } from "./models/rules/death";
 
-export { AttackEvent } from "./model/rules/attack";
-export { AnchorEvent } from "./model/rules/anchor";
+export { AttackEvent } from "./models/rules/attack";
+export { AnchorEvent } from "./models/rules/anchor";
 export { AbortEvent } from "./utils/abort";
 export { SelectEvent } from "./utils/select";
 export { DamageEvent } from "./utils/damage";
@@ -21,59 +21,59 @@ export { DamageUtil } from "./utils/damage";
 export { RestoreUtil } from "./utils/restore";
 export { LibraryUtil } from "./utils/library";
 
-export { RoleModel } from "./model/role";
-export { AttackModel } from "./model/rules/attack";
-export { HealthModel } from "./model/rules/health";
-export { ActionModel } from "./model/rules/action";
-export { SleepModel } from './model/rules/sleep';
-export { DeathModel } from "./model/rules/death";
+export { RoleModel } from "./models/role";
+export { AttackModel } from "./models/rules/attack";
+export { HealthModel } from "./models/rules/health";
+export { ActionModel } from "./models/rules/action";
+export { SleepModel } from './models/rules/sleep';
+export { DeathModel } from "./models/rules/death";
 
-export { GameModel } from "./model/game";
+export { GameModel } from "./models/game";
 
-export { TurnModel } from "./model/rules/turn";
-export { CostModel } from "./model/rules/cost";
-export { CardModel } from "./model/card";
+export { TurnModel } from "./models/rules/turn";
+export { CostModel } from "./models/rules/cost";
+export { CardModel } from "./models/card";
 
-export { MinionModel } from "./model/minion";
+export { MinionModel } from "./models/minion";
 
-export { HandModel } from "./model/containers/hand";
-export { BoardModel } from "./model/containers/board";
-export { DeckModel } from "./model/containers/deck";
-export { GraveyardModel } from "./model/containers/graveyard";
+export { HandModel } from "./models/containers/hand";
+export { BoardModel } from "./models/containers/board";
+export { DeckModel } from "./models/containers/deck";
+export { GraveyardModel } from "./models/containers/graveyard";
 
-export { RoleEntriesModel } from "./model/entries";
-export { FrozenModel } from "./model/entries/frozen";
-export { RushModel } from "./model/entries/rush";
-export { ChargeModel } from "./model/entries/charge";
-export { TauntModel } from "./model/entries/taunt";
-export { StealthModel } from './model/entries/stealth';
-export { WindfuryModel } from "./model/entries/windfury";
-export { SpellDamageModel } from "./model/entries/spell-damage";
-export { DivineSheildModel } from "./model/entries/divine-shield";
+export { RoleEntriesModel } from "./models/entries";
+export { FrozenModel } from "./models/entries/frozen";
+export { RushModel } from "./models/entries/rush";
+export { ChargeModel } from "./models/entries/charge";
+export { TauntModel } from "./models/entries/taunt";
+export { StealthModel } from './models/entries/stealth';
+export { WindfuryModel } from "./models/entries/windfury";
+export { SpellDamageModel } from "./models/entries/spell-damage";
+export { DivineSheildModel } from "./models/entries/divine-shield";
 
-export { FeaturesModel } from "./model/features";
-export { FeatureModel } from './model/feature'
-export { BuffModel } from "./model/buff";
+export { FeaturesModel } from "./models/features";
+export { FeatureModel } from './models/feature'
+export { BuffModel } from "./models/buff";
 
 
-export { CardHooksModel } from "./model/hooks";
-export { BattlecryModel } from "./model/hooks/battlecry";
-export { DeathrattleModel } from "./model/hooks/deathrattle";
-export { EndTurnHookModel } from "./model/hooks/end-turn";
-export { StartTurnHookModel } from "./model/hooks/start-turn";
+export { CardHooksModel } from "./models/hooks";
+export { BattlecryModel } from "./models/hooks/battlecry";
+export { DeathrattleModel } from "./models/hooks/deathrattle";
+export { EndTurnHookModel } from "./models/hooks/end-turn";
+export { StartTurnHookModel } from "./models/hooks/start-turn";
 
-export { HeroModel } from "./model/hero";
-export { MageModel } from "./model/players/mage";
-export { WarriorModel } from "./model/players/warrior";
+export { HeroModel } from "./models/hero";
+export { MageModel } from "./models/players/mage";
+export { WarriorModel } from "./models/players/warrior";
 
-export { SkillModel } from './model/skills';
-export { MageSkillModel } from "./model/skills/mage/skill";
-export { WarriorSkillModel } from "./model/skills/warrior/skill";
+export { SkillModel } from './models/skills';
+export { MageSkillModel } from "./models/skills/mage/skill";
+export { WarriorSkillModel } from "./models/skills/warrior/skill";
 
-export { AnchorModel } from "./model/rules/anchor";
-export { AppModel } from "./model/app";
+export { AnchorModel } from "./models/rules/anchor";
+export { AppModel } from "./models/app";
 
-export { ArmorModel } from "./model/rules/armor";
-export { PlayerModel } from "./model/players";
+export { ArmorModel } from "./models/rules/armor";
+export { PlayerModel } from "./models/players";
 
 

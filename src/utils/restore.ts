@@ -1,7 +1,7 @@
 import { TranxUtil } from "set-piece";
 import { DeathUtil } from "./death";
-import { AnchorEvent, AnchorModel } from "../model/rules/anchor";
-import { RoleModel } from "../model/role";
+import { AnchorEvent, AnchorModel } from "../models/rules/anchor";
+import { RoleModel } from "../models/role";
 
 export class RestoreEvent extends AnchorEvent {
     public readonly origin: number;

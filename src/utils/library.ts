@@ -1,5 +1,5 @@
 import { Constructor, Model, StoreUtil } from "set-piece";
-import { CardModel } from "../model/card";
+import { CardModel } from "../models/card";
 
 export class LibraryUtil {
     private static readonly registry: CardModel[] = [];

@@ -1,8 +1,8 @@
 import { BoardModel, GameModel, HandModel, MageModel, MinionModel, PlayerModel, RoleModel, SelectUtil, TimeUtil } from "../src";
-import { CostModel } from "../src/model/rules/cost";
-import { DeckModel } from "../src/model/containers/deck";
-import { AttackModel } from "../src/model/rules/attack";
-import { HealthModel } from "../src/model/rules/health";
+import { CostModel } from "../src/models/rules/cost";
+import { DeckModel } from "../src/models/containers/deck";
+import { AttackModel } from "../src/models/rules/attack";
+import { HealthModel } from "../src/models/rules/health";
 import { boot } from "./boot";
 import { WispModel } from "./card";
 
