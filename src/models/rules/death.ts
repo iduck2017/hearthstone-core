@@ -35,12 +35,11 @@ export class DeathModel extends Model<
 > {
     public get route() {
         const route = super.route;
-        const role: RoleModel | undefined = route.path.find(item => item instanceof RoleModel) as RoleModel | undefined;
         const card: CardModel | undefined = route.path.find(item => item instanceof CardModel) as CardModel | undefined;
         return {
             ...route,
-            role,
             card,
+            role: route.path.find(item => item instanceof RoleModel),
         }
     }
 

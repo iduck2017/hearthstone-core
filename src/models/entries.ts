@@ -1,4 +1,4 @@
-import { Model } from "set-piece";
+import { Model, StoreUtil } from "set-piece";
 import { ChargeModel } from "./entries/charge";
 import { DivineSheildModel } from "./entries/divine-shield";
 import { RushModel, RushStatus } from "./entries/rush";
@@ -24,6 +24,7 @@ export namespace RoleEntriesModel {
     export type Refer = {};
 }
 
+@StoreUtil.is('role-entries')
 export class RoleEntriesModel extends Model<
     RoleEntriesModel.Event,
     RoleEntriesModel.State,

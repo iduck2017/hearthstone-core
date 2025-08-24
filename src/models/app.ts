@@ -10,7 +10,7 @@ export namespace AppModel {
     export type Refer = {};
 }
 
-@StoreUtil.is('root')
+@StoreUtil.is('app')
 export class AppModel extends Model<
     AppModel.Event, 
     AppModel.State, 

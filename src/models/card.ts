@@ -8,7 +8,7 @@ import { BoardModel } from "./containers/board";
 import { GraveyardModel } from "./containers/graveyard";
 import { SelectEvent, SelectUtil } from "../utils/select";
 import { CardHooksModel } from "./hooks";
-import { AnchorModel, HeroModel, MinionModel, RoleModel } from "..";
+import { AnchorModel, HeroModel, MinionModel } from "..";
 import { AbortEvent } from "../utils/abort";
 import { CostModel } from "./rules/cost";
 import { WeaponModel } from "./weapon";
@@ -37,6 +37,7 @@ export namespace CardModel {
         readonly flavorDesc: string;
         readonly rarity: RarityType;
         readonly class: ClassType;
+        readonly isCollectible: boolean;
     };
     export type Event = {
         toPlay: AbortEvent;

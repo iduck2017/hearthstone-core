@@ -31,12 +31,11 @@ export class HealthModel extends Model<
 > {
     public get route() {
         const route = super.route;
-        const role: RoleModel | undefined = route.path.find(item => item instanceof RoleModel);
         const card: CardModel | undefined = route.path.find(item => item instanceof CardModel);
         return { 
             ...route, 
-            role,
             card,
+            role: route.path.find(item => item instanceof RoleModel),
             game: route.path.find(item => item instanceof GameModel),
             player: route.path.find(item => item instanceof PlayerModel),
         }

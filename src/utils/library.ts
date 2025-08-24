@@ -9,7 +9,6 @@ export class LibraryUtil {
             constructor: new (props: Record<string, never>) => CardModel
         ) {
             const prototype = new constructor({});
-            console.log('create', prototype)
             LibraryUtil.registry.push(prototype);
             StoreUtil.is(code)(constructor);
         }

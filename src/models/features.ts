@@ -1,4 +1,4 @@
-import { Model } from "set-piece";
+import { Model, StoreUtil } from "set-piece";
 import { FeatureModel } from "./feature";
 
 namespace FeaturesModel {
@@ -10,6 +10,7 @@ namespace FeaturesModel {
     export type Refer = {};
 }
 
+@StoreUtil.is('features')
 export class FeaturesModel extends Model<
     FeaturesModel.Event,
     FeaturesModel.State,

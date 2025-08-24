@@ -1,4 +1,4 @@
-import { Model } from "set-piece";
+import { Model, StoreUtil } from "set-piece";
 import { BattlecryModel } from "./hooks/battlecry";
 import { DeathrattleModel } from "./hooks/deathrattle";
 import { StartTurnHookModel } from "./hooks/start-turn";
@@ -16,6 +16,7 @@ export namespace CardHooksModel {
     export type Refer = {};
 }
 
+@StoreUtil.is('card-hooks')
 export class CardHooksModel extends Model<
     CardHooksModel.Event,
     CardHooksModel.State,

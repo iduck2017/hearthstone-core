@@ -1,5 +1,5 @@
-import { Model } from "set-piece";
-import { SkillModel } from "..";
+import { Model, StoreUtil } from "set-piece";
+import { SkillModel } from "./skills";
 
 export namespace HeroModel {
     export type Event = {};
@@ -12,6 +12,7 @@ export namespace HeroModel {
     export type Refer = {}
 }
 
+@StoreUtil.is('hero')
 export class HeroModel<
     E extends Partial<HeroModel.Event> & Model.Event = {},
     S extends Partial<HeroModel.State> & Model.State = {},

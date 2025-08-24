@@ -1,7 +1,6 @@
 import { StateUtil, TranxUtil } from "set-piece";
 import { FeatureModel } from "../feature";
 import { SleepModel } from "../rules/sleep";
-import { RushModel, RushStatus } from "./rush";
 
 export namespace ChargeModel {
     export type Event = {

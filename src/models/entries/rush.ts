@@ -1,4 +1,4 @@
-import { StateUtil, TranxUtil } from "set-piece";
+import { StateUtil } from "set-piece";
 import { FeatureModel } from "../feature";
 import { SleepModel } from "../rules/sleep";
 

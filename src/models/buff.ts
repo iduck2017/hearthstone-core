@@ -31,10 +31,9 @@ export abstract class BuffModel<
 > {
     public get route() {
         const route = super.route;
-        const role: RoleModel | undefined = route.path.find(item => item instanceof RoleModel);
         return { 
             ...route,
-            role,
+            role: route.path.find(item => item instanceof RoleModel),
         }
     }
 
