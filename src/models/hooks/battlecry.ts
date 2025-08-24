@@ -10,7 +10,7 @@ import { AnchorModel } from "../rules/anchor";
 export namespace BattlecryModel {
     export type Event = {
         toRun: AbortEvent;
-        onRun: { params: any[] };
+        onRun: { params: Model[] };
     };
     export type State = {};
     export type Child = {};
@@ -18,7 +18,7 @@ export namespace BattlecryModel {
 }
 
 export abstract class BattlecryModel<
-    T extends any[] = any[],
+    T extends Model[] = Model[],
     E extends Partial<BattlecryModel.Event> & Model.Event = {},
     S extends Partial<BattlecryModel.State> & Model.State = {},
     C extends Partial<BattlecryModel.Child> & Model.Child = {},

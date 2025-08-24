@@ -4,9 +4,9 @@ import { HeroModel } from "../hero";
 import { RoleModel } from "../role";
 import { AttackModel } from "../rules/attack";
 import { HealthModel } from "../rules/health";
-import { MageSkillModel } from "../skills/mage/skill";
+import { FireBlastModel } from "../skills/fireblast";
 
-@StoreUtil.is('mage-model')
+@StoreUtil.is('mage')
 export class MageModel extends PlayerModel {
     constructor(props: MageModel['props']) {
         super({
@@ -21,7 +21,7 @@ export class MageModel extends PlayerModel {
                     refer: {},
                     state: {}
                 }),
-                skill: new MageSkillModel({}),
+                skill: new FireBlastModel({}),
                 ...props.child,
             },
             refer: { ...props.refer },

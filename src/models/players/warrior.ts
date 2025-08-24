@@ -1,10 +1,12 @@
 import { HeroModel } from "../hero";
-import { WarriorSkillModel } from "../skills/warrior/skill";
 import { RoleModel } from "../role";
 import { HealthModel } from "../rules/health";
 import { AttackModel } from "../rules/attack";
 import { PlayerModel } from ".";
+import { ArmorUpModel } from "../skills/armor-up";
+import { StoreUtil } from "set-piece";
 
+@StoreUtil.is('warrior')
 export class WarriorModel extends PlayerModel {
     constructor(props: WarriorModel['props']) {
         super({
@@ -19,7 +21,7 @@ export class WarriorModel extends PlayerModel {
                     refer: {},
                     state: {},
                 }),
-                skill: new WarriorSkillModel({}),
+                skill: new ArmorUpModel({}),
                 ...props.child,
             },
             refer: { ...props.refer },

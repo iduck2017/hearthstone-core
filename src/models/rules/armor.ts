@@ -4,7 +4,9 @@ export namespace ArmorModel {
     export type State = {
         origin: number;
     }
-    export type Event = {}
+    export type Event = {
+        onGain: { value: number };
+    }
     export type Child = {}
     export type Refer = {}
 }
@@ -25,5 +27,10 @@ export class ArmorModel extends Model<
             child: { ...props.child },
             refer: { ...props.refer },
         });
+    }
+
+    public gain(value: number) {
+        this.draft.state.origin += value;
+        this.event.onGain({ value });
     }
 }

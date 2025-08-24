@@ -27,7 +27,7 @@ export namespace AttackModel {
     export type Refer = {}
 }
 
-@StoreUtil.is('attack-model')
+@StoreUtil.is('attack')
 export class AttackModel extends Model<
     AttackModel.Event,
     AttackModel.State,

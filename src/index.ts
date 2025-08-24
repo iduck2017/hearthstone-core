@@ -67,8 +67,8 @@ export { MageModel } from "./models/players/mage";
 export { WarriorModel } from "./models/players/warrior";
 
 export { SkillModel } from './models/skills';
-export { MageSkillModel } from "./models/skills/mage/skill";
-export { WarriorSkillModel } from "./models/skills/warrior/skill";
+export { FireBlastModel } from './models/skills/fireblast';
+export { ArmorUpModel } from './models/skills/armor-up';
 
 export { AnchorModel } from "./models/rules/anchor";
 export { AppModel } from "./models/app";

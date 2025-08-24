@@ -8,6 +8,7 @@ export enum DamageType {
     ATTACK = 1,
     DEFEND = 2,
     SPELL = 3,
+    SKILL = 4,
 }
 
 export class DamageEvent extends AnchorEvent {

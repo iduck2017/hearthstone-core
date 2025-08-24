@@ -3,7 +3,7 @@ import { DamageEvent } from "../../utils/damage";
 
 export namespace DivineSheildModel {
     export type Event = {
-        onGet: {};
+        onGain: {};
         onBreak: DamageEvent;
     };
     export type State = {
@@ -34,11 +34,11 @@ export class DivineSheildModel extends FeatureModel<
         });
     }
 
-    public get(): boolean {
+    public gain(): boolean {
         if (this.state.status) return false; 
         this.draft.state.status = 1;
         this.draft.state.count = 1;
-        this.event.onGet({});
+        this.event.onGain({});
         return true;
     }
 

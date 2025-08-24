@@ -116,7 +116,7 @@ export abstract class CardModel<
     private async toPlay() {
         const hooks = this.child.hooks;
         const battlecry = hooks.child.battlecry;
-        const event: PlayEvent = {
+        const events: PlayEvent = {
             battlecry: new Map(),
         };
         for (const item of battlecry) {
@@ -128,9 +128,9 @@ export abstract class CardModel<
                 if (result === undefined) return;
                 params.push(result);
             }
-            event.battlecry.set(item, params);
+            events.battlecry.set(item, params);
         }
-        return event;
+        return events;
     }
 
     private async onPlay(event: PlayEvent) {
