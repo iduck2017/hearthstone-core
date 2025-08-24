@@ -1,7 +1,7 @@
 import { Model } from "set-piece";
 import { CardModel } from "../card";
-import { FeatureModel } from "../features";
-import { AnchorModel } from "../anchor";
+import { FeatureModel } from "../feature";
+import { AnchorModel } from "../rules/anchor";
 
 export namespace EndTurnHookModel {
     export type Event = {

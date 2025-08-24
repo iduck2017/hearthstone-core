@@ -1,4 +1,4 @@
-import { FeatureModel } from "../features";
+import { FeatureModel } from "../feature";
 
 export namespace StealthModel {
     export type Event = {

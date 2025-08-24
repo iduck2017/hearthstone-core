@@ -1,13 +1,13 @@
 import { GameModel, MageModel, MinionModel, SelectUtil, TimeUtil } from "../src";
 import { boot } from "./boot";
-import { HandModel } from "../src/model/game/hand";
-import { DeckModel } from "../src/model/game/deck";
-import { BoardModel } from "../src/model/game/board";
-import { HealthModel } from "../src/model/role/health";
-import { AttackModel } from "../src/model/role/attack";
-import { DeathStatus } from "../src/model/role/death";
+import { HandModel } from "../src/model/containers/hand";
+import { DeckModel } from "../src/model/containers/deck";
+import { BoardModel } from "../src/model/containers/board";
+import { HealthModel } from "../src/model/rules/health";
+import { AttackModel } from "../src/model/rules/attack";
+import { DeathStatus } from "../src/model/rules/death";
 import { WispModel } from "./card";
-import { CostModel } from "../src/model/card/cost";
+import { CostModel } from "../src/model/rules/cost";
 
 describe('role', () => {
     const game = new GameModel({

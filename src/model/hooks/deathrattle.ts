@@ -1,9 +1,9 @@
 import { Model } from "set-piece";
 import { CardModel } from "../card";
-import { FeatureModel } from "../features";
+import { FeatureModel } from "../feature";
 import { AbortEvent } from "../../utils/abort";
-import { AnchorModel } from "../anchor";
-import { PlayerModel } from "../player";
+import { AnchorModel } from "../rules/anchor";
+import { PlayerModel } from "../players";
 
 export namespace DeathrattleModel {
     export type Event = {

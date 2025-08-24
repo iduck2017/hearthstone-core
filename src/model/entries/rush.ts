@@ -1,6 +1,6 @@
 import { StateUtil, TranxUtil } from "set-piece";
-import { FeatureModel } from "../features";
-import { SleepModel } from "../role/sleep";
+import { FeatureModel } from "../feature";
+import { SleepModel } from "../rules/sleep";
 
 export enum RushStatus {
     INACTIVE = 0,

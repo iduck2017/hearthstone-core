@@ -2,10 +2,10 @@ import { Model } from "set-piece";
 import { CardModel } from "../card";
 import { SelectEvent } from "../../utils/select";
 import { GameModel } from "../game";
-import { PlayerModel } from "../player";
-import { FeatureModel } from "../features";
+import { PlayerModel } from "../players";
+import { FeatureModel } from "../feature";
 import { AbortEvent } from "../../utils/abort";
-import { AnchorModel } from "../anchor";
+import { AnchorModel } from "../rules/anchor";
 
 export namespace BattlecryModel {
     export type Event = {

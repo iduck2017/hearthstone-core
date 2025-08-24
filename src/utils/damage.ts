@@ -1,5 +1,5 @@
 import { TranxUtil } from "set-piece";
-import { AnchorEvent, AnchorModel } from "../model/anchor";
+import { AnchorEvent, AnchorModel } from "../model/rules/anchor";
 import { DeathUtil } from "./death";
 import type { RoleModel } from "../model/role";
 
