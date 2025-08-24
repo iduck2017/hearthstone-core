@@ -1,0 +1,56 @@
+import { Model } from "set-piece";
+import { CardModel } from "../card";
+import { EndTurnHookModel } from "./end-turn";
+import { FeatureModel } from "../feature";
+import { AnchorModel } from "../rules/anchor";
+
+export namespace StartTurnHookModel {
+    export type Event = {
+        onRun: {};
+        toRun: {};
+    };
+    export type State = {};
+    export type Child = {};
+    export type Refer = {};
+}
+
+export abstract class StartTurnHookModel<
+    E extends Partial<StartTurnHookModel.Event> & Model.Event = {},
+    S extends Partial<StartTurnHookModel.State> & Model.State = {},
+    C extends Partial<StartTurnHookModel.Child> & Model.Child = {},
+    R extends Partial<StartTurnHookModel.Refer> & Model.Refer = {}
+> extends FeatureModel<
+    E & StartTurnHookModel.Event,
+    S & StartTurnHookModel.State,
+    C & StartTurnHookModel.Child,
+    R & StartTurnHookModel.Refer
+> {
+    constructor(props: EndTurnHookModel['props'] & {
+        uuid: string | undefined;
+        state: S & Pick<FeatureModel.State, 'desc' | 'name'>;
+        child: C;
+        refer: R;
+    }) {
+        super({
+            uuid: props.uuid,
+            state: {
+                status: 1,
+                ...props.state,
+            },
+            child: {
+                anchor: new AnchorModel({}),
+                ...props.child,
+            },
+            refer: { ...props.refer },
+        })
+    }
+    
+    public async run() {
+        if (!this.state.status) return;
+        this.event.toRun({});
+        await this.doRun();
+        this.event.onRun({});
+    }
+
+    protected abstract doRun(): Promise<void>;
+}
