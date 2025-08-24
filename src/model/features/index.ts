@@ -34,14 +34,13 @@ export abstract class FeatureModel<
 > {
     public get route() {
         const route = super.route;
-        const role: RoleModel | undefined = route.path.find(item => item instanceof RoleModel);
         const card: CardModel | undefined = route.path.find(item => item instanceof CardModel);
+        const role: RoleModel | undefined = route.path.find(item => item instanceof RoleModel);
         return { 
             ...route, 
-            role, 
             card,
+            role,
             game: route.path.find(item => item instanceof GameModel),
-            board: route.path.find(item => item instanceof BoardModel),
             player: route.path.find(item => item instanceof PlayerModel)
         }
     } 

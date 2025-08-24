@@ -30,10 +30,7 @@ export class AnchorModel<
     AnchorModel.Refer
 > {
 
-    public get route(): Route & {
-        card?: CardModel;
-        player?: PlayerModel;
-    } {
+    public get route() {
         const path = super.route.path;
         const card = path.find(item => item instanceof CardModel);
         return { 

@@ -25,12 +25,6 @@ export abstract class StartTurnHookModel<
     C & StartTurnHookModel.Child,
     R & StartTurnHookModel.Refer
 > {
-    public get route() {
-        const route = super.route;
-        const card: CardModel | undefined = route.path.find(item => item instanceof CardModel);
-        return { ...route, card };
-    }
-
     constructor(props: EndTurnHookModel['props'] & {
         uuid: string | undefined;
         state: S & Pick<FeatureModel.State, 'desc' | 'name'>;

@@ -26,15 +26,6 @@ export abstract class DeathrattleModel<
     C & DeathrattleModel.Child, 
     R & DeathrattleModel.Refer
 > {
-    public get route() {
-        const route = super.route;
-        const card: CardModel | undefined = route.path.find(item => item instanceof CardModel);
-        return { 
-            ...route, 
-            card,
-            player: route.path.find(item => item instanceof PlayerModel),
-        };
-    }
 
     constructor(props: DeathrattleModel['props'] & {
         uuid: string | undefined;

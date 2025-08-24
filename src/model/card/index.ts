@@ -72,22 +72,12 @@ export abstract class CardModel<
         return {
             ...route,
             game: route.path.find(item => item instanceof GameModel),
+            player: route.path.find(item => item instanceof PlayerModel),
+            /** should be here */
             hand: route.path.find(item => item instanceof HandModel),
             deck: route.path.find(item => item instanceof DeckModel),
             board: route.path.find(item => item instanceof BoardModel),
-            player: route.path.find(item => item instanceof PlayerModel),
             graveyard: route.path.find(item => item instanceof GraveyardModel),
-        }
-    }
-    
-    public get refer() {
-        const player = this.route.player;
-        return {
-            ...super.refer,
-            hand: player?.child.hand,
-            deck: player?.child.deck,
-            board: player?.child.board,
-            graveyard: player?.child.graveyard,
         }
     }
 

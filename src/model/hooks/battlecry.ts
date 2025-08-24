@@ -29,17 +29,6 @@ export abstract class BattlecryModel<
     C & BattlecryModel.Child, 
     R & BattlecryModel.Refer
 > {
-    public get route() {
-        const route = super.route;
-        const card: CardModel | undefined = route.path.find(item => item instanceof CardModel);
-        return { 
-            ...route, 
-            card, 
-            player: route.path.find(item => item instanceof PlayerModel),
-            game: route.path.find(item => item instanceof GameModel)
-        };
-    }
-
     constructor(props: BattlecryModel['props'] & {
         uuid: string | undefined;
         state: S & Pick<FeatureModel.State, 'desc' | 'name'>;

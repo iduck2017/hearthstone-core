@@ -8,6 +8,7 @@ import { RoleModel } from "../role";
 import { SkillModel } from "../skill/skill";
 import { AnchorModel } from "../anchor";
 import { ArmorModel } from "./armor";
+import { MinionModel } from "../card/minion";
 
 export namespace PlayerModel {
     export type State = {};
@@ -41,21 +42,23 @@ export abstract class PlayerModel extends Model<
     }
 
     public get refer() {
-        const game = this.route.game;
         const board = this.child.board;
-        let opponent: PlayerModel | undefined;
-        if (game?.child.playerA === this) opponent = game.child.playerB;
-        if (game?.child.playerB === this) opponent = game.child.playerA;
-        const minions: RoleModel[] = [];
-        board.child.cards.forEach(item => {
-            if (item.child.minion) minions.push(item.child.minion);
-        })
+        const minions: MinionModel[] = [];
+        board.child.cards.forEach(item => item.child.minion && minions.push(item.child.minion));
         return { 
             ...super.refer, 
-            opponent, 
+            opponent: this.opponent, 
             minions, 
             roles: [ ...minions, this.child.role ],
         }
+    }
+
+    private get opponent(): PlayerModel | undefined {
+        const game = this.route.game;
+        if (!game) return;
+        const playerA = game?.child.playerA;
+        const playerB = game?.child.playerB;
+        return playerA === this ? playerB : playerA;
     }
 
     constructor(props: PlayerModel['props'] & {

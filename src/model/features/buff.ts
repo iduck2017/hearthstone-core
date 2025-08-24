@@ -35,9 +35,6 @@ export abstract class BuffModel<
         return { 
             ...route,
             role,
-            game: route.path.find(item => item instanceof GameModel),
-            board: route.path.find(item => item instanceof BoardModel),
-            player: route.path.find(item => item instanceof PlayerModel),
         }
     }
 

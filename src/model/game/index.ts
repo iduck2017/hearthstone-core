@@ -1,7 +1,6 @@
 import { Model, StoreUtil } from "set-piece";
 import { PlayerModel } from "../player";
 import { TurnModel } from "./turn";
-import { RoleModel } from "../role";
 
 export namespace GameModel {
     export type State = {};
@@ -22,21 +21,14 @@ export class GameModel extends Model<
     GameModel.Child,
     GameModel.Refer
 > {
-    public get refer(): GameModel.Refer & {
-        minions: RoleModel[];
-        roles: RoleModel[];
-    } {
+    public get refer() {
         const refer = super.refer;
+        const playerA = this.child.playerA;
+        const playerB = this.child.playerB;
         return {
             ...refer,
-            minions: [
-                ...this.child.playerA.refer.minions,
-                ...this.child.playerB.refer.minions,
-            ],
-            roles: [
-                ...this.child.playerA.refer.roles,
-                ...this.child.playerB.refer.roles,
-            ]
+            roles: [ ...playerA.refer.roles, ...playerB.refer.roles ],
+            minions: [...playerA.refer.minions, ...playerB.refer.minions ],
         }
     }
     

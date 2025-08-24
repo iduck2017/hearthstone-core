@@ -24,7 +24,6 @@ export class TurnModel extends Model<
     TurnModel.Child, 
     TurnModel.Refer
 > {
-
     public get route() {
         const route = super.route;
         return {
@@ -47,9 +46,9 @@ export class TurnModel extends Model<
 
     public next() {
         this.end();
-        this.draft.refer.current = 
-            this.refer.current?.refer.opponent ?? 
-            this.route.game?.child.playerA;
+        const current = this.refer.current;
+        const game = this.route.game;
+        this.draft.refer.current = current?.refer.opponent ?? game?.child.playerA;
         this.draft.state.count ++;
         this.start();
     }

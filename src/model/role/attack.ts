@@ -33,7 +33,6 @@ export class AttackModel extends Model<
     AttackModel.Child,
     AttackModel.Refer
 > {
-
     public get route() {
         const route = super.route;
         const role: RoleModel | undefined = route.path.find(item => item instanceof RoleModel);
