@@ -2,22 +2,22 @@ import { Model } from "set-piece";
 import { CardModel, SkillModel } from "../..";
 
 export namespace HeroModel {
-    export type Event = Partial<CardModel.Event> & {};
-    export type State = Partial<CardModel.State> & {
+    export type Event = {};
+    export type State = {
         armor: number;
     };
-    export type Child = Partial<CardModel.Child> & {
+    export type Child = {
         skill: SkillModel
     };
-    export type Refer = Partial<CardModel.Refer>;
+    export type Refer = {}
 }
 
-export abstract class HeroModel<
+export class HeroModel<
     E extends Partial<HeroModel.Event> & Model.Event = {},
     S extends Partial<HeroModel.State> & Model.State = {},
     C extends Partial<HeroModel.Child> & Model.Child = {},
     R extends Partial<HeroModel.Refer> & Model.Refer = {}
-> extends CardModel<
+> extends Model<
     E & HeroModel.Event,
     S & HeroModel.State,
     C & HeroModel.Child,
@@ -25,12 +25,8 @@ export abstract class HeroModel<
 > {
     constructor(props: HeroModel['props'] & {
         uuid: string | undefined;
-        state: S & 
-            Pick<HeroModel.State, 'armor'> & 
-            CardModel.State, 
-        child: C & 
-            Pick<HeroModel.Child, 'skill'> & 
-            Pick<CardModel.Child, 'cost'>,
+        state: S & Pick<HeroModel.State, 'armor'>,
+        child: C & Pick<HeroModel.Child, 'skill'>,
         refer: R
     }) {
         super({

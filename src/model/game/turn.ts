@@ -61,7 +61,7 @@ export class TurnModel extends Model<
         if (!board) return;
         const cards = board.child.cards;
         cards.forEach(card => {
-            const role = card.child.role;
+            const role = card.child.minion;
             if (!role) return;
             const entries = role.child.entries;
             role.child.action.reset();

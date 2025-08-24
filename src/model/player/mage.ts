@@ -15,7 +15,9 @@ export class MageModel extends PlayerModel {
                     child: {
                         health: new HealthModel({state: { origin: 30 }}),
                         attack: new AttackModel({state: { origin: 0 }}),
-                    }
+                    },
+                    refer: {},
+                    state: {}
                 }),
                 skill: new MageSkillModel({}),
                 ...props.child,

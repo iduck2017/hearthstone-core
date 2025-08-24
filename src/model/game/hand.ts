@@ -1,23 +1,22 @@
-import { Model } from "set-piece";
-import { MinionModel } from "../card/minion";
-import { GameModel } from "../game";
-import { PlayerModel } from ".";
+import { Model, TranxUtil } from "set-piece";
+import { PlayerModel } from "../player";
 import { CardModel } from "../card";
+import { GameModel } from ".";
 
-export namespace BoardModel {
-    export type Event = {};
-    export type State = {};
+export namespace HandModel {
+    export type Event = {}
+    export type State = {}
     export type Child = {
         cards: CardModel[]
-    };
-    export type Refer = {};
+    }
+    export type Refer = {}
 }
 
-export class BoardModel extends Model<
-    BoardModel.Event,
-    BoardModel.State,
-    BoardModel.Child,
-    BoardModel.Refer
+export class HandModel extends Model<
+    HandModel.Event,
+    HandModel.State,
+    HandModel.Child,
+    HandModel.Refer
 > {
     public get route() {
         const route = super.route;
@@ -28,23 +27,26 @@ export class BoardModel extends Model<
         }
     }
 
-    constructor(props: BoardModel['props']) {
+    constructor(props: HandModel['props']) {
         super({
             uuid: props.uuid,
-            state: { ...props.state },
             child: { 
                 cards: [],
-                ...props.child 
+                ...props.child,
             },
+            state: { ...props.state },
             refer: { ...props.refer }
-        })  
+        })
     }
 
-    public add(card: MinionModel, pos: number) {
-        this.draft.child.cards.splice(pos, 0, card);
+    @TranxUtil.span()
+    public add(card: CardModel) {
+        this.draft.child.cards.push(card);
+        return card;
     }
 
-    public del(card: MinionModel) {
+    @TranxUtil.span()
+    public del<T extends CardModel>(card: T): T | undefined {
         const index = this.draft.child.cards.indexOf(card);
         if (index === -1) return;
         this.draft.child.cards.splice(index, 1);

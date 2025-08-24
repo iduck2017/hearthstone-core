@@ -1,11 +1,10 @@
 import { Model, Route } from "set-piece";
 import { GameModel } from "../game";
 import { PlayerModel } from "../player";
-import { BoardModel } from "../player/board";
-import { HandModel } from "../player/hand";
-import { DeckModel } from "../player/deck";
-import { GraveyardModel } from "../player/graveyard";
-import { MinionModel } from "../card/minion";
+import { BoardModel } from "../game/board";
+import { HandModel } from "../game/hand";
+import { DeckModel } from "../game/deck";
+import { GraveyardModel } from "../game/graveyard";
 import { CardModel, DeathModel } from "../..";
 import { ActionModel } from "./action";
 import { AttackModel } from "./attack";
@@ -19,23 +18,28 @@ export namespace RoleModel {
     export type State = {};
     export type Event = {};
     export type Child = {
-        death: DeathModel;
-        sleep: SleepModel;
-        health: HealthModel;
-        attack: AttackModel;
-        action: ActionModel;
-        entries: RoleEntriesModel;
-        features: FeaturesModel;
-        anchor: AnchorModel ;
+        readonly death: DeathModel;
+        readonly sleep: SleepModel;
+        readonly health: HealthModel;
+        readonly attack: AttackModel;
+        readonly action: ActionModel;
+        readonly entries: RoleEntriesModel;
+        readonly features: FeaturesModel;
+        readonly anchor: AnchorModel ;
     };
     export type Refer = {};
 }
 
-export class RoleModel extends Model<
-    RoleModel.Event,
-    RoleModel.State,
-    RoleModel.Child,
-    RoleModel.Refer
+export class RoleModel<
+    E extends Partial<RoleModel.Event> & Model.Event = RoleModel.Event,
+    S extends Partial<RoleModel.State> & Model.State = RoleModel.State,
+    C extends Partial<RoleModel.Child> & Model.Child = RoleModel.Child,
+    R extends Partial<RoleModel.Refer> & Model.Refer = RoleModel.Refer
+> extends Model<
+    E & RoleModel.Event,
+    S & RoleModel.State,
+    C & RoleModel.Child,
+    R & RoleModel.Refer
 > {
     public get route(): Route & {
         card?: CardModel;
@@ -71,7 +75,9 @@ export class RoleModel extends Model<
     }
 
     public constructor(props: RoleModel['props'] & {
-        child: Pick<RoleModel.Child, 'health' | 'attack'>;
+        state: S;
+        child: C & Pick<RoleModel.Child, 'health' | 'attack'>;
+        refer: R;
     }) {
         super({
             uuid: props.uuid,

@@ -1,7 +1,6 @@
 import { DebugUtil, Event, EventUtil, Model, TranxUtil } from "set-piece";
 import { DamageEvent } from "../../utils/damage";
 import { RoleModel } from ".";
-import { MinionModel } from "../card/minion";
 import { GameModel } from "../game";
 import { PlayerModel } from "../player";
 import { CardModel, RestoreEvent } from "../..";

@@ -47,7 +47,7 @@ export class AnchorModel<
         const route = this.route;
         return { 
             ...super.refer,
-            role: route.card?.child.role ?? route.player?.child.role,
+            role: route.card?.child.minion ?? route.player?.child.role,
         }
     }
     

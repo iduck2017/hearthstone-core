@@ -1,8 +1,8 @@
-import { CardModel, ClassType, MinionModel, RarityType } from "../src";
+import { CardModel, ClassType, RarityType } from "../src";
 
-export class WispModel extends MinionModel {
+export class WispModel extends CardModel {
     constructor(props: WispModel['props'] & {
-        child: Pick<MinionModel.Child, 'role'> & Pick<CardModel.Child, 'cost'>;
+        child: Pick<CardModel.Child, 'cost' | 'minion'>;
     }) {
         super({
             uuid: props.uuid,
@@ -12,7 +12,6 @@ export class WispModel extends MinionModel {
                 flavorDesc: '',
                 rarity: RarityType.COMMON,
                 class: ClassType.NEUTRAL,
-                races: [],
                 ...props.state,
             },
             child: { ...props.child },

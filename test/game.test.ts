@@ -1,6 +1,6 @@
-import { BoardModel, GameModel, HandModel, MageModel, PlayerModel, RoleModel, SelectUtil, TimeUtil } from "../src";
+import { BoardModel, GameModel, HandModel, MageModel, MinionModel, PlayerModel, RoleModel, SelectUtil, TimeUtil } from "../src";
 import { CostModel } from "../src/model/card/cost";
-import { DeckModel } from "../src/model/player/deck";
+import { DeckModel } from "../src/model/game/deck";
 import { AttackModel } from "../src/model/role/attack";
 import { HealthModel } from "../src/model/role/health";
 import { boot } from "./boot";
@@ -17,7 +17,8 @@ describe('game', () => {
                             new WispModel({
                                 child: {
                                     cost: new CostModel({ state: { origin: 0 } }),
-                                    role: new RoleModel({
+                                    minion: new MinionModel({
+                                        state: { races: [] },
                                         child: {
                                             health: new HealthModel({ state: { origin: 1 } }),
                                             attack: new AttackModel({ state: { origin: 1 } }),
@@ -28,7 +29,8 @@ describe('game', () => {
                             new WispModel({
                                 child: {
                                     cost: new CostModel({ state: { origin: 0 } }),
-                                    role: new RoleModel({
+                                    minion: new MinionModel({
+                                        state: { races: [] },
                                         child: {
                                             health: new HealthModel({ state: { origin: 1 } }),
                                             attack: new AttackModel({ state: { origin: 1 } }),
@@ -43,7 +45,8 @@ describe('game', () => {
                             new WispModel({
                                 child: {
                                     cost: new CostModel({ state: { origin: 0 } }),
-                                    role: new RoleModel({
+                                    minion: new MinionModel({
+                                        state: { races: [] },
                                         child: {
                                             health: new HealthModel({ state: { origin: 1 } }),
                                             attack: new AttackModel({ state: { origin: 1 } }),

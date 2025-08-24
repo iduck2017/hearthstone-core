@@ -1,7 +1,7 @@
 import { DebugUtil, Model } from "set-piece";
 import { CardModel } from "../card";
-import { GameModel } from "../game";
-import { PlayerModel } from ".";
+import { GameModel } from ".";
+import { PlayerModel } from "../player";
 
 export namespace DeckModel {
     export type Event = {}

@@ -1,7 +1,6 @@
 import { Model } from "set-piece";
 import { CardModel } from "../card";
 import { SelectEvent } from "../../utils/select";
-import { RoleModel } from "../role";
 import { GameModel } from "../game";
 import { PlayerModel } from "../player";
 import { FeatureModel } from "../features";

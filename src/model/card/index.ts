@@ -2,15 +2,16 @@ import { DebugUtil, Model, TranxUtil } from "set-piece";
 import { PlayerModel } from "../player";
 import { GameModel } from "../game";
 import { BattlecryModel } from "../hooks/battlecry";
-import { HandModel } from "../player/hand";
-import { DeckModel } from "../player/deck";
-import { BoardModel } from "../player/board";
-import { GraveyardModel } from "../player/graveyard";
-import { SelectUtil } from "../../utils/select";
+import { HandModel } from "../game/hand";
+import { DeckModel } from "../game/deck";
+import { BoardModel } from "../game/board";
+import { GraveyardModel } from "../game/graveyard";
+import { SelectEvent, SelectUtil } from "../../utils/select";
 import { CardHooksModel } from "./hooks";
-import { AnchorModel, RoleModel } from "../..";
+import { AnchorModel, HeroModel, MinionModel, RoleModel } from "../..";
 import { AbortEvent } from "../../utils/abort";
 import { CostModel } from "./cost";
+import { WeaponModel } from "./weapon";
 
 export type PlayEvent = {
     battlecry: Map<BattlecryModel, Model[]>;
@@ -45,9 +46,12 @@ export namespace CardModel {
     };
     export type Child = {
         readonly cost: CostModel;
-        readonly role?: RoleModel;
         readonly hooks: CardHooksModel;
         readonly anchor: AnchorModel;
+
+        readonly hero?: HeroModel;
+        readonly minion?: MinionModel;
+        readonly weapon?: WeaponModel;
     };
     export type Refer = {};
 }
@@ -105,26 +109,25 @@ export abstract class CardModel<
         });
     }
 
-
-    public abstract play(): Promise<void>;
-    
-    protected async onPlay(event: PlayEvent) {
-        this.event.onPlay({});
-        const hooks = this.child.hooks;
-        const battlecry = hooks.child.battlecry;
-        for (const item of battlecry) {
-            const params = event.battlecry.get(item);
-            if (!params) return;
-            await item.run(...params);
-        }
+    public async play() {
+        const player = this.route.player;
+        if (!player) return;
+        const board = player.child.board;
+        const minion = this.child.minion;
+        const position = await minion?.toSummon();
+        const event = await this.toPlay();
+        if (!event) return;
+        minion?.doSummon(board, position);
+        await this.onPlay(event);
+        minion?.onSummon();
     }
 
-    protected async toPlay(): Promise<PlayEvent | undefined> {
+    private async toPlay() {
+        const hooks = this.child.hooks;
+        const battlecry = hooks.child.battlecry;
         const event: PlayEvent = {
             battlecry: new Map(),
         };
-        const hooks = this.child.hooks;
-        const battlecry = hooks.child.battlecry;
         for (const item of battlecry) {
             const selectors = item.toRun();
             if (!selectors) continue;
@@ -137,6 +140,17 @@ export abstract class CardModel<
             event.battlecry.set(item, params);
         }
         return event;
+    }
+
+    private async onPlay(event: PlayEvent) {
+        this.event.onPlay({});
+        const hooks = this.child.hooks;
+        const battlecry = hooks.child.battlecry;
+        for (const item of battlecry) {
+            const params = event.battlecry.get(item);
+            if (!params) return;
+            await item.run(...params);
+        }
     }
 
 
@@ -162,13 +176,10 @@ export abstract class CardModel<
 
     @DebugUtil.log()
     public async clear() {
-        this.doClear();
+        const minion = this.child.minion;
+        minion?.clear();
         const hooks = this.child.hooks;
         const deathrattle = hooks.child.deathrattle;
-        for (const item of deathrattle) {
-            await item.run();
-        }
+        for (const item of deathrattle) await item.run();
     }
-    
-    public abstract doClear(): void;
 }

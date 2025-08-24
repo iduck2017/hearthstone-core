@@ -1,8 +1,8 @@
 import { Model } from "set-piece";
 import { CardModel } from "../card";
 import { AppModel } from "..";
-import { GameModel } from "../game";
-import { PlayerModel } from ".";
+import { GameModel } from ".";
+import { PlayerModel } from "../player";
 
 export namespace GraveyardModel {
     export type State = {};

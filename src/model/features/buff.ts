@@ -3,7 +3,7 @@ import { RoleModel } from "../role";
 import { FeatureModel } from ".";
 import { PlayerModel } from "../player";
 import { GameModel } from "../game";
-import { BoardModel } from "../player/board";
+import { BoardModel } from "../game/board";
 import { AttackModel } from "../role/attack";
 import { HealthModel } from "../role/health";
 

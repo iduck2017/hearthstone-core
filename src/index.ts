@@ -35,10 +35,10 @@ export { CardModel } from "./model/card";
 export { HeroModel } from "./model/card/hero";
 export { MinionModel } from "./model/card/minion";
 
-export { HandModel } from "./model/player/hand";
-export { BoardModel } from "./model/player/board";
-export { DeckModel } from "./model/player/deck";
-export { GraveyardModel } from "./model/player/graveyard";
+export { HandModel } from "./model/game/hand";
+export { BoardModel } from "./model/game/board";
+export { DeckModel } from "./model/game/deck";
+export { GraveyardModel } from "./model/game/graveyard";
 
 export { RoleEntriesModel } from "./model/role/entries";
 

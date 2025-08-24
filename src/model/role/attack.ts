@@ -3,9 +3,6 @@ import { DamageUtil, DamageType, DamageEvent, CardModel } from "../..";
 import { RoleModel } from ".";
 import { GameModel } from "../game";
 import { PlayerModel } from "../player";
-import { SelectEvent, SelectUtil } from "../../utils/select";
-import { MinionModel } from "../card/minion";
-import { RushStatus } from "../entries/rush";
 import { AbortEvent } from "../../utils/abort";
 
 export class AttackEvent extends AbortEvent {

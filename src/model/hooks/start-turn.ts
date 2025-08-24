@@ -1,6 +1,5 @@
 import { Model } from "set-piece";
 import { CardModel } from "../card";
-import { RoleModel } from "../role";
 import { EndTurnHookModel } from "./end-turn";
 import { FeatureModel } from "../features";
 import { AnchorModel } from "../anchor";

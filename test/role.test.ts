@@ -1,16 +1,14 @@
-import { GameModel, MageModel, PlayerModel, RoleModel, SelectUtil, TimeUtil } from "../src";
+import { GameModel, MageModel, MinionModel, SelectUtil, TimeUtil } from "../src";
 import { boot } from "./boot";
-import { HandModel } from "../src/model/player/hand";
-import { DeckModel } from "../src/model/player/deck";
-import { BoardModel } from "../src/model/player/board";
+import { HandModel } from "../src/model/game/hand";
+import { DeckModel } from "../src/model/game/deck";
+import { BoardModel } from "../src/model/game/board";
 import { HealthModel } from "../src/model/role/health";
 import { AttackModel } from "../src/model/role/attack";
 import { DeathStatus } from "../src/model/role/death";
-import { DebugUtil, LogLevel } from "set-piece";
 import { WispModel } from "./card";
 import { CostModel } from "../src/model/card/cost";
 
-DebugUtil.level = LogLevel.ERROR;
 describe('role', () => {
     const game = new GameModel({
         child: {
@@ -23,7 +21,8 @@ describe('role', () => {
                             cards: [new WispModel({
                                 child: {
                                     cost: new CostModel({ state: { origin: 0 } }),
-                                    role: new RoleModel({
+                                    minion: new MinionModel({
+                                        state: { races: [] },
                                         child: {
                                             health: new HealthModel({ state: { origin: 2 } }),
                                             attack: new AttackModel({ state: { origin: 1 } }),
@@ -44,7 +43,8 @@ describe('role', () => {
                             cards: [new WispModel({
                                 child: {
                                     cost: new CostModel({ state: { origin: 0 } }),
-                                    role: new RoleModel({
+                                    minion: new MinionModel({
+                                        state: { races: [] },
                                         child: {
                                             health: new HealthModel({ state: { origin: 2 } }),
                                             attack: new AttackModel({ state: { origin: 1 } }),
@@ -67,8 +67,8 @@ describe('role', () => {
         const boardB = playerB.child.board;
         const cardA = boardA.child.cards.find(item => item instanceof WispModel);
         const cardB = boardB.child.cards.find(item => item instanceof WispModel);
-        const roleA = cardA?.child.role;
-        const roleB = cardB?.child.role;
+        const roleA = cardA?.child.minion;
+        const roleB = cardB?.child.minion;
         expect(roleA).toBeDefined();
         expect(roleB).toBeDefined();
         if (!roleA || !roleB) return;
@@ -83,7 +83,7 @@ describe('role', () => {
         const player = game.child.playerA;
         const board = player.child.board;
         const card = board.child.cards.find(item => item instanceof WispModel);
-        const role = card?.child.role;
+        const role = card?.child.minion;
         expect(role).toBeDefined();
         if (!role) return;
         expect(role.child.health.state.current).toBe(2);
@@ -101,24 +101,24 @@ describe('role', () => {
         const boardB = playerB.child.board;
         const cardA = boardA.child.cards.find(item => item instanceof WispModel);
         const cardB = boardB.child.cards.find(item => item instanceof WispModel);
-        expect(cardA).toBeDefined();
-        expect(cardB).toBeDefined();
-        if (!cardA || !cardB) return;
+        const roleA = cardA?.child.minion;
+        const roleB = cardB?.child.minion;
+        expect(roleA).toBeDefined();
+        expect(roleB).toBeDefined();
+        if (!roleA || !roleB) return;
 
-        const promise = cardB.child.role.child.action.run();
+        const promise = roleB.child.action.run();
         
         await TimeUtil.sleep();
         const selector = SelectUtil.current;
         expect(selector).toBeDefined();
         if (!selector) return;
         expect(selector.options).toContain(playerA.child.role);
-        expect(selector?.options).toContain(cardA.child.role);
+        expect(selector?.options).toContain(cardA.child.minion);
         expect(selector?.options.length).toBe(2);
-        SelectUtil.set(cardA.child.role);
+        SelectUtil.set(cardA.child.minion);
         await promise;
 
-        const roleA = cardA.child.role;
-        const roleB = cardB.child.role;
         expect(roleA.state.health).toBe(1);
         expect(roleA.child.health.state.damage).toBe(1);
         expect(roleA.child.health.state.limit).toBe(2);
@@ -144,22 +144,22 @@ describe('role', () => {
         const graveyardB = playerB.child.graveyard;
         const cardA = boardA.child.cards.find(item => item instanceof WispModel);
         const cardB = boardB.child.cards.find(item => item instanceof WispModel);
-        expect(cardA).toBeDefined();
-        expect(cardB).toBeDefined();
-        if (!cardA || !cardB) return;
+        const roleA = cardA?.child.minion;
+        const roleB = cardB?.child.minion;
+        expect(roleA).toBeDefined();
+        expect(roleB).toBeDefined();
+        if (!roleA || !roleB) return;
 
         game.child.turn.next();
-        const promise = cardA.child.role.child.action.run();
+        const promise = roleA.child.action.run();
         await TimeUtil.sleep();
         const selector = SelectUtil.current;
         if (!selector) return;
-        expect(selector?.options).toContain(cardB.child.role);
+        expect(selector?.options).toContain(cardB.child.minion);
         expect(selector?.options.length).toBe(2);
-        SelectUtil.set(cardB.child.role);
+        SelectUtil.set(cardB.child.minion);
         await promise;
         
-        const roleA = cardA.child.role;
-        const roleB = cardB.child.role;
         expect(roleA.state.health).toBe(0);
         expect(roleA.child.health.state.damage).toBe(2);
         expect(roleA.child.health.state.limit).toBe(2);
