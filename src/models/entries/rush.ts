@@ -1,5 +1,5 @@
 import { StateUtil } from "set-piece";
-import { FeatureModel } from "../feature";
+import { FeatureModel } from "../features";
 import { SleepModel } from "../rules/sleep";
 
 export enum RushStatus {

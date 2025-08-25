@@ -1,6 +1,6 @@
 import { StoreUtil } from "set-piece";
 import { PlayerModel } from ".";
-import { HeroModel } from "../hero";
+import { HeroModel } from "../cards/hero";
 import { RoleModel } from "../role";
 import { AttackModel } from "../rules/attack";
 import { HealthModel } from "../rules/health";

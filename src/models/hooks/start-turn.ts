@@ -1,7 +1,7 @@
 import { Model } from "set-piece";
-import { CardModel } from "../card";
+import { CardModel } from "../cards";
 import { EndTurnHookModel } from "./end-turn";
-import { FeatureModel } from "../feature";
+import { FeatureModel } from "../features";
 import { AnchorModel } from "../rules/anchor";
 
 export namespace StartTurnHookModel {

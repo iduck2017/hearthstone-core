@@ -12,6 +12,7 @@ export class WispModel extends CardModel {
                 flavorDesc: '',
                 rarity: RarityType.COMMON,
                 class: ClassType.NEUTRAL,
+                isCollectible: false,
                 ...props.state,
             },
             child: { ...props.child },

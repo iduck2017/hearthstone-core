@@ -2,7 +2,7 @@ import { Model } from "set-piece";
 import { DamageEvent } from "../..";
 import { DeathUtil } from "../../utils/death";
 import { RoleModel } from "../role";
-import { CardModel } from "../card";
+import { CardModel } from "../cards";
 import type { AnchorEvent, AnchorModel } from "./anchor";
 
 export enum DeathStatus {

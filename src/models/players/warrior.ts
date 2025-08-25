@@ -1,4 +1,4 @@
-import { HeroModel } from "../hero";
+import { HeroModel } from "../cards/hero";
 import { RoleModel } from "../role";
 import { HealthModel } from "../rules/health";
 import { AttackModel } from "../rules/attack";

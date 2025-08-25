@@ -1,9 +1,7 @@
 import { Model } from "set-piece";
-import { CardModel } from "../card";
+import { CardModel } from "../cards";
 import { SelectEvent } from "../../utils/select";
-import { GameModel } from "../game";
-import { PlayerModel } from "../players";
-import { FeatureModel } from "../feature";
+import { FeatureModel } from "../features";
 import { AbortEvent } from "../../utils/abort";
 import { AnchorModel } from "../rules/anchor";
 

@@ -1,4 +1,4 @@
-import { FeatureModel } from "../feature";
+import { FeatureModel } from "../features";
 
 export namespace TauntModel {
     export type Event = {
@@ -29,7 +29,7 @@ export class TauntModel extends FeatureModel<
         })
     }
 
-    public get(): boolean {
+    public active(): boolean {
         if (this.state.status) return false;
         this.draft.state.status = 1;
         this.event.onActive({});

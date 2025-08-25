@@ -1,4 +1,4 @@
-import { FeatureModel } from "../feature";
+import { FeatureModel } from "../features";
 
 export namespace SpellDamageModel {
     export type Event = {};

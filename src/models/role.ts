@@ -10,8 +10,8 @@ import { ActionModel } from "./rules/action";
 import { AttackModel } from "./rules/attack";
 import { HealthModel } from "./rules/health";
 import { SleepModel } from "./rules/sleep";
-import { FeaturesModel } from "./features";
-import { RoleEntriesModel } from "./entries";
+import { FeaturesModel } from "./features/features";
+import { RoleEntriesModel } from "./entries/role-entries";
 import { AnchorModel } from "..";
 
 export namespace RoleModel {

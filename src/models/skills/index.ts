@@ -61,12 +61,12 @@ export abstract class SkillModel<
     }
 
     public async run() {
-        const event = this.event.toRun(new AbortEvent());
-        if (event.isAbort) return;
-        const events = this.toRun();
-        if (!events) return;
+        const signal = this.event.toRun(new AbortEvent());
+        if (signal.isAbort) return;
+        const event = this.toRun();
+        if (!event) return;
         const params: Model[] = [];
-        for (const item of events) {
+        for (const item of event) {
             const result = await SelectUtil.get(item);
             if (result === undefined) return;
             params.push(result);

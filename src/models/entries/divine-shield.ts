@@ -1,4 +1,4 @@
-import { FeatureModel } from "../feature";
+import { FeatureModel } from "../features";
 import { DamageEvent } from "../../utils/damage";
 
 export namespace DivineSheildModel {

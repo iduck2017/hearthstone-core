@@ -8,7 +8,9 @@ import { RoleModel } from "../role";
 import { SkillModel } from "../skills";
 import { AnchorModel } from "../rules/anchor";
 import { ArmorModel } from "../rules/armor";
-import { MinionModel } from "../minion";
+import { MinionModel } from "../cards/minion";
+import { ManaModel } from "../rules/mana";
+import { CardModel } from "../cards";
 
 export namespace PlayerModel {
     export type State = {};
@@ -16,9 +18,12 @@ export namespace PlayerModel {
     };
     export type Child = {
         readonly role: RoleModel;
+        readonly mana: ManaModel;
         readonly armor: ArmorModel;
         readonly skill: SkillModel;
         readonly anchor: AnchorModel;
+        weapon?: CardModel;
+
         readonly hand: HandModel;
         readonly deck: DeckModel;
         readonly board: BoardModel;
@@ -68,16 +73,25 @@ export abstract class PlayerModel extends Model<
             uuid: props.uuid,
             state: { ...props.state },
             child: {
+                mana: new ManaModel({}),
                 armor: new ArmorModel({}),
+                anchor: new AnchorModel({}),
+
                 hand: new HandModel({}),
                 deck: new DeckModel({}),
                 board: new BoardModel({}),
-                anchor: new AnchorModel({}),
                 graveyard: new GraveyardModel({}),
                 ...props.child
             },
             refer: { ...props.refer },
         });
+    }
+
+    equip(card: CardModel) {
+        if (!card.child.weapon) return;
+        const current = this.draft.child.weapon;
+        if (current) current.clear();
+        
     }
 }
 

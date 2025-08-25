@@ -1,5 +1,5 @@
 import { StateUtil, TranxUtil } from "set-piece";
-import { FeatureModel } from "../feature";
+import { FeatureModel } from "../features";
 import { ActionModel } from "../rules/action";
 
 export enum WindfuryStatus {

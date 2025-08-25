@@ -1,5 +1,5 @@
 import { Model } from "set-piece";
-import { CardModel } from "../card";
+import { CardModel } from "../cards";
 import { GameModel } from "../game";
 import { PlayerModel } from "../players";
 

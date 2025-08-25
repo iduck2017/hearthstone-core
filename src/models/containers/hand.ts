@@ -1,6 +1,6 @@
 import { Model, TranxUtil } from "set-piece";
 import { PlayerModel } from "../players";
-import { CardModel } from "../card";
+import { CardModel } from "../cards";
 import { GameModel } from "../game";
 
 export namespace HandModel {

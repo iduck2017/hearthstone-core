@@ -1,7 +1,7 @@
 import { Model } from "set-piece";
 import { GameModel } from "../game";
 import { PlayerModel } from "../players";
-import { CardModel } from "../card";
+import { CardModel } from "../cards";
 
 export namespace BoardModel {
     export type Event = {};
