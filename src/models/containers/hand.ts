@@ -7,7 +7,7 @@ export namespace HandModel {
     export type Event = {}
     export type State = {}
     export type Child = {
-        cards: CardModel[]
+        cards: CardModel[],
     }
     export type Refer = {}
 }

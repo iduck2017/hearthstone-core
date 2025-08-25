@@ -1,4 +1,4 @@
-import { Model } from "set-piece";
+import { Model, TranxUtil } from "set-piece";
 import { GameModel } from "../game";
 import { PlayerModel } from "../players";
 import { CardModel } from "../cards";
@@ -7,7 +7,7 @@ export namespace BoardModel {
     export type Event = {};
     export type State = {};
     export type Child = {
-        cards: CardModel[]
+        readonly cards: CardModel[]
     };
     export type Refer = {};
 }
@@ -38,6 +38,7 @@ export class BoardModel extends Model<
             refer: { ...props.refer }
         })  
     }
+
 
     public add(card: CardModel, pos: number) {
         if (!card.child.minion) return;

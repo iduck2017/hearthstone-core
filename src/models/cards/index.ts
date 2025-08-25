@@ -109,22 +109,27 @@ export abstract class CardModel<
     public check(): boolean {
         const game = this.route.game;
         const player = this.route.player;
+        if (!player) return false;
         if (!game) return false;
         const turn = game.child.turn;
         if (turn.refer.current !== player) return false;
-        if (!player) return false;
         const cost = this.child.cost;
         if (cost.state.type === CostType.MANA) {
             const mana = player.child.mana;
-            if (mana.state.current <= cost.state.current) return false;
+            if (mana.state.current < cost.state.current) return false;
             return true;
-        } else return true;
+        }
+        return true;
     }
 
     public async play() {
         if (!this.check()) return;
         const player = this.route.player;
         if (!player) return;
+        // signal
+        const signal = this.event.toPlay(new AbortEvent());
+        if (signal.isAbort) return;
+        // event
         const event = await this.toPlay();
         if (!event) return;
         await this.doPlay(event);
@@ -140,17 +145,22 @@ export abstract class CardModel<
         const mana = player.child.mana;
         const cost = this.child.cost;
         mana.consume(cost.state.current);
+
+        // reserve
+        const board = player.child.board;
+        if (minion) minion.doSummon(board, event.position);
+
         // battlecry
         const hooks = this.child.hooks;
         const battlecry = hooks.child.battlecry;
         for (const item of battlecry) {
             const params = event.battlecry.get(item);
-            if (!params) return;
+            if (!params) continue;
             await item.run(...params);
         }
+
         // summon
-        const board = player.child.board;
-        if (minion) minion.doSummon(board, event.position);
+        if (minion) minion.onSummon();
         // spell
         if (spell && event.spell) await spell.run(event.spell);
     }
@@ -161,9 +171,10 @@ export abstract class CardModel<
         const event: PlayEvent = {
             battlecry: new Map(),
         };
+        // minion
         const minion = this.child.minion;
-        event.position = await minion?.toSummon();
-
+        if (minion) event.position = await minion.toSummon();
+        // spell
         const spell = this.child.spell;
         if (spell) {
             const selector = spell.toRun();
@@ -186,17 +197,6 @@ export abstract class CardModel<
         }
         return event;
     }
-
-    // private async onPlay(event: PlayEvent) {
-    //     this.event.onPlay({});
-    //     const hooks = this.child.hooks;
-    //     const battlecry = hooks.child.battlecry;
-    //     for (const item of battlecry) {
-    //         const params = event.battlecry.get(item);
-    //         if (!params) return;
-    //         await item.run(...params);
-    //     }
-    // }
 
 
     @DebugUtil.log()

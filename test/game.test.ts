@@ -99,6 +99,8 @@ describe('game', () => {
         const hand = player.child.hand;
         const deck = player.child.deck;
 
+        game.child.turn.next();
+
         let card = hand.child.cards[0];
         expect(board.child.cards.length).toBe(1);
         expect(hand.child.cards.length).toBe(2);
