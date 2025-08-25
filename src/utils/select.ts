@@ -1,7 +1,7 @@
 import { Callback } from "set-piece";
 
 export class SelectEvent<T = any> {
-    public readonly options: T[];
+    public options: T[];
     public readonly hint?: string;
 
     constructor(

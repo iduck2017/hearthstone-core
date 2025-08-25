@@ -3,9 +3,9 @@ import { AbortEvent } from "../../utils/abort";
 import { SelectEvent } from "../../utils/select";
 
 export namespace SpellModel {
-    export type Event<T extends Model = Model> = {
+    export type Event<T extends Model[] = Model[]> = {
         toRun: AbortEvent,
-        onRun: { param: T }
+        onRun: { params: T }
     };
     export type State = {};
     export type Child = {};
@@ -13,7 +13,7 @@ export namespace SpellModel {
 }
 
 export abstract class SpellModel<
-   T extends Model = Model,
+   T extends Model[] = Model[],
    E extends Partial<SpellModel.Event> & Model.Event = {},
    S extends Partial<SpellModel.State> & Model.State = {},
    C extends Partial<SpellModel.Child> & Model.Child = {},
@@ -37,14 +37,14 @@ export abstract class SpellModel<
         })
     }
     
-    public async run(param: T) {
+    public async run(...params: T) {
         const event = this.event.toRun(new AbortEvent());
         if (event.isAbort) return;
-        await this.doRun(param);
-        this.event.onRun({ param });
+        await this.doRun(...params);
+        this.event.onRun({ params });
     }
 
-    protected abstract doRun(param: T): Promise<void>;
+    protected abstract doRun(...params: T): Promise<void>;
 
-    public abstract toRun(): SelectEvent<T> | undefined;
+    public abstract toRun(): { [K in keyof T]: SelectEvent<T[K]> } | undefined;
 }

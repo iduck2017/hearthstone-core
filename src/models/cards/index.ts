@@ -8,7 +8,7 @@ import { BoardModel } from "../containers/board";
 import { GraveyardModel } from "../containers/graveyard";
 import { SelectUtil } from "../../utils/select";
 import { CardHooksModel } from "../hooks/card-hooks";
-import { AnchorModel, FeaturesModel, HeroModel, MinionModel } from "../..";
+import { AnchorModel, FeaturesModel, HeroModel, MinionModel, RoleModel } from "../..";
 import { AbortEvent } from "../../utils/abort";
 import { CostModel, CostType } from "../rules/cost";
 import { WeaponModel } from "./weapon";
@@ -16,7 +16,7 @@ import { SpellModel } from "./spell";
 
 export type PlayEvent = {
     position?: number;
-    spell?: Model;
+    spell?: Model[];
     battlecry: Map<BattlecryModel, Model[]>;
 }
 
@@ -162,7 +162,7 @@ export abstract class CardModel<
         // summon
         if (minion) minion.onSummon();
         // spell
-        if (spell && event.spell) await spell.run(event.spell);
+        if (spell && event.spell) await spell.run(...event.spell);
     }
     
     private async toPlay() {
@@ -174,18 +174,43 @@ export abstract class CardModel<
         // minion
         const minion = this.child.minion;
         if (minion) event.position = await minion.toSummon();
+
         // spell
         const spell = this.child.spell;
         if (spell) {
-            const selector = spell.toRun();
-            if (!selector) return;
-            event.spell = await SelectUtil.get(selector);
+            const selectors = spell.toRun();
+            // condition not match
+            if (!selectors) return;
+            // elusive
+            for (const item of selectors) {
+                item.options = item.options.filter(item => {
+                    if (!(item instanceof RoleModel)) return true; 
+                    const role: RoleModel = item;
+                    const elusive = role.child.entries.child.elusive;
+                    if (elusive.state.status) return false;
+                    return true;
+                });
+                // invalid selector
+                if (!item.options.length) return;
+            }
+            const params: Model[] = [];
+            for (const item of selectors) {
+                const result = await SelectUtil.get(item);
+                // user cancel
+                if (result === undefined) return;
+                params.push(result);
+            }
+            event.spell = params;
         }
 
         for (const item of battlecry) {
             const selectors = item.toRun();
             // condition not match
             if (!selectors) continue;
+            for (const item of selectors) {
+                // invalid selector
+                if (!item.options.length) return;
+            }
             const params: Model[] = [];
             for (const item of selectors) {
                 const result = await SelectUtil.get(item);
@@ -218,9 +243,7 @@ export abstract class CardModel<
         return card;
     }
 
-
     public async use() {}
-
 
     @DebugUtil.log()
     public async clear() {
