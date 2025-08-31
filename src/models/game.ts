@@ -1,6 +1,7 @@
 import { Model, StoreUtil } from "set-piece";
 import { PlayerModel } from "./player";
 import { TurnModel } from "./rules/turn";
+import { RoleModel } from "./role";
 
 export namespace GameProps {
     export type S = {};
@@ -21,6 +22,16 @@ export class GameModel extends Model<
     GameProps.C, 
     GameProps.R
 > {
+    public get refer() {
+        const roles: RoleModel[] = [];
+        roles.push(...this.child.playerA.refer.roles);
+        roles.push(...this.child.playerB.refer.roles);
+        return {
+            ...super.refer,
+            roles,
+        }
+    }
+
     constructor(props: GameModel['props'] & {
         child: Pick<GameProps.C, 'playerA' | 'playerB'>;
     }) {
@@ -37,4 +48,6 @@ export class GameModel extends Model<
             refer: { ...props.refer },
         });
     }
+
+
 }

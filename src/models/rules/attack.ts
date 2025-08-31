@@ -1,8 +1,9 @@
 import { DebugUtil, Event, Model, StoreUtil } from "set-piece";
-import { MinionModel } from "../..";
+import { DamageEvent, DamageModel, MinionModel } from "../..";
 import { RoleModel } from "../role";
 import { GameModel } from "../game";
 import { PlayerModel } from "../player";
+import { DamageType } from "../../types/damage";
 
 export namespace AttackProps {
     export type E = {
@@ -13,7 +14,9 @@ export namespace AttackProps {
         origin: number;
         offset: number;
     }
-    export type C = {}
+    export type C = {
+        damage: DamageModel;
+    }
     export type R = {}
 }
 
@@ -53,7 +56,10 @@ export class AttackModel extends Model<
                 offset: 0,
                 ...props.state,
             },
-            child: { ...props.child },
+            child: { 
+                damage: props.child?.damage ?? new DamageModel({}),
+                ...props.child,
+            },
             refer: { ...props.refer },
         })
     }
@@ -68,32 +74,27 @@ export class AttackModel extends Model<
         const self = this.route.role;
         if (!self) return;
         if (!this.check()) return;
-        const attackB = target.child.attack.state.current;
+        
         const signal = this.event.toRun(new Event({ target }))
         if (signal.isCancel) return;
-        const healthB = target.child.health.state.current;
-        if (healthB <= 0) return;
-        // todo
-        // DamageUtil.run([
-        //     new DamageEvent({
-        //         target: roleB,
-        //         type: DamageType.ATTACK,
-        //         source: cardA.child.cha.child.damage,
-        //         reason: this,
-        //         origin: this.state.current,
-        //     }),
-        //     new DamageEvent({
-        //         target: roleA,
-        //         type: DamageType.DEFEND,
-        //         source: cardB.child.actions.child.damage,
-        //         reason: this,
-        //         origin: attackB,
-        //     }),
-        // ])
-        this.event.onRun(new Event({ target: target })); 
-    }
-
-    private doRun() {
         
+        const health = target.child.health.state.current;
+        if (health <= 0) return;
+        
+        DamageModel.run([
+            new DamageEvent({
+                target,
+                type: DamageType.ATTACK,
+                source: this.child.damage,
+                origin: this.state.current,
+            }),
+            new DamageEvent({
+                target: self,
+                type: DamageType.DEFEND,
+                source: target.child.attack.child.damage,
+                origin: target.child.attack.state.current,
+            }),
+        ])
+        this.event.onRun(new Event({ target: target })); 
     }
 }

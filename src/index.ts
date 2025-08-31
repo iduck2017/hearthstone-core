@@ -1,6 +1,11 @@
 export { RushStatus } from "./models/entries/rush";
 export { WindfuryStatus } from "./models/entries/windfury";
 export { DeathStatus } from "./models/rules/death";
+export { DamageType } from "./types/damage";
+
+export { ClassType } from "./types/card";
+export { RarityType } from "./types/card";
+export { RaceType } from "./types/card";
 
 export { SelectEvent } from "./utils/select";
 
@@ -49,6 +54,7 @@ export { DeathrattleModel } from "./models/hooks/deathrattle";
 export { EndTurnHookModel } from "./models/hooks/end-turn";
 export { StartTurnHookModel } from "./models/hooks/start-turn";
 
+export { CharacterModel } from "./models/characters";
 export { MageModel } from "./models/characters/mage";
 export { WarriorModel } from "./models/characters/warrior";
 

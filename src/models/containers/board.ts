@@ -46,16 +46,23 @@ export class BoardModel extends Model<
     }
 
     @TranxUtil.span()
-    public add(card: MinionModel, pos: number) {
-        this.draft.child.minions.push(card);
-        this.draft.refer.order?.splice(pos, 0, card);
+    public add(card: MinionModel, position?: number) {
+        const order = this.draft.refer.order;
+        if (position === -1) position = order.length;
+        if (!position) position = order.length;
+        const cards = this.draft.child.minions;
+        cards.push(card);
+        order.splice(position, 0, card);
+        return card;
     }
 
     public del(card: MinionModel) {
-        let index = this.draft.child.minions.indexOf(card);
-        if (index !== -1) this.draft.child.minions.splice(index, 1);
-        index = this.draft.refer.order?.indexOf(card) ?? -1;
-        if (index !== -1) this.draft.refer.order?.splice(index, 1);
+        const cards = this.draft.child.minions;
+        const order = this.draft.refer.order;
+        let index = cards.indexOf(card);
+        if (index !== -1) cards.splice(index, 1);
+        index = order.indexOf(card);
+        if (index !== -1) order.splice(index, 1);
         return card;
     }
 }

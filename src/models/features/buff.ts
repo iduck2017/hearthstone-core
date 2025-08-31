@@ -1,5 +1,4 @@
 import { Decor, Model, Props, StateUtil } from "set-piece";
-import { RoleModel } from "../role";
 import { FeatureModel, FeatureProps, FeatureStatus } from ".";
 import { AttackModel, AttackProps } from "../rules/attack";
 import { HealthModel, HealthProps } from "../rules/health";

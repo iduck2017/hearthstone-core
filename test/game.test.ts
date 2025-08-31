@@ -116,7 +116,7 @@ describe('game', () => {
 
         let card = hand.child.minions[0];
         expect(board.child.minions.length).toBe(1);
-        expect(board.refer.order?.length).toBe(1);
+        expect(board.refer.order.length).toBe(1);
         expect(hand.child.minions.length).toBe(2);
         expect(card).toBeDefined();
 
@@ -133,8 +133,8 @@ describe('game', () => {
         expect(board.child.minions.length).toBe(2);
         expect(board.child.minions[1]).toBe(card);
         // order
-        expect(board.refer.order?.length).toBe(2);
-        expect(board.refer.order?.[0]).toBe(card);
+        expect(board.refer.order.length).toBe(2);
+        expect(board.refer.order[0]).toBe(card);
         // hand
         expect(hand.child.minions.length).toBe(1);
 
@@ -148,6 +148,6 @@ describe('game', () => {
         SelectUtil.set(1);
         await promise;
         expect(board.child.minions[2]).toBe(card);
-        expect(board.refer.order?.[1]).toBe(card);
+        expect(board.refer.order[1]).toBe(card);
     })
 })

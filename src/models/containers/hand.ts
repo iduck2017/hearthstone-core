@@ -10,7 +10,9 @@ export namespace HandProps {
     export type C = {
         minions: MinionModel[]
     }
-    export type R = {}
+    export type R = {
+        order: CardModel[]
+    }
 }
 
 export class HandModel extends Model<
@@ -36,25 +38,34 @@ export class HandModel extends Model<
                 ...props.child,
             },
             state: { ...props.state },
-            refer: { ...props.refer }
+            refer: { 
+                order: props.child?.minions ?? [],
+                ...props.refer 
+            }
         })
     }
    
-    public add(card: CardModel) {
+    public add(card: CardModel, position?: number) {
+        const order = this.draft.refer.order;
+        if (position === -1) position = order.length;
+        if (!position) position = order.length;
         let cards: CardModel[] | undefined;
         if (card instanceof MinionModel) cards = this.draft.child.minions;
         if (!cards) return;
         cards.push(card);
+        order.splice(position, 0, card);
         return card;
     }
 
     public del(card: CardModel): CardModel | undefined {
+        const order = this.draft.refer.order;
         let cards: CardModel[] | undefined;
         if (card instanceof MinionModel) cards = this.draft.child.minions;
         if (!cards) return;
-        const index = cards.indexOf(card);
-        if (index === -1) return;
-        cards.splice(index, 1);
+        let index = cards.indexOf(card);
+        if (index !== -1) cards.splice(index, 1);
+        index = order.indexOf(card);
+        if (index !== -1) order.splice(index, 1);
         return card;
     }
 }

@@ -1,6 +1,4 @@
 import { AttackModel, CostModel, HealthModel, MinionModel, RoleModel } from "../../src";
-import { CardProps } from "../../src/models/cards";
-import { MinionProps } from "../../src/models/cards/minion";
 import { ClassType, RaceType, RarityType } from "../../src/types/card";
 
 

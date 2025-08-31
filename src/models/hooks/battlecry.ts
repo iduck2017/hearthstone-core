@@ -44,11 +44,11 @@ export abstract class BattlecryModel<
 
     public async run(...params: T) {
         if (!this.state.status) return;
-        const event = this.event.toRun(new Event({}));
-        if (event.isCancel) return;
+        const signal = this.event.toRun(new Event({}));
+        if (signal.isCancel) return;
         await this.doRun(...params);
         this.event.onRun(new Event({}));
-    }
+    }   
 
     protected abstract doRun(...params: T): Promise<void>;
 

@@ -1,9 +1,8 @@
 import { Event, Model, Props, TranxUtil } from "set-piece";
-import { MinionModel, PlayerModel, RoleModel } from "../..";
+import { BoardModel, CardModel, DeckModel, GraveyardModel, HandModel, MinionModel, PlayerModel, RoleModel } from "../..";
 import { GameModel } from "../..";
-import { BoardModel } from "../..";
-import { CardModel } from "../..";
 import { DamageModel } from "../..";
+import { CharacterModel } from "../..";
 
 export enum FeatureStatus {
     INACTIVE = 0,
@@ -39,17 +38,25 @@ export abstract class FeatureModel<
 > {
     public get route() {
         const route = super.route;
-        const card: CardModel | undefined = route.order.find(item => item instanceof CardModel);
         const minion: MinionModel | undefined = route.order.find(item => item instanceof MinionModel);
-        return { 
-            ...route, 
+        const card: CardModel | undefined = route.order.find(item => item instanceof CardModel);
+        const character: CharacterModel | undefined = route.order.find(item => item instanceof CharacterModel);
+        const entity = card ?? character;
+        return {
+            ...route,
+            minion,
             card,
+            character,
+            entity,
             role: route.order.find(item => item instanceof RoleModel),
-            game: route.order.find(item => item instanceof GameModel),
             board: route.order.find(item => item instanceof BoardModel),
+            hand: route.order.find(item => item instanceof HandModel),
+            deck: route.order.find(item => item instanceof DeckModel),
+            graveyard: route.order.find(item => item instanceof GraveyardModel),
+            game: route.order.find(item => item instanceof GameModel),
             player: route.order.find(item => item instanceof PlayerModel)
         }
-    } 
+    }
 
     constructor(props: FeatureModel['props'] & {
         uuid: string | undefined;

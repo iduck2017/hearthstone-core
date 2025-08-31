@@ -6,5 +6,5 @@ export function boot(game: GameModel) {
     RouteUtil.boot(root);
     root.set(game);
     game.child.turn.next();
-    return root;
+    return game;
 }

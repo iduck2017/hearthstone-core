@@ -1,5 +1,4 @@
 import { DebugUtil, Model, TranxUtil, Props, Event, Format } from "set-piece";
-import { BattlecryModel } from "../hooks/battlecry";
 import { BoardModel } from "../containers/board";
 import { SelectEvent, SelectUtil } from "../../utils/select";
 import { MinionHooksModel } from "../hooks/minion-hooks";
@@ -7,6 +6,7 @@ import { CardModel, CardProps } from ".";
 import { RaceType } from "../../types/card";
 import { FeaturesModel } from "../features/features";
 import { RoleModel } from "../role";
+import { BattlecryModel } from "../hooks/battlecry";
 
 export type MinionPlayEvent = {
     position: number;
@@ -140,9 +140,6 @@ export abstract class MinionModel<
 
     @TranxUtil.span()
     private doSummon(board: BoardModel, position?: number) {
-        const right = board.child.minions.length;
-        if (position === undefined) position = right;
-        if (position === -1) position = right;
         const player = this.route.player;
         const hand = player?.child.hand;
         if (hand) hand.del(this);

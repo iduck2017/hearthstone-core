@@ -6,6 +6,8 @@ import { DeckModel } from "./containers/deck";
 import { GraveyardModel } from "./containers/graveyard";
 import { ManaModel } from "./rules/mana";
 import { CharacterModel } from "./characters";
+import { RoleModel } from "./role";
+import { DeathStatus } from "./rules/death";
 
 export namespace PlayerProps {
     export type S= {};
@@ -38,8 +40,13 @@ export class PlayerModel extends Model<
     }
 
     public get refer() {
+        let roles: RoleModel[] = [];
+        roles.push(this.child.character.child.role);
+        roles.push(...this.child.board.child.minions.map(item => item.child.role));
+        roles = roles.filter(item => item.child.death.state)
         return { 
             ...super.refer, 
+            roles,
             opponent: this.opponent, 
         }
     }

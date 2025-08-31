@@ -5,7 +5,7 @@ import { BoardModel } from "./containers/board";
 import { HandModel } from "./containers/hand";
 import { DeckModel } from "./containers/deck";
 import { GraveyardModel } from "./containers/graveyard";
-import { DeathModel, MinionModel } from "..";
+import { DamageModel, DeathModel, MinionModel } from "..";
 import { ActionModel } from "./rules/action";
 import { AttackModel } from "./rules/attack";
 import { HealthModel } from "./rules/health";
