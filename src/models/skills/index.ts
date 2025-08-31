@@ -4,6 +4,7 @@ import { PlayerModel } from "../player";
 import { GameModel } from "../game";
 import { CostModel } from "../rules/cost";
 import { CharacterModel } from "../characters";
+import { DamageModel } from "../actions/damage";
 
 export namespace SkillProps {
     export type E = {
@@ -16,6 +17,7 @@ export namespace SkillProps {
     };
     export type C = {
         cost: CostModel,
+        damage: DamageModel,
     };
     export type R = {};
 }
@@ -52,12 +54,20 @@ export abstract class SkillModel<
         super({
             uuid: props.uuid,
             state: { ...props.state },
-            child: { ...props.child },
+            child: {
+                damage: props.child?.damage ?? new DamageModel({}),
+                ...props.child
+            },
             refer: { ...props.refer },
         });
     }
 
     public async run() {
+        // prepare
+        const player = this.route.player;
+        if (!player) return;
+        const cost = this.child.cost;
+        if (!cost.check()) return;
         const signal = this.event.toRun(new Event({}));
         if (signal.isCancel) return;
         const event = this.toRun();
@@ -68,6 +78,10 @@ export abstract class SkillModel<
             if (result === undefined) return;
             params.push(result);
         }
+        
+        // execute
+        const mana = player.child.mana;
+        mana.consume(cost.state.current);
         const self: SkillModel = this;
         await self.doRun(...params);
         this.event.onRun(new Event({ params }));

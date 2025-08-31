@@ -1,5 +1,4 @@
 import { SkillModel } from ".";
-import { SelectEvent } from "../../utils/select";
 import { CostModel } from "../rules/cost";
 
 export class ArmorUpModel extends SkillModel<[]> {

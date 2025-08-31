@@ -1,4 +1,6 @@
 import { Model } from "set-piece";
+import { PlayerModel } from "../player";
+import { GameModel } from "../game";
 
 export enum CostType {
     MANA = 1,
@@ -23,6 +25,14 @@ export class CostModel extends Model<
     CostProps.C, 
     CostProps.R
 > {
+    public get route() {
+        const route = super.route;
+        return {
+            ...route,
+            game: route.order.find(item => item instanceof GameModel),
+            player: route.order.find(item => item instanceof PlayerModel)
+        }
+    }
 
     public get state() {
         const state = super.state;
@@ -46,5 +56,15 @@ export class CostModel extends Model<
             refer: { ...props.refer },
         });
     }
-    
+
+    public check() {
+        const player = this.route.player;
+        if (!player) return false;
+        if (this.state.type === CostType.MANA) {
+            const mana = player.child.mana;
+            if (mana.state.current < this.state.current) return false;
+            return true;
+        }
+        return false;
+    }
 }

@@ -77,14 +77,9 @@ export abstract class CardModel<
         const turn = game.child.turn;
         if (turn.refer.current !== player) return false;
         const cost = this.child.cost;
-        if (cost.state.type === CostType.MANA) {
-            const mana = player.child.mana;
-            if (mana.state.current < cost.state.current) return false;
-            return true;
-        }
+        if (!cost.check()) return false;
         return true;
     }
-
     
     @DebugUtil.log()
     public draw() {

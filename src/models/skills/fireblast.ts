@@ -3,6 +3,8 @@ import { SkillModel } from ".";
 import { SelectEvent } from "../../utils/select";
 import { RoleModel } from "../role";
 import { CostModel } from "../rules/cost";
+import { DamageModel } from "../actions/damage";
+import { DamageEvent, DamageType } from "../../types/damage";
 
 @StoreUtil.is('fireblast')
 export class FireBlastModel extends SkillModel<[RoleModel]> {
@@ -23,20 +25,20 @@ export class FireBlastModel extends SkillModel<[RoleModel]> {
     }
 
     protected async doRun(target: RoleModel): Promise<void> {
-        // DamageUtil.run([new DamageEvent({
-        //     type: DamageType.SKILL,
-        //     reason: this,
-        //     target,
-        //     origin: 1,
-        // })])
+        DamageModel.run([
+            new DamageEvent({
+                type: DamageType.SKILL,
+                source: this.child.damage,
+                target,
+                origin: 1,
+            })
+        ])
     }
 
     protected toRun(): [SelectEvent<RoleModel>] | undefined {
-        // const game = this.route.game;
-        // if (!game) return;
-        // const roles = game.refer.roles;
-        // if (!roles.length) return;
-        return [new SelectEvent([])];
+        const game = this.route.game;
+        if (!game) return;
+        const roles = game.refer.roles;
+        return [new SelectEvent(roles)];
     }
-
 }
