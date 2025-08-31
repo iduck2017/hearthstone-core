@@ -1,21 +1,21 @@
-import { StateUtil, TranxUtil } from "set-piece";
-import { FeatureModel } from "../features";
-import { SleepModel } from "../rules/sleep";
+import { Decor, Event, StateUtil, TranxUtil } from "set-piece";
+import { FeatureModel, FeatureStatus } from "../features";
+import { SleepModel, SleepProps } from "../rules/sleep";
 
-export namespace ChargeModel {
-    export type Event = {
-        onActive: {};
-    };
-    export type State = {};
-    export type Child = {};
-    export type Refer = {};
+export namespace ChargeProps {
+    export type E = {
+        onActive: Event
+    }
+    export type S = {}
+    export type C = {}
+    export type R = {}
 }
 
 export class ChargeModel extends FeatureModel<
-    ChargeModel.Event,
-    ChargeModel.State,
-    ChargeModel.Child,
-    ChargeModel.Refer
+    ChargeProps.E,
+    ChargeProps.S,
+    ChargeProps.C,
+    ChargeProps.R
 > {
     constructor(props: ChargeModel['props']) {
         super({
@@ -23,7 +23,7 @@ export class ChargeModel extends FeatureModel<
             state: {
                 name: 'Charge',
                 desc: 'Can attack immediately.',
-                status: 1,
+                status: FeatureStatus.ACTIVE,
                 ...props.state,
             },
             child: { ...props.child },
@@ -31,12 +31,9 @@ export class ChargeModel extends FeatureModel<
         })
     }
 
-
     @StateUtil.on(self => self.route.role?.proxy.child.sleep.decor)
-    protected onSleepCheck(that: SleepModel, state: SleepModel.State) {
-        if (!this.state.status) return state;
-        const result = { ...state };
-        result.status = false;
-        return result;
+    protected onCheck(that: SleepModel, state: Decor<SleepProps.S>) {
+        if (!this.state.status) return;
+        state.current.status = FeatureStatus.INACTIVE;
     }
 }

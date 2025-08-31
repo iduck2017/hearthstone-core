@@ -1,14 +1,13 @@
-import { HeroModel } from "../cards/hero";
-import { RoleModel } from "../role";
-import { HealthModel } from "../rules/health";
-import { AttackModel } from "../rules/attack";
-import { PlayerModel } from ".";
-import { ArmorUpModel } from "../skills/armor-up";
 import { StoreUtil } from "set-piece";
+import { RoleModel } from "../role";
+import { AttackModel } from "../rules/attack";
+import { HealthModel } from "../rules/health";
+import { FireBlastModel } from "../skills/fireblast";
+import { CharacterModel } from ".";
 
-@StoreUtil.is('warrior')
-export class WarriorModel extends PlayerModel {
-    constructor(props: WarriorModel['props']) {
+@StoreUtil.is('mage')
+export class MageModel extends CharacterModel {
+    constructor(props: MageModel['props']) {
         super({
             uuid: props.uuid,
             state: { ...props.state },
@@ -19,9 +18,9 @@ export class WarriorModel extends PlayerModel {
                         attack: new AttackModel({state: { origin: 0 }}),
                     },
                     refer: {},
-                    state: {},
+                    state: {}
                 }),
-                skill: new ArmorUpModel({}),
+                skill: new FireBlastModel({}),
                 ...props.child,
             },
             refer: { ...props.refer },

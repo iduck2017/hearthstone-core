@@ -1,12 +1,12 @@
-import { Constructor, Model, StoreUtil } from "set-piece";
-import { CardModel } from "../models/cards";
+import { StoreUtil } from "set-piece";
+import { MinionModel } from "../models/cards/minion";
 
 export class LibraryUtil {
-    private static readonly registry: CardModel[] = [];
+    private static readonly registry: MinionModel[] = [];
 
     public static is(code: string) {
         return function (
-            constructor: new (props: Record<string, never>) => CardModel
+            constructor: new (props: Record<string, never>) => MinionModel
         ) {
             const prototype = new constructor({});
             LibraryUtil.registry.push(prototype);

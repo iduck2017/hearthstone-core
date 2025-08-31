@@ -1,40 +1,41 @@
-import { DebugUtil, Model, TranxUtil } from "set-piece";
-import { CardModel } from "../cards";
+import { DebugUtil, Event, Model, TranxUtil } from "set-piece";
+import { MinionModel } from "../cards/minion";
 import { RoleModel } from "../role";
 import { GameModel } from "../game";
-import { PlayerModel } from "../players";
-import { AbortEvent, BoardModel, RushStatus, SelectEvent, SelectUtil } from "../..";
+import { PlayerModel } from "../player";
+import { BoardModel, RushStatus, SelectEvent, SelectUtil } from "../..";
+import { FeatureStatus } from "../features";
 
-export namespace ActionModel {
-    export type State = {
-        readonly origin: number;
+export namespace ActionProps {
+    export type S = {
+        origin: number;
         cost: number;
-        status: boolean;
+        status: FeatureStatus;
     };
-    export type Event = {
-        toRun: AbortEvent;
-        onRun: {};
+    export type E = {
+        toRun: Event;
+        onRun: Event;
     };
-    export type Child = {};
-    export type Refer = {};
+    export type C = {};
+    export type R = {};
 }
 
 export class ActionModel extends Model<
-    ActionModel.Event,
-    ActionModel.State,
-    ActionModel.Child,
-    ActionModel.Refer
+    ActionProps.E,
+    ActionProps.S,
+    ActionProps.C,
+    ActionProps.R
 > {
     public get route() {
         const route = super.route;
-        const card: CardModel | undefined = route.path.find(item => item instanceof CardModel);
+        const minion: MinionModel | undefined = route.order.find(item => item instanceof MinionModel);
         return { 
             ...route, 
-            card,
-            role: route.path.find(item => item instanceof RoleModel),
-            board: route.path.find(item => item instanceof BoardModel),
-            game: route.path.find(item => item instanceof GameModel),
-            player: route.path.find(item => item instanceof PlayerModel),
+            minion,
+            role: route.order.find(item => item instanceof RoleModel),
+            board: route.order.find(item => item instanceof BoardModel),
+            game: route.order.find(item => item instanceof GameModel),
+            player: route.order.find(item => item instanceof PlayerModel),
         }
     }
 
@@ -52,7 +53,7 @@ export class ActionModel extends Model<
             state: {
                 origin: 1,
                 cost: 0,
-                status: true,
+                status: FeatureStatus.ACTIVE,
                 ...props.state,
             },
             child: { ...props.child },
@@ -79,9 +80,10 @@ export class ActionModel extends Model<
         if (!player) return;
         const opponent = player.refer.opponent;
         if (!opponent) return;
-        let options: RoleModel[] = opponent.refer.roles
-        if (rush.state.status === RushStatus.ACTIVE && !charge.state.status) {
-            options = opponent.refer.minions;
+        const board = opponent.child.board;
+        let options: RoleModel[] = board.child.minions.map(item => item.child.role);
+        if (rush.state.status !== RushStatus.ACTIVE || charge.state.status) {
+            options.push(opponent.child.character.child.role);
         }
         const tauntOptions = options.filter(item => {
             const entries = item.child.entries;
@@ -111,12 +113,12 @@ export class ActionModel extends Model<
         if (!action.check()) return;
         const roleB = await this.select();
         if (!roleB) return;
-        const event = this.event.toRun(new AbortEvent())
-        if (event.isAbort) return;
+        const event = this.event.toRun(new Event({}))
+        if (event.isCancel) return;
         if (!action.consume()) return;
         const attack = roleA.child.attack;
         await attack.run(roleB);
-        this.event.onRun({});
+        this.event.onRun(new Event({}));
     }
 
     public check(): boolean {

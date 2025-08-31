@@ -1,33 +1,31 @@
-import { Model } from "set-piece";
-import { CardModel } from "../cards";
+import { Event, Model, Props } from "set-piece";
 import { EndTurnHookModel } from "./end-turn";
-import { FeatureModel } from "../features";
-import { AnchorModel } from "../rules/anchor";
+import { FeatureModel, FeatureProps } from "../features";
 
-export namespace StartTurnHookModel {
-    export type Event = {
-        onRun: {};
-        toRun: {};
+export namespace StartTurnHookProps {
+    export type E = {
+        onRun: Event;
+        toRun: Event;
     };
-    export type State = {};
-    export type Child = {};
-    export type Refer = {};
+    export type S = {};
+    export type C = {};
+    export type R = {};
 }
 
 export abstract class StartTurnHookModel<
-    E extends Partial<StartTurnHookModel.Event> & Model.Event = {},
-    S extends Partial<StartTurnHookModel.State> & Model.State = {},
-    C extends Partial<StartTurnHookModel.Child> & Model.Child = {},
-    R extends Partial<StartTurnHookModel.Refer> & Model.Refer = {}
+    E extends Partial<StartTurnHookProps.E> & Props.E = {},
+    S extends Partial<StartTurnHookProps.S> & Props.S = {},
+    C extends Partial<StartTurnHookProps.C> & Props.C = {},
+    R extends Partial<StartTurnHookProps.R> & Props.R = {}
 > extends FeatureModel<
-    E & StartTurnHookModel.Event,
-    S & StartTurnHookModel.State,
-    C & StartTurnHookModel.Child,
-    R & StartTurnHookModel.Refer
+    E & StartTurnHookProps.E,
+    S & StartTurnHookProps.S,
+    C & StartTurnHookProps.C,
+    R & StartTurnHookProps.R
 > {
     constructor(props: EndTurnHookModel['props'] & {
         uuid: string | undefined;
-        state: S & Pick<FeatureModel.State, 'desc' | 'name'>;
+        state: S & Pick<FeatureProps.S, 'desc' | 'name'>;
         child: C;
         refer: R;
     }) {
@@ -37,19 +35,16 @@ export abstract class StartTurnHookModel<
                 status: 1,
                 ...props.state,
             },
-            child: {
-                anchor: new AnchorModel({}),
-                ...props.child,
-            },
+            child: { ...props.child },
             refer: { ...props.refer },
         })
     }
     
     public async run() {
         if (!this.state.status) return;
-        this.event.toRun({});
+        this.event.toRun(new Event({}));
         await this.doRun();
-        this.event.onRun({});
+        this.event.onRun(new Event({}));
     }
 
     protected abstract doRun(): Promise<void>;

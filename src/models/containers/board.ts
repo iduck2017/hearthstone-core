@@ -1,54 +1,61 @@
 import { Model, TranxUtil } from "set-piece";
 import { GameModel } from "../game";
-import { PlayerModel } from "../players";
+import { PlayerModel } from "../player";
+import { MinionModel } from "../cards/minion";
 import { CardModel } from "../cards";
 
-export namespace BoardModel {
-    export type Event = {};
-    export type State = {};
-    export type Child = {
-        readonly cards: CardModel[]
+export namespace BoardProps {
+    export type E = {};
+    export type S = {};
+    export type C = {
+        readonly minions: MinionModel[]
     };
-    export type Refer = {};
+    export type R = {
+        readonly order: CardModel[];
+    };
 }
 
 export class BoardModel extends Model<
-    BoardModel.Event,
-    BoardModel.State,
-    BoardModel.Child,
-    BoardModel.Refer
+    BoardProps.E,
+    BoardProps.S,
+    BoardProps.C,
+    BoardProps.R
 > {
     public get route() {
         const route = super.route;
         return { 
             ...route,
-            game: route.path.find(item => item instanceof GameModel),
-            player: route.path.find(item => item instanceof PlayerModel),
+            game: route.order.find(item => item instanceof GameModel),
+            player: route.order.find(item => item instanceof PlayerModel),
         }
     }
 
     constructor(props: BoardModel['props']) {
         super({
             uuid: props.uuid,
-            state: { ...props.state },
+            state: {},
             child: { 
-                cards: [],
-                ...props.child 
+                minions: props.child?.minions ?? [],
+                ...props.child,
             },
-            refer: { ...props.refer }
-        })  
+            refer: { 
+                order: props.child?.minions ?? [],
+                ...props.refer
+            }
+        })
     }
 
-
-    public add(card: CardModel, pos: number) {
-        if (!card.child.minion) return;
-        this.draft.child.cards.splice(pos, 0, card);
+    @TranxUtil.span()
+    public add(card: MinionModel, pos: number) {
+        this.draft.child.minions.push(card);
+        this.draft.refer.order?.splice(pos, 0, card);
     }
 
-    public del(card: CardModel) {
-        const index = this.draft.child.cards.indexOf(card);
-        if (index === -1) return;
-        this.draft.child.cards.splice(index, 1);
+    public del(card: MinionModel) {
+        let index = this.draft.child.minions.indexOf(card);
+        if (index !== -1) this.draft.child.minions.splice(index, 1);
+        index = this.draft.refer.order?.indexOf(card) ?? -1;
+        if (index !== -1) this.draft.refer.order?.splice(index, 1);
         return card;
     }
 }

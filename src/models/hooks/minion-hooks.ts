@@ -4,26 +4,26 @@ import { DeathrattleModel } from "./deathrattle";
 import { StartTurnHookModel } from "./start-turn";
 import { EndTurnHookModel } from "./end-turn";
 
-export namespace CardHooksModel {
-    export type Event = {};
-    export type State = {};
-    export type Child = {
+export namespace MinionHooksProps {
+    export type E = {};
+    export type S = {};
+    export type C = {
         readonly endTurn: EndTurnHookModel[];
         readonly startTurn: StartTurnHookModel[];
         readonly battlecry: BattlecryModel[];
         readonly deathrattle: DeathrattleModel[];
     };
-    export type Refer = {};
+    export type R = {};
 }
 
 @StoreUtil.is('card-hooks')
-export class CardHooksModel extends Model<
-    CardHooksModel.Event,
-    CardHooksModel.State,
-    CardHooksModel.Child,
-    CardHooksModel.Refer
+export class MinionHooksModel extends Model<
+    MinionHooksProps.E,
+    MinionHooksProps.S,
+    MinionHooksProps.C,
+    MinionHooksProps.R
 > {
-    constructor(props: CardHooksModel['props']) {
+    constructor(props: MinionHooksModel['props']) {
         super({
             uuid: props.uuid,
             state: { ...props.state },

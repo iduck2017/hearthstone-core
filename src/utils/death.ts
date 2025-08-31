@@ -1,4 +1,4 @@
-import { Callback } from "set-piece";
+import { Func } from "set-piece";
 import type { DeathModel } from "../models/rules/death";
 
 export class DeathUtil {
@@ -17,8 +17,8 @@ export class DeathUtil {
         return function(
             prototype: unknown,
             key: string,
-            descriptor: TypedPropertyDescriptor<Callback>
-        ): TypedPropertyDescriptor<Callback> {
+            descriptor: TypedPropertyDescriptor<Func>
+        ): TypedPropertyDescriptor<Func> {
             const handler = descriptor.value;
             if (!handler) return descriptor;
             const instance = {
@@ -47,7 +47,7 @@ export class DeathUtil {
         const tasks = DeathUtil.tasks.filter(item => item.state.status);
         // console.log('death tranx', tasks)
         DeathUtil.tasks = [];
-        tasks.forEach(item => item.route.card?.clear());
+        tasks.forEach(item => item.route.minion?.dispose());
         tasks.forEach(item => item.onActive());
     }
 

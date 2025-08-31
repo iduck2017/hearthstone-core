@@ -1,35 +1,36 @@
-import { FeatureModel } from "../features";
+import { Event } from "set-piece";
+import { FeatureModel, FeatureStatus } from "../features";
 
-export namespace SpellDamageModel {
-    export type Event = {};
-    export type State = {
+export namespace SpellDamageProps {
+    export type E = {
+        onActive: Event;
+    };
+    export type S = {
         origin: number;
     };
-    export type Child = {};
-    export type Refer = {};
+    export type C = {};
+    export type R = {};
 }
 
 export class SpellDamageModel extends FeatureModel<
-    SpellDamageModel.Event,
-    SpellDamageModel.State,
-    SpellDamageModel.Child,
-    SpellDamageModel.Refer
-> {
+    SpellDamageProps.E,
+    SpellDamageProps.S,
+    SpellDamageProps.C,
+    SpellDamageProps.R
+>  {
     constructor(props: SpellDamageModel['props'] & {
-        state: Pick<SpellDamageModel.State, 'origin'>
+        state: Pick<SpellDamageProps.S, 'origin'>
     }) {
         super({
             uuid: props.uuid,
             state: {
                 name: 'Spell Damage',
                 desc: 'Your spell cards deal extra damage.',
-                status: 1,
+                status: FeatureStatus.ACTIVE,
                 ...props.state,
             },
             child: { ...props.child },
             refer: { ...props.refer },
         });
     }
-
-
 }

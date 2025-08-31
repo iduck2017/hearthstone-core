@@ -1,66 +1,60 @@
-import { Model, Route } from "set-piece";
+import { Model } from "set-piece";
 import { GameModel } from "./game";
-import { PlayerModel } from "./players";
+import { PlayerModel } from "./player";
 import { BoardModel } from "./containers/board";
 import { HandModel } from "./containers/hand";
 import { DeckModel } from "./containers/deck";
 import { GraveyardModel } from "./containers/graveyard";
-import { CardModel, DeathModel } from "..";
+import { DeathModel, MinionModel } from "..";
 import { ActionModel } from "./rules/action";
 import { AttackModel } from "./rules/attack";
 import { HealthModel } from "./rules/health";
 import { SleepModel } from "./rules/sleep";
 import { FeaturesModel } from "./features/features";
 import { RoleEntriesModel } from "./entries/role-entries";
-import { AnchorModel } from "..";
+import { CardModel } from "./cards";
+import { CharacterModel } from "./characters";
 
-export namespace RoleModel {
-    export type State = {};
-    export type Event = {};
-    export type Child = {
+export namespace RoleProps {
+    export type S = {};
+    export type E = {};
+    export type C = {
         readonly death: DeathModel;
         readonly sleep: SleepModel;
         readonly health: HealthModel;
         readonly attack: AttackModel;
         readonly action: ActionModel;
         readonly entries: RoleEntriesModel;
-        readonly features: FeaturesModel;
-        readonly anchor: AnchorModel ;
+        readonly feats: FeaturesModel;
     };
-    export type Refer = {};
+    export type R = {};
 }
 
-export class RoleModel<
-    E extends Partial<RoleModel.Event> & Model.Event = RoleModel.Event,
-    S extends Partial<RoleModel.State> & Model.State = RoleModel.State,
-    C extends Partial<RoleModel.Child> & Model.Child = RoleModel.Child,
-    R extends Partial<RoleModel.Refer> & Model.Refer = RoleModel.Refer
-> extends Model<
-    E & RoleModel.Event,
-    S & RoleModel.State,
-    C & RoleModel.Child,
-    R & RoleModel.Refer
+export class RoleModel extends Model<
+    RoleProps.E,
+    RoleProps.S,
+    RoleProps.C,
+    RoleProps.R
 > {
-    public get route(): Route & {
-        card?: CardModel;
-        hand?: HandModel;
-        deck?: DeckModel;
-        game?: GameModel;
-        player?: PlayerModel;
-        board?: BoardModel;
-        graveyard?: GraveyardModel;
-    } {
+    public get route() {
         const route = super.route;
-        const card: CardModel | undefined = route.path.find(item => item instanceof CardModel);
+        const card: CardModel | undefined = route.order.find(item => item instanceof CardModel);
+        const minion: MinionModel | undefined = route.order.find(item => item instanceof MinionModel);
+        const character: CharacterModel | undefined = route.order.find(item => item instanceof CharacterModel);
+        const entity = character ?? card;
         return {
             ...super.route, 
             card, 
-            hand: route.path.find(item => item instanceof HandModel),
-            deck: route.path.find(item => item instanceof DeckModel),
-            game: route.path.find(item => item instanceof GameModel),
-            player: route.path.find(item => item instanceof PlayerModel),
-            board: route.path.find(item => item instanceof BoardModel),
-            graveyard: route.path.find(item => item instanceof GraveyardModel),
+            minion,
+            entity,
+            character,
+            game: route.order.find(item => item instanceof GameModel),
+            player: route.order.find(item => item instanceof PlayerModel),
+            /** current position */
+            hand: route.order.find(item => item instanceof HandModel),
+            deck: route.order.find(item => item instanceof DeckModel),
+            board: route.order.find(item => item instanceof BoardModel),
+            graveyard: route.order.find(item => item instanceof GraveyardModel),
         };
     }
 
@@ -75,20 +69,17 @@ export class RoleModel<
     }
 
     public constructor(props: RoleModel['props'] & {
-        state: S;
-        child: C & Pick<RoleModel.Child, 'health' | 'attack'>;
-        refer: R;
+        child: Pick<RoleProps.C, 'health' | 'attack'>;
     }) {
         super({
             uuid: props.uuid,
             state: { ...props.state },
             child: { 
-                death: new DeathModel({}),
-                sleep: new SleepModel({}),
-                action: new ActionModel({}),
-                anchor: new AnchorModel({}),
-                entries: new RoleEntriesModel({}),
-                features: new FeaturesModel({}),
+                death: props.child.death ?? new DeathModel({}),
+                sleep: props.child.sleep ?? new SleepModel({}),
+                action: props.child.action ?? new ActionModel({}),
+                entries: props.child.entries ?? new RoleEntriesModel({}),
+                feats: props.child.feats ?? new FeaturesModel({}),
                 ...props.child,
             },
             refer: { ...props.refer },

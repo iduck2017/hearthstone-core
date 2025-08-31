@@ -1,29 +1,30 @@
 import { DebugUtil, Model } from "set-piece";
-import { CardModel } from "../cards";
+import { MinionModel } from "../cards/minion";
 import { GameModel } from "../game";
-import { PlayerModel } from "../players";
+import { PlayerModel } from "../player";
+import { CardModel } from "../cards";
 
-export namespace DeckModel {
-    export type Event = {}
-    export type State = {}
-    export type Child = {
-        cards: CardModel[]
+export namespace DeckProps {
+    export type E = {}
+    export type S = {}
+    export type C = {
+        minions: MinionModel[]
     }
-    export type Refer = {}
+    export type R = {}
 }
 
 export class DeckModel extends Model<
-    DeckModel.Event,
-    DeckModel.State,
-    DeckModel.Child,
-    DeckModel.Refer
+    DeckProps.E,
+    DeckProps.S,
+    DeckProps.C,
+    DeckProps.R
 > {
     public get route() {
         const route = super.route;
         return { 
             ...route,
-            game: route.path.find(item => item instanceof GameModel),
-            player: route.path.find(item => item instanceof PlayerModel),
+            game: route.order.find(item => item instanceof GameModel),
+            player: route.order.find(item => item instanceof PlayerModel),
         }
     }
 
@@ -31,7 +32,7 @@ export class DeckModel extends Model<
         super({
             uuid: props.uuid,
             child: { 
-                cards: [],
+                minions: [],
                 ...props.child,
             },
             state: { ...props.state },
@@ -41,17 +42,19 @@ export class DeckModel extends Model<
 
     @DebugUtil.log()
     public draw() {
-        const card = this.child.cards[0];
+        const card = this.child.minions[0];
         if (!card) return;
         card.draw();
         return card;
     }
 
     public del(card: CardModel): CardModel | undefined {
-        const index = this.draft.child.cards.indexOf(card);
+        let cards: CardModel[] | undefined;
+        if (card instanceof MinionModel) cards = this.draft.child.minions;
+        if (!cards) return;
+        const index = cards.indexOf(card);
         if (index === -1) return;
-        this.draft.child.cards.splice(index, 1);
+        cards.splice(index, 1);
         return card;
     }
-
 }

@@ -1,29 +1,30 @@
 import { Model, TranxUtil } from "set-piece";
-import { PlayerModel } from "../players";
-import { CardModel } from "../cards";
+import { PlayerModel } from "../player";
+import { MinionModel } from "../cards/minion";
 import { GameModel } from "../game";
+import { CardModel } from "../cards";
 
-export namespace HandModel {
-    export type Event = {}
-    export type State = {}
-    export type Child = {
-        cards: CardModel[],
+export namespace HandProps {
+    export type E = {}
+    export type S = {}
+    export type C = {
+        minions: MinionModel[]
     }
-    export type Refer = {}
+    export type R = {}
 }
 
 export class HandModel extends Model<
-    HandModel.Event,
-    HandModel.State,
-    HandModel.Child,
-    HandModel.Refer
+    HandProps.E,
+    HandProps.S,
+    HandProps.C,
+    HandProps.R
 > {
     public get route() {
         const route = super.route;
         return { 
             ...route,
-            game: route.path.find(item => item instanceof GameModel),
-            player: route.path.find(item => item instanceof PlayerModel),
+            game: route.order.find(item => item instanceof GameModel),
+            player: route.order.find(item => item instanceof PlayerModel),
         }
     }
 
@@ -31,25 +32,29 @@ export class HandModel extends Model<
         super({
             uuid: props.uuid,
             child: { 
-                cards: [],
+                minions: [],
                 ...props.child,
             },
             state: { ...props.state },
             refer: { ...props.refer }
         })
     }
-
-    @TranxUtil.span()
+   
     public add(card: CardModel) {
-        this.draft.child.cards.push(card);
+        let cards: CardModel[] | undefined;
+        if (card instanceof MinionModel) cards = this.draft.child.minions;
+        if (!cards) return;
+        cards.push(card);
         return card;
     }
 
-    @TranxUtil.span()
-    public del<T extends CardModel>(card: T): T | undefined {
-        const index = this.draft.child.cards.indexOf(card);
+    public del(card: CardModel): CardModel | undefined {
+        let cards: CardModel[] | undefined;
+        if (card instanceof MinionModel) cards = this.draft.child.minions;
+        if (!cards) return;
+        const index = cards.indexOf(card);
         if (index === -1) return;
-        this.draft.child.cards.splice(index, 1);
+        cards.splice(index, 1);
         return card;
     }
 }

@@ -1,6 +1,6 @@
-import { StateUtil, TranxUtil } from "set-piece";
+import { Decor, Event, StateUtil, TranxUtil } from "set-piece";
 import { FeatureModel } from "../features";
-import { ActionModel } from "../rules/action";
+import { ActionProps, ActionModel } from "../rules/action";
 
 export enum WindfuryStatus {
     INACTIVE = 0,
@@ -8,22 +8,22 @@ export enum WindfuryStatus {
     ACTIVE_SUPER = 2,
 }
 
-export namespace WindfuryModel {
-    export type Event = {
-        onGet: {};
+export namespace WindfuryProps {
+    export type E = {
+        onActive: Event;
     };
-    export type State = {
+    export type S = {
         status: WindfuryStatus;
     };
-    export type Child = {};
-    export type Refer = {};
+    export type C = {};
+    export type R = {};
 }
 
 export class WindfuryModel extends FeatureModel<
-    WindfuryModel.Event,
-    WindfuryModel.State,
-    WindfuryModel.Child,
-    WindfuryModel.Refer
+    WindfuryProps.E,
+    WindfuryProps.S,
+    WindfuryProps.C,
+    WindfuryProps.R
 > {
     constructor(props: WindfuryModel['props']) {
         super({
@@ -42,16 +42,14 @@ export class WindfuryModel extends FeatureModel<
     public active(status: WindfuryStatus): boolean {
         if (this.state.status) return false;
         this.draft.state.status = status;
-        this.event.onGet({});
+        this.event.onActive(new Event({}));
         return true;
     }
 
     @StateUtil.on(self => self.route.role?.proxy.child.action.decor)
-    protected onActionCheck(that: ActionModel, state: ActionModel.State) {
-        if (!this.state.status) return state;
+    protected onCheck(that: ActionModel, state: Decor<ActionProps.S>) {
+        if (!this.state.status) return;
         const offset = this.state.status === WindfuryStatus.ACTIVE_SUPER ? 3 : 1;
-        const result = { ...state };
-        result.origin = state.origin + offset;
-        return result;
+        state.current.origin += offset;
     }
 }

@@ -1,9 +1,12 @@
-import { Model } from "set-piece";
-import { DamageEvent } from "../..";
+import { Event, Model } from "set-piece";
 import { DeathUtil } from "../../utils/death";
 import { RoleModel } from "../role";
+import { MinionModel } from "../cards/minion";
+import { DestroyEvent, DestroyModel } from "../actions/destroy";
 import { CardModel } from "../cards";
-import type { AnchorEvent, AnchorModel } from "./anchor";
+import { CharacterModel } from "../characters";
+import { DamageEvent } from "../../types/damage";
+import { DamageModel } from "../actions/damage";
 
 export enum DeathStatus {
     INACTIVE = 0,
@@ -11,35 +14,41 @@ export enum DeathStatus {
     ACTIVE = 2,
 }
 
-export namespace DeathModel {
-    export type Event = {
-        onActive: {};
-        toDestroy: AnchorEvent;
-        onDestroy: {};
+
+export namespace DeathProps {
+    export type E = {
+        onActive: Event;
+        toDestroy: DestroyEvent;
+        onDestroy: Event;
     }
-    export type State = {
+    export type S = {
         status: DeathStatus;
         isDestroy: boolean;
     }
-    export type Child = {}
-    export type Refer = {
-        reason?: AnchorModel;
+    export type C = {}
+    export type R = {
+        reason?: DestroyModel | DamageModel;
     }
 }
 
 export class DeathModel extends Model<
-    DeathModel.Event,
-    DeathModel.State,
-    DeathModel.Child,
-    DeathModel.Refer
+    DeathProps.E,
+    DeathProps.S,
+    DeathProps.C,
+    DeathProps.R
 > {
     public get route() {
         const route = super.route;
-        const card: CardModel | undefined = route.path.find(item => item instanceof CardModel) as CardModel | undefined;
+        const card: CardModel | undefined = route.order.find(item => item instanceof CardModel)
+        const minion: MinionModel | undefined = route.order.find(item => item instanceof MinionModel);
+        const character: CharacterModel | undefined = route.order.find(item => item instanceof CharacterModel);
+        const entity = character ?? card;
         return {
             ...route,
             card,
-            role: route.path.find(item => item instanceof RoleModel),
+            minion,
+            entity,
+            role: route.order.find(item => item instanceof RoleModel),
         }
     }
 
@@ -57,13 +66,13 @@ export class DeathModel extends Model<
     }
 
     @DeathUtil.span()
-    public destroy(event: AnchorEvent) {
-        if (event.isAbort) return false;
+    public destroy(event: DestroyEvent) {
+        if (event.isCancel) return false;
         event = this.event.toDestroy(event);
-        if (event.isAbort) return false;
+        if (event.isCancel) return false;
         if (this.state.isDestroy) return false;
         this.draft.state.isDestroy = true;
-        this.draft.refer.reason = event.source;
+        this.draft.refer.reason = event.detail.source;
         this.draft.state.status = DeathStatus.ACTIVE_PREV;
         DeathUtil.add(this);
         return true;
@@ -71,7 +80,7 @@ export class DeathModel extends Model<
 
     public active(event: DamageEvent) {
         if (this.state.status) return false;
-        this.draft.refer.reason = event.source;
+        this.draft.refer.reason = event.detail.source;
         this.draft.state.status = DeathStatus.ACTIVE_PREV;
         DeathUtil.add(this);
     }
@@ -86,8 +95,8 @@ export class DeathModel extends Model<
     public onActive() {
         if (!this.state.status) return;
         this.draft.state.status = DeathStatus.ACTIVE;
-        this.event.onActive({});
+        this.event.onActive(new Event({}));
         if (!this.state.isDestroy) return;
-        this.event.onDestroy({});
+        this.event.onDestroy(new Event({}));
     }
 }

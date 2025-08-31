@@ -1,21 +1,21 @@
 import { Model, StoreUtil } from "set-piece";
 import { FeatureModel } from ".";
 
-namespace FeaturesModel {
-    export type Event = {};
-    export type State = {};
-    export type Child = {
+namespace FeaturesProps {
+    export type E = {};
+    export type S = {};
+    export type C = {
         items: FeatureModel[];
     };
-    export type Refer = {};
+    export type R = {};
 }
 
 @StoreUtil.is('features')
 export class FeaturesModel extends Model<
-    FeaturesModel.Event,
-    FeaturesModel.State,
-    FeaturesModel.Child,
-    FeaturesModel.Refer
+    FeaturesProps.E,
+    FeaturesProps.S,
+    FeaturesProps.C,
+    FeaturesProps.R
 > {
     constructor(props: FeaturesModel['props']) {
         super({

@@ -1,68 +1,35 @@
-import { TranxUtil } from "set-piece";
-import { AnchorEvent, AnchorModel } from "../models/rules/anchor";
-import { DeathUtil } from "./death";
-import type { RoleModel } from "../models/role";
+// import { Model, TranxUtil } from "set-piece";
+// import { DeathUtil } from "./death";
+// import type { RoleModel } from "../models/role";
+// import { AbortEvent } from "./event";
 
-export enum DamageType {
-    DEFAULT = 0,
-    ATTACK = 1,
-    DEFEND = 2,
-    SPELL = 3,
-    SKILL = 4,
-}
 
-export class DamageEvent extends AnchorEvent {
-    public readonly type: DamageType;
-    public readonly target: RoleModel;
-    public readonly origin: number;
-    public result: number;
-    public isBlock?: boolean;
 
-    constructor(props: {
-        type: DamageType;
-        source: AnchorModel<DamageEvent>;
-        target: RoleModel;
-        origin: number;
-    }) {
-        super(props)
-        this.type = props.type;
-        this.origin = props.origin;
-        this.result = props.origin;
-        this.target = props.target;
-        this.isBlock = false;
-    }
-}
+// export class DamageUtil {
+//     @DeathUtil.span()
+//     public static run(tasks: DamageEvent[]) {
+//         tasks = tasks.map(item => item.source?.toRun(item) ?? item);
+//         tasks = tasks.map(item => item.target.child.health.toHurt(item) ?? item);
+//         // filter
+//         tasks = tasks.filter(item => !item.isAbort);
+//         // execute
+//         tasks = DamageUtil.doRun(tasks);
+//         // filter
+//         tasks = tasks.filter(item => item.result > 0 && !item.isAbort);
+//         tasks.forEach(item => item.target.child.health.onHurt(item));
+//         tasks.forEach(item => {
+//             item.source?.onRun(item);
+//             const minion = item.source?.route.minion;
+//             if (!minion) return;
+//             const role = minion.child.role;
+//             if (item.result > 0) role.child.entries.child.stealth.deactive();
+//         });
+//     }
 
-export namespace DamageModel {
-    export type Event = {
-        toRun: DamageEvent;
-        onRun: DamageEvent;
-    };
-    export type State = {};
-    export type Child = {};
-    export type Refer = {};
-}
+//     @TranxUtil.span()
+//     private static doRun(tasks: DamageEvent[]) {
+//         return tasks.map(item => item.target.child.health.doHurt(item));
+//     }
 
-export class DamageUtil {
-    @DeathUtil.span()
-    public static run(tasks: DamageEvent[]) {
-        tasks = tasks.map(item => item.source.toRun(item) ?? item);
-        tasks = tasks.map(item => item.target.child.health.toHurt(item) ?? item);
-        tasks = DamageUtil.doRun(tasks);
-        tasks.forEach(item => item.target.child.health.onHurt(item));
-        tasks.forEach(item => {
-            item.source.onRun(item);
-            item.source.route.player?.child.anchor.onRun(item);
-            item.source.route.card?.child.anchor.onRun(item);
-            item.source.refer.role?.child.anchor.onRun(item);
-            if (item.result > 0) item.source.refer.role?.child.entries.child.stealth.deactive();
-        });
-    }
-
-    @TranxUtil.span()
-    private static doRun(tasks: DamageEvent[]) {
-        return tasks.map(item => item.target.child.health.doHurt(item));
-    }
-
-    private constructor() {}
-}
+//     private constructor() {}
+// }

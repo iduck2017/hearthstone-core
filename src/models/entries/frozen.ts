@@ -1,20 +1,21 @@
-import { FeatureModel } from "../features";
+import { Event } from "set-piece";
+import { FeatureModel, FeatureStatus } from "../features";
 
-export namespace FrozenModel {
-    export type Event = {
-        onActive: {};
-        onDeactive: {};
-    };
-    export type State = {};
-    export type Child = {};
-    export type Refer = {};
+export namespace FrozenProps {
+    export type E = {
+        onActive: Event
+        onDeactive: Event
+    }
+    export type S = {}
+    export type C = {}
+    export type R = {}
 }
 
 export class FrozenModel extends FeatureModel<
-    FrozenModel.Event,
-    FrozenModel.State,
-    FrozenModel.Child,
-    FrozenModel.Refer
+    FrozenProps.E,
+    FrozenProps.S,
+    FrozenProps.C,
+    FrozenProps.R
 > {
     constructor(props: FrozenModel['props']) {
         super({
@@ -22,7 +23,7 @@ export class FrozenModel extends FeatureModel<
             state: {
                 name: 'Frozen',
                 desc: 'Frozen charactoers lose their next attack.',
-                status: 1,
+                status: FeatureStatus.ACTIVE,
                 ...props.state,
             },
             child: { ...props.child },
@@ -32,8 +33,8 @@ export class FrozenModel extends FeatureModel<
 
     public active(): boolean {
         if (this.state.status) return false;
-        this.draft.state.status = 1;
-        this.event.onActive({});
+        this.draft.state.status = FeatureStatus.ACTIVE;
+        this.event.onActive(new Event({}));
         return true;
     }
 
@@ -43,7 +44,7 @@ export class FrozenModel extends FeatureModel<
         const action = role.child.action;
         if (action.state.current <= 0) return false;
         this.disable();
-        this.event.onDeactive({});
+        this.event.onDeactive(new Event({}));
         return true;
     }
 }

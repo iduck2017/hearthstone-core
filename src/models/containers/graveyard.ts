@@ -1,29 +1,30 @@
 import { Model } from "set-piece";
-import { CardModel } from "../cards";
+import { MinionModel } from "../cards/minion";
 import { GameModel } from "../game";
-import { PlayerModel } from "../players";
+import { PlayerModel } from "../player";
+import { CardModel } from "../cards";
 
-export namespace GraveyardModel {
-    export type State = {};
-    export type Event = {};
-    export type Child = {
-        readonly cards: CardModel[];
-    };
-    export type Refer = {};
+export namespace GraveyardProps {
+    export type E = {}
+    export type S = {}
+    export type C = {
+        minions: MinionModel[]
+    }
+    export type R = {}
 }
 
 export class GraveyardModel extends Model<
-    GraveyardModel.Event,
-    GraveyardModel.State,
-    GraveyardModel.Child,
-    GraveyardModel.Refer
+    GraveyardProps.E,
+    GraveyardProps.S,
+    GraveyardProps.C,
+    GraveyardProps.R
 > {
     public get route() {
         const route = super.route;
         return { 
             ...route,
-            game: route.path.find(item => item instanceof GameModel),
-            player: route.path.find(item => item instanceof PlayerModel),
+            game: route.order.find(item => item instanceof GameModel),
+            player: route.order.find(item => item instanceof PlayerModel),
         }
     }
 
@@ -32,7 +33,7 @@ export class GraveyardModel extends Model<
             uuid: props.uuid,
             state: { ...props.state },
             child: { 
-                cards: [],
+                minions: [],
                 ...props.child,
             },
             refer: { ...props.refer },
@@ -40,7 +41,10 @@ export class GraveyardModel extends Model<
     }
     
     public add(card: CardModel) {
-        this.draft.child.cards.push(card);
+        let cards: CardModel[] | undefined;
+        if (card instanceof MinionModel) cards = this.draft.child.minions;
+        if (!cards) return;
+        cards.push(card);
         return card;
     }
 }

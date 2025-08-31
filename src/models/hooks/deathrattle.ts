@@ -1,35 +1,31 @@
-import { Model } from "set-piece";
-import { CardModel } from "../cards";
-import { FeatureModel } from "../features";
-import { AbortEvent } from "../../utils/abort";
-import { AnchorModel } from "../rules/anchor";
-import { PlayerModel } from "../players";
+import { Event, Model, Props } from "set-piece";
+import { FeatureModel, FeatureProps } from "../features";
 
-export namespace DeathrattleModel {
-    export type Event = {
-        toRun: AbortEvent;
-        onRun: {};
+export namespace DeathrattleProps {
+    export type E = {
+        toRun: Event;
+        onRun: Event;
     };
-    export type State = {};
-    export type Child = {};
-    export type Refer = {};
+    export type S = {};
+    export type C = {};
+    export type R = {};
 }
 
 export abstract class DeathrattleModel<
-    E extends Partial<DeathrattleModel.Event> & Model.Event = {},
-    S extends Partial<DeathrattleModel.State> & Model.State = {},
-    C extends Partial<DeathrattleModel.Child> & Model.Child = {},
-    R extends Partial<DeathrattleModel.Refer> & Model.Refer = {}
+    E extends Partial<DeathrattleProps.E> & Props.E = {},
+    S extends Partial<DeathrattleProps.S> & Props.S = {},
+    C extends Partial<DeathrattleProps.C> & Props.C = {},
+    R extends Partial<DeathrattleProps.R> & Props.R = {}
 > extends FeatureModel<
-    E & DeathrattleModel.Event, 
-    S & DeathrattleModel.State, 
-    C & DeathrattleModel.Child, 
-    R & DeathrattleModel.Refer
+    E & DeathrattleProps.E, 
+    S & DeathrattleProps.S, 
+    C & DeathrattleProps.C, 
+    R & DeathrattleProps.R
 > {
 
     constructor(props: DeathrattleModel['props'] & {
         uuid: string | undefined;
-        state: S & Pick<FeatureModel.State, 'desc' | 'name'>;
+        state: S & Pick<FeatureProps.S, 'desc' | 'name'>;
         child: C;
         refer: R;
     }) {
@@ -39,20 +35,17 @@ export abstract class DeathrattleModel<
                 status: 1,
                 ...props.state,
             },
-            child: {
-                anchor: new AnchorModel({}),
-                ...props.child,
-            },
+            child: { ...props.child },
             refer: { ...props.refer },
         });
     }
 
     public async run() {
         if (!this.state.status) return;
-        const event = this.event.toRun(new AbortEvent());
-        if (event.isAbort) return;
+        const signal = this.event.toRun(new Event({}));
+        if (signal.isCancel) return;
         await this.doRun();
-        this.event.onRun({});
+        this.event.onRun(new Event({}));
     }
 
     protected abstract doRun(): Promise<void>;

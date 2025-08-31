@@ -1,20 +1,21 @@
-import { FeatureModel } from "../features";
+import { Event } from "set-piece";
+import { FeatureModel, FeatureStatus } from "../features";
 
-export namespace ElusiveModel {
-    export type Event = {
-        onActive: {};
-        onDeactive: {};
-    };
-    export type State = {}
-    export type Child = {};
-    export type Refer = {};
+export namespace ElusiveProps {
+    export type E = {
+        onActive: Event
+        onDeactive: Event
+    }
+    export type S = {}
+    export type C = {}
+    export type R = {}
 }
 
 export class ElusiveModel extends FeatureModel<
-    ElusiveModel.Event,
-    ElusiveModel.State,
-    ElusiveModel.Child,
-    ElusiveModel.Refer
+    ElusiveProps.E,
+    ElusiveProps.S,
+    ElusiveProps.C,
+    ElusiveProps.R
 > {
     constructor(props: ElusiveModel['props']) {
         super({
@@ -22,7 +23,7 @@ export class ElusiveModel extends FeatureModel<
             state: {
                 name: 'Elusive',
                 desc: 'Can\'t be targeted by spells or Hero Powers.',
-                status: 1,
+                status: FeatureStatus.ACTIVE,
                 ...props.state,
             },
             child: { ...props.child },
@@ -33,7 +34,7 @@ export class ElusiveModel extends FeatureModel<
     public active(): boolean {
         if (this.state.status) return false;
         this.draft.state.status = 1;
-        this.event.onActive({});
+        this.event.onActive(new Event({}));
         return true;
     }
 }

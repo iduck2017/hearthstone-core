@@ -1,28 +1,29 @@
-import { Model } from "set-piece";
+import { Event, Model } from "set-piece";
+import { FeatureStatus } from "../features";
 
-export namespace SleepModel {
-    export type Event = {
-        onActive: {};
-        onDeactive: {};
+export namespace SleepProps {
+    export type E = {
+        onActive: Event;
+        onDeactive: Event;
     };
-    export type State = {
-        status: boolean;
+    export type S = {
+        status: FeatureStatus;
     }
-    export type Child = {};
-    export type Refer = {}
+    export type C = {};
+    export type R = {}
 }
 
 export class SleepModel extends Model<
-    SleepModel.Event,
-    SleepModel.State,
-    SleepModel.Child,
-    SleepModel.Refer
+    SleepProps.E,
+    SleepProps.S,
+    SleepProps.C,
+    SleepProps.R
 > {
     constructor(props: SleepModel['props']) {
         super({
             uuid: props.uuid,
             state: {
-                status: true,
+                status: FeatureStatus.ACTIVE,
                 ...props.state
             },
             child: { ...props.child },
@@ -31,12 +32,12 @@ export class SleepModel extends Model<
     }
 
     public active() {
-        this.draft.state.status = true;
-        this.event.onActive({});
+        this.draft.state.status = FeatureStatus.ACTIVE;
+        this.event.onActive(new Event({}));
     }
 
     public deactive(): void {
-        this.draft.state.status = false;
-        this.event.onDeactive({});
+        this.draft.state.status = FeatureStatus.INACTIVE;
+        this.event.onDeactive(new Event({}));
     }
 }

@@ -1,36 +1,35 @@
-import { Model } from "set-piece";
+import { Event, Model } from "set-piece";
 
-export namespace ArmorModel {
-    export type State = {
+export namespace ArmorProps {
+    export type E = {
+        onGain: Event<{ value: number }>;
+    }
+    export type S = {
         origin: number;
     }
-    export type Event = {
-        onGain: { value: number };
-    }
-    export type Child = {}
-    export type Refer = {}
+    export type C = {}
+    export type R = {}
 }
 
 export class ArmorModel extends Model<
-    ArmorModel.Event, 
-    ArmorModel.State, 
-    ArmorModel.Child, 
-    ArmorModel.Refer
+    ArmorProps.E,
+    ArmorProps.S,
+    ArmorProps.C,
+    ArmorProps.R
 > {
     constructor(props: ArmorModel['props']) {
         super({
             uuid: props.uuid,
             state: {
-                origin: 0,
-                ...props.state,
+                origin: props.state?.origin ?? 0,
             },
-            child: { ...props.child },
-            refer: { ...props.refer },
+            child: {},
+            refer: {},
         });
     }
 
     public gain(value: number) {
         this.draft.state.origin += value;
-        this.event.onGain({ value });
+        this.event.onGain(new Event({ value }));
     }
 }

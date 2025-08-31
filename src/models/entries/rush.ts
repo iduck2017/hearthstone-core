@@ -1,6 +1,6 @@
-import { StateUtil } from "set-piece";
-import { FeatureModel } from "../features";
-import { SleepModel } from "../rules/sleep";
+import { Decor, Event, StateUtil } from "set-piece";
+import { FeatureModel, FeatureStatus } from "../features";
+import { SleepModel, SleepProps } from "../rules/sleep";
 
 export enum RushStatus {
     INACTIVE = 0,
@@ -8,22 +8,22 @@ export enum RushStatus {
     ACTIVE_ONCE = 2,
 }
 
-export namespace RushModel {
-    export type Event = {
-        onActive: {};
+export namespace RushProps {
+    export type E = {
+        onActive: Event;
     };
-    export type State = {
+    export type S = {
         status: RushStatus;
     }
-    export type Child = {};
-    export type Refer = {};
+    export type C = {};
+    export type R = {};
 }
 
 export class RushModel extends FeatureModel<
-    RushModel.Event,
-    RushModel.State,
-    RushModel.Child,
-    RushModel.Refer
+    RushProps.E,
+    RushProps.S,
+    RushProps.C,
+    RushProps.R
 > {
     constructor(props: RushModel['props']) {
         super({
@@ -42,22 +42,19 @@ export class RushModel extends FeatureModel<
     public active(): boolean {
         if (this.state.status) return false;
         this.draft.state.status = RushStatus.ACTIVE;
-        this.event.onActive({});
+        this.event.onActive(new Event({}));
         return true;
     }
 
-    public deactive(): boolean {
+    public overdue(): boolean {
         if (!this.state.status) return false;
         this.draft.state.status = RushStatus.ACTIVE_ONCE;
         return true;
     }
 
-
     @StateUtil.on(self => self.route.role?.proxy.child.sleep.decor)
-    protected onSleepCheck(that: SleepModel, state: SleepModel.State) {
-        if (!this.state.status) return state;
-        const result = { ...state };
-        result.status = false;
-        return result;
+    protected onSleepCheck(that: SleepModel, state: Decor<SleepProps.S>) {
+        if (!this.state.status) return;
+        state.current.status = FeatureStatus.INACTIVE;
     }
 }

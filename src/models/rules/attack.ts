@@ -1,49 +1,38 @@
-import { DebugUtil, Model, StoreUtil } from "set-piece";
-import { DamageUtil, DamageType, DamageEvent, CardModel, MinionModel } from "../..";
+import { DebugUtil, Event, Model, StoreUtil } from "set-piece";
+import { MinionModel } from "../..";
 import { RoleModel } from "../role";
 import { GameModel } from "../game";
-import { PlayerModel } from "../players";
-import { AbortEvent } from "../../utils/abort";
+import { PlayerModel } from "../player";
 
-export class AttackEvent extends AbortEvent {
-    public readonly target: RoleModel;
-
-    constructor(props: { target: RoleModel }) {
-        super();
-        this.target = props.target;
+export namespace AttackProps {
+    export type E = {
+        toRun: Event<{ target: RoleModel }>;
+        onRun: Event<{ target: RoleModel }>;
     }
-}
-
-export namespace AttackModel {
-    export type Event = {
-        toRun: AttackEvent;
-        onRun: { target: RoleModel };
-    }
-    export type State = {
+    export type S = {
         origin: number;
         offset: number;
     }
-    export type Child = {}
-    export type Refer = {}
+    export type C = {}
+    export type R = {}
 }
 
 @StoreUtil.is('attack')
 export class AttackModel extends Model<
-    AttackModel.Event,
-    AttackModel.State,
-    AttackModel.Child,
-    AttackModel.Refer
+    AttackProps.E,
+    AttackProps.S,
+    AttackProps.C,
+    AttackProps.R
 > {
     public get route() {
         const route = super.route;
-        const card: CardModel | undefined = route.path.find(item => item instanceof CardModel);
+        const minion: MinionModel | undefined = route.order.find(item => item instanceof MinionModel);
         return { 
             ...route, 
-            card,
-            role: route.path.find(item => item instanceof RoleModel),
-            minion: route.path.find(item => item instanceof MinionModel),
-            game: route.path.find(item => item instanceof GameModel),
-            player: route.path.find(item => item instanceof PlayerModel),
+            minion,
+            role: route.order.find(item => item instanceof RoleModel),
+            game: route.order.find(item => item instanceof GameModel),
+            player: route.order.find(item => item instanceof PlayerModel),
         }
     }
 
@@ -56,7 +45,7 @@ export class AttackModel extends Model<
     }
     
     constructor(props: AttackModel['props'] & {
-        state: Pick<AttackModel.State, 'origin'>
+        state: Pick<AttackProps.S, 'origin'>
     }) {
         super({
             uuid: props.uuid,
@@ -75,33 +64,36 @@ export class AttackModel extends Model<
     }
 
     @DebugUtil.log()
-    public async run(roleB: RoleModel) {
-        const roleA = this.route.role;
-        if (!roleA) return;
+    public async run(target: RoleModel) {
+        const self = this.route.role;
+        if (!self) return;
         if (!this.check()) return;
-        const attackB = roleB.child.attack.state.current;
-        const event = this.event.toRun(new AttackEvent({ target: roleB }))
-        if (event.isAbort) return;
-        const healthB = roleB.child.health.state.current;
+        const attackB = target.child.attack.state.current;
+        const signal = this.event.toRun(new Event({ target }))
+        if (signal.isCancel) return;
+        const healthB = target.child.health.state.current;
         if (healthB <= 0) return;
-        const anchorA = roleA.child.anchor;
-        const anchorB = roleB.child.anchor;
-        if (!anchorA) return;
-        if (!anchorB) return;
-        DamageUtil.run([
-            new DamageEvent({
-                target: roleB,
-                type: DamageType.ATTACK,
-                source: anchorA,
-                origin: this.state.current,
-            }),
-            new DamageEvent({
-                target: roleA,
-                type: DamageType.DEFEND,
-                source: anchorB,
-                origin: attackB,
-            }),
-        ])
-        this.event.onRun({ target: roleB }); 
+        // todo
+        // DamageUtil.run([
+        //     new DamageEvent({
+        //         target: roleB,
+        //         type: DamageType.ATTACK,
+        //         source: cardA.child.cha.child.damage,
+        //         reason: this,
+        //         origin: this.state.current,
+        //     }),
+        //     new DamageEvent({
+        //         target: roleA,
+        //         type: DamageType.DEFEND,
+        //         source: cardB.child.actions.child.damage,
+        //         reason: this,
+        //         origin: attackB,
+        //     }),
+        // ])
+        this.event.onRun(new Event({ target: target })); 
+    }
+
+    private doRun() {
+        
     }
 }

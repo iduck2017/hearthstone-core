@@ -8,11 +8,12 @@ import { TauntModel } from "./taunt";
 import { WindfuryModel, WindfuryStatus } from "./windfury";
 import { SpellDamageModel } from "./spell-damage";
 import { ElusiveModel } from "./elusive";
+import { FeatureStatus } from "../features";
 
-export namespace RoleEntriesModel {
-    export type Event = {};
-    export type State = {};
-    export type Child = {
+export namespace RoleEntriesProps {
+    export type E = {};
+    export type S = {};
+    export type C = {
         readonly rush: RushModel;
         readonly taunt: TauntModel;
         readonly charge: ChargeModel;
@@ -23,30 +24,30 @@ export namespace RoleEntriesModel {
         readonly spellDamage: SpellDamageModel;
         readonly divineShield: DivineSheildModel;
     };
-    export type Refer = {};
+    export type R = {};
 }
 
 @StoreUtil.is('role-entries')
 export class RoleEntriesModel extends Model<
-    RoleEntriesModel.Event,
-    RoleEntriesModel.State,
-    RoleEntriesModel.Child,
-    RoleEntriesModel.Refer
+    RoleEntriesProps.E,
+    RoleEntriesProps.S,
+    RoleEntriesProps.C,
+    RoleEntriesProps.R
 > {
     constructor(props: RoleEntriesModel['props']) {
         super({
             uuid: props.uuid,
             state: { ...props.state },
             child: { 
-                rush: new RushModel({ state: { status: RushStatus.INACTIVE }}),
-                taunt: new TauntModel({ state: { status: 0 }}),
-                charge: new ChargeModel({ state: { status: 0 }}),
-                frozen: new FrozenModel({ state: { status: 0 }}),
-                elusive: new ElusiveModel({ state: { status: 0 }}),
-                stealth: new StealthModel({ state: { status: 0 }}),
-                windfury: new WindfuryModel({ state: { status: WindfuryStatus.INACTIVE }}),
-                spellDamage: new SpellDamageModel({ state: { origin: 0, status: 0 }}),
-                divineShield: new DivineSheildModel({ state: { count: 0, status: 0 }}),
+                rush: props.child?.rush ?? new RushModel({ state: { status: RushStatus.INACTIVE }}),
+                taunt: props.child?.taunt ?? new TauntModel({ state: { status: FeatureStatus.INACTIVE }}),
+                charge: props.child?.charge ?? new ChargeModel({ state: { status: FeatureStatus.INACTIVE }}),
+                frozen: props.child?.frozen ?? new FrozenModel({ state: { status: FeatureStatus.INACTIVE }}),
+                elusive: props.child?.elusive ?? new ElusiveModel({ state: { status: FeatureStatus.INACTIVE }}),
+                stealth: props.child?.stealth ?? new StealthModel({ state: { status: FeatureStatus.INACTIVE }}),
+                windfury: props.child?.windfury ?? new WindfuryModel({ state: { status: WindfuryStatus.INACTIVE }}),
+                spellDamage: props.child?.spellDamage ?? new SpellDamageModel({ state: { origin: 0, status: FeatureStatus.INACTIVE }}),
+                divineShield: props.child?.divineShield ?? new DivineSheildModel({ state: { count: 0, status: FeatureStatus.INACTIVE }}),
                 ...props.child 
             },
             refer: { ...props.refer }

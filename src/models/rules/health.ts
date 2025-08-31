@@ -1,43 +1,47 @@
-import { DebugUtil, Event, EventUtil, Model, TranxUtil } from "set-piece";
-import { DamageEvent } from "../../utils/damage";
+import { DebugUtil, Event, EventUtil, Model, StateChangeEvent, TranxUtil } from "set-piece";
 import { RoleModel } from "../role";
 import { GameModel } from "../game";
-import { PlayerModel } from "../players";
-import { CardModel, RestoreEvent } from "../..";
+import { PlayerModel } from "../player";
+import { MinionModel } from "../..";
+import { CardModel } from "../cards";
+import { DamageEvent } from "../../types/damage";
+import { RestoreEvent } from "../../types/restore";
 
-export namespace HealthModel {
-    export type Event = {
+export namespace HealthProps {
+    export type E = {
         toHurt: DamageEvent;
         onHurt: DamageEvent;
         toHeal: RestoreEvent;
         onHeal: RestoreEvent;
     };
-    export type State = {
+    export type S = {
         origin: number;
         offset: number;
         memory: number;
         damage: number;
     };
-    export type Child = {};
-    export type Refer = {};
+    export type C = {};
+    export type R = {};
 }
 
 
 export class HealthModel extends Model<
-    HealthModel.Event,
-    HealthModel.State,
-    HealthModel.Child,
-    HealthModel.Refer
+    HealthProps.E,
+    HealthProps.S,
+    HealthProps.C,
+    HealthProps.R
 > {
     public get route() {
         const route = super.route;
-        const card: CardModel | undefined = route.path.find(item => item instanceof CardModel);
+        const card: CardModel | undefined = route.order.find(item => item instanceof CardModel);
+        const minion: MinionModel | undefined = route.order.find(item => item instanceof MinionModel);
         return { 
             ...route, 
             card,
-            role: route.path.find(item => item instanceof RoleModel),
-            game: route.path.find(item => item instanceof GameModel),
-            player: route.path.find(item => item instanceof PlayerModel),
+            minion,
+            role: route.order.find(item => item instanceof RoleModel),
+            game: route.order.find(item => item instanceof GameModel),
+            player: route.order.find(item => item instanceof PlayerModel),
         }
     }
 
@@ -53,7 +57,7 @@ export class HealthModel extends Model<
     }
 
     constructor(props: HealthModel['props'] & {
-        state: Pick<HealthModel.State, 'origin'>
+        state: Pick<HealthProps.S, 'origin'>
     }) {
         super({
             uuid: props.uuid,
@@ -76,7 +80,7 @@ export class HealthModel extends Model<
 
     @TranxUtil.span()
     public doHurt(event: DamageEvent): DamageEvent {
-        const result = event.result;
+        const result = event.detail.result;
         const role = this.route.role;
         if (!role) return event;
         const entries = role.child.entries;
@@ -84,33 +88,26 @@ export class HealthModel extends Model<
         const death = role.child.death;
         const health = this.state.current;
         if (result <= 0) {
-            event.result = 0;
+            event.reset(0);
             return event;
         }
         if (divineSheild.state.status) {
-            divineSheild.break();
-            event.result = 0;
+            divineSheild.consume();
+            event.reset(0);
             return event;
         }
         this.draft.state.damage += result;
         if (health <= result) death.active(event);
-        event.result = result;
+        event.reset(result);
         return event;
     }
 
     public onHurt(event: DamageEvent) {
         const role = this.route.role;
         if (!role) return;
-        if (event.isAbort) return;
-        if (event.isBlock) {
-            const entries = role.child.entries;
-            const divineSheild = entries.child.divineShield;
-            divineSheild.onBreak(event);
-            return;
-        }
+        if (event.isCancel) return;
         return this.event.onHurt(event);
     }
-
 
 
     public toHeal(event: RestoreEvent) {
@@ -119,12 +116,12 @@ export class HealthModel extends Model<
     }
 
     public doHeal(event: RestoreEvent): RestoreEvent {
-        let result = event.result;
+        let result = event.detail.result;
         const role = this.route.role;
         if (!role) return event;
         const death = role.child.death;
         if (result <= 0) {
-            event.result = 0;
+            event.reset(0);
             return event;
         }
         const damage = this.draft.state.damage;
@@ -132,15 +129,15 @@ export class HealthModel extends Model<
         if (damage < result) result = damage;
         this.draft.state.damage -= result;
         if (health + result > 0) death.cancel(); 
-        event.result = result;
+        event.reset(result);
         return event;
     }
 
     public onHeal(event: RestoreEvent) {
         const role = this.route.role;
         if (!role) return;
-        if (event.isAbort) return;
-        if (event.result <= 0) return;
+        if (event.isCancel) return;
+        if (event.detail.result <= 0) return;
         return this.event.onHeal(event);
     }
 
@@ -148,8 +145,8 @@ export class HealthModel extends Model<
     @EventUtil.on(self => self.proxy.event.onStateChange)
     @DebugUtil.log()
     @TranxUtil.span()
-    private balance(that: HealthModel, event: Event.OnStateChange<HealthModel>) {
-        const { memory, limit, damage } = event.next;
+    private onCheck(that: HealthModel, event: StateChangeEvent<HealthModel>) {
+        const { memory, limit, damage } = event.detail.next;
         const offset = memory - limit;
         if (offset !== 0) console.log('imbalance', memory, limit);
         if (offset !== 0) this.draft.state.memory = limit;

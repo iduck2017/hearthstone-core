@@ -1,21 +1,21 @@
 import { DebugUtil, Model, StoreUtil } from "set-piece";
 import { GameModel } from "./game";
 
-export namespace AppModel {
-    export type State = {};
-    export type Event = {};
-    export type Child = {
+export namespace AppProps {
+    export type S = {};
+    export type E = {};
+    export type C = {
         game?: GameModel
     };
-    export type Refer = {};
+    export type R = {};
 }
 
 @StoreUtil.is('app')
 export class AppModel extends Model<
-    AppModel.Event, 
-    AppModel.State, 
-    AppModel.Child,
-    AppModel.Refer
+    AppProps.E, 
+    AppProps.S, 
+    AppProps.C, 
+    AppProps.R
 > {
     constructor(props: AppModel['props']) {
         super({

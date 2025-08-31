@@ -12,7 +12,7 @@ export class ArmorUpModel extends SkillModel<[]> {
                 ...props.state,
             },
             child: {
-                cost: new CostModel({ state: { origin: 2 }}),
+                cost: props.child?.cost ?? new CostModel({ state: { origin: 2 }}),
                 ...props.child,
             },
             refer: { ...props.refer },
@@ -22,7 +22,8 @@ export class ArmorUpModel extends SkillModel<[]> {
     protected async doRun(): Promise<void> {
         const player = this.route.player;
         if (!player) return;
-        const armor = player.child.armor;
+        const armor = player.child.character.child.armor;
+        armor.gain(2);
     }
 
     protected toRun(): [] { return [] }

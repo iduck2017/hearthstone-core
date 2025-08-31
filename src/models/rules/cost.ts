@@ -5,23 +5,23 @@ export enum CostType {
     HEALTH,
 }
 
-export namespace CostModel {
-    export type State = {
+export namespace CostProps {
+    export type S = {
         origin: number;
         offset: number;
         type: CostType;
     }
-    export type Event = {}
-    export type Child = {}
-    export type Refer = {}
+    export type E = {}
+    export type C = {}
+    export type R = {}
 }
 
 
 export class CostModel extends Model<
-    CostModel.Event, 
-    CostModel.State, 
-    CostModel.Child, 
-    CostModel.Refer
+    CostProps.E, 
+    CostProps.S, 
+    CostProps.C, 
+    CostProps.R
 > {
 
     public get state() {
@@ -33,7 +33,7 @@ export class CostModel extends Model<
     }
 
     constructor(props: CostModel['props'] & {
-        state: Pick<CostModel.State, 'origin'>;
+        state: Pick<CostProps.S, 'origin'>;
     }) {
         super({
             uuid: props.uuid,

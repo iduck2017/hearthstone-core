@@ -1,23 +1,24 @@
-import { FeatureModel } from "../features";
-import { DamageEvent } from "../../utils/damage";
+import { Event } from "set-piece";
+import { DamageEvent } from "../../types/damage";
+import { FeatureModel, FeatureStatus } from "../features";
 
-export namespace DivineSheildModel {
-    export type Event = {
-        onGain: {};
-        onBreak: DamageEvent;
-    };
-    export type State = {
-        count: number;
-    };
-    export type Child = {};
-    export type Refer = {};
+export namespace DivineSheildProps {
+    export type E = {
+        onActive: Event
+        onConsume: DamageEvent
+    }
+    export type S = {
+        count: number
+    }
+    export type C = {}
+    export type R = {}
 }
 
 export class DivineSheildModel extends FeatureModel<
-    DivineSheildModel.Event,
-    DivineSheildModel.State,
-    DivineSheildModel.Child,
-    DivineSheildModel.Refer
+    DivineSheildProps.E,
+    DivineSheildProps.S,
+    DivineSheildProps.C,
+    DivineSheildProps.R
 > {
     constructor(props: DivineSheildModel['props']) {
         super({
@@ -25,7 +26,7 @@ export class DivineSheildModel extends FeatureModel<
             state: {
                 name: 'Divine Shield',
                 desc: 'The first time you take damage, ignore it.',
-                status: 1,
+                status: FeatureStatus.ACTIVE,
                 count: 1,
                 ...props.state,
             },
@@ -34,23 +35,23 @@ export class DivineSheildModel extends FeatureModel<
         });
     }
 
-    public gain(): boolean {
+    public actve(): boolean {
         if (this.state.status) return false; 
         this.draft.state.status = 1;
         this.draft.state.count = 1;
-        this.event.onGain({});
+        this.event.onActive(new Event({}));
         return true;
     }
 
-    public async break() {
+    public async consume() {
         if (!this.state.status) return false;
         if (this.draft.state.count <= 1) this.draft.state.status = 0;
         this.draft.state.count =- 1;
         return true;
     }
 
-    public onBreak(event: DamageEvent) {
-        this.event.onBreak(event);
+    public onConsume(event: DamageEvent) {
+        this.event.onConsume(event);
     }
 
     public disable() {

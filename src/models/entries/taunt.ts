@@ -1,19 +1,20 @@
-import { FeatureModel } from "../features";
+import { Event } from "set-piece";
+import { FeatureModel, FeatureStatus } from "../features";
 
-export namespace TauntModel {
-    export type Event = {
-        onActive: {};
+export namespace TauntProps {
+    export type E = {
+        onActive: Event;
     };
-    export type State = {};
-    export type Child = {};
-    export type Refer = {};
+    export type S = {};
+    export type C = {};
+    export type R = {};
 }
 
 export class TauntModel extends FeatureModel<
-    TauntModel.Event, 
-    TauntModel.State, 
-    TauntModel.Child, 
-    TauntModel.Refer
+    TauntProps.E, 
+    TauntProps.S, 
+    TauntProps.C, 
+    TauntProps.R
 > {
     constructor(props: TauntModel['props']) {
         super({
@@ -21,7 +22,7 @@ export class TauntModel extends FeatureModel<
             state: {
                 name: 'Taunt',
                 desc: 'Taunt',
-                status: 1,
+                status: FeatureStatus.ACTIVE,
                 ...props.state,
             },
             child: { ...props.child },
@@ -32,7 +33,7 @@ export class TauntModel extends FeatureModel<
     public active(): boolean {
         if (this.state.status) return false;
         this.draft.state.status = 1;
-        this.event.onActive({});
+        this.event.onActive(new Event({}));
         return true;
     }
 }

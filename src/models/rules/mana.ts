@@ -1,24 +1,24 @@
-import { Model, StoreUtil, TranxUtil } from "set-piece";
+import { Event, Model, StoreUtil, TranxUtil } from "set-piece";
 
-export namespace ManaModel {
-    export type Event = {
-        onConsume: { value: number }
+export namespace ManaProps {
+    export type E = {
+        onConsume: Event<{ value: number }>;
     };
-    export type State = {
+    export type S = {
         origin: number;
         current: number;
         limit: number;
     }
-    export type Child = {};
-    export type Refer = {};
+    export type C = {};
+    export type R = {};
 }
 
 @StoreUtil.is('mana')
 export class ManaModel extends Model<
-    ManaModel.Event,
-    ManaModel.State,
-    ManaModel.Child,
-    ManaModel.Refer
+    ManaProps.E,
+    ManaProps.S,
+    ManaProps.C,
+    ManaProps.R
 > {
     constructor(props: ManaModel['props']) {
         super({
@@ -45,6 +45,6 @@ export class ManaModel extends Model<
     public consume(value: number) {
         if (value > this.draft.state.current) value= this.draft.state.current;
         this.draft.state.current -= value;
-        this.event.onConsume({ value });
+        this.event.onConsume(new Event({ value }));
     }
 }

@@ -1,68 +1,65 @@
-import { Model } from "set-piece";
+import { Event, Model, Props } from "set-piece";
 import { SelectEvent, SelectUtil } from "../../utils/select";
-import { AbortEvent } from "../../utils/abort";
-import { PlayerModel } from "../players";
+import { PlayerModel } from "../player";
 import { GameModel } from "../game";
 import { CostModel } from "../rules/cost";
-import { AnchorModel } from "../rules/anchor";
+import { CharacterModel } from "../characters";
 
-export namespace SkillModel {
-    export type Event = {
-        toRun: AbortEvent,
-        onRun: {}
+export namespace SkillProps {
+    export type E = {
+        toRun: Event,
+        onRun: Event<{ params: Model[] }>
     };
-    export type State = {
+    export type S = {
         desc: string,
         name: string;
     };
-    export type Child = {
+    export type C = {
         cost: CostModel,
-        anchor: AnchorModel
     };
-    export type Refer = {};
+    export type R = {};
 }
 
 export abstract class SkillModel<
     T extends Model[] = Model[],
-    E extends Partial<SkillModel.Event> & Model.Event = {},
-    S extends Partial<SkillModel.State> & Model.State = {},
-    C extends Partial<SkillModel.Child> & Model.Child = {},
-    R extends Partial<SkillModel.Refer> & Model.Refer = {},
+    E extends Partial<SkillProps.E> & Props.E = {},
+    S extends Partial<SkillProps.S> & Props.S = {},
+    C extends Partial<SkillProps.C> & Props.C = {},
+    R extends Partial<SkillProps.R> & Props.R = {},
 > extends Model<
-    E & SkillModel.Event,
-    S & SkillModel.State,
-    C & SkillModel.Child,
-    R & SkillModel.Refer
+    E & SkillProps.E,
+    S & SkillProps.S,
+    C & SkillProps.C,
+    R & SkillProps.R
 > {
     public get route() {
         const route = super.route;
+        const character: CharacterModel | undefined = route.order.find(item => item instanceof CharacterModel);
         return {
             ...route,
-            player: route.path.find(item => item instanceof PlayerModel),
-            game: route.path.find(item => item instanceof GameModel),
+            character,
+            player: route.order.find(item => item instanceof PlayerModel),
+            game: route.order.find(item => item instanceof GameModel),
         }
     }
 
     constructor(props: SkillModel['props'] & {
         uuid: string | undefined;
-        state: S & SkillModel.State;
-        child: C & Pick<SkillModel.Child, 'cost'>;
+        state: S & SkillProps.S;
+        child: C & Pick<SkillProps.C, 'cost'>;
         refer: R;
     }) {
         super({
             uuid: props.uuid,
             state: { ...props.state },
-            child: { 
-                anchor: new AnchorModel({}),
-                ...props.child 
-            },
+            child: { ...props.child },
             refer: { ...props.refer },
         });
     }
 
     public async run() {
-        const signal = this.event.toRun(new AbortEvent());
-        if (signal.isAbort) return;
+        const signal = this.event.toRun(new Event({}));
+        if (signal.isCancel) return;
         const event = this.toRun();
         if (!event) return;
         const params: Model[] = [];
@@ -73,7 +70,7 @@ export abstract class SkillModel<
         }
         const self: SkillModel = this;
         await self.doRun(...params);
-        this.event.onRun({ params });
+        this.event.onRun(new Event({ params }));
     }
 
     protected abstract doRun(...params: T): Promise<void>;

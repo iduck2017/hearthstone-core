@@ -1,34 +1,34 @@
-import { Model } from "set-piece";
-import { PlayerModel } from "../players";
+import { Event, Model } from "set-piece";
+import { PlayerModel } from "../player";
 import { GameModel } from "../game";
 
-export namespace TurnModel {
-    export type State = {
+export namespace TurnProps {
+    export type S = {
         count: number;
     };
-    export type Event = {
-        toEnd: {};
-        onEnd: {};
-        toStart: {};
-        onStart: {};
+    export type E = {
+        toEnd: Event;
+        onEnd: Event;
+        toStart: Event;
+        onStart: Event;
     };
-    export type Child = {};
-    export type Refer = {
+    export type C = {};
+    export type R = {
         current?: PlayerModel;
     };
 }
 
 export class TurnModel extends Model<
-    TurnModel.Event, 
-    TurnModel.State, 
-    TurnModel.Child, 
-    TurnModel.Refer
+    TurnProps.E, 
+    TurnProps.S, 
+    TurnProps.C, 
+    TurnProps.R
 > {
     public get route() {
         const route = super.route;
         return {
             ...route,
-            game: route.path.find(item => item instanceof GameModel)
+            game: route.order.find(item => item instanceof GameModel)
         }
     }
 
@@ -54,38 +54,39 @@ export class TurnModel extends Model<
     }
 
     private start() {
-        this.event.toStart({});
+        this.event.toStart(new Event({}));
         const player = this.refer.current;
         const board = player?.child.board;
         if (!board) return;
-        const cards = board.child.cards;
+        const minions = board.child.minions;
         player.child.mana.reset();
-        cards.forEach(card => {
-            const role = card.child.minion;
-            if (!role) return;
+        // rule
+        minions.forEach(item => {
+            const role = item.child.role;
             const entries = role.child.entries;
             role.child.action.reset();
             role.child.sleep.deactive();
-            entries.child.rush.deactive();
+            entries.child.rush.overdue();
             entries.child.frozen.deactive();
         });
-        cards.forEach(card => {
-            const hooks = card.child.hooks;
+        // hooks
+        minions.forEach(item => {
+            const hooks = item.child.hooks;
             hooks.child.startTurn.forEach(hook => hook.run());
         });
-        this.event.onStart({});
+        this.event.onStart(new Event({}));
     }
     
     private end() {
-        this.event.toEnd({});
+        this.event.toEnd(new Event({}));
         const player = this.refer.current;
         const board = player?.child.board;
         if (!board) return;
-        const cards = board.child.cards;
-        cards?.forEach(card => {
-            const hooks = card.child.hooks;
+        const minions = board.child.minions;
+        minions?.forEach(item => {
+            const hooks = item.child.hooks;
             hooks.child.endTurn.forEach(hook => hook.run());
         });
-        this.event.onEnd({});
+        this.event.onEnd(new Event({}));
     }
 }

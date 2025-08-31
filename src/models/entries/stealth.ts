@@ -1,20 +1,21 @@
-import { FeatureModel } from "../features";
+import { Event } from "set-piece";
+import { FeatureModel, FeatureStatus } from "../features";
 
-export namespace StealthModel {
-    export type Event = {
-        onActive: {};
-        onDeactive: {};
+export namespace StealthProps {
+    export type E = {
+        onActive: Event;
+        onDeactive: Event;
     };
-    export type State = {};
-    export type Child = {};
-    export type Refer = {};
+    export type S = {};
+    export type C = {};
+    export type R = {};
 }
 
 export class StealthModel extends FeatureModel<
-    StealthModel.Event,
-    StealthModel.State,
-    StealthModel.Child,
-    StealthModel.Refer
+    StealthProps.E,
+    StealthProps.S,
+    StealthProps.C,
+    StealthProps.R
 > {
     constructor(props: StealthModel['props']) {
         super({
@@ -32,14 +33,14 @@ export class StealthModel extends FeatureModel<
 
     public active() {
         if (this.state.status) return false; 
-        this.draft.state.status = 1;
-        this.event.onActive({});
+        this.draft.state.status = FeatureStatus.ACTIVE;
+        this.event.onActive(new Event({}));
         return true;
     }
 
     public deactive() {
         this.disable();
-        this.event.onDeactive({});
+        this.event.onDeactive(new Event({}));
     }
 
 }

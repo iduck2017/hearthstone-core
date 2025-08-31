@@ -1,78 +1,84 @@
-import { Model, TranxUtil } from "set-piece";
-import { AbortEvent, AnchorModel, RoleModel } from "../..";
-import { CardModel } from "../..";
-import { PlayerModel } from "../..";
+import { Event, Model, Props, TranxUtil } from "set-piece";
+import { MinionModel, PlayerModel, RoleModel } from "../..";
 import { GameModel } from "../..";
 import { BoardModel } from "../..";
+import { CardModel } from "../..";
+import { DamageModel } from "../..";
 
-export namespace FeatureModel {
-    export type State = {
+export enum FeatureStatus {
+    INACTIVE = 0,
+    ACTIVE = 1
+}
+
+export namespace FeatureProps {
+    export type E = {
+        toSilence: Event;
+        onSilence: Event;
+    };
+    export type S = {
         name: string;
         desc: string;
         status: number;
     }
-    export type Event = {
-        toSilence: AbortEvent;
-        onSilence: {};
+    export type C = {
+        damage: DamageModel;
     };
-    export type Child = {
-        anchor: AnchorModel;
-    };
-    export type Refer = {};
+    export type R = {};
 }
 
 export abstract class FeatureModel<
-    E extends Partial<FeatureModel.Event> & Model.Event = {},
-    S extends Partial<FeatureModel.State> & Model.State = {},
-    C extends Partial<FeatureModel.Child> & Model.Child = {},
-    R extends Partial<FeatureModel.Refer> & Model.Refer = {}
+    E extends Partial<FeatureProps.E> & Props.E = {},
+    S extends Partial<FeatureProps.S> & Props.S = {},
+    C extends Partial<FeatureProps.C> & Props.C = {},
+    R extends Partial<FeatureProps.R> & Props.R = {}
 > extends Model<
-    E & FeatureModel.Event,
-    S & FeatureModel.State,
-    C & FeatureModel.Child,
-    R & FeatureModel.Refer
+    E & FeatureProps.E,
+    S & FeatureProps.S,
+    C & FeatureProps.C,
+    R & FeatureProps.R
 > {
     public get route() {
         const route = super.route;
-        const card: CardModel | undefined = route.path.find(item => item instanceof CardModel);
+        const card: CardModel | undefined = route.order.find(item => item instanceof CardModel);
+        const minion: MinionModel | undefined = route.order.find(item => item instanceof MinionModel);
         return { 
             ...route, 
             card,
-            role: route.path.find(item => item instanceof RoleModel),
-            game: route.path.find(item => item instanceof GameModel),
-            board: route.path.find(item => item instanceof BoardModel),
-            player: route.path.find(item => item instanceof PlayerModel)
+            role: route.order.find(item => item instanceof RoleModel),
+            game: route.order.find(item => item instanceof GameModel),
+            board: route.order.find(item => item instanceof BoardModel),
+            player: route.order.find(item => item instanceof PlayerModel)
         }
     } 
 
     constructor(props: FeatureModel['props'] & {
         uuid: string | undefined;
-        state: S & Pick<FeatureModel.State, 'name' | 'desc' | 'status'>;
+        state: S & Pick<FeatureProps.S, 'name' | 'desc' | 'status'>;
         child: C,
         refer: R,
     }) {
         super({
             uuid: props.uuid,
             state: { ...props.state },
-            child: {
-                anchor: new AnchorModel({}),
-                ...props.child,
+            child: { 
+                damage: props.child?.damage ?? new DamageModel({}),
+                ...props.child
             },
             refer: { ...props.refer },
         })
     }
 
-    public silence() {
-        const event = this.event.toSilence(new AbortEvent());
-        if (event.isAbort) return;
+    public silence(): boolean {
+        const signal = this.event.toSilence(new Event({}));
+        if (signal.isCancel) return false;
         this.disable();
-        this.event.onSilence({});
+        this.event.onSilence(new Event({}));
         return true;
     }
 
     @TranxUtil.span()
     public disable() {
-        this.draft.state.status = 0;
+        this.draft.state.status = FeatureStatus.INACTIVE;
         this.reload();
     }
 }
