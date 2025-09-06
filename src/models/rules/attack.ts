@@ -74,8 +74,8 @@ export class AttackModel extends Model<
 
     @DebugUtil.log()
     public async run(target: RoleModel) {
-        const self = this.route.role;
-        if (!self) return;
+        const role = this.route.role;
+        if (!role) return;
         if (!this.check()) return;
         
         const signal = this.event.toRun(new Event({ target }))
@@ -92,12 +92,17 @@ export class AttackModel extends Model<
                 origin: this.state.current,
             }),
             new DamageEvent({
-                target: self,
+                target: role,
                 type: DamageType.DEFEND,
                 source: target.child.attack.child.damage,
                 origin: target.child.attack.state.current,
             }),
         ])
+        
+        const entries = role.child.entries;
+        const stealth = entries.child.stealth;
+        stealth.deactive();
+
         this.event.onRun(new Event({ target: target })); 
     }
 }

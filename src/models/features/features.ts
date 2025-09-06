@@ -1,7 +1,7 @@
 import { Loader, Model, StoreUtil } from "set-piece";
 import { FeatureModel } from ".";
 
-namespace FeaturesProps {
+export namespace FeaturesProps {
     export type E = {};
     export type S = {};
     export type C = {

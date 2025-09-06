@@ -64,11 +64,6 @@ export class DamageModel extends Model<
     }
 
     private onRun(event: DamageEvent) {
-        const detail = event.detail;
-        const minion = detail.source.route.minion;
-        if (!minion) return;
-        const role = minion.child.role;
-        const entries = role.child.entries;
-        if (detail.result > 0) entries.child.stealth.deactive();
+        this.event.onRun(event);
     }
 }
