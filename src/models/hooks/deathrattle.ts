@@ -43,11 +43,11 @@ export abstract class DeathrattleModel<
         });
     }
 
-    public async run() {
+    public run() {
         if (!this.state.isActive) return;
         const signal = this.event.toRun(new Event({}));
         if (signal.isCancel) return;
-        await this.doRun();
+        this.doRun();
         this.event.onRun(new Event({}));
     }
 

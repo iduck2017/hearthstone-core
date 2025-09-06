@@ -1,9 +1,5 @@
 import { DebugUtil, EventUtil, Method, Model, StateChangeEvent, TranxUtil } from "set-piece";
-import { RoleModel } from "../role";
-import { GameModel } from "../game";
-import { PlayerModel } from "../player";
-import { MinionModel } from "../..";
-import { CardModel } from "../cards";
+import { RoleModel, MinionModel, GameModel, PlayerModel, CardModel } from "../..";
 import { DamageEvent } from "../../types/damage";
 import { RestoreEvent } from "../../types/restore";
 

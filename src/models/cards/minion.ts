@@ -1,17 +1,14 @@
 import { DebugUtil, Model, TranxUtil, Props, Event, Format, Loader, Method } from "set-piece";
 import { BoardModel } from "../containers/board";
 import { SelectEvent, SelectUtil } from "../../utils/select";
-import { MinionHooksModel } from "../hooks/minion-hooks";
-import { CardModel, CardProps } from ".";
+import { HooksModel } from "../hooks/hooks";
+import { CardModel, CardProps, PlayEvent } from ".";
 import { RaceType } from "../../types/card";
 import { FeaturesModel } from "../features/features";
 import { RoleModel } from "../role";
 import { BattlecryModel } from "../hooks/battlecry";
 
-export type MinionPlayEvent = {
-    position: number;
-    battlecry: Map<BattlecryModel, Model[]>;
-}
+export type MinionPlayEvent = { position: number } & PlayEvent;
 
 export namespace MinionProps {
     export type S = {
@@ -22,8 +19,6 @@ export namespace MinionProps {
         onSummon: Event;
     };
     export type C = {
-        readonly hooks: MinionHooksModel;
-        readonly features: FeaturesModel;
         readonly role: RoleModel;
     };
     export type R = {};
@@ -43,7 +38,7 @@ export abstract class MinionModel<
     constructor(loader: Method<MinionModel['props'] & {
         uuid: string | undefined;
         state: S & Format.State<MinionProps.S & CardProps.S>;
-        child: C & Pick<MinionProps.C, 'role'> & Pick<CardProps.C, 'cost'>;
+        child: C & MinionProps.C & Pick<CardProps.C, 'cost'>;
         refer: R;
     }, []>) {
         super(() => {
@@ -51,11 +46,7 @@ export abstract class MinionModel<
             return {
                 uuid: props.uuid,
                 state: { ...props.state },
-                child: {
-                    hooks: props.child.hooks ?? new MinionHooksModel(),
-                    features: props.child.features ?? new FeaturesModel(),
-                    ...props.child,
-                },
+                child: {...props.child },
                 refer: { ...props.refer },
             }
         });
@@ -73,56 +64,24 @@ export abstract class MinionModel<
         await this.event.onPlay(new Event({}));
     }
 
-    private async doPlay(event: MinionPlayEvent) {
+    protected async doPlay(event: MinionPlayEvent) {
         const player = this.route.player;
         if (!player) return;
-        // mana
-        const mana = player.child.mana;
-        const cost = this.child.cost;
-        mana.consume(cost.state.current);
-        // reserve
         const board = player.child.board;
         this.doSummon(board, event.position);
         // battlecry
-        const hooks = this.child.hooks;
-        const battlecry = hooks.child.battlecry;
-        for (const item of battlecry) {
-            const params = event.battlecry.get(item);
-            if (!params) continue;
-            await item.run(...params);
-        }
+        await super.doPlay(event);
         this.event.onSummon(new Event({}));
     }
     
-    private async toPlay() {
-        const hooks = this.child.hooks;
-        const battlecry = hooks.child.battlecry;
+    protected async toPlay(): Promise<MinionPlayEvent | undefined> {
         // summon
         const position = await this.toSummon();
         if (position === undefined) return;
-        const event: MinionPlayEvent = {
-            position,
-            battlecry: new Map(),
-        };
-        // battlecry
-        for (const item of battlecry) {
-            const selectors = item.toRun();
-            // condition not match
-            if (!selectors) continue;
-            for (const item of selectors) {
-                // invalid selector
-                if (!item.options.length) return;
-            }
-            const params: Model[] = [];
-            for (const item of selectors) {
-                const result = await SelectUtil.get(item);
-                // user cancel
-                if (result === undefined) return;
-                params.push(result);
-            }
-            event.battlecry.set(item, params);
-        }
-        return event;
+        
+        const event = await super.toPlay();
+        if (!event) return;
+        return { ...event, position };
     }
 
     
@@ -153,9 +112,7 @@ export abstract class MinionModel<
     @DebugUtil.log()
     public async dispose() {
         this.doRemove();
-        const hooks = this.child.hooks;
-        const deathrattle = hooks.child.deathrattle;
-        for (const item of deathrattle) await item.run();
+        super.dispose();
     }
 
     @TranxUtil.span()

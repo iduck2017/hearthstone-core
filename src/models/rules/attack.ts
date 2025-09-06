@@ -1,8 +1,5 @@
 import { DebugUtil, Event, Method, Model, StoreUtil } from "set-piece";
-import { DamageEvent, DamageModel, MinionModel } from "../..";
-import { RoleModel } from "../role";
-import { GameModel } from "../game";
-import { PlayerModel } from "../player";
+import { DamageEvent, DamageModel, MinionModel, RoleModel, GameModel, PlayerModel } from "../..";
 import { DamageType } from "../../types/damage";
 
 export namespace AttackProps {

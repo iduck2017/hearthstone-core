@@ -2,6 +2,7 @@ import { Loader, Method, Model, Props } from "set-piece";
 import { SkillModel } from "../skills";
 import { RoleModel } from "../role";
 import { ArmorModel } from "../rules/armor";
+import { WeaponModel } from "../cards/weapon";
 
 export namespace CharacterProps {
     export type E = {};
@@ -10,6 +11,7 @@ export namespace CharacterProps {
         readonly armor: ArmorModel;
         readonly skill: SkillModel;
         readonly role: RoleModel;
+        weapon?: WeaponModel;
     };
     export type R = {};
 }
@@ -42,5 +44,9 @@ export abstract class CharacterModel<
                 refer: { ...props.refer },
             }
         })
+    }
+
+    public del(weapon: WeaponModel) {
+        this.draft.child.weapon = undefined;
     }
 }

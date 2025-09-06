@@ -1,5 +1,5 @@
 import { Loader } from "set-piece";
-import { AttackModel, ClassType, CostModel, HealthModel, LibraryUtil, MinionHooksModel, MinionModel, RarityType, RoleModel } from "hearthstone-core";
+import { AttackModel, ClassType, CostModel, HealthModel, LibraryUtil, HooksModel, MinionModel, RarityType, RoleModel } from "hearthstone-core";
 import { LeperGnomeDeathrattleModel } from "./deathrattle";
 
 @LibraryUtil.is('leper-gnome')
@@ -27,7 +27,7 @@ export class LeperGnomeModel extends MinionModel {
                             attack: new AttackModel(() => ({ state: { origin: 2 }})),
                         },
                     })),
-                    hooks: new MinionHooksModel(() => ({
+                    hooks: new HooksModel(() => ({
                         child: { deathrattle: [new LeperGnomeDeathrattleModel()] }
                     })),
                     ...props.child
