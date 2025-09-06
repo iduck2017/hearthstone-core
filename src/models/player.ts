@@ -39,13 +39,12 @@ export class PlayerModel extends Model<
     }
 
     public get refer() {
-        let roles: RoleModel[] = [];
-        roles.push(this.child.character.child.role);
-        roles.push(...this.child.board.child.minions.map(item => item.child.role));
-        roles = roles.filter(item => item.child.death.state)
+        const minions = this.child.board.child.minions.map(item => item.child.role);
+        const roles = [this.child.character.child.role, ...minions];
         return { 
             ...super.refer, 
-            roles,
+            roles: roles.filter(item => !item.child.death.state.isActive),
+            minions: minions.filter(item => !item.child.death.state.isActive),
             opponent: this.opponent, 
         }
     }

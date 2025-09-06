@@ -23,12 +23,16 @@ export class GameModel extends Model<
     GameProps.R
 > {
     public get refer() {
-        const roles: RoleModel[] = [];
-        roles.push(...this.child.playerA.refer.roles);
-        roles.push(...this.child.playerB.refer.roles);
         return {
             ...super.refer,
-            roles,
+            roles: [
+                ...this.child.playerA.refer.roles,
+                ...this.child.playerB.refer.roles
+            ],
+            minions: [
+                ...this.child.playerA.refer.minions,
+                ...this.child.playerB.refer.minions
+            ]
         }
     }
 
