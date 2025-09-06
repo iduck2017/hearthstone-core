@@ -1,4 +1,4 @@
-import { BoardModel, GameModel, MageModel, ManaModel, PlayerModel, SelectUtil, TimeUtil, WarriorModel } from "hearthstone-core";
+import { BoardModel, GameModel, HandModel, MageModel, ManaModel, PlayerModel, WarriorModel } from "hearthstone-core";
 import { boot } from "../common/boot";
 import { WispModel } from "../wisp";
 import { FieryWarAxeModel } from ".";
@@ -9,8 +9,9 @@ describe('firey-war-axe', () => {
             playerA: new PlayerModel(() => ({
                 child: {
                     mana: new ManaModel(() => ({ state: { origin: 10 }})),
-                    character: new WarriorModel(() => ({
-                        child: { weapon: new FieryWarAxeModel() }   
+                    character: new WarriorModel(),
+                    hand: new HandModel(() => ({
+                        child: { weapons: [new FieryWarAxeModel()] }
                     })),
                 }
             })),
@@ -27,24 +28,26 @@ describe('firey-war-axe', () => {
     })));
     const playerA = game.child.playerA;
     const playerB = game.child.playerB;
-    const boardA = playerA.child.board;
-    const boardB = playerB.child.board;
-    const handA = playerA.child.hand;
-    const handB = playerB.child.hand;
     const charA = playerA.child.character;
     const charB = playerB.child.character;
+    const handA = playerA.child.hand;
     const roleA = charA.child.role;
     const roleB = charB.child.role;
     if (!roleA || !roleB) throw new Error();
 
-    test('fiery-war-axe-equip', () => {
-        
-    })
+    const weapon = handA.child.weapons.find(item => item instanceof FieryWarAxeModel);
+    expect(weapon).toBeDefined();
+    if (!weapon) throw new Error();
 
-    test('warrior-attack', async () => {
-        const weapon = charA.child.weapon;
+    test('fiery-war-axe-equip', async () => {
+        expect(roleA.child.attack.state.current).toBe(0);
+        expect(charA.child.weapon).toBeUndefined();
+        await weapon.play();
         expect(charA.child.weapon).toBeDefined();
         expect(weapon?.child.attack.state.origin).toBe(3);
+        expect(roleA.child.attack.state.origin).toBe(0);
+        expect(roleA.child.attack.state.offset).toBe(3);
         expect(roleA.child.attack.state.current).toBe(3);
     })
+
 })

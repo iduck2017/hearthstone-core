@@ -49,4 +49,8 @@ export abstract class CharacterModel<
     public del(weapon: WeaponModel) {
         this.draft.child.weapon = undefined;
     }
+
+    public add(weapon: WeaponModel) {
+        this.draft.child.weapon = weapon;
+    }
 }

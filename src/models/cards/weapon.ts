@@ -2,10 +2,13 @@ import { Event, Format, Method, Model, Props, TranxUtil } from "set-piece";
 import { CardModel, CardProps, PlayEvent } from ".";
 import { WeaponAttackModel } from "../rules/weapon-attack";
 import { DurabilityModel } from "../rules/durability";
+import { CharacterModel } from "../characters";
 
 export namespace WeaponProps {
     export type S = {};
-    export type E = {};
+    export type E = {
+        onEquip: Event;
+    };
     export type C = {
         attack: WeaponAttackModel;
         durability: DurabilityModel;
@@ -54,16 +57,21 @@ export class WeaponModel<
     }
 
     protected async doPlay(event: PlayEvent) {
-        this.equip();
-        await super.doPlay(event);
-    }
-
-    private equip() {
         const player = this.route.player;
         if (!player) return;
         const character = player.child.character;
+        this.doEquip(character);
+        await super.doPlay(event);
+        this.event.onEquip(new Event({}));
+    }
+
+    @TranxUtil.span()
+    private doEquip(character: CharacterModel) {
+        const player = this.route.player;
+        const hand = player?.child.hand;
+        if (hand) hand.del(this);
         const weapon = character.child.weapon;
-        if (weapon) weapon
+        if (weapon) character.add(weapon);
     }
 
     // dispose

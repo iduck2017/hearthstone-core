@@ -1,14 +1,15 @@
 import { Loader, Model, TranxUtil } from "set-piece";
 import { PlayerModel } from "../player";
-import { MinionModel } from "../cards/minion";
 import { GameModel } from "../game";
 import { CardModel } from "../cards";
+import { WeaponModel, MinionModel } from "../..";
 
 export namespace HandProps {
     export type E = {}
     export type S = {}
     export type C = {
-        minions: MinionModel[]
+        minions: MinionModel[],
+        weapons: WeaponModel[]
     }
     export type R = {
         order: CardModel[]
@@ -37,6 +38,7 @@ export class HandModel extends Model<
                 uuid: props.uuid,
                 child: { 
                     minions: [],
+                    weapons: [],
                     ...props.child,
                 },
                 state: { ...props.state },
@@ -52,9 +54,12 @@ export class HandModel extends Model<
         const order = this.draft.refer.order;
         if (position === -1) position = order.length;
         if (!position) position = order.length;
+
         let cards: CardModel[] | undefined;
         if (card instanceof MinionModel) cards = this.draft.child.minions;
+        if (card instanceof WeaponModel) cards = this.draft.child.weapons;
         if (!cards) return;
+        
         cards.push(card);
         order.splice(position, 0, card);
         return card;
@@ -62,9 +67,12 @@ export class HandModel extends Model<
 
     public del(card: CardModel): CardModel | undefined {
         const order = this.draft.refer.order;
+
         let cards: CardModel[] | undefined;
         if (card instanceof MinionModel) cards = this.draft.child.minions;
+        if (card instanceof WeaponModel) cards = this.draft.child.weapons;
         if (!cards) return;
+        
         let index = cards.indexOf(card);
         if (index !== -1) cards.splice(index, 1);
         index = order.indexOf(card);
