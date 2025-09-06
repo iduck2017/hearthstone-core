@@ -1,4 +1,4 @@
-import { BattlecryModel, DamageEvent, DamageModel, DamageType, RoleModel, SelectEvent } from "../../src";
+import { BattlecryModel, DamageEvent, DamageModel, DamageType, RoleModel, SelectEvent } from "hearthstone-core";
 import { Loader, StoreUtil } from "set-piece";
 
 @StoreUtil.is('elven-archer-battlecry')

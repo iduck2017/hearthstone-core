@@ -1,5 +1,5 @@
 import { Loader } from "set-piece";
-import { AttackModel, CardModel, ClassType, CostModel, HealthModel, LibraryUtil, MinionHooksModel, MinionModel, RarityType, RoleModel } from "../../src";
+import { AttackModel, ClassType, CostModel, HealthModel, LibraryUtil, MinionHooksModel, MinionModel, RarityType, RoleModel } from "hearthstone-core";
 import { LeperGnomeDeathrattleModel } from "./deathrattle";
 
 @LibraryUtil.is('leper-gnome')

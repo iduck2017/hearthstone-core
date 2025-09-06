@@ -1,4 +1,4 @@
-import { GameModel, AppModel } from "../src";
+import { GameModel, AppModel } from "hearthstone-core";
 
 export function boot(game: GameModel) {
     const root = new AppModel();

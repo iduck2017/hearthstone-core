@@ -1,6 +1,6 @@
-import { MinionModel, HealthModel, AttackModel, RoleModel, MinionHooksModel, LibraryUtil, CostModel } from "../../src";
+import { MinionModel, HealthModel, AttackModel, RoleModel, MinionHooksModel, LibraryUtil, CostModel } from "hearthstone-core";
 import { ElvenArcherBattlecryModel } from "./battlecry";
-import { ClassType, RarityType } from "../../src/types/card";
+import { ClassType, RarityType } from "hearthstone-core";
 import { Loader } from "set-piece";
 
 @LibraryUtil.is('elven-archer')

@@ -1,4 +1,4 @@
-import { DamageEvent, DamageModel, DamageType, DeathrattleModel } from "../../src";
+import { DamageEvent, DamageModel, DamageType, DeathrattleModel } from "hearthstone-core";
 import { Loader, StoreUtil } from "set-piece";
 
 @StoreUtil.is('leper-gnome-deathrattle')

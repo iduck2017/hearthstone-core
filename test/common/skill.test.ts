@@ -1,5 +1,5 @@
-import { BoardModel, GameModel, MageModel, ManaModel, PlayerModel, SelectUtil, TimeUtil, WarriorModel } from "../../src";
-import { boot } from "../boot";
+import { BoardModel, GameModel, MageModel, ManaModel, PlayerModel, SelectUtil, TimeUtil, WarriorModel } from "hearthstone-core";
+import { boot } from "./boot";
 import { WispModel } from "../wisp";
 
 describe('skill', () => {
