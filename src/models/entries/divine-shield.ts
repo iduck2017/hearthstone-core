@@ -59,6 +59,7 @@ export class DivineSheildModel extends FeatureModel<
         return true;
     }
 
+    @TranxUtil.then()
     public onConsume(event: DamageEvent) {
         this.event.onConsume(event);
     }

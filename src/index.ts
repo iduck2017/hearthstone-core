@@ -7,6 +7,7 @@ export { RaceType } from "./types/card";
 // event
 export { SelectEvent } from "./utils/select";
 export { DamageEvent } from "./types/damage";
+export { RestoreEvent } from "./types/restore";
 
 // utils
 export { TimeUtil } from "./utils/time";
@@ -25,6 +26,7 @@ export { TurnProps, TurnModel } from "./models/rules/turn";
 export { CostProps, CostModel } from "./models/rules/cost";
 export { ArmorProps, ArmorModel } from "./models/rules/armor";
 export { DamageProps, DamageModel } from "./models/actions/damage";
+export { RestoreProps, RestoreModel } from "./models/actions/restore";
 
 // card
 export { CardProps, CardModel } from "./models/cards";

@@ -3,6 +3,7 @@ import { BoardModel, CardModel, DeckModel, GraveyardModel, HandModel, MinionMode
 import { GameModel } from "../..";
 import { DamageModel } from "../..";
 import { CharacterModel } from "../..";
+import { RestoreModel } from "../actions/restore";
 
 export namespace FeatureProps {
     export type E = {
@@ -16,6 +17,7 @@ export namespace FeatureProps {
     }
     export type C = {
         damage: DamageModel;
+        restore: RestoreModel;
     };
     export type R = {};
 }
@@ -66,6 +68,7 @@ export abstract class FeatureModel<
                 state: { ...props.state },
                 child: { 
                     damage: props.child?.damage ?? new DamageModel(),
+                    restore: props.child?.restore ?? new RestoreModel(),
                     ...props.child
                 },
                 refer: { ...props.refer },
