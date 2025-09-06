@@ -1,9 +1,10 @@
 /**
  * Test cases for Emerald Skytalon
  * 
- * 1. start: Player A has 2 emerald skytalons in hand, Player B has 2 wisps on board, turn starts (nextTurn)
- * 2. rush: Player A plays 2 emerald skytalons, they can attack immediately but only target wisps (not Player B hero), one emerald attacks one wisp, the other doesn't move
- * 3. attack: After 2 turns, the other emerald can attack the hero
+ * 1. emerald-skytalon-rush: Player A plays 2 emerald skytalons, they can attack immediately but only target wisps
+ * 2. wisp-play: Player A plays a wisp, it can not attack immediately
+ * 3. emerald-skytalon-attack: After 2 turns, the other emerald can attack the hero
+ * 4. wisp-attack: Player B plays a wisp, it can attack immediately
  */
 
 import { GameModel, PlayerModel, MageModel, HandModel, BoardModel, SelectUtil, TimeUtil, ActionModel, ManaModel } from "hearthstone-core";

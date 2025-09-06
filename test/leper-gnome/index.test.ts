@@ -1,6 +1,9 @@
-// Test scenario:
-// Initial setup: Player A has Leper Gnome on board, Player B has Wisp on board
-// Test case: Player A's Leper Gnome attacks Player B's Wisp, both die, Player B loses 2 health
+/**
+ * Test cases for Leper Gnome
+ * 
+ * 1. leper-gnome-deathrattle: Player A's Leper Gnome attacks Player B's Wisp, both die, Player B loses 2 health
+ */
+
 import { GameModel, BoardModel, MageModel, TimeUtil, SelectUtil, ManaModel, PlayerModel } from "hearthstone-core";
 import { LeperGnomeModel } from ".";
 import { WispModel } from "../wisp";

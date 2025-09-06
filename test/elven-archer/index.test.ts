@@ -1,10 +1,9 @@
 /**
  * Test cases for Elven Archer
  * 
- * Requirements:
- * 1. start: Player B has a wisp on board by default, Player A has an elven archer in hand
- * 2. battlecry: Player A uses Elven Archer to attack the wisp
+ * 1. elven-archer-battlecry: Player A plays Elven Archer and use battlecry, Player B's Wisp dies.
  */
+
 import { BoardModel, GameModel, HandModel, MageModel, ManaModel, PlayerModel, SelectUtil, TimeUtil } from "hearthstone-core";
 import { boot } from "../common/boot";
 import { ElvenArcherModel } from ".";
