@@ -1,4 +1,4 @@
-import { Event, Format, Method, Model, Props, TranxUtil } from "set-piece";
+import { DebugUtil, Event, Format, LogLevel, Method, Props, TranxUtil } from "set-piece";
 import { CardModel, CardProps, PlayEvent } from ".";
 import { WeaponAttackModel } from "../rules/weapon-attack";
 import { DurabilityModel } from "../rules/durability";
@@ -65,13 +65,15 @@ export class WeaponModel<
         this.event.onEquip(new Event({}));
     }
 
+    @DebugUtil.log(LogLevel.ERROR)
     @TranxUtil.span()
     private doEquip(character: CharacterModel) {
         const player = this.route.player;
         const hand = player?.child.hand;
         if (hand) hand.del(this);
         const weapon = character.child.weapon;
-        if (weapon) character.add(weapon);
+        if (weapon) character.del(weapon);
+        character.add(this);
     }
 
     // dispose
@@ -89,4 +91,5 @@ export class WeaponModel<
         const graveyard = player.child.graveyard;
         graveyard.add(this);
     }
+
 }

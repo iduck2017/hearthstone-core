@@ -41,8 +41,10 @@ describe('firey-war-axe', () => {
 
     test('fiery-war-axe-equip', async () => {
         expect(roleA.child.attack.state.current).toBe(0);
+        expect(handA.child.weapons.length).toBe(1);
         expect(charA.child.weapon).toBeUndefined();
         await weapon.play();
+        expect(handA.child.weapons.length).toBe(0);
         expect(charA.child.weapon).toBeDefined();
         expect(weapon?.child.attack.state.origin).toBe(3);
         expect(roleA.child.attack.state.origin).toBe(0);
