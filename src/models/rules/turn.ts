@@ -69,7 +69,6 @@ export class TurnModel extends Model<
             const entries = role.child.entries;
             role.child.action.reset();
             role.child.sleep.deactive();
-            entries.child.rush.overdue();
             entries.child.frozen.deactive();
         });
         // hooks

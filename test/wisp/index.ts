@@ -2,7 +2,6 @@ import { Loader } from "set-piece";
 import { AttackModel, CostModel, HealthModel, MinionModel, RoleModel } from "../../src";
 import { ClassType, RaceType, RarityType } from "../../src/types/card";
 
-
 export class WispModel extends MinionModel {
     constructor(loader?: Loader<WispModel>) {
         super(() => {

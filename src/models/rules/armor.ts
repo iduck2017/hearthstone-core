@@ -1,4 +1,4 @@
-import { Event, Loader, Method, Model } from "set-piece";
+import { Event, Loader, Model } from "set-piece";
 
 export namespace ArmorProps {
     export type E = {

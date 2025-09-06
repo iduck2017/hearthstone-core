@@ -34,7 +34,7 @@ export abstract class StartTurnHookModel<
             return {
                 uuid: props.uuid,
                 state: {
-                    status: 1,
+                    isActive: true,
                     ...props.state,
                 },
                 child: { ...props.child },
@@ -44,7 +44,7 @@ export abstract class StartTurnHookModel<
     }
     
     public async run() {
-        if (!this.state.status) return;
+        if (!this.state.isActive) return;
         this.event.toRun(new Event({}));
         await this.doRun();
         this.event.onRun(new Event({}));

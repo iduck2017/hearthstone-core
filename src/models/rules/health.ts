@@ -1,4 +1,4 @@
-import { DebugUtil, Event, EventUtil, Method, Model, StateChangeEvent, TranxUtil } from "set-piece";
+import { DebugUtil, EventUtil, Method, Model, StateChangeEvent, TranxUtil } from "set-piece";
 import { RoleModel } from "../role";
 import { GameModel } from "../game";
 import { PlayerModel } from "../player";
@@ -95,7 +95,7 @@ export class HealthModel extends Model<
             event.reset(0);
             return event;
         }
-        if (divineSheild.state.status) {
+        if (divineSheild.state.isActive) {
             divineSheild.consume();
             event.reset(0);
             return event;

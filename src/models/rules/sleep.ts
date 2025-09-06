@@ -1,5 +1,4 @@
-import { Event, Loader, Method, Model } from "set-piece";
-import { FeatureStatus } from "../features";
+import { Event, Loader, Model } from "set-piece";
 
 export namespace SleepProps {
     export type E = {
@@ -7,7 +6,7 @@ export namespace SleepProps {
         onDeactive: Event;
     };
     export type S = {
-        status: FeatureStatus;
+        isActive: boolean;
     }
     export type C = {};
     export type R = {}
@@ -25,7 +24,7 @@ export class SleepModel extends Model<
             return {
                 uuid: props.uuid,
                 state: {
-                    status: FeatureStatus.ACTIVE,
+                    isActive: true,
                     ...props.state
                 },
                 child: { ...props.child },
@@ -35,12 +34,12 @@ export class SleepModel extends Model<
     }
 
     public active() {
-        this.draft.state.status = FeatureStatus.ACTIVE;
+        this.draft.state.isActive = true;
         this.event.onActive(new Event({}));
     }
 
     public deactive(): void {
-        this.draft.state.status = FeatureStatus.INACTIVE;
+        this.draft.state.isActive = false;
         this.event.onDeactive(new Event({}));
     }
 }

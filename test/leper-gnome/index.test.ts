@@ -1,10 +1,10 @@
 // Test scenario:
 // Initial setup: Player A has Leper Gnome on board, Player B has Wisp on board
 // Test case: Player A's Leper Gnome attacks Player B's Wisp, both die, Player B loses 2 health
-import { GameModel, BoardModel, MageModel, TimeUtil, SelectUtil, DeathStatus, ManaModel, PlayerModel, HandModel } from "../src";
-import { LeperGnomeModel } from "./leper-gnome";
-import { WispModel } from "./wisp";
-import { boot } from "./boot";
+import { GameModel, BoardModel, MageModel, TimeUtil, SelectUtil, ManaModel, PlayerModel, HandModel } from "../../src";
+import { LeperGnomeModel } from ".";
+import { WispModel } from "../wisp";
+import { boot } from "../boot";
 import { DebugUtil, LogLevel } from "set-piece";
 
 DebugUtil.level = LogLevel.ERROR;
@@ -37,8 +37,6 @@ describe('leper-gnome', () => {
     const playerB = game.child.playerB;
     const boardA = playerA.child.board;
     const boardB = playerB.child.board;
-    const handA = playerA.child.hand;
-    const handB = playerB.child.hand;
     const cardC = boardA.child.minions.find(item => item instanceof LeperGnomeModel);
     const cardD = boardB.child.minions.find(item => item instanceof WispModel);
     const roleC = cardC?.child.role;
@@ -65,8 +63,8 @@ describe('leper-gnome', () => {
         
         expect(boardA.child.minions.length).toBe(0);
         expect(boardB.child.minions.length).toBe(0);
-        expect(roleC.child.death.state.status).toBe(DeathStatus.ACTIVE);
-        expect(roleD.child.death.state.status).toBe(DeathStatus.ACTIVE);
+        expect(roleC.child.death.state.isActive).toBe(true);
+        expect(roleD.child.death.state.isActive).toBe(true);
         expect(roleB.state.health).toBe(28);
         expect(roleB.child.health.state.damage).toBe(2);
     })

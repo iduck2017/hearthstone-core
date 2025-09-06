@@ -1,5 +1,5 @@
 import { Event, Method, StoreUtil } from "set-piece";
-import { FeatureModel, FeatureStatus } from "../features";
+import { FeatureModel } from "../features";
 
 export namespace SpellDamageProps {
     export type E = {
@@ -29,7 +29,7 @@ export class SpellDamageModel extends FeatureModel<
                 state: {
                     name: 'Spell Damage',
                     desc: 'Your spell cards deal extra damage.',
-                    status: FeatureStatus.ACTIVE,
+                    isActive: true,
                     ...props.state,
                 },
                 child: { ...props.child },

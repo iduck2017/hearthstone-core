@@ -1,6 +1,5 @@
-import { Decor, Event, Loader, StateUtil, StoreUtil, TranxUtil } from "set-piece";
-import { FeatureModel, FeatureStatus } from "../features";
-import { SleepModel, SleepProps } from "../rules/sleep";
+import { Event, Loader, StoreUtil } from "set-piece";
+import { FeatureModel } from "../features";
 
 export namespace ChargeProps {
     export type E = {
@@ -26,18 +25,12 @@ export class ChargeModel extends FeatureModel<
                 state: {
                     name: 'Charge',
                     desc: 'Can attack immediately.',
-                    status: FeatureStatus.ACTIVE,
+                    isActive: true,
                     ...props.state,
                 },
                 child: { ...props.child },
                 refer: { ...props.refer },
             }
         })
-    }
-
-    @StateUtil.on(self => self.route.role?.proxy.child.sleep.decor)
-    protected onCheck(that: SleepModel, state: Decor<SleepProps.S>) {
-        if (!this.state.status) return;
-        state.current.status = FeatureStatus.INACTIVE;
     }
 }

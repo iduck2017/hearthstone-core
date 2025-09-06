@@ -8,13 +8,6 @@ import { CharacterModel } from "../characters";
 import { DamageEvent } from "../../types/damage";
 import { DamageModel } from "../actions/damage";
 
-export enum DeathStatus {
-    INACTIVE = 0,
-    ACTIVE_PREV = 1,
-    ACTIVE = 2,
-}
-
-
 export namespace DeathProps {
     export type E = {
         onActive: Event;
@@ -22,7 +15,7 @@ export namespace DeathProps {
         onDestroy: Event;
     }
     export type S = {
-        status: DeathStatus;
+        isActive: boolean;
         isDestroy: boolean;
     }
     export type C = {}
@@ -58,7 +51,7 @@ export class DeathModel extends Model<
             return {
                 uuid: props.uuid,
                 state: { 
-                    status: DeathStatus.INACTIVE,
+                    isActive: false,
                     isDestroy: false,
                     ...props.state,
                 },
@@ -75,29 +68,29 @@ export class DeathModel extends Model<
         if (event.isCancel) return false;
         if (this.state.isDestroy) return false;
         this.draft.state.isDestroy = true;
+        this.draft.state.isActive = true;
         this.draft.refer.reason = event.detail.source;
-        this.draft.state.status = DeathStatus.ACTIVE_PREV;
         DeathUtil.add(this);
         return true;
     }
 
     public active(event: DamageEvent) {
-        if (this.state.status) return false;
+        if (this.state.isActive) return false;
         this.draft.refer.reason = event.detail.source;
-        this.draft.state.status = DeathStatus.ACTIVE_PREV;
+        this.draft.state.isActive = true;
         DeathUtil.add(this);
     }
 
     public cancel() {
-        if (!this.state.status) return false
+        if (!this.state.isActive) return false
         if (this.state.isDestroy) return false;
         this.draft.refer.reason = undefined;
-        this.draft.state.status = DeathStatus.INACTIVE;
+        this.draft.state.isActive = false;
     }
     
     public onActive() {
-        if (!this.state.status) return;
-        this.draft.state.status = DeathStatus.ACTIVE;
+        if (!this.state.isActive) return;
+        this.draft.state.isActive = true;
         this.event.onActive(new Event({}));
         if (!this.state.isDestroy) return;
         this.event.onDestroy(new Event({}));

@@ -5,10 +5,10 @@
  * 1. start: Player B has a wisp on board by default, Player A has an elven archer in hand
  * 2. battlecry: Player A uses Elven Archer to attack the wisp
  */
-import { BoardModel, DeathStatus, GameModel, HandModel, MageModel, ManaModel, PlayerModel, SelectUtil, TimeUtil } from "../src";
-import { boot } from "./boot";
-import { ElvenArcherModel } from "./elven-archer";
-import { WispModel } from "./wisp";
+import { BoardModel, GameModel, HandModel, MageModel, ManaModel, PlayerModel, SelectUtil, TimeUtil } from "../../src";
+import { boot } from "../boot";
+import { ElvenArcherModel } from ".";
+import { WispModel } from "../wisp";
 
 describe('battlecry', () => {
     const game = new GameModel(() => ({
@@ -67,7 +67,7 @@ describe('battlecry', () => {
         expect(roleD.child.health.state.limit).toBe(1);
         expect(roleD.child.health.state.current).toBe(0);
         expect(roleD.child.health.state.origin).toBe(1);
-        expect(roleD.child.death.state.status).toBe(DeathStatus.ACTIVE);
+        expect(roleD.child.death.state.isActive).toBe(true);
         const reason = roleD.child.death.refer.reason;
         expect(reason?.route.card).toBe(cardC);
     })

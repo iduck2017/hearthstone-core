@@ -1,5 +1,5 @@
 import { Event, Loader, StoreUtil } from "set-piece";
-import { FeatureModel, FeatureStatus } from "../features";
+import { FeatureModel } from "../features";
 
 export namespace FrozenProps {
     export type E = {
@@ -26,7 +26,7 @@ export class FrozenModel extends FeatureModel<
                 state: {
                     name: 'Frozen',
                     desc: 'Frozen charactoers lose their next attack.',
-                    status: FeatureStatus.ACTIVE,
+                    isActive: true,
                     ...props.state,
                 },
                 child: { ...props.child },
@@ -36,8 +36,8 @@ export class FrozenModel extends FeatureModel<
     }
 
     public active(): boolean {
-        if (this.state.status) return false;
-        this.draft.state.status = FeatureStatus.ACTIVE;
+        if (this.state.isActive) return false;
+        this.draft.state.isActive = true;
         this.event.onActive(new Event({}));
         return true;
     }

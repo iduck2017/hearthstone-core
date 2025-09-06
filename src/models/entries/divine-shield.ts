@@ -1,6 +1,6 @@
-import { Event, Loader, StoreUtil } from "set-piece";
+import { Event, Loader, StoreUtil, TranxUtil } from "set-piece";
 import { DamageEvent } from "../../types/damage";
-import { FeatureModel, FeatureStatus } from "../features";
+import { FeatureModel } from "../features";
 
 export namespace DivineSheildProps {
     export type E = {
@@ -29,8 +29,8 @@ export class DivineSheildModel extends FeatureModel<
                 state: {
                     name: 'Divine Shield',
                     desc: 'The first time you take damage, ignore it.',
-                    status: FeatureStatus.ACTIVE,
-                    count: 1,
+                    isActive: true,
+                    count: props.state?.isActive ? 1 : 0,
                     ...props.state,
                 },
                 child: { ...props.child },
@@ -40,16 +40,21 @@ export class DivineSheildModel extends FeatureModel<
     }
 
     public actve(): boolean {
-        if (this.state.status) return false; 
-        this.draft.state.status = 1;
-        this.draft.state.count = 1;
+        if (this.state.isActive) return false; 
+        this.doActive();
         this.event.onActive(new Event({}));
         return true;
     }
 
+    @TranxUtil.span()
+    private doActive() {
+        this.draft.state.isActive = true;
+        this.draft.state.count = 1;
+    }
+
     public async consume() {
-        if (!this.state.status) return false;
-        if (this.draft.state.count <= 1) this.draft.state.status = 0;
+        if (!this.state.isActive) return false;
+        if (this.draft.state.count <= 1) this.draft.state.isActive = false;
         this.draft.state.count =- 1;
         return true;
     }

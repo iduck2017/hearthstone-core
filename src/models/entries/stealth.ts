@@ -1,5 +1,5 @@
 import { Event, Loader, StoreUtil } from "set-piece";
-import { FeatureModel, FeatureStatus } from "../features";
+import { FeatureModel } from "../features";
 
 export namespace StealthProps {
     export type E = {
@@ -25,8 +25,8 @@ export class StealthModel extends FeatureModel<
                 uuid: props.uuid,
                 state: {
                     name: 'Stealth',
-                    desc: '',
-                    status: 1,
+                    desc: 'Can not be attacked or targeted until it attacks.',
+                    isActive: true,
                     ...props.state,
                 },
                 child: { ...props.child },
@@ -36,8 +36,8 @@ export class StealthModel extends FeatureModel<
     }
 
     public active() {
-        if (this.state.status) return false; 
-        this.draft.state.status = FeatureStatus.ACTIVE;
+        if (this.state.isActive) return false; 
+        this.draft.state.isActive = true;
         this.event.onActive(new Event({}));
         return true;
     }

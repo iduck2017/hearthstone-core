@@ -35,7 +35,7 @@ export abstract class BattlecryModel<
             return {
                 uuid: props.uuid,
                 state: { 
-                    status: 1,
+                    isActive: true,
                     ...props.state,
                 },
                 child: { ...props.child },
@@ -45,7 +45,7 @@ export abstract class BattlecryModel<
     }
 
     public async run(...params: T) {
-        if (!this.state.status) return;
+        if (!this.state.isActive) return;
         const signal = this.event.toRun(new Event({}));
         if (signal.isCancel) return;
         await this.doRun(...params);

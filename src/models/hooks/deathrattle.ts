@@ -34,7 +34,7 @@ export abstract class DeathrattleModel<
             return {
                 uuid: props.uuid,
                 state: {
-                    status: 1,
+                    isActive: true,
                     ...props.state,
                 },
                 child: { ...props.child },
@@ -44,7 +44,7 @@ export abstract class DeathrattleModel<
     }
 
     public async run() {
-        if (!this.state.status) return;
+        if (!this.state.isActive) return;
         const signal = this.event.toRun(new Event({}));
         if (signal.isCancel) return;
         await this.doRun();

@@ -1,7 +1,6 @@
-import { BoardModel, GameModel, MageModel, ManaModel, PlayerModel, SelectUtil, TimeUtil, WarriorModel } from "../src";
-import { boot } from "./boot";
-import { LeperGnomeModel } from "./leper-gnome";
-import { WispModel } from "./wisp";
+import { BoardModel, GameModel, MageModel, ManaModel, PlayerModel, SelectUtil, TimeUtil, WarriorModel } from "../../src";
+import { boot } from "../boot";
+import { WispModel } from "../wisp";
 
 describe('skill', () => {
     const game = boot(new GameModel(() => ({

@@ -1,5 +1,5 @@
 import { Decor, Method, Model, Props, StateUtil, StoreUtil } from "set-piece";
-import { FeatureModel, FeatureProps, FeatureStatus } from ".";
+import { FeatureModel, FeatureProps } from ".";
 import { AttackModel, AttackProps } from "../rules/attack";
 import { HealthModel, HealthProps } from "../rules/health";
 
@@ -26,7 +26,7 @@ export abstract class BuffModel<
 > {
     constructor(loader: Method<BuffModel['props'] & {
         uuid: string | undefined;
-        state: S & BuffProps.S & Omit<FeatureProps.S, 'status'>,
+        state: S & BuffProps.S & Omit<FeatureProps.S, 'isActive'>,
         child: C,
         refer: R,
     }, []>) {
@@ -35,8 +35,7 @@ export abstract class BuffModel<
             return {
                 uuid: props.uuid,
                 state: {
-                    status: FeatureStatus.ACTIVE,
-                    isOverride: false,
+                    isActive: true,
                     ...props.state,
                 },
                 child: { ...props.child },
@@ -47,20 +46,20 @@ export abstract class BuffModel<
 
     @StateUtil.on(self => self.route.role?.proxy.child.attack.decor)
     protected onAttackCheck(that: AttackModel, state: Decor<AttackProps.S>) {
-        if (!this.state.status) return;
+        if (!this.state.isActive) return;
         const self: BuffModel = this;
         state.current.offset += self.state.offsetAttack;
     }
 
     @StateUtil.on(self => self.route.role?.proxy.child.health.decor)
     protected onHealthCheck(that: HealthModel, state: Decor<HealthProps.S>) {
-        if (!this.state.status) return;
+        if (!this.state.isActive) return;
         const self: BuffModel = this;
         state.current.offset += self.state.offsetHealth;
     }
 
     public override() {
-        this.draft.state.status = FeatureStatus.INACTIVE;
+        this.draft.state.isActive = false;
         this.reload();
     }
 }

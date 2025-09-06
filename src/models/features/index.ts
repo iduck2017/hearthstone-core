@@ -4,11 +4,6 @@ import { GameModel } from "../..";
 import { DamageModel } from "../..";
 import { CharacterModel } from "../..";
 
-export enum FeatureStatus {
-    INACTIVE = 0,
-    ACTIVE = 1
-}
-
 export namespace FeatureProps {
     export type E = {
         toSilence: Event;
@@ -17,7 +12,7 @@ export namespace FeatureProps {
     export type S = {
         name: string;
         desc: string;
-        status: number;
+        isActive: boolean;
     }
     export type C = {
         damage: DamageModel;
@@ -60,7 +55,7 @@ export abstract class FeatureModel<
 
     constructor(loader: Method<FeatureModel['props'] & {
         uuid: string | undefined;
-        state: S & Pick<FeatureProps.S, 'name' | 'desc' | 'status'>;
+        state: S & FeatureProps.S;
         child: C,
         refer: R,
     }, []>) {
@@ -78,6 +73,7 @@ export abstract class FeatureModel<
         })
     }
 
+
     public silence(): boolean {
         const signal = this.event.toSilence(new Event({}));
         if (signal.isCancel) return false;
@@ -88,7 +84,7 @@ export abstract class FeatureModel<
 
     @TranxUtil.span()
     public disable() {
-        this.draft.state.status = FeatureStatus.INACTIVE;
+        this.draft.state.isActive = false;
         this.reload();
     }
 }

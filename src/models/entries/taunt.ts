@@ -1,5 +1,5 @@
 import { Event, Loader, StoreUtil } from "set-piece";
-import { FeatureModel, FeatureStatus } from "../features";
+import { FeatureModel } from "../features";
 
 export namespace TauntProps {
     export type E = {
@@ -24,8 +24,8 @@ export class TauntModel extends FeatureModel<
                 uuid: props.uuid,
                 state: {
                     name: 'Taunt',
-                    desc: 'Taunt',
-                    status: FeatureStatus.ACTIVE,
+                    desc: 'Enemies must attack this minion.',
+                    isActive: true,
                     ...props.state,
                 },
                 child: { ...props.child },
@@ -35,8 +35,8 @@ export class TauntModel extends FeatureModel<
     }
 
     public active(): boolean {
-        if (this.state.status) return false;
-        this.draft.state.status = 1;
+        if (this.state.isActive) return false;
+        this.draft.state.isActive = true;
         this.event.onActive(new Event({}));
         return true;
     }

@@ -2,18 +2,12 @@ import { Decor, Event, Loader, StateUtil, StoreUtil, TranxUtil } from "set-piece
 import { FeatureModel } from "../features";
 import { ActionProps, ActionModel } from "../rules/action";
 
-export enum WindfuryStatus {
-    INACTIVE = 0,
-    ACTIVE = 1,
-    ACTIVE_SUPER = 2,
-}
-
 export namespace WindfuryProps {
     export type E = {
         onActive: Event;
     };
     export type S = {
-        status: WindfuryStatus;
+        isAdvance: boolean;
     };
     export type C = {};
     export type R = {};
@@ -34,7 +28,8 @@ export class WindfuryModel extends FeatureModel<
                 state: {
                     name: 'Windfury',
                     desc: 'Can attack twice each turn.',
-                    status: WindfuryStatus.ACTIVE,
+                    isAdvance: false,
+                    isActive: true,
                     ...props.state,
                 },
                 child: { ...props.child },
@@ -43,17 +38,30 @@ export class WindfuryModel extends FeatureModel<
         });
     }
 
-    public active(status: WindfuryStatus): boolean {
-        if (this.state.status) return false;
-        this.draft.state.status = status;
+    public active(isAdvance?: boolean): boolean {
+        if (!isAdvance && this.state.isActive) return false;
+        if (this.state.isActive && this.state.isAdvance) return false; 
+        this.doActive(isAdvance);
         this.event.onActive(new Event({}));
         return true;
     }
 
+    @TranxUtil.span()
+    private doActive(isAdvance?: boolean) {
+        this.draft.state.isActive = true;
+        this.draft.state.isAdvance = isAdvance ?? false;
+    }
+
     @StateUtil.on(self => self.route.role?.proxy.child.action.decor)
     protected onCheck(that: ActionModel, state: Decor<ActionProps.S>) {
-        if (!this.state.status) return;
-        const offset = this.state.status === WindfuryStatus.ACTIVE_SUPER ? 3 : 1;
+        if (!this.state.isActive) return;
+        const offset = this.state.isAdvance ? 3 : 1;
         state.current.origin += offset;
+    }
+
+    @TranxUtil.span()
+    public disable(): void {
+        super.disable();
+        this.draft.state.isAdvance = false;
     }
 }
