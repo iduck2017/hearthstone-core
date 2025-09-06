@@ -1,4 +1,4 @@
-import { Model } from "set-piece";
+import { Loader, Model } from "set-piece";
 
 export namespace RestoreProps {
     export type E = {
@@ -11,12 +11,15 @@ export namespace RestoreProps {
 }
 
 export class RestoreModel extends Model {
-    constructor(props: RestoreModel['props']) {
-        super({
-            uuid: props.uuid,
-            state: {},
-            child: {},
-            refer: {}
+    constructor(loader?: Loader<RestoreModel>) {
+        super(() => {
+            const props = loader?.() ?? {};
+            return {
+                uuid: props.uuid,
+                state: { ...props.state },
+                child: { ...props.child },
+                refer: { ...props.refer }
+            }
         })
     }
 }

@@ -1,4 +1,4 @@
-import { Model, StoreUtil } from "set-piece";
+import { Method, Model, StoreUtil } from "set-piece";
 import { PlayerModel } from "./player";
 import { TurnModel } from "./rules/turn";
 import { RoleModel } from "./role";
@@ -32,20 +32,23 @@ export class GameModel extends Model<
         }
     }
 
-    constructor(props: GameModel['props'] & {
+    constructor(loader: Method<GameModel['props'] & {
         child: Pick<GameProps.C, 'playerA' | 'playerB'>;
-    }) {
-        super({
-            uuid: props.uuid,
-            state: { 
-                turn: 0,
-                ...props.state 
-            },
-            child: { 
-                turn: props.child.turn ?? new TurnModel({}),
-                ...props.child
-            },
-            refer: { ...props.refer },
+    }, []>) {
+        super(() => {
+            const props = loader?.() ?? {};
+            return {
+                uuid: props.uuid,
+                state: {
+                    turn: 0,
+                    ...props.state,
+                },
+                child: { 
+                    turn: props.child.turn ?? new TurnModel(),
+                    ...props.child
+                },
+                refer: { ...props.refer },
+            }
         });
     }
 

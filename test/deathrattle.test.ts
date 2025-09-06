@@ -9,30 +9,30 @@ import { DebugUtil, LogLevel } from "set-piece";
 
 DebugUtil.level = LogLevel.ERROR;
 describe('leper-gnome', () => {
-    const game = boot(new GameModel({
+    const game = boot(new GameModel(() => ({
         child: {
-            playerA: new PlayerModel({
+            playerA: new PlayerModel(() => ({
                 child: {
-                    mana: new ManaModel({ state: { origin: 10 }}),
-                    character: new MageModel({}),
-                    board: new BoardModel({
+                    mana: new ManaModel(() => ({ state: { origin: 10 }})),
+                    character: new MageModel(),
+                    board: new BoardModel(() => ({
                         child: { 
-                            minions: [new LeperGnomeModel({})] 
+                            minions: [new LeperGnomeModel()] 
                         }
-                    })
+                    })),
                 }
-            }),
-            playerB: new PlayerModel({
+            })),
+            playerB: new PlayerModel(() => ({
                 child: {
-                    mana: new ManaModel({ state: { origin: 10 }}),
-                    character: new MageModel({}),
-                    board: new BoardModel({
-                        child: { minions: [new WispModel({})] }
-                    })
+                    mana: new ManaModel(() => ({ state: { origin: 10 }})),
+                    character: new MageModel(),
+                    board: new BoardModel(() => ({
+                        child: { minions: [new WispModel()] }
+                    })),
                 }
-            }),
+            })),
         }
-    }));
+    })));
     const playerA = game.child.playerA;
     const playerB = game.child.playerB;
     const boardA = playerA.child.board;

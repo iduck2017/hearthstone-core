@@ -1,4 +1,4 @@
-import { Model } from "set-piece";
+import { Method, Model } from "set-piece";
 import { GameModel } from "./game";
 import { HandModel } from "./containers/hand";
 import { BoardModel } from "./containers/board";
@@ -7,7 +7,6 @@ import { GraveyardModel } from "./containers/graveyard";
 import { ManaModel } from "./rules/mana";
 import { CharacterModel } from "./characters";
 import { RoleModel } from "./role";
-import { DeathStatus } from "./rules/death";
 
 export namespace PlayerProps {
     export type S= {};
@@ -59,24 +58,34 @@ export class PlayerModel extends Model<
         return playerA === this ? playerB : playerA;
     }
 
-    constructor(props: PlayerModel['props'] & {
+    constructor(loader: Method<PlayerModel['props'] & {
         child: Pick<PlayerProps.C, 'character'>;
-    }) {
-        super({
-            uuid: props.uuid,
-            state: { ...props.state },
-            child: {
-                mana: props.child.mana ?? new ManaModel({}),
-                hand: props.child.hand ?? new HandModel({}),
-                deck: props.child.deck ?? new DeckModel({}),
-                board: props.child.board ?? new BoardModel({}),
-                graveyard: props.child.graveyard ?? new GraveyardModel({}),
-                ...props.child
-            },
-            refer: { ...props.refer },
+    }, []>) {
+        super(() => {
+            const props = loader?.();
+            return {
+                uuid: props.uuid,
+                state: { ...props.state },
+                child: {
+                    mana: props.child.mana ?? new ManaModel(),
+                    hand: props.child.hand ?? new HandModel(),
+                    deck: props.child.deck ?? new DeckModel(),
+                    board: props.child.board ?? new BoardModel(),
+                    graveyard: props.child.graveyard ?? new GraveyardModel(),
+                    ...props.child
+                },
+                refer: { ...props.refer },
+            }
         });
     }
 
+    public check(): boolean {
+        const game = this.route.game;
+        if (!game) return false;
+        const turn = game.child.turn;
+        if (turn.refer.current !== this) return false;
+        return true;
+    }
 }
 
 

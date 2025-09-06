@@ -1,4 +1,4 @@
-import { Func } from "set-piece";
+import { Method } from "set-piece";
 
 export class SelectEvent<T = any> {
     public options: T[];
@@ -21,7 +21,7 @@ export class SelectEvent<T = any> {
 }
 
 export class SelectUtil {
-    private static queue: [SelectEvent, Func][] = [];
+    private static queue: [SelectEvent, Method][] = [];
     public static get current(): SelectEvent | undefined {
         const [selector] = SelectUtil.queue[0] ?? [];
         return selector;

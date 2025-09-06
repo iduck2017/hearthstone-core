@@ -1,4 +1,4 @@
-import { Event, Model, Props, TranxUtil } from "set-piece";
+import { Event, Method, Model, Props, TranxUtil } from "set-piece";
 import { BoardModel, CardModel, DeckModel, GraveyardModel, HandModel, MinionModel, PlayerModel, RoleModel } from "../..";
 import { GameModel } from "../..";
 import { DamageModel } from "../..";
@@ -58,20 +58,23 @@ export abstract class FeatureModel<
         }
     }
 
-    constructor(props: FeatureModel['props'] & {
+    constructor(loader: Method<FeatureModel['props'] & {
         uuid: string | undefined;
         state: S & Pick<FeatureProps.S, 'name' | 'desc' | 'status'>;
         child: C,
         refer: R,
-    }) {
-        super({
-            uuid: props.uuid,
-            state: { ...props.state },
-            child: { 
-                damage: props.child?.damage ?? new DamageModel({}),
-                ...props.child
-            },
-            refer: { ...props.refer },
+    }, []>) {
+        super(() => {
+            const props = loader?.();
+            return {
+                uuid: props.uuid,
+                state: { ...props.state },
+                child: { 
+                    damage: props.child?.damage ?? new DamageModel(),
+                    ...props.child
+                },
+                refer: { ...props.refer },
+            }
         })
     }
 

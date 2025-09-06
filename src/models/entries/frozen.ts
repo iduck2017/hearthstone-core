@@ -1,4 +1,4 @@
-import { Event } from "set-piece";
+import { Event, Loader, StoreUtil } from "set-piece";
 import { FeatureModel, FeatureStatus } from "../features";
 
 export namespace FrozenProps {
@@ -11,23 +11,27 @@ export namespace FrozenProps {
     export type R = {}
 }
 
+@StoreUtil.is('frozen')
 export class FrozenModel extends FeatureModel<
     FrozenProps.E,
     FrozenProps.S,
     FrozenProps.C,
     FrozenProps.R
 > {
-    constructor(props: FrozenModel['props']) {
-        super({
-            uuid: props.uuid,
-            state: {
-                name: 'Frozen',
-                desc: 'Frozen charactoers lose their next attack.',
-                status: FeatureStatus.ACTIVE,
-                ...props.state,
-            },
-            child: { ...props.child },
-            refer: { ...props.refer },
+    constructor(loader?: Loader<FrozenModel>) {
+        super(() => {
+            const props = loader?.() ?? {};
+            return {
+                uuid: props.uuid,
+                state: {
+                    name: 'Frozen',
+                    desc: 'Frozen charactoers lose their next attack.',
+                    status: FeatureStatus.ACTIVE,
+                    ...props.state,
+                },
+                child: { ...props.child },
+                refer: { ...props.refer },
+            }
         });
     }
 

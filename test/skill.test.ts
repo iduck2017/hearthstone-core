@@ -4,25 +4,25 @@ import { LeperGnomeModel } from "./leper-gnome";
 import { WispModel } from "./wisp";
 
 describe('skill', () => {
-    const game = boot(new GameModel({
+    const game = boot(new GameModel(() => ({
         child: {
-            playerA: new PlayerModel({
+            playerA: new PlayerModel(() => ({
                 child: {
-                    mana: new ManaModel({ state: { origin: 10 }}),
-                    character: new MageModel({}),
+                    mana: new ManaModel(() => ({ state: { origin: 10 }})),
+                    character: new MageModel(),
                 }
-            }),
-            playerB: new PlayerModel({
+            })),
+            playerB: new PlayerModel(() => ({
                 child: {
-                    mana: new ManaModel({ state: { origin: 10 }}),
-                    character: new WarriorModel({}),
-                    board: new BoardModel({
-                        child: { minions: [new WispModel({})] }
-                    })
+                    mana: new ManaModel(() => ({ state: { origin: 10 }})),
+                    character: new WarriorModel(),
+                    board: new BoardModel(() => ({
+                        child: { minions: [new WispModel()] }
+                    })),
                 }
-            }),
+            })),
         }
-    }));
+    })));
     const playerA = game.child.playerA;
     const playerB = game.child.playerB;
     const boardA = playerA.child.board;
@@ -39,8 +39,6 @@ describe('skill', () => {
         expect(roleA.state.health).toBe(30);
         expect(roleB.state.health).toBe(30);
         expect(playerA.child.mana.state.current).toBe(10);
-
-
 
         const promise = charA.child.skill.run();
         await TimeUtil.sleep();

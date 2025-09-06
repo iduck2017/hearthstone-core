@@ -1,4 +1,4 @@
-import { Model, TranxUtil } from "set-piece";
+import { Loader, Model, TranxUtil } from "set-piece";
 import { PlayerModel } from "../player";
 import { MinionModel } from "../cards/minion";
 import { GameModel } from "../game";
@@ -30,17 +30,20 @@ export class HandModel extends Model<
         }
     }
 
-    constructor(props: HandModel['props']) {
-        super({
-            uuid: props.uuid,
-            child: { 
-                minions: [],
-                ...props.child,
-            },
-            state: { ...props.state },
-            refer: { 
-                order: props.child?.minions ?? [],
-                ...props.refer 
+    constructor(loader?: Loader<HandModel>) {
+        super(() => {
+            const props = loader?.() ?? {};
+            return {
+                uuid: props.uuid,
+                child: { 
+                    minions: [],
+                    ...props.child,
+                },
+                state: { ...props.state },
+                refer: { 
+                    order: props.child?.minions ?? [],
+                    ...props.refer 
+                }
             }
         })
     }

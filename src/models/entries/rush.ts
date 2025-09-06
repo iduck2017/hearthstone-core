@@ -1,4 +1,4 @@
-import { Decor, Event, StateUtil } from "set-piece";
+import { Decor, Event, Loader, StateUtil, StoreUtil } from "set-piece";
 import { FeatureModel, FeatureStatus } from "../features";
 import { SleepModel, SleepProps } from "../rules/sleep";
 
@@ -19,23 +19,27 @@ export namespace RushProps {
     export type R = {};
 }
 
+@StoreUtil.is('rush')
 export class RushModel extends FeatureModel<
     RushProps.E,
     RushProps.S,
     RushProps.C,
     RushProps.R
 > {
-    constructor(props: RushModel['props']) {
-        super({
-            uuid: props.uuid,
-            state: {
-                name: 'Rush',
-                desc: 'Can attack minions immediately.',
-                status: RushStatus.ACTIVE,
-                ...props.state,
-            },
-            child: { ...props.child },
-            refer: { ...props.refer },
+    constructor(loader?: Loader<RushModel>) {
+        super(() => {
+            const props = loader?.() ?? {};
+            return {
+                uuid: props.uuid,
+                state: {
+                    name: 'Rush',
+                    desc: 'Can attack minions immediately.',
+                    status: RushStatus.ACTIVE,
+                    ...props.state,
+                },
+                child: { ...props.child },
+                refer: { ...props.refer },
+            }
         });
     }
 

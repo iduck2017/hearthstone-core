@@ -1,4 +1,4 @@
-import { Model, TranxUtil } from "set-piece";
+import { Loader, Model, TranxUtil } from "set-piece";
 import { GameModel } from "../game";
 import { PlayerModel } from "../player";
 import { MinionModel } from "../cards/minion";
@@ -30,17 +30,20 @@ export class BoardModel extends Model<
         }
     }
 
-    constructor(props: BoardModel['props']) {
-        super({
-            uuid: props.uuid,
-            state: {},
-            child: { 
-                minions: props.child?.minions ?? [],
-                ...props.child,
-            },
-            refer: { 
-                order: props.child?.minions ?? [],
-                ...props.refer
+    constructor(loader?: Loader<BoardModel>) {
+        super(() => {
+            const props = loader?.() ?? {};
+            return {
+                uuid: props.uuid,
+                state: {},
+                child: { 
+                    minions: [],
+                    ...props.child,
+                },
+                refer: { 
+                    order: props.child?.minions ?? [],
+                    ...props.refer
+                }
             }
         })
     }
@@ -49,7 +52,7 @@ export class BoardModel extends Model<
     public add(card: MinionModel, position?: number) {
         const order = this.draft.refer.order;
         if (position === -1) position = order.length;
-        if (!position) position = order.length;
+        if (position === undefined) position = order.length;
         const cards = this.draft.child.minions;
         cards.push(card);
         order.splice(position, 0, card);

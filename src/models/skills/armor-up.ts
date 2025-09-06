@@ -1,20 +1,24 @@
+import { Loader } from "set-piece";
 import { SkillModel } from ".";
 import { CostModel } from "../rules/cost";
 
 export class ArmorUpModel extends SkillModel<[]> {
-    constructor(props: ArmorUpModel['props']) {
-        super({
-            uuid: props.uuid,
-            state: {
-                desc: 'Armor Up!',
-                name: 'Gain 2 Armor.',
-                ...props.state,
-            },
-            child: {
-                cost: props.child?.cost ?? new CostModel({ state: { origin: 2 }}),
-                ...props.child,
-            },
-            refer: { ...props.refer },
+    constructor(loader?: Loader<ArmorUpModel>) {
+        super(() => {
+            const props = loader?.() ?? {};
+            return {
+                uuid: props.uuid,
+                state: {
+                    desc: 'Armor Up!',
+                    name: 'Gain 2 Armor.',
+                    ...props.state,
+                },
+                child: {
+                    cost: new CostModel(() => ({ state: { origin: 2 }})),
+                    ...props.child,
+                },
+                refer: { ...props.refer },
+            }
         })
     }
 

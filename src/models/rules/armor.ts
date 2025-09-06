@@ -1,4 +1,4 @@
-import { Event, Model } from "set-piece";
+import { Event, Loader, Method, Model } from "set-piece";
 
 export namespace ArmorProps {
     export type E = {
@@ -17,14 +17,18 @@ export class ArmorModel extends Model<
     ArmorProps.C,
     ArmorProps.R
 > {
-    constructor(props: ArmorModel['props']) {
-        super({
-            uuid: props.uuid,
-            state: {
-                origin: props.state?.origin ?? 0,
-            },
-            child: {},
-            refer: {},
+    constructor(loader?: Loader<ArmorModel>) {
+        super(() => {
+            const props = loader?.() ?? {};
+            return {
+                uuid: props.uuid,
+                state: {    
+                    origin: 0,
+                    ...props.state,
+                },
+                child: { ...props.child },
+                refer: { ...props.refer },
+            }
         });
     }
 

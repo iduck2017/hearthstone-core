@@ -5,12 +5,10 @@ export class LibraryUtil {
     private static readonly registry: MinionModel[] = [];
 
     public static is(code: string) {
-        return function (
-            constructor: new (props: Record<string, never>) => MinionModel
-        ) {
-            const prototype = new constructor({});
+        return function (type: new () => MinionModel) {
+            const prototype = new type();
             LibraryUtil.registry.push(prototype);
-            StoreUtil.is(code)(constructor);
+            StoreUtil.is(code)(type);
         }
     }
 }

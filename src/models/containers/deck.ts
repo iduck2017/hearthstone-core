@@ -1,4 +1,4 @@
-import { DebugUtil, Model } from "set-piece";
+import { DebugUtil, Loader, Model } from "set-piece";
 import { MinionModel } from "../cards/minion";
 import { GameModel } from "../game";
 import { PlayerModel } from "../player";
@@ -28,15 +28,21 @@ export class DeckModel extends Model<
         }
     }
 
-    constructor(props: DeckModel['props']) {
-        super({
-            uuid: props.uuid,
-            child: { 
-                minions: [],
-                ...props.child,
-            },
-            state: { ...props.state },
-            refer: { ...props.refer }
+    constructor(loader?: Loader<DeckModel>) {
+        super(() => {
+            const props = loader?.() ?? {};
+            return {
+                uuid: props.uuid,
+                child: { 
+                    minions: [],
+                    ...props.child,
+                },
+                state: { ...props.state },
+                refer: { 
+                    order: props.child?.minions ?? [],
+                    ...props.refer 
+                }
+            }
         })
     }
 

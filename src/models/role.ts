@@ -1,4 +1,4 @@
-import { Model } from "set-piece";
+import { Method, Model } from "set-piece";
 import { GameModel } from "./game";
 import { PlayerModel } from "./player";
 import { BoardModel } from "./containers/board";
@@ -68,21 +68,24 @@ export class RoleModel extends Model<
         }
     }
 
-    public constructor(props: RoleModel['props'] & {
+    public constructor(loader: Method<RoleModel['props'] & {
         child: Pick<RoleProps.C, 'health' | 'attack'>;
-    }) {
-        super({
-            uuid: props.uuid,
-            state: { ...props.state },
-            child: { 
-                death: props.child.death ?? new DeathModel({}),
-                sleep: props.child.sleep ?? new SleepModel({}),
-                action: props.child.action ?? new ActionModel({}),
-                entries: props.child.entries ?? new RoleEntriesModel({}),
-                feats: props.child.feats ?? new FeaturesModel({}),
-                ...props.child,
-            },
-            refer: { ...props.refer },
+    }, []>) {
+        super(() => {
+            const props = loader();
+            return {
+                uuid: props.uuid,
+                state: { ...props.state },
+                child: { 
+                    death: props.child.death ?? new DeathModel(),
+                    sleep: props.child.sleep ?? new SleepModel(),
+                    action: props.child.action ?? new ActionModel(),
+                    entries: props.child.entries ?? new RoleEntriesModel(),
+                    feats: props.child.feats ?? new FeaturesModel(),
+                    ...props.child,
+                },
+                refer: { ...props.refer },
+            }
         })
     }
 }

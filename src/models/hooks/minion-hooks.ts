@@ -1,4 +1,4 @@
-import { Model, StoreUtil } from "set-piece";
+import { Loader, Model, StoreUtil } from "set-piece";
 import { BattlecryModel } from "./battlecry";
 import { DeathrattleModel } from "./deathrattle";
 import { StartTurnHookModel } from "./start-turn";
@@ -23,18 +23,21 @@ export class MinionHooksModel extends Model<
     MinionHooksProps.C,
     MinionHooksProps.R
 > {
-    constructor(props: MinionHooksModel['props']) {
-        super({
-            uuid: props.uuid,
-            state: { ...props.state },
-            child: { 
-                endTurn: [],
-                startTurn: [],
-                battlecry: [],
-                deathrattle: [],
-                ...props.child 
-            },
-            refer: { ...props.refer }
+    constructor(loader?: Loader<MinionHooksModel>) {
+        super(() => {
+            const props = loader?.() ?? {};
+            return {
+                uuid: props.uuid,
+                state: { ...props.state },
+                child: { 
+                    endTurn: [],
+                    startTurn: [],
+                    battlecry: [],
+                    deathrattle: [],
+                    ...props.child 
+                },
+                refer: { ...props.refer }
+            }
         });
     }
 

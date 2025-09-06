@@ -1,4 +1,4 @@
-import { Model, Props } from "set-piece";
+import { Loader, Method, Model, Props } from "set-piece";
 import { SkillModel } from "../skills";
 import { RoleModel } from "../role";
 import { ArmorModel } from "../rules/armor";
@@ -25,19 +25,22 @@ export abstract class CharacterModel<
     C & CharacterModel.C,
     R & CharacterModel.R
 > {
-    constructor(props: CharacterModel['props'] & {
+    constructor(loader: Method<CharacterModel['props'] & {
         state: S & CharacterModel.S;
         child: C & Pick<CharacterModel.C, 'skill' | 'role'>;
         refer: R & CharacterModel.R;
-    }) {
-        super({
-            uuid: props.uuid,
-            state: { ...props.state },
-            child: {
-                armor: props.child.armor ?? new ArmorModel({}),
-                ...props.child,
-            },
-            refer: { ...props.refer },
+    }, []>) {
+        super(() => {
+            const props = loader();
+            return {
+                uuid: props.uuid,
+                state: { ...props.state },
+                child: {
+                    armor: props.child.armor ?? new ArmorModel(),
+                    ...props.child,
+                },
+                refer: { ...props.refer },
+            }
         })
     }
 }

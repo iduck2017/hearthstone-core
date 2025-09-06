@@ -1,4 +1,4 @@
-import { Event } from "set-piece";
+import { Event, Method, StoreUtil } from "set-piece";
 import { FeatureModel, FeatureStatus } from "../features";
 
 export namespace SpellDamageProps {
@@ -12,25 +12,29 @@ export namespace SpellDamageProps {
     export type R = {};
 }
 
+@StoreUtil.is('spell-damage')
 export class SpellDamageModel extends FeatureModel<
     SpellDamageProps.E,
     SpellDamageProps.S,
     SpellDamageProps.C,
     SpellDamageProps.R
 >  {
-    constructor(props: SpellDamageModel['props'] & {
+    constructor(loader: Method<SpellDamageModel['props'] & {
         state: Pick<SpellDamageProps.S, 'origin'>
-    }) {
-        super({
-            uuid: props.uuid,
-            state: {
-                name: 'Spell Damage',
-                desc: 'Your spell cards deal extra damage.',
-                status: FeatureStatus.ACTIVE,
-                ...props.state,
-            },
-            child: { ...props.child },
-            refer: { ...props.refer },
+    }>) {
+        super(() => {
+            const props = loader?.() ?? {};
+            return {
+                uuid: props.uuid,
+                state: {
+                    name: 'Spell Damage',
+                    desc: 'Your spell cards deal extra damage.',
+                    status: FeatureStatus.ACTIVE,
+                    ...props.state,
+                },
+                child: { ...props.child },
+                refer: { ...props.refer },
+            }
         });
     }
 }

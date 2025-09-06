@@ -1,4 +1,4 @@
-import { Event, Model, TranxUtil } from "set-piece";
+import { Event, Loader, Model, TranxUtil } from "set-piece";
 import { PlayerModel } from "../player";
 import { CardModel } from "../cards";
 import { MinionModel } from "../cards/minion";
@@ -51,12 +51,15 @@ export class DamageModel extends Model<
         }
     } 
 
-    constructor(props: DamageModel['props']) {
-        super({
-            uuid: props.uuid,
-            state: {},
-            child: {},
-            refer: {}
+    constructor(loader?: Loader<DamageModel>) {
+        super(() => {
+            const props = loader?.() ?? {};
+            return {
+                uuid: props.uuid,
+                state: { ...props.state },
+                child: { ...props.child },
+                refer: { ...props.refer }
+            }
         })
     }
 

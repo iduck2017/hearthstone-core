@@ -1,4 +1,4 @@
-import { Model } from "set-piece";
+import { Loader, Model } from "set-piece";
 
 export namespace WeaponAttackProps {
     export type E = {}
@@ -13,12 +13,15 @@ export class WeaponAttackModel extends Model<
     WeaponAttackProps.C,
     WeaponAttackProps.R
 > {
-    constructor(props: WeaponAttackModel['props']) {
-        super({
-            uuid: props.uuid,
-            state: { ...props.state },
-            child: { ...props.child },
-            refer: { ...props.refer },
+    constructor(loader?: Loader<WeaponAttackModel>) {
+        super(() => {
+            const props = loader?.() ?? {};
+            return {
+                uuid: props.uuid,
+                state: { ...props.state },
+                child: { ...props.child },
+                refer: { ...props.refer },
+            }
         });
     }
 }

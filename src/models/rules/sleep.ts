@@ -1,4 +1,4 @@
-import { Event, Model } from "set-piece";
+import { Event, Loader, Method, Model } from "set-piece";
 import { FeatureStatus } from "../features";
 
 export namespace SleepProps {
@@ -19,15 +19,18 @@ export class SleepModel extends Model<
     SleepProps.C,
     SleepProps.R
 > {
-    constructor(props: SleepModel['props']) {
-        super({
-            uuid: props.uuid,
-            state: {
-                status: FeatureStatus.ACTIVE,
-                ...props.state
-            },
-            child: { ...props.child },
-            refer: { ...props.refer },
+    constructor(loader?: Loader<SleepModel>) {
+        super(() => {
+            const props = loader?.() ?? {};
+            return {
+                uuid: props.uuid,
+                state: {
+                    status: FeatureStatus.ACTIVE,
+                    ...props.state
+                },
+                child: { ...props.child },
+                refer: { ...props.refer },
+            }
         })
     }
 

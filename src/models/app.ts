@@ -1,4 +1,4 @@
-import { DebugUtil, Model, StoreUtil } from "set-piece";
+import { DebugUtil, Loader, Model, StoreUtil } from "set-piece";
 import { GameModel } from "./game";
 
 export namespace AppProps {
@@ -17,12 +17,15 @@ export class AppModel extends Model<
     AppProps.C, 
     AppProps.R
 > {
-    constructor(props: AppModel['props']) {
-        super({
-            uuid: props.uuid,
-            state: { ...props?.state },
-            child: { ...props?.child },
-            refer: { ...props?.refer },
+    constructor(loader?: Loader<AppModel>) {
+        super(() => {
+            const props = loader?.() ?? {};
+            return {
+                uuid: props.uuid,
+                state: { ...props.state },
+                child: { ...props.child },
+                refer: { ...props.refer },
+            }
         });
     }
 

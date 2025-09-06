@@ -1,4 +1,4 @@
-import { Event } from "set-piece";
+import { Event, Loader, StoreUtil } from "set-piece";
 import { DamageEvent } from "../../types/damage";
 import { FeatureModel, FeatureStatus } from "../features";
 
@@ -14,25 +14,29 @@ export namespace DivineSheildProps {
     export type R = {}
 }
 
+@StoreUtil.is('divine-shield')
 export class DivineSheildModel extends FeatureModel<
     DivineSheildProps.E,
     DivineSheildProps.S,
     DivineSheildProps.C,
     DivineSheildProps.R
 > {
-    constructor(props: DivineSheildModel['props']) {
-        super({
-            uuid: props.uuid,
-            state: {
-                name: 'Divine Shield',
-                desc: 'The first time you take damage, ignore it.',
-                status: FeatureStatus.ACTIVE,
-                count: 1,
-                ...props.state,
-            },
-            child: { ...props.child },
-            refer: { ...props.refer },
-        });
+    constructor(loader?: Loader<DivineSheildModel>) {
+        super(() => {
+            const props = loader?.() ?? {};
+            return {
+                uuid: props.uuid,
+                state: {
+                    name: 'Divine Shield',
+                    desc: 'The first time you take damage, ignore it.',
+                    status: FeatureStatus.ACTIVE,
+                    count: 1,
+                    ...props.state,
+                },
+                child: { ...props.child },
+                refer: { ...props.refer },
+            }
+        })
     }
 
     public actve(): boolean {

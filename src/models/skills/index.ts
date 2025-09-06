@@ -1,4 +1,4 @@
-import { Event, Model, Props } from "set-piece";
+import { Event, Method, Model, Props } from "set-piece";
 import { SelectEvent, SelectUtil } from "../../utils/select";
 import { PlayerModel } from "../player";
 import { GameModel } from "../game";
@@ -45,20 +45,23 @@ export abstract class SkillModel<
         }
     }
 
-    constructor(props: SkillModel['props'] & {
+    constructor(loader: Method<SkillModel['props'] & {
         uuid: string | undefined;
         state: S & SkillProps.S;
         child: C & Pick<SkillProps.C, 'cost'>;
         refer: R;
-    }) {
-        super({
-            uuid: props.uuid,
-            state: { ...props.state },
-            child: {
-                damage: props.child?.damage ?? new DamageModel({}),
-                ...props.child
-            },
-            refer: { ...props.refer },
+    }, []>) {
+        super(() => {
+            const props = loader?.();
+            return {
+                uuid: props.uuid,
+                state: { ...props.state },
+                child: {
+                    damage: props.child?.damage ?? new DamageModel(),
+                    ...props.child
+                },
+                refer: { ...props.refer },
+            }
         });
     }
 

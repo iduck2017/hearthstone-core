@@ -7,83 +7,83 @@ import { boot } from "./boot";
 import { WispModel } from "./wisp";
 
 describe('game', () => {
-    const game = new GameModel({
+    const game = new GameModel(() => ({
         child: {
-            playerA: new PlayerModel({
+            playerA: new PlayerModel(() => ({
                 child: {
-                    hand: new HandModel({}),
-                    deck: new DeckModel({
+                    hand: new HandModel(),
+                    deck: new DeckModel(() => ({
                         child: { 
                             minions: [
-                                new WispModel({
+                                new WispModel(() => ({
                                     child: {
-                                        cost: new CostModel({ state: { origin: 0 } }),
-                                        role: new RoleModel({
+                                        cost: new CostModel(() => ({ state: { origin: 0 } })),
+                                        role: new RoleModel(() => ({
                                             state: { races: [] },
                                             child: {
-                                                health: new HealthModel({ state: { origin: 1 } }),
-                                                attack: new AttackModel({ state: { origin: 1 } }),
+                                                health: new HealthModel(() => ({ state: { origin: 1 } })),
+                                                attack: new AttackModel(() => ({ state: { origin: 1 } })),
                                             }
-                                        })
+                                        })),
                                     }
-                                }),
-                                new WispModel({
+                                })),
+                                new WispModel(() => ({
                                     child: {
-                                        cost: new CostModel({ state: { origin: 0 } }),
-                                        role: new RoleModel({
+                                        cost: new CostModel(() => ({ state: { origin: 0 } })),
+                                        role: new RoleModel(() => ({
                                             state: { races: [] },
                                             child: {
-                                                health: new HealthModel({ state: { origin: 1 } }),
-                                                attack: new AttackModel({ state: { origin: 1 } }),
+                                                health: new HealthModel(() => ({ state: { origin: 1 } })),
+                                                attack: new AttackModel(() => ({ state: { origin: 1 } })),
                                             }
-                                        })
+                                        })),
                                     }
-                                })
+                                })),
                             ]
                         }
-                    }),
-                    board: new BoardModel({
+                    })),
+                    board: new BoardModel(() => ({
                         child: {
                             minions: [
-                                new WispModel({
+                                new WispModel(() => ({
                                     child: {
-                                        cost: new CostModel({ state: { origin: 0 } }),
-                                        role: new RoleModel({
+                                        cost: new CostModel(() => ({ state: { origin: 0 } })),
+                                        role: new RoleModel(() => ({
                                             state: { races: [] },
                                             child: {
-                                                health: new HealthModel({ state: { origin: 1 } }),
-                                                attack: new AttackModel({ state: { origin: 1 } }),
+                                                health: new HealthModel(() => ({ state: { origin: 1 } })),
+                                                attack: new AttackModel(() => ({ state: { origin: 1 } })),
                                             }
-                                        })
+                                        })),
                                     }
-                                })
+                                })),
                             ]
                         }
-                    }),
-                    character: new MageModel({})
+                    })),
+                    character: new MageModel()
                 }
-            }),
-            playerB: new PlayerModel({
+            })),
+            playerB: new PlayerModel(() => ({
                 child: {
-                    hand: new HandModel({}),
-                    deck: new DeckModel({
+                    hand: new HandModel(),
+                    deck: new DeckModel(() => ({
                         child: { 
                             minions: [
-                                new WispModel({}),
-                                new WispModel({})
+                                new WispModel(),
+                                new WispModel()
                             ]
                         }
-                    }),
-                    board: new BoardModel({
+                    })),
+                    board: new BoardModel(() => ({
                         child: {
-                            minions: [new WispModel({})]
+                            minions: [new WispModel()]
                         }
-                    }),
-                    character: new MageModel({})
+                    })),
+                    character: new MageModel()
                 }
-            }),
+            })),
         }
-    });
+    }));
     const player = game.child.playerA;
     const board = player.child.board;
     const hand = player.child.hand;
@@ -129,6 +129,7 @@ describe('game', () => {
         expect(selector?.options.length).toBe(2);
         SelectUtil.set(0);
         await promise;
+        
         // minions
         expect(board.child.minions.length).toBe(2);
         expect(board.child.minions[1]).toBe(card);

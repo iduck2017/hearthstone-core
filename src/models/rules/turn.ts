@@ -1,4 +1,4 @@
-import { Event, Model } from "set-piece";
+import { Event, Loader, Method, Model } from "set-piece";
 import { PlayerModel } from "../player";
 import { GameModel } from "../game";
 
@@ -32,15 +32,18 @@ export class TurnModel extends Model<
         }
     }
 
-    constructor(props: TurnModel['props']) {
-        super({
-            uuid: props.uuid,
-            state: {
-                count: 0,
-                ...props.state,
-            },
-            child: { ...props.child },
-            refer: { ...props.refer },
+    constructor(loader?: Loader<TurnModel>) {
+        super(() => {
+            const props = loader?.() ?? {};
+            return {
+                uuid: props.uuid,
+                state: {
+                    count: 0,
+                    ...props.state,
+                },
+                child: { ...props.child },
+                refer: { ...props.refer },
+            }
         })
     }
 

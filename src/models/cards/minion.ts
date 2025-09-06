@@ -1,4 +1,4 @@
-import { DebugUtil, Model, TranxUtil, Props, Event, Format } from "set-piece";
+import { DebugUtil, Model, TranxUtil, Props, Event, Format, Loader, Method } from "set-piece";
 import { BoardModel } from "../containers/board";
 import { SelectEvent, SelectUtil } from "../../utils/select";
 import { MinionHooksModel } from "../hooks/minion-hooks";
@@ -40,21 +40,24 @@ export abstract class MinionModel<
     C & MinionProps.C,
     R & MinionProps.R
 > {
-    constructor(props: MinionModel['props'] & {
+    constructor(loader: Method<MinionModel['props'] & {
         uuid: string | undefined;
         state: S & Format.State<MinionProps.S & CardProps.S>;
         child: C & Pick<MinionProps.C, 'role'> & Pick<CardProps.C, 'cost'>;
         refer: R;
-    }) {
-        super({
-            uuid: props.uuid,
-            state: { ...props.state },
-            child: {
-                hooks: new MinionHooksModel({}),
-                features: new FeaturesModel({}),
-                ...props.child,
-            },
-            refer: { ...props.refer },
+    }, []>) {
+        super(() => {
+            const props = loader();
+            return {
+                uuid: props.uuid,
+                state: { ...props.state },
+                child: {
+                    hooks: props.child.hooks ?? new MinionHooksModel(),
+                    features: props.child.features ?? new FeaturesModel(),
+                    ...props.child,
+                },
+                refer: { ...props.refer },
+            }
         });
     }
 

@@ -1,4 +1,4 @@
-import { Model } from "set-piece";
+import { Loader, Model } from "set-piece";
 import { MinionModel } from "../cards/minion";
 import { GameModel } from "../game";
 import { PlayerModel } from "../player";
@@ -28,15 +28,18 @@ export class GraveyardModel extends Model<
         }
     }
 
-    constructor(props: GraveyardModel['props']) {
-        super({
-            uuid: props.uuid,
-            state: { ...props.state },
-            child: { 
-                minions: [],
-                ...props.child,
-            },
-            refer: { ...props.refer },
+    constructor(loader?: Loader<GraveyardModel>) {
+        super(() => {
+            const props = loader?.() ?? {};
+            return {
+                uuid: props.uuid,
+                state: { ...props.state },
+                child: { 
+                    minions: [],
+                    ...props.child,
+                },
+                refer: { ...props.refer },
+            }
         });
     }
     

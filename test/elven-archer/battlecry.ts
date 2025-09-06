@@ -1,18 +1,21 @@
 import { BattlecryModel, DamageEvent, DamageModel, DamageType, RoleModel, SelectEvent } from "../../src";
-import { StoreUtil } from "set-piece";
+import { Loader, StoreUtil } from "set-piece";
 
 @StoreUtil.is('elven-archer-battlecry')
 export class ElvenArcherBattlecryModel extends BattlecryModel<[RoleModel]> {
-    constructor(props: ElvenArcherBattlecryModel['props']) {
-        super({
-            uuid: props.uuid,
-            state: {
-                name: 'Elven Archer Battlecry',
-                desc: 'Deal 1 damage.',
-                ...props.state,
-            },
-            child: { ...props.child },
-            refer: { ...props.refer },
+    constructor(loader?: Loader<ElvenArcherBattlecryModel>) {
+        super(() => {
+            const props = loader?.() ?? {};
+            return {
+                uuid: props.uuid,
+                state: {
+                    name: 'Elven Archer Battlecry',
+                    desc: 'Deal 1 damage.',
+                    ...props.state,
+                },
+                child: { ...props.child },
+                refer: { ...props.refer },
+            }
         });
     }
 

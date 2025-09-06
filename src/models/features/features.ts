@@ -1,4 +1,4 @@
-import { Model, StoreUtil } from "set-piece";
+import { Loader, Model, StoreUtil } from "set-piece";
 import { FeatureModel } from ".";
 
 namespace FeaturesProps {
@@ -17,16 +17,19 @@ export class FeaturesModel extends Model<
     FeaturesProps.C,
     FeaturesProps.R
 > {
-    constructor(props: FeaturesModel['props']) {
-        super({
-            uuid: props.uuid,
-            state: { ...props.state },
-            child: { 
-                items: [],
-                ...props.child 
-            },
-            refer: { ...props.refer }
-        });
+    constructor(loader?: Loader<FeaturesModel>) {
+        super(() => {
+            const props = loader?.() ?? {};
+            return {
+                uuid: props.uuid,
+                state: { ...props.state },
+                child: {
+                    items: props.child?.items ?? [],
+                    ...props.child
+                },
+                refer: { ...props.refer }
+            }
+        })
     }
 
     public add(feature: FeatureModel) {

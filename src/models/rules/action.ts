@@ -1,4 +1,4 @@
-import { DebugUtil, Event, Model, TranxUtil } from "set-piece";
+import { DebugUtil, Event, Loader, Method, Model, TranxUtil } from "set-piece";
 import { MinionModel } from "../cards/minion";
 import { RoleModel } from "../role";
 import { GameModel } from "../game";
@@ -47,17 +47,20 @@ export class ActionModel extends Model<
         }
     }
 
-    constructor(props: ActionModel['props']) {
-        super({
-            uuid: props.uuid,
-            state: {
-                origin: 1,
-                cost: 0,
-                status: FeatureStatus.ACTIVE,
-                ...props.state,
-            },
-            child: { ...props.child },
-            refer: { ...props.refer },
+    constructor(loader?: Loader<ActionModel>) {
+        super(() => {
+            const props = loader?.() ?? {};
+            return {
+                uuid: props.uuid,
+                state: {
+                    origin: 1,
+                    cost: 0,
+                    status: FeatureStatus.ACTIVE,
+                    ...props.state,
+                },
+                child: { ...props.child },
+                refer: { ...props.refer },
+            }
         });
     }
 

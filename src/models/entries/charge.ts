@@ -1,4 +1,4 @@
-import { Decor, Event, StateUtil, TranxUtil } from "set-piece";
+import { Decor, Event, Loader, StateUtil, StoreUtil, TranxUtil } from "set-piece";
 import { FeatureModel, FeatureStatus } from "../features";
 import { SleepModel, SleepProps } from "../rules/sleep";
 
@@ -11,23 +11,27 @@ export namespace ChargeProps {
     export type R = {}
 }
 
+@StoreUtil.is('charge')
 export class ChargeModel extends FeatureModel<
     ChargeProps.E,
     ChargeProps.S,
     ChargeProps.C,
     ChargeProps.R
 > {
-    constructor(props: ChargeModel['props']) {
-        super({
-            uuid: props.uuid,
-            state: {
-                name: 'Charge',
-                desc: 'Can attack immediately.',
-                status: FeatureStatus.ACTIVE,
-                ...props.state,
-            },
-            child: { ...props.child },
-            refer: { ...props.refer },
+    constructor(loader?: Loader<ChargeModel>) {
+        super(() => {
+            const props = loader?.() ?? {};
+            return {
+                uuid: props.uuid,
+                state: {
+                    name: 'Charge',
+                    desc: 'Can attack immediately.',
+                    status: FeatureStatus.ACTIVE,
+                    ...props.state,
+                },
+                child: { ...props.child },
+                refer: { ...props.refer },
+            }
         })
     }
 

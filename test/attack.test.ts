@@ -6,34 +6,34 @@ import { BoardModel } from "../src/models/containers/board";
 import { WispModel } from "./wisp";
 
 describe('role', () => {
-    const game = new GameModel({
+    const game = new GameModel(() => ({
         child: {
-            playerA: new PlayerModel({
+            playerA: new PlayerModel(() => ({
                 child: {
-                    character: new MageModel({}),
-                    hand: new HandModel({}),
-                    deck: new DeckModel({}),
-                    board: new BoardModel({
+                    character: new MageModel(),
+                    hand: new HandModel(),
+                    deck: new DeckModel(),
+                    board: new BoardModel(() => ({
                         child: { 
-                            minions: [new WispModel({})]
+                            minions: [new WispModel()]
                         }
-                    }),
+                    })),
                 }
-            }),
-            playerB: new PlayerModel({
+            })),
+            playerB: new PlayerModel(() => ({
                 child: {
-                    character: new MageModel({}),
-                    hand: new HandModel({}),
-                    deck: new DeckModel({}),
-                    board: new BoardModel({
+                    character: new MageModel(),
+                    hand: new HandModel(),
+                    deck: new DeckModel(),
+                    board: new BoardModel(() => ({
                         child: { 
-                            minions: [new WispModel({})]
+                            minions: [new WispModel()]
                         }
-                    }),
+                    })),
                 }
-            })
+            })),
         }
-    });
+    }));
     boot(game)
     const playerA = game.child.playerA;
     const playerB = game.child.playerB;

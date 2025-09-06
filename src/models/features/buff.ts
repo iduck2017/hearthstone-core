@@ -1,4 +1,4 @@
-import { Decor, Model, Props, StateUtil } from "set-piece";
+import { Decor, Method, Model, Props, StateUtil, StoreUtil } from "set-piece";
 import { FeatureModel, FeatureProps, FeatureStatus } from ".";
 import { AttackModel, AttackProps } from "../rules/attack";
 import { HealthModel, HealthProps } from "../rules/health";
@@ -24,21 +24,24 @@ export abstract class BuffModel<
     C & BuffProps.C,
     R & BuffProps.R
 > {
-    constructor(props: BuffModel['props'] & {
+    constructor(loader: Method<BuffModel['props'] & {
         uuid: string | undefined;
-        state: S & Pick<BuffProps.S, 'offsetAttack' | 'offsetHealth'> & Pick<FeatureProps.S, 'name' | 'desc'>,
+        state: S & BuffProps.S & Omit<FeatureProps.S, 'status'>,
         child: C,
         refer: R,
-    }) {
-        super({
-            uuid: props.uuid,
-            state: {
-                status: FeatureStatus.ACTIVE,
-                isOverride: false,
-                ...props.state,
-            },
-            child: { ...props.child },
-            refer: { ...props.refer },
+    }, []>) {
+        super(() => {
+            const props = loader();
+            return {
+                uuid: props.uuid,
+                state: {
+                    status: FeatureStatus.ACTIVE,
+                    isOverride: false,
+                    ...props.state,
+                },
+                child: { ...props.child },
+                refer: { ...props.refer },
+            }
         });
     }
 

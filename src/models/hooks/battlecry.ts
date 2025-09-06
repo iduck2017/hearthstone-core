@@ -1,5 +1,4 @@
-import { Event, Model, Props } from "set-piece";
-import { MinionModel } from "../cards/minion";
+import { Event, Method, Model, Props } from "set-piece";
 import { SelectEvent } from "../../utils/select";
 import { FeatureModel, FeatureProps } from "../features";
 
@@ -25,20 +24,23 @@ export abstract class BattlecryModel<
     C & BattlecryProps.C, 
     R & BattlecryProps.R
 > {
-    constructor(props: BattlecryModel['props'] & {
+    constructor(loader: Method<BattlecryModel['props'] & {
         uuid: string | undefined;
         state: S & Pick<FeatureProps.S, 'desc' | 'name'>;
         child: C;
         refer: R;
-    }) {
-        super({
-            uuid: props.uuid,
-            state: { 
-                status: 1,
-                ...props.state,
-            },
-            child: { ...props.child },
-            refer: { ...props.refer },
+    }, []>) {
+        super(() => {
+            const props = loader?.();
+            return {
+                uuid: props.uuid,
+                state: { 
+                    status: 1,
+                    ...props.state,
+                },
+                child: { ...props.child },
+                refer: { ...props.refer },
+            }
         });
     }
 

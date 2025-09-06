@@ -11,30 +11,30 @@ import { ElvenArcherModel } from "./elven-archer";
 import { WispModel } from "./wisp";
 
 describe('battlecry', () => {
-    const game = new GameModel({
+    const game = new GameModel(() => ({
         child: {
-            playerA: new PlayerModel({
+            playerA: new PlayerModel(() => ({
                 child: {
-                    mana: new ManaModel({ state: { origin: 10 }}),
-                    character: new MageModel({}),
-                    hand: new HandModel({
+                    mana: new ManaModel(() => ({ state: { origin: 10 }})),
+                    character: new MageModel(),
+                    hand: new HandModel(() => ({
                         child: { 
-                            minions: [new ElvenArcherModel({})] 
+                            minions: [new ElvenArcherModel()] 
                         }
-                    })
+                    })),
                 }
-            }),
-            playerB: new PlayerModel({
+            })),
+            playerB: new PlayerModel(() => ({
                 child: {
-                    mana: new ManaModel({ state: { origin: 10 }}),
-                    character: new MageModel({}),
-                    board: new BoardModel({
-                        child: { minions: [new WispModel({})] }
-                    })
+                    mana: new ManaModel(() => ({ state: { origin: 10 }})),
+                    character: new MageModel(),
+                    board: new BoardModel(() => ({
+                        child: { minions: [new WispModel()] }
+                    })),
                 }
-            }),
+            })),
         }
-    })
+    }));
     const root = boot(game);
     const playerA = game.child.playerA;
     const playerB = game.child.playerB;

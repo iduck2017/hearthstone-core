@@ -1,4 +1,4 @@
-import { Event } from "set-piece";
+import { Event, Loader, StoreUtil } from "set-piece";
 import { FeatureModel, FeatureStatus } from "../features";
 
 export namespace TauntProps {
@@ -10,23 +10,27 @@ export namespace TauntProps {
     export type R = {};
 }
 
+@StoreUtil.is('taunt')
 export class TauntModel extends FeatureModel<
     TauntProps.E, 
     TauntProps.S, 
     TauntProps.C, 
     TauntProps.R
 > {
-    constructor(props: TauntModel['props']) {
-        super({
-            uuid: props.uuid,
-            state: {
-                name: 'Taunt',
-                desc: 'Taunt',
-                status: FeatureStatus.ACTIVE,
-                ...props.state,
-            },
-            child: { ...props.child },
-            refer: { ...props.refer },
+    constructor(loader?: Loader<TauntModel>) {
+        super(() => {
+            const props = loader?.() ?? {};
+            return {
+                uuid: props.uuid,
+                state: {
+                    name: 'Taunt',
+                    desc: 'Taunt',
+                    status: FeatureStatus.ACTIVE,
+                    ...props.state,
+                },
+                child: { ...props.child },
+                refer: { ...props.refer },
+            }
         })
     }
 

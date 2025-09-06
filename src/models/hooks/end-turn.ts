@@ -1,4 +1,4 @@
-import { Event, Model, Props } from "set-piece";
+import { Event, Method, Model, Props } from "set-piece";
 import { MinionModel } from "../cards/minion";
 import { FeatureModel, FeatureProps } from "../features";
 
@@ -23,20 +23,23 @@ export abstract class EndTurnHookModel<
     C & EndTurnHookProps.C,
     R & EndTurnHookProps.R
 > {
-    constructor(props: EndTurnHookModel['props'] & {
+    constructor(loader: Method<EndTurnHookModel['props'] & {
         uuid: string | undefined;
         state: S & Pick<FeatureProps.S, 'desc' | 'name'>;
         child: C;
         refer: R;
-    }) {
-        super({
-            uuid: props.uuid,
-            state: {
-                status: 1,
-                ...props.state,
-            },
-            child: { ...props.child },
-            refer: { ...props.refer },
+    }, []>) {
+        super(() => {
+            const props = loader?.();
+            return {
+                uuid: props.uuid,
+                state: {
+                    status: 1,
+                    ...props.state,
+                },
+                child: { ...props.child },
+                refer: { ...props.refer },
+            }
         })
     }
 

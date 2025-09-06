@@ -1,4 +1,4 @@
-import { DebugUtil, Event, Model, StoreUtil } from "set-piece";
+import { DebugUtil, Event, Method, Model, StoreUtil } from "set-piece";
 import { DamageEvent, DamageModel, MinionModel } from "../..";
 import { RoleModel } from "../role";
 import { GameModel } from "../game";
@@ -47,21 +47,24 @@ export class AttackModel extends Model<
         }
     }
     
-    constructor(props: AttackModel['props'] & {
+    constructor(loader: Method<AttackModel['props'] & {
         state: Pick<AttackProps.S, 'origin'>
-    }) {
-        super({
-            uuid: props.uuid,
-            state: {
-                offset: 0,
-                ...props.state,
-            },
-            child: { 
-                damage: props.child?.damage ?? new DamageModel({}),
-                ...props.child,
-            },
-            refer: { ...props.refer },
-        })
+    }, []>) {
+        super(() => {
+            const props = loader?.();
+            return {
+                uuid: props.uuid,
+                state: {
+                    offset: 0,
+                    ...props.state,
+                },
+                child: { 
+                    damage: props.child?.damage ?? new DamageModel(),
+                    ...props.child,
+                },
+                refer: { ...props.refer },
+            }
+        });
     }
 
     public check(): boolean {

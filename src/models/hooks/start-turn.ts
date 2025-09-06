@@ -1,4 +1,4 @@
-import { Event, Model, Props } from "set-piece";
+import { Event, Method, Model, Props } from "set-piece";
 import { EndTurnHookModel } from "./end-turn";
 import { FeatureModel, FeatureProps } from "../features";
 
@@ -23,21 +23,24 @@ export abstract class StartTurnHookModel<
     C & StartTurnHookProps.C,
     R & StartTurnHookProps.R
 > {
-    constructor(props: EndTurnHookModel['props'] & {
+    constructor(loader: Method<StartTurnHookModel['props'] & {
         uuid: string | undefined;
         state: S & Pick<FeatureProps.S, 'desc' | 'name'>;
         child: C;
         refer: R;
-    }) {
-        super({
-            uuid: props.uuid,
-            state: {
-                status: 1,
-                ...props.state,
-            },
-            child: { ...props.child },
-            refer: { ...props.refer },
-        })
+    }, []>) {
+        super(() => {
+            const props = loader?.();
+            return {
+                uuid: props.uuid,
+                state: {
+                    status: 1,
+                    ...props.state,
+                },
+                child: { ...props.child },
+                refer: { ...props.refer },
+            }
+        });
     }
     
     public async run() {

@@ -1,4 +1,4 @@
-import { DebugUtil, Model, TranxUtil, Props, Event } from "set-piece";
+import { DebugUtil, Model, TranxUtil, Props, Event, Method } from "set-piece";
 import { CostModel, CostType } from "../rules/cost";
 import { GameModel } from "../game";
 import { PlayerModel } from "../player";
@@ -54,28 +54,28 @@ export abstract class CardModel<
         }
     }
 
-    constructor(props: CardModel['props'] & {
+    constructor(loader: Method<CardModel['props'] & {
         state: S & CardProps.S,
         child: C & Pick<CardProps.C, 'cost'>,
         refer: R & CardProps.R,
-    }) {
-        super({
-            uuid: props.uuid,
-            state: { ...props.state },
-            child: { ...props.child },
-            refer: { ...props.refer } 
+    }, []>) {
+        super(() => {
+            const props = loader?.() ?? {};
+            return {
+                uuid: props.uuid,
+                state: { ...props.state },
+                child: { ...props.child },
+                refer: { ...props.refer }
+            }
         })
     }
 
     public abstract play(): Promise<void>;
     
     public check(): boolean {
-        const game = this.route.game;
         const player = this.route.player;
         if (!player) return false;
-        if (!game) return false;
-        const turn = game.child.turn;
-        if (turn.refer.current !== player) return false;
+        if (!player.check()) return false;
         const cost = this.child.cost;
         if (!cost.check()) return false;
         return true;

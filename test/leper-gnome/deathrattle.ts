@@ -1,18 +1,21 @@
 import { DamageEvent, DamageModel, DamageType, DeathrattleModel } from "../../src";
-import { StoreUtil } from "set-piece";
+import { Loader, StoreUtil } from "set-piece";
 
 @StoreUtil.is('leper-gnome-deathrattle')
 export class LeperGnomeDeathrattleModel extends DeathrattleModel {
-    constructor(props: LeperGnomeDeathrattleModel['props']) {
-        super({
-            uuid: props.uuid,
-            state: {
-                name: 'Leper Gnome\'s Deathrattle',
-                desc: 'Deal 2 damage to the enemy hero.',
-                ...props.state,
-            },
-            child: { ...props.child },
-            refer: { ...props.refer },
+    constructor(loader?: Loader<LeperGnomeDeathrattleModel>) {
+        super(() => {
+            const props = loader?.() ?? {};
+            return {
+                uuid: props.uuid,
+                state: {
+                    name: 'Leper Gnome\'s Deathrattle',
+                    desc: 'Deal 2 damage to the enemy hero.',
+                    ...props.state,
+                },
+                child: { ...props.child },
+                refer: { ...props.refer },
+            }
         });
     }
 

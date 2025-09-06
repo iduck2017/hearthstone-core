@@ -1,4 +1,4 @@
-import { Model } from "set-piece";
+import { Method, Model } from "set-piece";
 import { PlayerModel } from "../player";
 import { GameModel } from "../game";
 
@@ -42,18 +42,21 @@ export class CostModel extends Model<
         }
     }
 
-    constructor(props: CostModel['props'] & {
+    constructor(loader: Method<CostModel['props'] & {
         state: Pick<CostProps.S, 'origin'>;
-    }) {
-        super({
-            uuid: props.uuid,
-            state: { 
-                offset: 0,
-                type: CostType.MANA,
-                ...props.state 
-            },
-            child: { ...props.child },
-            refer: { ...props.refer },
+    }, []>) {
+        super(() => {
+            const props = loader?.();
+            return {
+                uuid: props.uuid,
+                state: { 
+                    offset: 0,
+                    type: CostType.MANA,
+                    ...props.state 
+                },
+                child: { ...props.child },
+                refer: { ...props.refer },
+            }
         });
     }
 

@@ -1,4 +1,4 @@
-import { Decor, Event, StateUtil, TranxUtil } from "set-piece";
+import { Decor, Event, Loader, StateUtil, StoreUtil, TranxUtil } from "set-piece";
 import { FeatureModel } from "../features";
 import { ActionProps, ActionModel } from "../rules/action";
 
@@ -19,23 +19,27 @@ export namespace WindfuryProps {
     export type R = {};
 }
 
+@StoreUtil.is('windfury')
 export class WindfuryModel extends FeatureModel<
     WindfuryProps.E,
     WindfuryProps.S,
     WindfuryProps.C,
     WindfuryProps.R
 > {
-    constructor(props: WindfuryModel['props']) {
-        super({
-            uuid: props.uuid,
-            state: {
-                name: 'Windfury',
-                desc: 'Can attack twice each turn.',
-                status: WindfuryStatus.ACTIVE,
-                ...props.state,
-            },
-            child: { ...props.child },
-            refer: { ...props.refer },
+    constructor(loader?: Loader<WindfuryModel>) {
+        super(() => {
+            const props = loader?.() ?? {};
+            return {
+                uuid: props.uuid,
+                state: {
+                    name: 'Windfury',
+                    desc: 'Can attack twice each turn.',
+                    status: WindfuryStatus.ACTIVE,
+                    ...props.state,
+                },
+                child: { ...props.child },
+                refer: { ...props.refer },
+            }
         });
     }
 

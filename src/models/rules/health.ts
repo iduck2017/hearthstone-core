@@ -1,4 +1,4 @@
-import { DebugUtil, Event, EventUtil, Model, StateChangeEvent, TranxUtil } from "set-piece";
+import { DebugUtil, Event, EventUtil, Method, Model, StateChangeEvent, TranxUtil } from "set-piece";
 import { RoleModel } from "../role";
 import { GameModel } from "../game";
 import { PlayerModel } from "../player";
@@ -56,19 +56,23 @@ export class HealthModel extends Model<
         }
     }
 
-    constructor(props: HealthModel['props'] & {
+    constructor(loader: Method<HealthModel['props'] & {
         state: Pick<HealthProps.S, 'origin'>
-    }) {
-        super({
-            uuid: props.uuid,
-            state: { 
-                offset: 0,
-                damage: 0,
-                memory: props.state.origin + (props.state?.offset ?? 0),
-                ...props.state,
-            },
-            child: { ...props.child },
-            refer: { ...props.refer },
+    }, []>) {
+        super(() => {
+            const props = loader?.();
+            const memory = props.state.origin + (props.state.offset ?? 0);
+            return {
+                uuid: props.uuid,
+                state: { 
+                    offset: 0,
+                    damage: 0,
+                    memory,
+                    ...props.state,
+                },
+                child: { ...props.child },
+                refer: { ...props.refer },
+            }
         });
     }
 

@@ -1,4 +1,4 @@
-import { Func } from "set-piece";
+import { Method } from "set-piece";
 import type { DeathModel } from "../models/rules/death";
 
 export class DeathUtil {
@@ -17,8 +17,8 @@ export class DeathUtil {
         return function(
             prototype: unknown,
             key: string,
-            descriptor: TypedPropertyDescriptor<Func>
-        ): TypedPropertyDescriptor<Func> {
+            descriptor: TypedPropertyDescriptor<Method>
+        ): TypedPropertyDescriptor<Method> {
             const handler = descriptor.value;
             if (!handler) return descriptor;
             const instance = {

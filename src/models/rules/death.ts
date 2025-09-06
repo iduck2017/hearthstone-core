@@ -1,4 +1,4 @@
-import { Event, Model } from "set-piece";
+import { Event, Loader, Model } from "set-piece";
 import { DeathUtil } from "../../utils/death";
 import { RoleModel } from "../role";
 import { MinionModel } from "../cards/minion";
@@ -52,16 +52,19 @@ export class DeathModel extends Model<
         }
     }
 
-    constructor(props: DeathModel['props']) {
-        super({
-            uuid: props.uuid,
-            state: { 
-                status: DeathStatus.INACTIVE,
-                isDestroy: false,
-                ...props.state,
-            },
-            child: { ...props.child },
-            refer: { ...props.refer },
+    constructor(loader?: Loader<DeathModel>) {
+        super(() => {
+            const props = loader?.() ?? {};
+            return {
+                uuid: props.uuid,
+                state: { 
+                    status: DeathStatus.INACTIVE,
+                    isDestroy: false,
+                    ...props.state,
+                },
+                child: { ...props.child },
+                refer: { ...props.refer },
+            }
         });
     }
 

@@ -1,4 +1,4 @@
-import { Event, Model, StoreUtil, TranxUtil } from "set-piece";
+import { Event, Loader, Method, Model, StoreUtil, TranxUtil } from "set-piece";
 
 export namespace ManaProps {
     export type E = {
@@ -20,17 +20,20 @@ export class ManaModel extends Model<
     ManaProps.C,
     ManaProps.R
 > {
-    constructor(props: ManaModel['props']) {
-        super({
-            uuid: props.uuid,
-            state: {
-                origin: 0,
-                current: props.state?.origin ?? 0,
-                limit: 10,
-                ...props.state,
-            },
-            child: { ...props.child },
-            refer: { ...props.refer }, 
+    constructor(loader?: Loader<ManaModel>) {
+        super(() => {
+            const props = loader?.() ?? {};
+            return {
+                uuid: props.uuid,
+                state: {
+                    origin: 0,
+                    current: props.state?.origin ?? 0,
+                    limit: 10,
+                    ...props.state,
+                },
+                child: { ...props.child },
+                refer: { ...props.refer }, 
+            }
         })
     }
 
