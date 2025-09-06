@@ -1,10 +1,15 @@
 import { Event, Format, Method, Model, Props, TranxUtil } from "set-piece";
 import { CardModel, CardProps, PlayEvent } from ".";
+import { WeaponAttackModel } from "../rules/weapon-attack";
+import { DurabilityModel } from "../rules/durability";
 
 export namespace WeaponProps {
     export type S = {};
     export type E = {};
-    export type C = {};
+    export type C = {
+        attack: WeaponAttackModel;
+        durability: DurabilityModel;
+    };
     export type R = {};
 }
 

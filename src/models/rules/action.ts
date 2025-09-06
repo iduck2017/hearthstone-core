@@ -8,7 +8,7 @@ import { BoardModel, SelectEvent, SelectUtil } from "../..";
 export namespace ActionProps {
     export type S = {
         origin: number;
-        cost: number;
+        reduce: number;
         isEnable: boolean;
     };
     export type E = {
@@ -42,7 +42,7 @@ export class ActionModel extends Model<
         const state = super.state;
         return {
             ...state,
-            current: state.origin - state.cost,
+            current: state.origin - state.reduce,
         }
     }
 
@@ -53,7 +53,7 @@ export class ActionModel extends Model<
                 uuid: props.uuid,
                 state: {
                     origin: 1,
-                    cost: 0,
+                    reduce: 0,
                     isEnable: true,
                     ...props.state,
                 },
@@ -65,7 +65,7 @@ export class ActionModel extends Model<
 
     @TranxUtil.span()
     public reset() {
-        this.draft.state.cost = 0;
+        this.draft.state.reduce = 0;
     }
 
     private async select(): Promise<RoleModel | undefined> {
@@ -164,7 +164,7 @@ export class ActionModel extends Model<
 
     public consume() {
         if (!this.check()) return false;
-        this.draft.state.cost ++;
+        this.draft.state.reduce ++;
         return true;
     }
 }

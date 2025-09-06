@@ -27,6 +27,8 @@ export { CostProps, CostModel } from "./models/rules/cost";
 export { ArmorProps, ArmorModel } from "./models/rules/armor";
 export { DamageProps, DamageModel } from "./models/actions/damage";
 export { RestoreProps, RestoreModel } from "./models/actions/restore";
+export { WeaponAttackProps, WeaponAttackModel } from "./models/rules/weapon-attack";
+export { DurabilityProps, DurabilityModel } from "./models/rules/durability";
 
 // card
 export { CardProps, CardModel } from "./models/cards";

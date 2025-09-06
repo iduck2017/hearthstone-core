@@ -45,17 +45,17 @@ export abstract class BuffModel<
     }
 
     @StateUtil.on(self => self.route.role?.proxy.child.attack.decor)
-    protected onAttackCheck(that: AttackModel, state: Decor<AttackProps.S>) {
+    protected onAttackCheck(that: AttackModel, decor: Decor<AttackProps.S>) {
         if (!this.state.isActive) return;
         const self: BuffModel = this;
-        state.current.offset += self.state.offsetAttack;
+        decor.current.offset += self.state.offsetAttack;
     }
 
     @StateUtil.on(self => self.route.role?.proxy.child.health.decor)
-    protected onHealthCheck(that: HealthModel, state: Decor<HealthProps.S>) {
+    protected onHealthCheck(that: HealthModel, decor: Decor<HealthProps.S>) {
         if (!this.state.isActive) return;
         const self: BuffModel = this;
-        state.current.offset += self.state.offsetHealth;
+        decor.current.offset += self.state.offsetHealth;
     }
 
     public override() {

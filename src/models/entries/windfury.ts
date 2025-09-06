@@ -53,10 +53,10 @@ export class WindfuryModel extends FeatureModel<
     }
 
     @StateUtil.on(self => self.route.role?.proxy.child.action.decor)
-    protected onCheck(that: ActionModel, state: Decor<ActionProps.S>) {
+    protected onCheck(that: ActionModel, decor: Decor<ActionProps.S>) {
         if (!this.state.isActive) return;
         const offset = this.state.isAdvance ? 3 : 1;
-        state.current.origin += offset;
+        decor.current.origin += offset;
     }
 
     @TranxUtil.span()

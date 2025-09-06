@@ -145,7 +145,7 @@ export class HealthModel extends Model<
     @EventUtil.on(self => self.proxy.event.onStateChange)
     @DebugUtil.log()
     @TranxUtil.span()
-    private onCheck(that: HealthModel, event: StateChangeEvent<HealthModel>) {
+    private onChange(that: HealthModel, event: StateChangeEvent<HealthModel>) {
         const { memory, limit, damage } = event.detail.next;
         const offset = memory - limit;
         if (offset !== 0) console.log('imbalance', memory, limit);
