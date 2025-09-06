@@ -65,7 +65,6 @@ export class WeaponModel<
         this.event.onEquip(new Event({}));
     }
 
-    @DebugUtil.log(LogLevel.ERROR)
     @TranxUtil.span()
     private doEquip(character: CharacterModel) {
         const player = this.route.player;
