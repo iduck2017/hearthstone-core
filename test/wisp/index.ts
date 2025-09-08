@@ -1,8 +1,8 @@
 import { Loader } from "set-piece";
-import { AttackModel, CostModel, HealthModel, MinionModel, RoleModel } from "hearthstone-core";
+import { AttackModel, CostModel, HealthModel, MinionCardModel, RoleModel } from "hearthstone-core";
 import { ClassType, RaceType, RarityType } from "hearthstone-core";
 
-export class WispModel extends MinionModel {
+export class WispModel extends MinionCardModel {
     constructor(loader?: Loader<WispModel>) {
         super(() => {
             const props = loader?.() ?? {};

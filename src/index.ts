@@ -36,8 +36,8 @@ export { DurabilityProps, DurabilityModel } from "./models/rules/durability";
 
 // card
 export { CardProps, CardModel } from "./models/cards";
-export { MinionProps, MinionModel } from "./models/cards/minion";
-export { WeaponProps, WeaponModel } from "./models/cards/weapon";
+export { MinionCardProps, MinionCardModel } from "./models/cards/minion";
+export { WeaponCardProps, WeaponCardModel } from "./models/cards/weapon";
 
 // game
 export { AppProps, AppModel } from "./models/app";

@@ -5,12 +5,13 @@ import { DurabilityModel } from "../rules/durability";
 import { CharacterModel } from "../characters";
 import { WeaponHooksModel } from "../hooks/weapon";
 import { BattlecryModel } from "../hooks/battlecry";
+import { WeaponDisposeModel } from "../rules/dispose/weapon";
 
 export type WeaponPlayEvent = {
     battlecry: Map<BattlecryModel, Model[]>;
 }
 
-export namespace WeaponProps {
+export namespace WeaponCardProps {
     export type S = {};
     export type E = {
         onEquip: Event;
@@ -19,25 +20,26 @@ export namespace WeaponProps {
         readonly hooks: WeaponHooksModel;
         readonly attack: WeaponAttackModel;
         readonly durability: DurabilityModel;
+        readonly dispose: WeaponDisposeModel;
     };
     export type R = {};
 }
 
-export class WeaponModel<
-    E extends Partial<WeaponProps.E & CardProps.E> & Props.E = {},
-    S extends Partial<WeaponProps.S & CardProps.S> & Props.S = {},
-    C extends Partial<WeaponProps.C & CardProps.C> & Props.C = {},
-    R extends Partial<WeaponProps.R & CardProps.R> & Props.R = {}
+export class WeaponCardModel<
+    E extends Partial<WeaponCardProps.E & CardProps.E> & Props.E = {},
+    S extends Partial<WeaponCardProps.S & CardProps.S> & Props.S = {},
+    C extends Partial<WeaponCardProps.C & CardProps.C> & Props.C = {},
+    R extends Partial<WeaponCardProps.R & CardProps.R> & Props.R = {}
 > extends CardModel<
-    WeaponProps.E,
-    WeaponProps.S,
-    WeaponProps.C,
-    WeaponProps.R
+    WeaponCardProps.E,
+    WeaponCardProps.S,
+    WeaponCardProps.C,
+    WeaponCardProps.R
 > {
-    constructor(loader: Method<WeaponModel['props'] & {
-        state: WeaponProps.S & Format.State<Omit<CardProps.S, 'isActive'>>;
-        child: Omit<WeaponProps.C, 'hooks'> & Pick<CardProps.C, 'cost'>;
-        refer: WeaponProps.R;
+    constructor(loader: Method<WeaponCardModel['props'] & {
+        state: WeaponCardProps.S & Format.State<Omit<CardProps.S, 'isActive'>>;
+        child: Omit<WeaponCardProps.C, 'hooks' | 'dispose'> & Pick<CardProps.C, 'cost'>;
+        refer: WeaponCardProps.R;
     }, []>) {
         super(() => {
             const props = loader();
@@ -45,6 +47,7 @@ export class WeaponModel<
                 uuid: props.uuid,
                 state: { ...props.state },
                 child: {
+                    dispose: props.child.dispose ?? new WeaponDisposeModel(),
                     hooks: props.child.hooks ?? new WeaponHooksModel(),
                     ...props.child,
                 },
@@ -91,23 +94,5 @@ export class WeaponModel<
         if (weapon) character.del(weapon);
         character.add(this);
     }
-
-    // dispose
-    // public dispose() {
-    //     this.doRemove();
-    //     const hooks = this.child.hooks;
-    //     const deathrattle = hooks.child.deathrattle;
-    //     for (const item of deathrattle) item.run();
-    // }
-
-    // @TranxUtil.span()
-    // private doRemove() {
-    //     const player = this.route.player;
-    //     if (!player) return;
-    //     const character = player.child.character;
-    //     character.del(this);
-    //     const graveyard = player.child.graveyard;
-    //     graveyard.add(this);
-    // }
 
 }

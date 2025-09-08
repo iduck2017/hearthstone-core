@@ -2,7 +2,7 @@ import { Loader, Method, Model, Props } from "set-piece";
 import { SkillModel } from "../skills";
 import { RoleModel } from "../role";
 import { ArmorModel } from "../rules/armor";
-import { WeaponModel } from "../cards/weapon";
+import { WeaponCardModel } from "../cards/weapon";
 import { CharacterDisposeModel } from "../rules/dispose/character";
 
 export namespace CharacterProps {
@@ -12,7 +12,7 @@ export namespace CharacterProps {
         readonly armor: ArmorModel;
         readonly skill: SkillModel;
         readonly role: RoleModel;
-        weapon?: WeaponModel;
+        weapon?: WeaponCardModel;
         readonly dispose: CharacterDisposeModel
     };
     export type R = {};
@@ -49,11 +49,11 @@ export abstract class CharacterModel<
         })
     }
 
-    public del(weapon: WeaponModel) {
+    public del(weapon: WeaponCardModel) {
         this.draft.child.weapon = undefined;
     }
 
-    public add(weapon: WeaponModel) {
+    public add(weapon: WeaponCardModel) {
         this.draft.child.weapon = weapon;
     }
 }

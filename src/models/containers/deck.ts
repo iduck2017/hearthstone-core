@@ -1,5 +1,5 @@
 import { DebugUtil, Loader, Model } from "set-piece";
-import { MinionModel } from "../cards/minion";
+import { MinionCardModel } from "../cards/minion";
 import { GameModel } from "../game";
 import { PlayerModel } from "../player";
 import { CardModel } from "../cards";
@@ -8,7 +8,7 @@ export namespace DeckProps {
     export type E = {}
     export type S = {}
     export type C = {
-        minions: MinionModel[]
+        minions: MinionCardModel[]
     }
     export type R = {}
 }
@@ -56,7 +56,7 @@ export class DeckModel extends Model<
 
     public del(card: CardModel): CardModel | undefined {
         let cards: CardModel[] | undefined;
-        if (card instanceof MinionModel) cards = this.draft.child.minions;
+        if (card instanceof MinionCardModel) cards = this.draft.child.minions;
         if (!cards) return;
         const index = cards.indexOf(card);
         if (index === -1) return;

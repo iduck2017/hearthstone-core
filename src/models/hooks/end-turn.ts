@@ -1,5 +1,5 @@
 import { Event, Method, Model, Props } from "set-piece";
-import { MinionModel } from "../cards/minion";
+import { MinionCardModel } from "../cards/minion";
 import { FeatureModel, FeatureProps } from "../features";
 
 export namespace EndTurnHookProps {

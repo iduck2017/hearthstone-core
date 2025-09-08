@@ -7,7 +7,7 @@ import { GraveyardModel } from "./containers/graveyard";
 import { ManaModel } from "./rules/mana";
 import { CharacterModel } from "./characters";
 import { RoleModel } from "./role";
-import { MinionModel } from "./cards/minion";
+import { MinionCardModel } from "./cards/minion";
 
 export namespace PlayerProps {
     export type S= {};
@@ -40,8 +40,8 @@ export class PlayerModel extends Model<
     }
 
     public get refer() {
-        const minions: MinionModel[] = this.child.board.child.minions.filter(item => !item.child.dispose.state.isActive);
-        const entities: (MinionModel | CharacterModel)[] = [this.child.character, ...minions].filter(item => !item.child.dispose.state.isActive);
+        const minions: MinionCardModel[] = this.child.board.child.minions.filter(item => !item.child.dispose.state.isActive);
+        const entities: (MinionCardModel | CharacterModel)[] = [this.child.character, ...minions].filter(item => !item.child.dispose.state.isActive);
         return { 
             ...super.refer, 
             roles: entities.map(item => item.child.role),

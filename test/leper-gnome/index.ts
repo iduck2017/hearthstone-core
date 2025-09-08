@@ -1,9 +1,9 @@
 import { Loader } from "set-piece";
-import { AttackModel, ClassType, CostModel, HealthModel, LibraryUtil, MinionModel, RarityType, RoleModel, MinionHooksModel } from "hearthstone-core";
+import { AttackModel, ClassType, CostModel, HealthModel, LibraryUtil, MinionCardModel, RarityType, RoleModel, MinionHooksModel } from "hearthstone-core";
 import { LeperGnomeDeathrattleModel } from "./deathrattle";
 
 @LibraryUtil.is('leper-gnome')
-export class LeperGnomeModel extends MinionModel {
+export class LeperGnomeModel extends MinionCardModel {
     constructor(loader?: Loader<LeperGnomeModel>) {
         super(() => {
             const props = loader?.() ?? {};

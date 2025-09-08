@@ -15,7 +15,7 @@ export type MinionPlayEvent = {
     position: number;
 }
 
-export namespace MinionProps {
+export namespace MinionCardProps {
     export type S = {
         readonly races: RaceType[];
     };
@@ -31,21 +31,21 @@ export namespace MinionProps {
     export type R = {};
 }
 
-export abstract class MinionModel<
-    E extends Partial<MinionProps.E & CardProps.E> & Props.E = {},
-    S extends Partial<MinionProps.S & CardProps.S> & Props.S = {},
-    C extends Partial<MinionProps.C & CardProps.C> & Props.C = {},
-    R extends Partial<MinionProps.R & CardProps.R> & Props.R = {}
+export abstract class MinionCardModel<
+    E extends Partial<MinionCardProps.E & CardProps.E> & Props.E = {},
+    S extends Partial<MinionCardProps.S & CardProps.S> & Props.S = {},
+    C extends Partial<MinionCardProps.C & CardProps.C> & Props.C = {},
+    R extends Partial<MinionCardProps.R & CardProps.R> & Props.R = {}
 > extends CardModel<
-    E & MinionProps.E, 
-    S & MinionProps.S, 
-    C & MinionProps.C,
-    R & MinionProps.R
+    E & MinionCardProps.E, 
+    S & MinionCardProps.S, 
+    C & MinionCardProps.C,
+    R & MinionCardProps.R
 > {
-    constructor(loader: Method<MinionModel['props'] & {
+    constructor(loader: Method<MinionCardModel['props'] & {
         uuid: string | undefined;
-        state: S & Format.State<Omit<CardProps.S, 'isActive'> & MinionProps.S>;
-        child: C & Pick<MinionProps.C, 'role'> & Pick<CardProps.C, 'cost'>;
+        state: S & Format.State<Omit<CardProps.S, 'isActive'> & MinionCardProps.S>;
+        child: C & Pick<MinionCardProps.C, 'role'> & Pick<CardProps.C, 'cost'>;
         refer: R;
     }, []>) {
         super(() => {

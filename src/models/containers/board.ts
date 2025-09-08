@@ -1,14 +1,14 @@
 import { Loader, Model, TranxUtil } from "set-piece";
 import { GameModel } from "../game";
 import { PlayerModel } from "../player";
-import { MinionModel } from "../cards/minion";
+import { MinionCardModel } from "../cards/minion";
 import { CardModel } from "../cards";
 
 export namespace BoardProps {
     export type E = {};
     export type S = {};
     export type C = {
-        readonly minions: MinionModel[]
+        readonly minions: MinionCardModel[]
     };
     export type R = {
         readonly order: CardModel[];
@@ -49,7 +49,7 @@ export class BoardModel extends Model<
     }
 
     @TranxUtil.span()
-    public add(card: MinionModel, position?: number) {
+    public add(card: MinionCardModel, position?: number) {
         const order = this.draft.refer.order;
         if (position === -1) position = order.length;
         if (position === undefined) position = order.length;
@@ -59,7 +59,7 @@ export class BoardModel extends Model<
         return card;
     }
 
-    public del(card: MinionModel) {
+    public del(card: MinionCardModel) {
         const cards = this.draft.child.minions;
         const order = this.draft.refer.order;
         let index = cards.indexOf(card);

@@ -1,6 +1,6 @@
 import { Event, Loader, Model } from "set-piece";
 import { CardModel } from "../cards";
-import { MinionModel } from "../cards/minion";
+import { MinionCardModel } from "../cards/minion";
 import { PlayerModel } from "../player";
 import { RoleModel } from "../role";
 
@@ -23,7 +23,7 @@ export class DestroyModel extends Model {
     public get route() {
         const route = super.route;
         const card: CardModel | undefined = route.order.find(item => item instanceof CardModel);
-        const minion: MinionModel | undefined = route.order.find(item => item instanceof MinionModel);
+        const minion: MinionCardModel | undefined = route.order.find(item => item instanceof MinionCardModel);
         return {
             ...route,
             card,

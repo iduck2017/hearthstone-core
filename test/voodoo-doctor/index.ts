@@ -1,11 +1,11 @@
-import { AttackModel, ClassType, HealthModel, MinionModel, RarityType, RaceType, RoleModel, MinionHooksModel } from "hearthstone-core";
+import { AttackModel, ClassType, HealthModel, MinionCardModel, RarityType, RaceType, RoleModel, MinionHooksModel } from "hearthstone-core";
 import { VoodooDoctorBattlecryModel } from "./battlecry";
 import { CostModel } from "hearthstone-core";
 import { LibraryUtil } from "hearthstone-core";
 import { Loader } from "set-piece";
 
 @LibraryUtil.is('voodoo-doctor')
-export class VoodooDoctorModel extends MinionModel {
+export class VoodooDoctorModel extends MinionCardModel {
     constructor(loader?: Loader<VoodooDoctorModel>) {
         super(() => {
             const props = loader?.() ?? {};
