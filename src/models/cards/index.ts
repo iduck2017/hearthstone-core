@@ -1,4 +1,4 @@
-import { DebugUtil, Model, TranxUtil, Props, Event, Method } from "set-piece";
+import { DebugUtil, Model, TranxUtil, Props, Event, Method, Format } from "set-piece";
 import { CostModel, CostType } from "../rules/cost";
 import { GameModel } from "../game";
 import { PlayerModel } from "../player";
@@ -30,6 +30,7 @@ export namespace CardProps {
         readonly class: ClassType;
         readonly rarity: RarityType;
         readonly isCollectible: boolean;
+        readonly isActive: boolean;
     };
     export type C = {
         readonly cost: CostModel;
@@ -64,8 +65,16 @@ export abstract class CardModel<
         }
     }
 
+    public get state(): Readonly<Format.State<S & CardProps.S>> {
+        const state = super.state;
+        return {
+            ...state,
+            isActive: this.check(),
+        }
+    }
+
     constructor(loader: Method<CardModel['props'] & {
-        state: S & CardProps.S,
+        state: S & Omit<CardProps.S, 'isActive'>,
         child: C & Pick<CardProps.C, 'cost'>,
         refer: R & CardProps.R,
     }, []>) {
@@ -73,7 +82,10 @@ export abstract class CardModel<
             const props = loader?.() ?? {};
             return {
                 uuid: props.uuid,
-                state: { ...props.state },
+                state: { 
+                    isActive: false,
+                    ...props.state
+                },
                 child: { 
                     hooks: props.child.hooks ?? new HooksModel(),
                     features: props.child.features ?? new FeaturesModel(),
@@ -128,12 +140,12 @@ export abstract class CardModel<
         }
     }
 
-    public check(): boolean {
+    private check(): boolean {
         const player = this.route.player;
         if (!player) return false;
-        if (!player.check()) return false;
+        if (!player.state.isActive) return false;
         const cost = this.child.cost;
-        if (!cost.check()) return false;
+        if (!cost.state.isActive) return false;
         return true;
     }
     

@@ -1,15 +1,11 @@
 import { DebugUtil, Event, Loader, Model, TranxUtil } from "set-piece";
-import { MinionModel } from "../cards/minion";
-import { RoleModel } from "../role";
-import { GameModel } from "../game";
-import { PlayerModel } from "../player";
-import { BoardModel, SelectEvent, SelectUtil } from "../..";
+import { BoardModel, SelectEvent, SelectUtil, MinionModel, RoleModel, PlayerModel, GameModel } from "../..";
 
 export namespace ActionProps {
     export type S = {
         origin: number;
         reduce: number;
-        isEnable: boolean;
+        isLock: boolean;
     };
     export type E = {
         toRun: Event;
@@ -42,6 +38,7 @@ export class ActionModel extends Model<
         const state = super.state;
         return {
             ...state,
+            isActive: this.check(state),
             current: state.origin - state.reduce,
         }
     }
@@ -54,7 +51,7 @@ export class ActionModel extends Model<
                 state: {
                     origin: 1,
                     reduce: 0,
-                    isEnable: true,
+                    isLock: false,
                     ...props.state,
                 },
                 child: { ...props.child },
@@ -109,7 +106,7 @@ export class ActionModel extends Model<
 
     @DebugUtil.log()
     public async run() {
-        if (!this.check()) return;
+        if (!this.state.isActive) return;
 
         const game = this.route.game;
         if (!game) return;
@@ -129,9 +126,11 @@ export class ActionModel extends Model<
         this.event.onRun(new Event({}));
     }
 
-    public check(): boolean {
-        if (!this.state.isEnable) return false;
-        if (this.state.current <= 0) return false;
+    private check(state: ActionProps.S): boolean {
+        if (state.isLock) return false;
+
+        const current = state.origin - state.reduce;
+        if (current <= 0) return false;
 
         const player = this.route.player;
         if (!player) return false;
@@ -158,12 +157,12 @@ export class ActionModel extends Model<
             !rush.state.isActive
         ) return false;
 
-        if (!attack.check()) return false;
+        if (!attack.state.isActive) return false;
         return true;
     }
 
     public consume() {
-        if (!this.check()) return false;
+        if (!this.state.isActive) return false;
         this.draft.state.reduce ++;
         return true;
     }

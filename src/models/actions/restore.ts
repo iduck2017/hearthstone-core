@@ -1,6 +1,6 @@
 import { Loader, Model, TranxUtil } from "set-piece";
 import { RestoreEvent } from "../../types/restore";
-import { DeathUtil } from "../../utils/death";
+import { DisposeModel } from "../rules/dispose";
 
 export namespace RestoreProps {
     export type E = {
@@ -18,7 +18,7 @@ export class RestoreModel extends Model<
     RestoreProps.C,
     RestoreProps.R
 > {
-    @DeathUtil.span()
+    @DisposeModel.span()
     public static run(tasks: RestoreEvent[]) {
         tasks.forEach(item => item.detail.source.event.toRun(item));
         tasks.forEach(item => item.detail.target.child.health.toHeal(item));

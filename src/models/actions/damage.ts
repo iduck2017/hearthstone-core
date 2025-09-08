@@ -3,7 +3,7 @@ import { PlayerModel } from "../player";
 import { CardModel } from "../cards";
 import { MinionModel } from "../cards/minion";
 import { DamageEvent } from "../../types/damage";
-import { DeathUtil } from "../../utils/death";
+import { DisposeModel } from "../rules/dispose";
 
 export namespace DamageProps {
     export type E = {
@@ -21,13 +21,13 @@ export class DamageModel extends Model<
     DamageProps.C,
     DamageProps.R
 > {
-    @DeathUtil.span()
+    @DisposeModel.span()
     public static run(tasks: DamageEvent[]) {
         tasks.forEach(item => item.detail.source.event.toRun(item));
         tasks.forEach(item => item.detail.target.child.health.toHurt(item));
         
         tasks = tasks.filter(item => !item.isCancel);
-        tasks = DamageModel.doRun(tasks);
+        DamageModel.doRun(tasks);
 
         tasks = tasks.filter(item => item.detail.result > 0 && !item.isCancel);
         tasks.forEach(item => item.detail.target.child.health.onHurt(item));
@@ -36,7 +36,7 @@ export class DamageModel extends Model<
 
     @TranxUtil.span()
     private static doRun(tasks: DamageEvent[]) {
-        return tasks.map(item => item.detail.target.child.health.doHurt(item));
+        return tasks.forEach(item => item.detail.target.child.health.doHurt(item));
     }
 
     public get route() {

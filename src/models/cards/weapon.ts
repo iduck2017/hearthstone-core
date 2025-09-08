@@ -28,7 +28,7 @@ export class WeaponModel<
     WeaponProps.R
 > {
     constructor(loader: Method<WeaponModel['props'] & {
-        state: WeaponProps.S & Format.State<CardProps.S>;
+        state: WeaponProps.S & Format.State<Omit<CardProps.S, 'isActive'>>;
         child: WeaponProps.C & Pick<CardProps.C, 'cost'>;
         refer: WeaponProps.R;
     }, []>) {
@@ -45,7 +45,7 @@ export class WeaponModel<
 
     // equip
     public async play() {
-        if (!this.check()) return;
+        if (!this.state.isActive) return;
         const player = this.route.player;
         if (!player) return;
         const signal = this.event.toPlay(new Event({}));

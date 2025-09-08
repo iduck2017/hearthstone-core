@@ -1,5 +1,5 @@
 import { DebugUtil, EventUtil, Method, Model, StateChangeEvent, TranxUtil } from "set-piece";
-import { RoleModel, MinionModel, GameModel, PlayerModel, CardModel } from "../..";
+import { RoleModel, MinionModel, GameModel, PlayerModel, CardModel, CharacterModel } from "../..";
 import { DamageEvent } from "../../types/damage";
 import { RestoreEvent } from "../../types/restore";
 
@@ -31,10 +31,13 @@ export class HealthModel extends Model<
         const route = super.route;
         const card: CardModel | undefined = route.order.find(item => item instanceof CardModel);
         const minion: MinionModel | undefined = route.order.find(item => item instanceof MinionModel);
+        const character: CharacterModel | undefined = route.order.find(item => item instanceof CharacterModel);
+        const entity = character ?? minion;
         return { 
             ...route, 
             card,
             minion,
+            entity,
             role: route.order.find(item => item instanceof RoleModel),
             game: route.order.find(item => item instanceof GameModel),
             player: route.order.find(item => item instanceof PlayerModel),
@@ -85,8 +88,11 @@ export class HealthModel extends Model<
         if (!role) return event;
         const entries = role.child.entries;
         const divineSheild = entries.child.divineShield;
-        const death = role.child.death;
-        const health = this.state.current;
+
+        const entity = this.route.entity;
+        if (!entity) return event;
+        const dispose = entity.child.dispose;
+        
         if (result <= 0) {
             event.reset(0);
             return event;
@@ -97,7 +103,7 @@ export class HealthModel extends Model<
             return event;
         }
         this.draft.state.damage += result;
-        if (health <= result) death.active(event);
+        dispose.log(event.detail.source);
         event.reset(result);
         return event;
     }
@@ -119,16 +125,13 @@ export class HealthModel extends Model<
         let result = event.detail.result;
         const role = this.route.role;
         if (!role) return event;
-        const death = role.child.death;
         if (result <= 0) {
             event.reset(0);
             return event;
         }
         const damage = this.draft.state.damage;
-        const health = this.state.current;
         if (damage < result) result = damage;
         this.draft.state.damage -= result;
-        if (health + result > 0) death.cancel(); 
         event.reset(result);
         return event;
     }

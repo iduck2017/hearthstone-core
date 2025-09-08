@@ -38,9 +38,11 @@ export class AttackModel extends Model<
 
     public get state() {
         const state = super.state;
+        const current = state.origin + state.offset;
         return {
             ...state,
-            current: state.origin + state.offset,
+            isActive: current > 0,
+            current,
         }
     }
     
@@ -64,16 +66,12 @@ export class AttackModel extends Model<
         });
     }
 
-    public check(): boolean {
-        if (!this.state.current) return false;
-        return true;
-    }
 
     @DebugUtil.log()
     public async run(target: RoleModel) {
         const role = this.route.role;
         if (!role) return;
-        if (!this.check()) return;
+        if (!this.state.isActive) return;
         
         const signal = this.event.toRun(new Event({ target }))
         if (signal.isCancel) return;

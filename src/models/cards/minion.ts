@@ -7,6 +7,8 @@ import { RaceType } from "../../types/card";
 import { FeaturesModel } from "../features/features";
 import { RoleModel } from "../role";
 import { BattlecryModel } from "../hooks/battlecry";
+import { DisposeModel } from "../rules/dispose";
+import { MinionDisposeModel } from "../rules/dispose/minion";
 
 export type MinionPlayEvent = { position: number } & PlayEvent;
 
@@ -20,6 +22,7 @@ export namespace MinionProps {
     };
     export type C = {
         readonly role: RoleModel;
+        readonly dispose: MinionDisposeModel
     };
     export type R = {};
 }
@@ -37,8 +40,8 @@ export abstract class MinionModel<
 > {
     constructor(loader: Method<MinionModel['props'] & {
         uuid: string | undefined;
-        state: S & Format.State<MinionProps.S & CardProps.S>;
-        child: C & MinionProps.C & Pick<CardProps.C, 'cost'>;
+        state: S & Format.State<Omit<CardProps.S, 'isActive'> & MinionProps.S>;
+        child: C & Pick<MinionProps.C, 'role'> & Pick<CardProps.C, 'cost'>;
         refer: R;
     }, []>) {
         super(() => {
@@ -46,14 +49,18 @@ export abstract class MinionModel<
             return {
                 uuid: props.uuid,
                 state: { ...props.state },
-                child: {...props.child },
+                child: { 
+                    dispose: props.child.dispose ?? new MinionDisposeModel(),
+                    ...props.child 
+                },
                 refer: { ...props.refer },
             }
         });
     }
 
+
     public async play() {
-        if (!this.check()) return;
+        if (!this.state.isActive) return;
         const player = this.route.player;
         if (!player) return;
         const signal = this.event.toPlay(new Event({}));
@@ -78,7 +85,7 @@ export abstract class MinionModel<
         // summon
         const position = await this.toSummon();
         if (position === undefined) return;
-        
+
         const event = await super.toPlay();
         if (!event) return;
         return { ...event, position };

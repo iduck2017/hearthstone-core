@@ -7,6 +7,7 @@ import { GraveyardModel } from "./containers/graveyard";
 import { ManaModel } from "./rules/mana";
 import { CharacterModel } from "./characters";
 import { RoleModel } from "./role";
+import { MinionModel } from "./cards/minion";
 
 export namespace PlayerProps {
     export type S= {};
@@ -39,13 +40,21 @@ export class PlayerModel extends Model<
     }
 
     public get refer() {
-        const minions = this.child.board.child.minions.map(item => item.child.role);
-        const roles = [this.child.character.child.role, ...minions];
+        const minions: MinionModel[] = this.child.board.child.minions.filter(item => !item.child.dispose.state.isActive);
+        const entities: (MinionModel | CharacterModel)[] = [this.child.character, ...minions].filter(item => !item.child.dispose.state.isActive);
         return { 
             ...super.refer, 
-            roles: roles.filter(item => !item.child.death.state.isActive),
-            minions: minions.filter(item => !item.child.death.state.isActive),
+            roles: entities.map(item => item.child.role),
+            minions: minions.map(item => item.child.role),
             opponent: this.opponent, 
+        }
+    }
+
+    public get state() {
+        const state = super.state;
+        return {
+            ...state,
+            isActive: this.check(),
         }
     }
 
@@ -78,7 +87,7 @@ export class PlayerModel extends Model<
         });
     }
 
-    public check(): boolean {
+    private check(): boolean {
         const game = this.route.game;
         if (!game) return false;
         const turn = game.child.turn;

@@ -3,8 +3,7 @@
  * 
  * 1. elven-archer-battlecry: Player A plays Elven Archer and use battlecry, Player B's Wisp dies.
  */
-
-import { BoardModel, GameModel, HandModel, MageModel, ManaModel, PlayerModel, SelectUtil, TimeUtil } from "hearthstone-core";
+import { BoardModel, DamageModel, GameModel, HandModel, MageModel, ManaModel, PlayerModel, SelectUtil, TimeUtil } from "hearthstone-core";
 import { boot } from "../common/boot";
 import { ElvenArcherModel } from ".";
 import { WispModel } from "../wisp";
@@ -66,8 +65,9 @@ describe('battlecry', () => {
         expect(roleD.child.health.state.limit).toBe(1);
         expect(roleD.child.health.state.current).toBe(0);
         expect(roleD.child.health.state.origin).toBe(1);
-        expect(roleD.child.death.state.isActive).toBe(true);
-        const reason = roleD.child.death.refer.reason;
-        expect(reason?.route.card).toBe(cardC);
+        expect(cardD.child.dispose.state.isActive).toBe(true);
+        const reason = cardD.child.dispose.refer.reason;
+        expect(reason instanceof DamageModel).toBe(true);
+        if (reason instanceof DamageModel) expect(reason?.route.card).toBe(cardC);
     })
 })

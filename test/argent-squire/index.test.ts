@@ -60,8 +60,8 @@ describe('argent-squire', () => {
         expect(roleD.state.health).toBe(1);
         expect(roleC.child.entries.child.divineShield.state.isActive).toBe(false);
         expect(roleD.child.entries.child.divineShield.state.isActive).toBe(false);
-        expect(roleC.child.death.state.isActive).toBe(false);
-        expect(roleD.child.death.state.isActive).toBe(false);
+        expect(cardC.child.dispose.state.isActive).toBe(false);
+        expect(cardD.child.dispose.state.isActive).toBe(false);
     })
 
     test('argent-squire-die', async () => {
@@ -73,9 +73,9 @@ describe('argent-squire', () => {
         await promise;
 
         expect(roleC.state.health).toBe(0);
-        expect(roleC.child.death.state.isActive).toBe(true);
         expect(roleD.state.health).toBe(0);
-        expect(roleD.child.death.state.isActive).toBe(true);
+        expect(cardC.child.dispose.state.isActive).toBe(true);
+        expect(cardD.child.dispose.state.isActive).toBe(true);
 
         expect(boardA.child.minions.length).toBe(0);
         expect(boardB.child.minions.length).toBe(0);

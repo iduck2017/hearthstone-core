@@ -5,7 +5,7 @@ import { BoardModel } from "./containers/board";
 import { HandModel } from "./containers/hand";
 import { DeckModel } from "./containers/deck";
 import { GraveyardModel } from "./containers/graveyard";
-import { DamageModel, DeathModel, MinionModel } from "..";
+import { MinionModel } from "..";
 import { ActionModel } from "./rules/action";
 import { AttackModel } from "./rules/attack";
 import { HealthModel } from "./rules/health";
@@ -19,7 +19,6 @@ export namespace RoleProps {
     export type S = {};
     export type E = {};
     export type C = {
-        readonly death: DeathModel;
         readonly sleep: SleepModel;
         readonly health: HealthModel;
         readonly attack: AttackModel;
@@ -77,7 +76,6 @@ export class RoleModel extends Model<
                 uuid: props.uuid,
                 state: { ...props.state },
                 child: { 
-                    death: props.child.death ?? new DeathModel(),
                     sleep: props.child.sleep ?? new SleepModel(),
                     action: props.child.action ?? new ActionModel(),
                     entries: props.child.entries ?? new RoleEntriesModel(),

@@ -11,7 +11,6 @@ export { RestoreEvent } from "./types/restore";
 
 // utils
 export { TimeUtil } from "./utils/time";
-export { DeathUtil } from './utils/death';
 export { SelectUtil } from "./utils/select";
 export { LibraryUtil } from "./utils/library";
 
@@ -20,7 +19,8 @@ export { AttackProps, AttackModel } from "./models/rules/attack";
 export { HealthProps, HealthModel } from "./models/rules/health";
 export { ActionProps, ActionModel } from "./models/rules/action";
 export { SleepProps, SleepModel } from './models/rules/sleep';
-export { DeathProps, DeathModel } from "./models/rules/death";
+export { DisposeProps, DisposeModel } from './models/rules/dispose'
+export { MinionDisposeModel } from "./models/rules/dispose/minion";
 export { ManaProps, ManaModel } from './models/rules/mana';
 export { TurnProps, TurnModel } from "./models/rules/turn";
 export { CostProps, CostModel } from "./models/rules/cost";

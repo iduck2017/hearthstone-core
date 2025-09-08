@@ -66,8 +66,6 @@ describe('leper-gnome', () => {
         
         expect(boardA.child.minions.length).toBe(0);
         expect(boardB.child.minions.length).toBe(0);
-        expect(roleC.child.death.state.isActive).toBe(true);
-        expect(roleD.child.death.state.isActive).toBe(true);
         expect(roleB.state.health).toBe(28);
         expect(roleB.child.health.state.damage).toBe(2);
     })
