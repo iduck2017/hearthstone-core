@@ -1,5 +1,5 @@
 import { Event, Method, Model, Props, TranxUtil } from "set-piece";
-import { BoardModel, CardModel, DeckModel, GraveyardModel, HandModel, MinionModel, PlayerModel, RoleModel } from "../..";
+import { BoardModel, CardModel, DeckModel, GraveyardModel, HandModel, MinionCardModel, PlayerModel, RoleModel } from "../..";
 import { GameModel } from "../..";
 import { DamageModel } from "../..";
 import { CharacterModel } from "../..";
@@ -35,7 +35,7 @@ export abstract class FeatureModel<
 > {
     public get route() {
         const route = super.route;
-        const minion: MinionModel | undefined = route.order.find(item => item instanceof MinionModel);
+        const minion: MinionCardModel | undefined = route.order.find(item => item instanceof MinionCardModel);
         const card: CardModel | undefined = route.order.find(item => item instanceof CardModel);
         const character: CharacterModel | undefined = route.order.find(item => item instanceof CharacterModel);
         const entity = card ?? character;

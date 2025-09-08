@@ -1,11 +1,11 @@
 import { DebugUtil, Loader, Model, TranxUtil } from "set-piece";
 import { DisposeModel } from ".";
-import { MinionModel, PlayerModel } from "../../..";
+import { MinionCardModel, PlayerModel } from "../../..";
 
 export class MinionDisposeModel extends DisposeModel {
     public get route() {
         const route = super.route;
-        const minion: MinionModel | undefined = route.order.find(item => item instanceof MinionModel);
+        const minion: MinionCardModel | undefined = route.order.find(item => item instanceof MinionCardModel);
         return {
             ...route,
             minion,

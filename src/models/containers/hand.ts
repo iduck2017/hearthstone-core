@@ -2,14 +2,14 @@ import { Loader, Model, TranxUtil } from "set-piece";
 import { PlayerModel } from "../player";
 import { GameModel } from "../game";
 import { CardModel } from "../cards";
-import { WeaponModel, MinionModel } from "../..";
+import { WeaponCardModel, MinionCardModel } from "../..";
 
 export namespace HandProps {
     export type E = {}
     export type S = {}
     export type C = {
-        minions: MinionModel[],
-        weapons: WeaponModel[]
+        minions: MinionCardModel[],
+        weapons: WeaponCardModel[]
     }
     export type R = {
         order: CardModel[]
@@ -56,8 +56,8 @@ export class HandModel extends Model<
         if (!position) position = order.length;
 
         let cards: CardModel[] | undefined;
-        if (card instanceof MinionModel) cards = this.draft.child.minions;
-        if (card instanceof WeaponModel) cards = this.draft.child.weapons;
+        if (card instanceof MinionCardModel) cards = this.draft.child.minions;
+        if (card instanceof WeaponCardModel) cards = this.draft.child.weapons;
         if (!cards) return;
         
         cards.push(card);
@@ -69,8 +69,8 @@ export class HandModel extends Model<
         const order = this.draft.refer.order;
 
         let cards: CardModel[] | undefined;
-        if (card instanceof MinionModel) cards = this.draft.child.minions;
-        if (card instanceof WeaponModel) cards = this.draft.child.weapons;
+        if (card instanceof MinionCardModel) cards = this.draft.child.minions;
+        if (card instanceof WeaponCardModel) cards = this.draft.child.weapons;
         if (!cards) return;
         
         let index = cards.indexOf(card);

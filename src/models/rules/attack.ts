@@ -1,5 +1,5 @@
 import { DebugUtil, Event, Method, Model, StoreUtil } from "set-piece";
-import { DamageEvent, DamageModel, MinionModel, RoleModel, GameModel, PlayerModel } from "../..";
+import { DamageEvent, DamageModel, MinionCardModel, RoleModel, GameModel, PlayerModel } from "../..";
 import { DamageType } from "../../types/damage";
 
 export namespace AttackProps {
@@ -26,7 +26,7 @@ export class AttackModel extends Model<
 > {
     public get route() {
         const route = super.route;
-        const minion: MinionModel | undefined = route.order.find(item => item instanceof MinionModel);
+        const minion: MinionCardModel | undefined = route.order.find(item => item instanceof MinionCardModel);
         return { 
             ...route, 
             minion,

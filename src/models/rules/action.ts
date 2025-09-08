@@ -1,5 +1,5 @@
 import { DebugUtil, Event, Loader, Model, TranxUtil } from "set-piece";
-import { BoardModel, SelectEvent, SelectUtil, MinionModel, RoleModel, PlayerModel, GameModel } from "../..";
+import { BoardModel, SelectEvent, SelectUtil, MinionCardModel, RoleModel, PlayerModel, GameModel } from "../..";
 
 export namespace ActionProps {
     export type S = {
@@ -23,7 +23,7 @@ export class ActionModel extends Model<
 > {
     public get route() {
         const route = super.route;
-        const minion: MinionModel | undefined = route.order.find(item => item instanceof MinionModel);
+        const minion: MinionCardModel | undefined = route.order.find(item => item instanceof MinionCardModel);
         return { 
             ...route, 
             minion,

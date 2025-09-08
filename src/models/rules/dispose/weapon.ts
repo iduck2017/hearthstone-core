@@ -1,11 +1,11 @@
 import { DebugUtil, Loader, Model, TranxUtil } from "set-piece";
 import { DisposeModel } from ".";
-import { MinionModel, PlayerModel, WeaponModel } from "../../..";
+import { MinionCardModel, PlayerModel, WeaponCardModel } from "../../..";
 
 export class WeaponDisposeModel extends DisposeModel {
     public get route() {
         const route = super.route;
-        const weapon: WeaponModel | undefined = route.order.find(item => item instanceof WeaponModel);
+        const weapon: WeaponCardModel | undefined = route.order.find(item => item instanceof WeaponCardModel);
         return {
             ...route,
             weapon,

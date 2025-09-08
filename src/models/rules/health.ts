@@ -1,5 +1,5 @@
 import { DebugUtil, EventUtil, Method, Model, StateChangeEvent, TranxUtil } from "set-piece";
-import { RoleModel, MinionModel, GameModel, PlayerModel, CardModel, CharacterModel } from "../..";
+import { RoleModel, MinionCardModel, GameModel, PlayerModel, CardModel, CharacterModel } from "../..";
 import { DamageEvent } from "../../types/damage";
 import { RestoreEvent } from "../../types/restore";
 
@@ -30,7 +30,7 @@ export class HealthModel extends Model<
     public get route() {
         const route = super.route;
         const card: CardModel | undefined = route.order.find(item => item instanceof CardModel);
-        const minion: MinionModel | undefined = route.order.find(item => item instanceof MinionModel);
+        const minion: MinionCardModel | undefined = route.order.find(item => item instanceof MinionCardModel);
         const character: CharacterModel | undefined = route.order.find(item => item instanceof CharacterModel);
         const entity = character ?? minion;
         return { 

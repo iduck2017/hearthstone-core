@@ -5,7 +5,7 @@ import { BoardModel } from "./containers/board";
 import { HandModel } from "./containers/hand";
 import { DeckModel } from "./containers/deck";
 import { GraveyardModel } from "./containers/graveyard";
-import { MinionModel } from "..";
+import { MinionCardModel } from "..";
 import { ActionModel } from "./rules/action";
 import { AttackModel } from "./rules/attack";
 import { HealthModel } from "./rules/health";
@@ -38,7 +38,7 @@ export class RoleModel extends Model<
     public get route() {
         const route = super.route;
         const card: CardModel | undefined = route.order.find(item => item instanceof CardModel);
-        const minion: MinionModel | undefined = route.order.find(item => item instanceof MinionModel);
+        const minion: MinionCardModel | undefined = route.order.find(item => item instanceof MinionCardModel);
         const character: CharacterModel | undefined = route.order.find(item => item instanceof CharacterModel);
         const entity = character ?? card;
         return {
