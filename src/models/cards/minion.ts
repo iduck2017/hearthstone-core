@@ -1,8 +1,8 @@
 import { DebugUtil, Model, TranxUtil, Props, Event, Format, Loader, Method } from "set-piece";
 import { BoardModel } from "../containers/board";
 import { SelectEvent, SelectUtil } from "../../utils/select";
-import { HooksModel } from "../hooks/hooks";
-import { CardModel, CardProps, PlayEvent } from ".";
+import { MinionHooksModel } from "../hooks/hooks";
+import { CardModel, CardProps } from ".";
 import { RaceType } from "../../types/card";
 import { FeaturesModel } from "../features/features";
 import { RoleModel } from "../role";
@@ -10,7 +10,10 @@ import { BattlecryModel } from "../hooks/battlecry";
 import { DisposeModel } from "../rules/dispose";
 import { MinionDisposeModel } from "../rules/dispose/minion";
 
-export type MinionPlayEvent = { position: number } & PlayEvent;
+export type MinionPlayEvent = { 
+    battlecry: Map<BattlecryModel, Model[]>;
+    position: number;
+}
 
 export namespace MinionProps {
     export type S = {
@@ -21,6 +24,7 @@ export namespace MinionProps {
         onSummon: Event;
     };
     export type C = {
+        readonly hooks: MinionHooksModel;
         readonly role: RoleModel;
         readonly dispose: MinionDisposeModel
     };
@@ -50,6 +54,7 @@ export abstract class MinionModel<
                 uuid: props.uuid,
                 state: { ...props.state },
                 child: { 
+                    hooks: props.child.hooks ?? new MinionHooksModel(),
                     dispose: props.child.dispose ?? new MinionDisposeModel(),
                     ...props.child 
                 },
@@ -76,8 +81,18 @@ export abstract class MinionModel<
         if (!player) return;
         const board = player.child.board;
         this.doSummon(board, event.position);
+        // mana
+        const mana = player.child.mana;
+        const cost = this.child.cost;
+        mana.consume(cost.state.current);
         // battlecry
-        await super.doPlay(event);
+        const hooks = this.child.hooks;
+        const battlecry = hooks.child.battlecry;
+        for (const item of battlecry) {
+            const params = event.battlecry.get(item);
+            if (!params) continue;
+            await item.run(...params);
+        }
         this.event.onSummon(new Event({}));
     }
     
@@ -86,9 +101,29 @@ export abstract class MinionModel<
         const position = await this.toSummon();
         if (position === undefined) return;
 
-        const event = await super.toPlay();
-        if (!event) return;
-        return { ...event, position };
+        const event: MinionPlayEvent = {
+            battlecry: new Map(),
+            position,
+        };
+        const hooks = this.child.hooks;
+        const battlecry = hooks.child.battlecry;
+        // battlecry
+        for (const item of battlecry) {
+            const selectors = item.toRun();
+            // condition not match
+            if (!selectors) continue;
+            for (const item of selectors) {
+                if (!item.options.length) return;
+            }
+            const params: Model[] = [];
+            for (const item of selectors) {
+                const result = await SelectUtil.get(item);
+                if (result === undefined) return;
+                params.push(result);
+            }
+            event.battlecry.set(item, params);
+        }
+        return event;
     }
 
     
@@ -116,18 +151,5 @@ export abstract class MinionModel<
     }
 
 
-    @DebugUtil.log()
-    public async dispose() {
-        this.doRemove();
-        super.dispose();
-    }
-
-    @TranxUtil.span()
-    public doRemove() {
-        const player = this.route.player;
-        if (!player) return;
-        player.child.board.del(this);
-        player.child.graveyard.add(this);
-    }
 
 }

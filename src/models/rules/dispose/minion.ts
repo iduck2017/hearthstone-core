@@ -1,6 +1,6 @@
-import { Loader, Model } from "set-piece";
+import { DebugUtil, Loader, Model, TranxUtil } from "set-piece";
 import { DisposeModel } from ".";
-import { MinionModel } from "../../..";
+import { MinionModel, PlayerModel } from "../../..";
 
 export class MinionDisposeModel extends DisposeModel {
     public get route() {
@@ -9,6 +9,7 @@ export class MinionDisposeModel extends DisposeModel {
         return {
             ...route,
             minion,
+            player: route.order.find(item => item instanceof PlayerModel)
         }
     }
 
@@ -36,6 +37,19 @@ export class MinionDisposeModel extends DisposeModel {
     protected run(): void {
         const minion = this.route.minion;
         if (!minion) return;
-        minion.dispose();
+        this.doRemove();
+        const hooks = minion.child.hooks;
+        const deathrattle = hooks.child.deathrattle;
+        for (const item of deathrattle) item.run();
+    }
+
+    @TranxUtil.span()
+    public doRemove() {
+        const player = this.route.player;
+        if (!player) return;
+        const minion = this.route.minion;
+        if (!minion) return;
+        player.child.board.del(minion);
+        player.child.graveyard.add(minion);
     }
 }

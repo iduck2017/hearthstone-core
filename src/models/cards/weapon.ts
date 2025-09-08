@@ -1,8 +1,14 @@
-import { DebugUtil, Event, Format, LogLevel, Method, Props, TranxUtil } from "set-piece";
-import { CardModel, CardProps, PlayEvent } from ".";
+import { DebugUtil, Event, Format, LogLevel, Method, Model, Props, TranxUtil } from "set-piece";
+import { CardModel, CardProps } from ".";
 import { WeaponAttackModel } from "../rules/weapon-attack";
 import { DurabilityModel } from "../rules/durability";
 import { CharacterModel } from "../characters";
+import { WeaponHooksModel } from "../hooks/weapon";
+import { BattlecryModel } from "../hooks/battlecry";
+
+export type WeaponPlayEvent = {
+    battlecry: Map<BattlecryModel, Model[]>;
+}
 
 export namespace WeaponProps {
     export type S = {};
@@ -10,8 +16,9 @@ export namespace WeaponProps {
         onEquip: Event;
     };
     export type C = {
-        attack: WeaponAttackModel;
-        durability: DurabilityModel;
+        readonly hooks: WeaponHooksModel;
+        readonly attack: WeaponAttackModel;
+        readonly durability: DurabilityModel;
     };
     export type R = {};
 }
@@ -29,7 +36,7 @@ export class WeaponModel<
 > {
     constructor(loader: Method<WeaponModel['props'] & {
         state: WeaponProps.S & Format.State<Omit<CardProps.S, 'isActive'>>;
-        child: WeaponProps.C & Pick<CardProps.C, 'cost'>;
+        child: Omit<WeaponProps.C, 'hooks'> & Pick<CardProps.C, 'cost'>;
         refer: WeaponProps.R;
     }, []>) {
         super(() => {
@@ -37,7 +44,10 @@ export class WeaponModel<
             return {
                 uuid: props.uuid,
                 state: { ...props.state },
-                child: { ...props.child },
+                child: {
+                    hooks: props.child.hooks ?? new WeaponHooksModel(),
+                    ...props.child,
+                },
                 refer: { ...props.refer },
             }
         })
@@ -50,18 +60,25 @@ export class WeaponModel<
         if (!player) return;
         const signal = this.event.toPlay(new Event({}));
         if (signal.isCancel) return;
-        const event = await this.toPlay();
-        if (!event) return;
+        const event: WeaponPlayEvent = {
+            battlecry: new Map(),
+        };
+        const hooks = this.child.hooks;
+        const battlecry = hooks.child.battlecry;
+        for (const item of battlecry) {
+            const params = event.battlecry.get(item);
+            if (!params) continue;
+            await item.run(...params);
+        }
         await this.doPlay(event);
         await this.event.onPlay(new Event({}));
     }
 
-    protected async doPlay(event: PlayEvent) {
+    protected async doPlay(event: WeaponPlayEvent) {
         const player = this.route.player;
         if (!player) return;
         const character = player.child.character;
         this.doEquip(character);
-        await super.doPlay(event);
         this.event.onEquip(new Event({}));
     }
 
@@ -76,19 +93,21 @@ export class WeaponModel<
     }
 
     // dispose
-    public dispose() {
-        this.doRemove();
-        super.dispose();
-    }
+    // public dispose() {
+    //     this.doRemove();
+    //     const hooks = this.child.hooks;
+    //     const deathrattle = hooks.child.deathrattle;
+    //     for (const item of deathrattle) item.run();
+    // }
 
-    @TranxUtil.span()
-    private doRemove() {
-        const player = this.route.player;
-        if (!player) return;
-        const character = player.child.character;
-        character.del(this);
-        const graveyard = player.child.graveyard;
-        graveyard.add(this);
-    }
+    // @TranxUtil.span()
+    // private doRemove() {
+    //     const player = this.route.player;
+    //     if (!player) return;
+    //     const character = player.child.character;
+    //     character.del(this);
+    //     const graveyard = player.child.graveyard;
+    //     graveyard.add(this);
+    // }
 
 }

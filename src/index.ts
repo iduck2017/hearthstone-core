@@ -63,7 +63,7 @@ export { FeatureProps, FeatureModel } from './models/features'
 export { BuffProps, BuffModel } from "./models/features/buff";
 
 // hooks
-export { HooksProps, HooksModel } from "./models/hooks/hooks";
+export { MinionHooksProps, MinionHooksModel } from "./models/hooks/hooks";
 export { BattlecryProps, BattlecryModel } from "./models/hooks/battlecry";
 export { DeathrattleProps, DeathrattleModel } from "./models/hooks/deathrattle";
 export { EndTurnHookProps, EndTurnHookModel } from "./models/hooks/end-turn";
