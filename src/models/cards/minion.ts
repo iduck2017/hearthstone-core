@@ -1,7 +1,7 @@
 import { DebugUtil, Model, TranxUtil, Props, Event, Format, Loader, Method } from "set-piece";
 import { BoardModel } from "../containers/board";
 import { SelectEvent, SelectUtil } from "../../utils/select";
-import { MinionHooksModel } from "../hooks/hooks";
+import { MinionHooksModel } from "../hooks/minion";
 import { CardModel, CardProps } from ".";
 import { RaceType } from "../../types/card";
 import { FeaturesModel } from "../features/features";

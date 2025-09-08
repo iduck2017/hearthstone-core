@@ -7,7 +7,7 @@ import { DeckModel } from "../containers/deck";
 import { BoardModel } from "../containers/board";
 import { GraveyardModel } from "../containers/graveyard";
 import { ClassType, RarityType } from "../../types/card";
-import { MinionHooksModel } from "../hooks/hooks";
+import { MinionHooksModel } from "../hooks/minion";
 import { FeaturesModel } from "../features/features";
 import { BattlecryModel } from "../hooks/battlecry";
 import { SelectUtil } from "../../utils/select";
@@ -94,7 +94,6 @@ export abstract class CardModel<
 
     public abstract play(): Promise<void>;
 
-
     private check(): boolean {
         const player = this.route.player;
         if (!player) return false;
@@ -103,7 +102,6 @@ export abstract class CardModel<
         if (!cost.state.isActive) return false;
         return true;
     }
-    
 
 
     @DebugUtil.log()

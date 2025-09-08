@@ -46,10 +46,9 @@ describe('firey-war-axe', () => {
         await weapon.play();
         expect(handA.child.weapons.length).toBe(0);
         expect(charA.child.weapon).toBeDefined();
+        expect(roleA.child.attack.state.current).toBe(3);
         expect(weapon?.child.attack.state.origin).toBe(3);
         expect(roleA.child.attack.state.origin).toBe(0);
         expect(roleA.child.attack.state.offset).toBe(3);
-        expect(roleA.child.attack.state.current).toBe(3);
     })
-
 })

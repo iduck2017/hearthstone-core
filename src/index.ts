@@ -15,18 +15,22 @@ export { SelectUtil } from "./utils/select";
 export { LibraryUtil } from "./utils/library";
 
 // rules
+export { DisposeProps, DisposeModel } from './models/rules/dispose'
+export { MinionDisposeModel } from "./models/rules/dispose/minion";
+export { CharacterDisposeModel } from "./models/rules/dispose/character";
+export { WeaponDisposeModel } from "./models/rules/dispose/weapon";
+
 export { AttackProps, AttackModel } from "./models/rules/attack";
 export { HealthProps, HealthModel } from "./models/rules/health";
 export { ActionProps, ActionModel } from "./models/rules/action";
 export { SleepProps, SleepModel } from './models/rules/sleep';
-export { DisposeProps, DisposeModel } from './models/rules/dispose'
-export { MinionDisposeModel } from "./models/rules/dispose/minion";
 export { ManaProps, ManaModel } from './models/rules/mana';
 export { TurnProps, TurnModel } from "./models/rules/turn";
 export { CostProps, CostModel } from "./models/rules/cost";
 export { ArmorProps, ArmorModel } from "./models/rules/armor";
 export { DamageProps, DamageModel } from "./models/actions/damage";
 export { RestoreProps, RestoreModel } from "./models/actions/restore";
+
 export { WeaponAttackProps, WeaponAttackModel } from "./models/rules/weapon-attack";
 export { DurabilityProps, DurabilityModel } from "./models/rules/durability";
 
@@ -46,7 +50,7 @@ export { DeckProps, DeckModel } from "./models/containers/deck";
 export { GraveyardProps, GraveyardModel } from "./models/containers/graveyard";
 
 // entries
-export { RoleEntriesProps, RoleEntriesModel } from "./models/entries/role-entries";
+export { RoleEntriesProps, RoleEntriesModel } from "./models/entries/role";
 export { FrozenProps, FrozenModel } from "./models/entries/frozen";
 export { RushProps, RushModel } from "./models/entries/rush";
 export { ChargeProps, ChargeModel } from "./models/entries/charge";
@@ -63,7 +67,7 @@ export { FeatureProps, FeatureModel } from './models/features'
 export { BuffProps, BuffModel } from "./models/features/buff";
 
 // hooks
-export { MinionHooksProps, MinionHooksModel } from "./models/hooks/hooks";
+export { MinionHooksProps, MinionHooksModel } from "./models/hooks/minion";
 export { BattlecryProps, BattlecryModel } from "./models/hooks/battlecry";
 export { DeathrattleProps, DeathrattleModel } from "./models/hooks/deathrattle";
 export { EndTurnHookProps, EndTurnHookModel } from "./models/hooks/end-turn";

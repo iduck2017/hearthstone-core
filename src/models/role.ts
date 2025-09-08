@@ -11,7 +11,7 @@ import { AttackModel } from "./rules/attack";
 import { HealthModel } from "./rules/health";
 import { SleepModel } from "./rules/sleep";
 import { FeaturesModel } from "./features/features";
-import { RoleEntriesModel } from "./entries/role-entries";
+import { RoleEntriesModel } from "./entries/role";
 import { CardModel } from "./cards";
 import { CharacterModel } from "./characters";
 
