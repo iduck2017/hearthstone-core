@@ -1,5 +1,5 @@
 import { Decor, Event, EventUtil, Method, Model, StateChangeEvent, StateUtil } from "set-piece";
-import { GameModel, PlayerModel, HeroModel, AttackProps, AttackModel, TurnModel } from "../..";
+import { GameModel, PlayerModel, HeroModel, RoleAttackModel, RoleAttackProps, TurnModel } from "../../..";
 
 export namespace WeaponAttackProps {
     export type E = {}
@@ -81,7 +81,7 @@ export class WeaponAttackModel extends Model<
     }
 
     @StateUtil.on(self => self.route.hero?.proxy.child.role.child.attack.decor)
-    private onCheck(that: AttackModel, decor: Decor<AttackProps.S>) {
+    private onCheck(that: RoleAttackModel, decor: Decor<RoleAttackProps.S>) {
         if (!this.state.isActive) return;
         decor.current.offset += this.state.current;
     }

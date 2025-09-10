@@ -1,6 +1,6 @@
 import { Decor, Method, Model, Props, StateUtil, StoreUtil } from "set-piece";
 import { FeatureModel, FeatureProps } from ".";
-import { AttackModel, AttackProps } from "../rules/attack";
+import { RoleAttackModel, RoleAttackProps } from "../rules/attack/role";
 import { HealthModel, HealthProps } from "../rules/health";
 
 export namespace BuffProps {
@@ -45,7 +45,7 @@ export abstract class BuffModel<
     }
 
     @StateUtil.on(self => self.route.role?.proxy.child.attack.decor)
-    protected onAttackCheck(that: AttackModel, decor: Decor<AttackProps.S>) {
+    protected onAttackCheck(that: RoleAttackModel, decor: Decor<RoleAttackProps.S>) {
         if (!this.state.isActive) return;
         const self: BuffModel = this;
         decor.current.offset += self.state.offsetAttack;

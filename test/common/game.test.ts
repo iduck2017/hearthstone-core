@@ -1,4 +1,4 @@
-import { AttackModel, BoardModel, CostModel, DeckModel, GameModel, HandModel, HealthModel, MageModel, PlayerModel, RoleModel, SelectUtil, TimeUtil } from "hearthstone-core";
+import { RoleAttackModel, BoardModel, CostModel, DeckModel, GameModel, HandModel, HealthModel, MageModel, PlayerModel, RoleModel, SelectUtil, TimeUtil } from "hearthstone-core";
 import { boot } from "./boot";
 import { WispModel } from "../wisp";
 
@@ -18,7 +18,7 @@ describe('game', () => {
                                             state: { races: [] },
                                             child: {
                                                 health: new HealthModel(() => ({ state: { origin: 1 } })),
-                                                attack: new AttackModel(() => ({ state: { origin: 1 } })),
+                                                attack: new RoleAttackModel(() => ({ state: { origin: 1 } })),
                                             }
                                         })),
                                     }
@@ -30,7 +30,7 @@ describe('game', () => {
                                             state: { races: [] },
                                             child: {
                                                 health: new HealthModel(() => ({ state: { origin: 1 } })),
-                                                attack: new AttackModel(() => ({ state: { origin: 1 } })),
+                                                attack: new RoleAttackModel(() => ({ state: { origin: 1 } })),
                                             }
                                         })),
                                     }
@@ -48,7 +48,7 @@ describe('game', () => {
                                             state: { races: [] },
                                             child: {
                                                 health: new HealthModel(() => ({ state: { origin: 1 } })),
-                                                attack: new AttackModel(() => ({ state: { origin: 1 } })),
+                                                attack: new RoleAttackModel(() => ({ state: { origin: 1 } })),
                                             }
                                         })),
                                     }

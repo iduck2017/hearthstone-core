@@ -20,7 +20,7 @@ export { MinionDisposeModel } from "./models/rules/dispose/minion";
 export { HeroDisposeModel } from "./models/rules/dispose/hero";
 export { WeaponDisposeModel } from "./models/rules/dispose/weapon";
 
-export { AttackProps, AttackModel } from "./models/rules/attack";
+export { RoleAttackProps, RoleAttackModel } from "./models/rules/attack/role";
 export { HealthProps, HealthModel } from "./models/rules/health";
 export { ActionProps, ActionModel } from "./models/rules/action";
 export { SleepProps, SleepModel } from './models/rules/sleep';
@@ -31,7 +31,7 @@ export { ArmorProps, ArmorModel } from "./models/rules/armor";
 export { DamageProps, DamageModel } from "./models/actions/damage";
 export { RestoreProps, RestoreModel } from "./models/actions/restore";
 
-export { WeaponAttackProps, WeaponAttackModel } from "./models/rules/weapon-attack";
+export { WeaponAttackProps, WeaponAttackModel } from "./models/rules/attack/attack";
 export { DurabilityProps, DurabilityModel } from "./models/rules/durability";
 
 // card

@@ -1,5 +1,5 @@
 import { Loader } from "set-piece";
-import { AttackModel, ClassType, CostModel, HealthModel, LibraryUtil, MinionCardModel, RarityType, RoleModel, MinionHooksModel } from "hearthstone-core";
+import { RoleAttackModel, ClassType, CostModel, HealthModel, LibraryUtil, MinionCardModel, RarityType, RoleModel, MinionHooksModel } from "hearthstone-core";
 import { LeperGnomeDeathrattleModel } from "./deathrattle";
 
 @LibraryUtil.is('leper-gnome')
@@ -24,7 +24,7 @@ export class LeperGnomeModel extends MinionCardModel {
                     role: new RoleModel(() => ({
                         child: {
                             health: new HealthModel(() => ({ state: { origin: 1 }})),
-                            attack: new AttackModel(() => ({ state: { origin: 2 }})),
+                            attack: new RoleAttackModel(() => ({ state: { origin: 2 }})),
                         },
                     })),
                     hooks: new MinionHooksModel(() => ({

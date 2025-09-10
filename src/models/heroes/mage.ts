@@ -1,6 +1,6 @@
 import { Loader, StoreUtil } from "set-piece";
 import { RoleModel } from "../role";
-import { AttackModel } from "../rules/attack";
+import { RoleAttackModel } from "../rules/attack/role";
 import { HealthModel } from "../rules/health";
 import { FireBlastModel } from "../skills/fireblast";
 import { HeroModel } from ".";
@@ -17,7 +17,7 @@ export class MageModel extends HeroModel {
                     role: props.child?.role ?? new RoleModel(() => ({ 
                         child: {
                             health: new HealthModel(() => ({ state: { origin: 30 }})),
-                            attack: new AttackModel(() => ({ state: { origin: 0 }})),
+                            attack: new RoleAttackModel(() => ({ state: { origin: 0 }})),
                         },
                     })),
                     skill: props.child?.skill ?? new FireBlastModel(),

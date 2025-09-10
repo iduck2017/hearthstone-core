@@ -1,8 +1,8 @@
 import { DebugUtil, Event, Method, Model, StoreUtil } from "set-piece";
-import { DamageEvent, DamageModel, MinionCardModel, RoleModel, GameModel, PlayerModel, HeroModel, WeaponCardModel } from "../..";
-import { DamageType } from "../../types/damage";
+import { DamageEvent, DamageModel, MinionCardModel, RoleModel, GameModel, PlayerModel, HeroModel, WeaponCardModel } from "../../..";
+import { DamageType } from "../../../types/damage";
 
-export namespace AttackProps {
+export namespace RoleAttackProps {
     export type E = {
         toRun: Event<{ target: RoleModel }>;
         onRun: Event<{ target: RoleModel }>;
@@ -18,11 +18,11 @@ export namespace AttackProps {
 }
 
 @StoreUtil.is('attack')
-export class AttackModel extends Model<
-    AttackProps.E,
-    AttackProps.S,
-    AttackProps.C,
-    AttackProps.R
+export class RoleAttackModel extends Model<
+    RoleAttackProps.E,
+    RoleAttackProps.S,
+    RoleAttackProps.C,
+    RoleAttackProps.R
 > {
     public get route() {
         const route = super.route;
@@ -58,8 +58,8 @@ export class AttackModel extends Model<
         }
     }
     
-    constructor(loader: Method<AttackModel['props'] & {
-        state: Pick<AttackProps.S, 'origin'>
+    constructor(loader: Method<RoleAttackModel['props'] & {
+        state: Pick<RoleAttackProps.S, 'origin'>
     }, []>) {
         super(() => {
             const props = loader?.();

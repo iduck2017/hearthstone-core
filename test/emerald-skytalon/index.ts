@@ -1,4 +1,4 @@
-import { AttackModel, ClassType, HealthModel, MinionCardModel,RarityType,  RaceType, RoleEntriesModel, RoleModel, RushModel } from "hearthstone-core";
+import { RoleAttackModel, ClassType, HealthModel, MinionCardModel,RarityType,  RaceType, RoleEntriesModel, RoleModel, RushModel } from "hearthstone-core";
 import { CostModel } from "hearthstone-core";
 import { LibraryUtil } from "hearthstone-core";
 import { Loader } from "set-piece";
@@ -24,7 +24,7 @@ export class EmeraldSkytalonModel extends MinionCardModel {
                     cost: new CostModel(() => ({ state: { origin: 1 }})),
                     role: new RoleModel(() => ({
                         child: {
-                            attack: new AttackModel(() => ({ state: { origin: 2 }})),
+                            attack: new RoleAttackModel(() => ({ state: { origin: 2 }})),
                             health: new HealthModel(() => ({ state: { origin: 1 }})),   
                             entries: new RoleEntriesModel(() => ({
                                 child: { rush: new RushModel() }

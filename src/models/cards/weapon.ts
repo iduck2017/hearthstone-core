@@ -1,6 +1,6 @@
 import { Event, Method, Model, Props, TranxUtil } from "set-piece";
 import { CardModel, CardProps } from ".";
-import { WeaponAttackModel } from "../rules/weapon-attack";
+import { WeaponAttackModel } from "../rules/attack/attack";
 import { DurabilityModel } from "../rules/durability";
 import { HeroModel } from "../heroes";
 import { WeaponHooksModel } from "../hooks/weapon";

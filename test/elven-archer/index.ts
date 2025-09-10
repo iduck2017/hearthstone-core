@@ -1,4 +1,4 @@
-import { MinionCardModel, HealthModel, AttackModel, RoleModel, LibraryUtil, CostModel, MinionHooksModel } from "hearthstone-core";
+import { MinionCardModel, HealthModel, RoleAttackModel, RoleModel, LibraryUtil, CostModel, MinionHooksModel } from "hearthstone-core";
 import { ElvenArcherBattlecryModel } from "./battlecry";
 import { ClassType, RarityType } from "hearthstone-core";
 import { Loader } from "set-piece";
@@ -24,7 +24,7 @@ export class ElvenArcherModel extends MinionCardModel {
                     cost: new CostModel(() => ({ state: { origin: 1 }})),
                     role: new RoleModel(() => ({
                         child: {
-                            attack: new AttackModel(() => ({ state: { origin: 1 }})),
+                            attack: new RoleAttackModel(() => ({ state: { origin: 1 }})),
                             health: new HealthModel(() => ({ state: { origin: 1 }})),   
                         }
                     })),
