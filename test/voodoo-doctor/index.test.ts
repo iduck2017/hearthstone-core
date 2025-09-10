@@ -16,7 +16,7 @@ describe('voodoo-doctor', () => {
         child: {
             playerA: new PlayerModel(() => ({
                 child: {
-                    character: new MageModel(),
+                    hero: new MageModel(),
                     mana: new ManaModel(() => ({ state: { origin: 10 }})),
                     board: new BoardModel(() => ({
                         child: { minions: [new WispModel()] }
@@ -29,7 +29,7 @@ describe('voodoo-doctor', () => {
             playerB: new PlayerModel(() => ({
                 child: {
                     mana: new ManaModel(() => ({ state: { origin: 10 }})),
-                    character: new MageModel(),
+                    hero: new MageModel(),
                 }
             }))
         }
@@ -44,8 +44,8 @@ describe('voodoo-doctor', () => {
     const roleD = cardD?.child.role;
     const playerB = game.child.playerB;
     const playerA = game.child.playerA;
-    const roleA = playerA.child.character.child.role;
-    const roleB = playerB.child.character.child.role;
+    const roleA = playerA.child.hero.child.role;
+    const roleB = playerB.child.hero.child.role;
     if (!roleC || !roleD) throw new Error();
 
     test('wisp-attack-shieldbearer', async () => {

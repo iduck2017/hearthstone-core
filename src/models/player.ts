@@ -5,7 +5,7 @@ import { BoardModel } from "./containers/board";
 import { DeckModel } from "./containers/deck";
 import { GraveyardModel } from "./containers/graveyard";
 import { ManaModel } from "./rules/mana";
-import { CharacterModel } from "./characters";
+import { HeroModel } from "./heroes";
 import { RoleModel } from "./role";
 import { MinionCardModel } from "./cards/minion";
 
@@ -14,7 +14,7 @@ export namespace PlayerProps {
     export type E = {
     };
     export type C = {
-        readonly character: CharacterModel;
+        readonly hero: HeroModel;
         readonly mana: ManaModel;
         // container
         readonly hand: HandModel;
@@ -41,7 +41,7 @@ export class PlayerModel extends Model<
 
     public get refer() {
         const minions: MinionCardModel[] = this.child.board.child.minions.filter(item => !item.child.dispose.state.isActive);
-        const entities: (MinionCardModel | CharacterModel)[] = [this.child.character, ...minions].filter(item => !item.child.dispose.state.isActive);
+        const entities: (MinionCardModel | HeroModel)[] = [this.child.hero, ...minions].filter(item => !item.child.dispose.state.isActive);
         return { 
             ...super.refer, 
             roles: entities.map(item => item.child.role),
@@ -67,7 +67,7 @@ export class PlayerModel extends Model<
     }
 
     constructor(loader: Method<PlayerModel['props'] & {
-        child: Pick<PlayerProps.C, 'character'>;
+        child: Pick<PlayerProps.C, 'hero'>;
     }, []>) {
         super(() => {
             const props = loader?.();

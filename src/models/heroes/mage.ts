@@ -3,10 +3,10 @@ import { RoleModel } from "../role";
 import { AttackModel } from "../rules/attack";
 import { HealthModel } from "../rules/health";
 import { FireBlastModel } from "../skills/fireblast";
-import { CharacterModel } from ".";
+import { HeroModel } from ".";
 
 @StoreUtil.is('mage')
-export class MageModel extends CharacterModel {
+export class MageModel extends HeroModel {
     constructor(loader?: Loader<MageModel>) {
         super(() => {
             const props = loader?.() ?? {};

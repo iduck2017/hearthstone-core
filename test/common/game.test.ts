@@ -56,7 +56,7 @@ describe('game', () => {
                             ]
                         }
                     })),
-                    character: new MageModel()
+                    hero: new MageModel()
                 }
             })),
             playerB: new PlayerModel(() => ({
@@ -75,7 +75,7 @@ describe('game', () => {
                             minions: [new WispModel()]
                         }
                     })),
-                    character: new MageModel()
+                    hero: new MageModel()
                 }
             })),
         }

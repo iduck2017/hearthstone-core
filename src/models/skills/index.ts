@@ -3,7 +3,7 @@ import { SelectEvent, SelectUtil } from "../../utils/select";
 import { PlayerModel } from "../player";
 import { GameModel } from "../game";
 import { CostModel } from "../rules/cost";
-import { CharacterModel } from "../characters";
+import { HeroModel } from "../heroes";
 import { DamageModel } from "../actions/damage";
 
 export namespace SkillProps {
@@ -36,12 +36,12 @@ export abstract class SkillModel<
 > {
     public get route() {
         const route = super.route;
-        const character: CharacterModel | undefined = route.order.find(item => item instanceof CharacterModel);
+        const hero: HeroModel | undefined = route.order.find(item => item instanceof HeroModel);
         return {
             ...route,
-            character,
-            player: route.order.find(item => item instanceof PlayerModel),
+            hero,
             game: route.order.find(item => item instanceof GameModel),
+            player: route.order.find(item => item instanceof PlayerModel),
         }
     }
 

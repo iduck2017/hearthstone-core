@@ -16,7 +16,7 @@ describe('stonetusk-boar', () => {
             playerA: new PlayerModel(() => ({
                 child: {
                     mana: new ManaModel(() => ({ state: { origin: 10 }})),
-                    character: new MageModel(),
+                    hero: new MageModel(),
                     board: new BoardModel(() => ({
                         child: { minions: [] }
                     })),
@@ -28,7 +28,7 @@ describe('stonetusk-boar', () => {
             playerB: new PlayerModel(() => ({
                 child: {
                     mana: new ManaModel(() => ({ state: { origin: 10 }})),
-                    character: new MageModel(),
+                    hero: new MageModel(),
                     board: new BoardModel(() => ({
                         child: { minions: [new WispModel()] }
                     })),
@@ -48,7 +48,7 @@ describe('stonetusk-boar', () => {
     const cardD = boardB.child.minions.find(item => item instanceof WispModel);
     const roleC = cardC?.child.role;
     const roleD = cardD?.child.role;
-    const roleB = game.child.playerB.child.character.child.role;
+    const roleB = game.child.playerB.child.hero.child.role;
     if (!roleC || !roleD) throw new Error();
 
     test('stonetusk-boar-charge', async () => {

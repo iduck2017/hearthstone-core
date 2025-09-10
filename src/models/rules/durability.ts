@@ -1,5 +1,5 @@
 import { Event, Method, Model, TranxUtil } from "set-piece";
-import { CharacterModel, DisposeModel, GameModel, PlayerModel, WeaponCardModel } from "../..";
+import { HeroModel, DisposeModel, GameModel, PlayerModel, WeaponCardModel } from "../..";
 
 export namespace DurabilityProps {
     export type E = {
@@ -24,11 +24,11 @@ export class DurabilityModel extends Model<
     public get route() {
         const route = super.route;
         const weapon: WeaponCardModel | undefined = route.order.find(item => item instanceof WeaponCardModel);
-        const character: CharacterModel | undefined = route.order.find(item => item instanceof CharacterModel);
+        const hero: HeroModel | undefined = route.order.find(item => item instanceof HeroModel);
         return { 
             ...route, 
             weapon,
-            character,
+            hero,
             game: route.order.find(item => item instanceof GameModel),
             player: route.order.find(item => item instanceof PlayerModel),
         }

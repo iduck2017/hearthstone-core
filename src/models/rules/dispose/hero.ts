@@ -1,18 +1,18 @@
 import { Loader, Model } from "set-piece";
 import { DisposeModel } from ".";
-import { CardModel, CharacterModel } from "../../..";
+import { CardModel, HeroModel } from "../../..";
 
-export class CharacterDisposeModel extends DisposeModel {
+export class HeroDisposeModel extends DisposeModel {
     public get route() {
         const route = super.route;
-        const character: CharacterModel | undefined = route.order.find(item => item instanceof CharacterModel)
+        const hero: HeroModel | undefined = route.order.find(item => item instanceof HeroModel)
         return {
             ...route,
-            character,
+            hero,
         }
     }
 
-    constructor(loader?: Loader<CharacterDisposeModel>) {
+    constructor(loader?: Loader<HeroDisposeModel>) {
         super(() => {
             const props = loader?.() ?? {};
             return {
@@ -25,9 +25,9 @@ export class CharacterDisposeModel extends DisposeModel {
     }
 
     protected check(): boolean {
-        const character = this.route.character;
-        if (!character) return true;
-        const role = character.child.role;
+        const hero = this.route.hero;
+        if (!hero) return true;
+        const role = hero.child.role;
         const health = role.child.health;
         if (health.state.current <= 0) return true;
         return false;

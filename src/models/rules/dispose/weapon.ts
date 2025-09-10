@@ -49,7 +49,7 @@ export class WeaponDisposeModel extends DisposeModel {
         if (!weapon) return;
         const player = this.route.player;
         if (!player) return;
-        const character = player.child.character;
-        character.del()
+        const hero = player.child.hero;
+        hero.del()
     }
 }

@@ -3,9 +3,9 @@ import { SkillModel } from "../skills";
 import { RoleModel } from "../role";
 import { ArmorModel } from "../rules/armor";
 import { WeaponCardModel } from "../cards/weapon";
-import { CharacterDisposeModel } from "../rules/dispose/character";
+import { HeroDisposeModel } from "../rules/dispose/hero";
 
-export namespace CharacterProps {
+export namespace HeroProps {
     export type E = {};
     export type S = {};
     export type C = {
@@ -13,26 +13,26 @@ export namespace CharacterProps {
         readonly skill: SkillModel;
         readonly role: RoleModel;
         weapon?: WeaponCardModel;
-        readonly dispose: CharacterDisposeModel
+        readonly dispose: HeroDisposeModel
     };
     export type R = {};
 }
 
-export abstract class CharacterModel<
-    E extends Partial<CharacterProps.E> & Props.E = {},
-    S extends Partial<CharacterProps.S> & Props.S = {},
-    C extends Partial<CharacterProps.C> & Props.C = {},
-    R extends Partial<CharacterProps.R> & Props.R = {}
+export abstract class HeroModel<
+    E extends Partial<HeroProps.E> & Props.E = {},
+    S extends Partial<HeroProps.S> & Props.S = {},
+    C extends Partial<HeroProps.C> & Props.C = {},
+    R extends Partial<HeroProps.R> & Props.R = {}
 > extends Model<
-    E & CharacterProps.E,
-    S & CharacterProps.S,
-    C & CharacterProps.C,
-    R & CharacterProps.R
+    E & HeroProps.E,
+    S & HeroProps.S,
+    C & HeroProps.C,
+    R & HeroProps.R
 > {
-    constructor(loader: Method<CharacterModel['props'] & {
-        state: S & CharacterProps.S;
-        child: C & Pick<CharacterProps.C, 'skill' | 'role'>;
-        refer: R & CharacterProps.R;
+    constructor(loader: Method<HeroModel['props'] & {
+        state: S & HeroProps.S;
+        child: C & Pick<HeroProps.C, 'skill' | 'role'>;
+        refer: R & HeroProps.R;
     }, []>) {
         super(() => {
             const props = loader();
@@ -41,7 +41,7 @@ export abstract class CharacterModel<
                 state: { ...props.state },
                 child: {
                     armor: props.child.armor ?? new ArmorModel(),
-                    dispose: props.child.dispose ?? new CharacterDisposeModel(),
+                    dispose: props.child.dispose ?? new HeroDisposeModel(),
                     ...props.child,
                 },
                 refer: { ...props.refer },

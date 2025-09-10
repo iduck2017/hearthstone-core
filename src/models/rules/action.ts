@@ -84,7 +84,7 @@ export class ActionModel extends Model<
         const board = opponent.child.board;
         let options: RoleModel[] = board.child.minions.map(item => item.child.role);
         if (!sleep.state.isActive || charge.state.isActive) {
-            options.push(opponent.child.character.child.role);
+            options.push(opponent.child.hero.child.role);
         }
 
         const tauntOptions = options.filter(item => {

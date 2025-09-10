@@ -25,7 +25,7 @@ export class ArmorUpModel extends SkillModel<[]> {
     protected async doRun(): Promise<void> {
         const player = this.route.player;
         if (!player) return;
-        const armor = player.child.character.child.armor;
+        const armor = player.child.hero.child.armor;
         armor.gain(2);
     }
 

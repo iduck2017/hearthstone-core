@@ -2,7 +2,7 @@ import { Event, Method, Model, Props, TranxUtil } from "set-piece";
 import { CardModel, CardProps } from ".";
 import { WeaponAttackModel } from "../rules/weapon-attack";
 import { DurabilityModel } from "../rules/durability";
-import { CharacterModel } from "../characters";
+import { HeroModel } from "../heroes";
 import { WeaponHooksModel } from "../hooks/weapon";
 import { BattlecryModel } from "../hooks/battlecry";
 import { WeaponDisposeModel } from "../rules/dispose/weapon";
@@ -80,22 +80,22 @@ export class WeaponCardModel<
     protected async doPlay(event: WeaponCardEvent) {
         const player = this.route.player;
         if (!player) return;
-        const character = player.child.character;
-        this.doEquip(character);
+        const hero = player.child.hero;
+        this.doEquip(hero);
         this.event.onEquip(new Event({}));
     }
 
     @TranxUtil.span()
-    private doEquip(character: CharacterModel) {
+    private doEquip(hero: HeroModel) {
         const player = this.route.player;
         const hand = player?.child.hand;
         if (hand) hand.del(this);
-        const prev = character.child.weapon;
+        const prev = hero.child.weapon;
         if (prev) {
             prev.child.dispose.active(this, true);
-            character.del();
+            hero.del();
         }
-        character.add(this);
+        hero.add(this);
     }
 
 }

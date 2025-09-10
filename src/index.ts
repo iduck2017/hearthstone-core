@@ -17,7 +17,7 @@ export { LibraryUtil } from "./utils/library";
 // rules
 export { DisposeProps, DisposeModel } from './models/rules/dispose'
 export { MinionDisposeModel } from "./models/rules/dispose/minion";
-export { CharacterDisposeModel } from "./models/rules/dispose/character";
+export { HeroDisposeModel } from "./models/rules/dispose/hero";
 export { WeaponDisposeModel } from "./models/rules/dispose/weapon";
 
 export { AttackProps, AttackModel } from "./models/rules/attack";
@@ -73,10 +73,10 @@ export { DeathrattleProps, DeathrattleModel } from "./models/hooks/deathrattle";
 export { EndTurnHookProps, EndTurnHookModel } from "./models/hooks/end-turn";
 export { StartTurnHookProps, StartTurnHookModel } from "./models/hooks/start-turn";
 
-// characters
-export { CharacterProps, CharacterModel } from "./models/characters";
-export { MageModel } from "./models/characters/mage";
-export { WarriorModel } from "./models/characters/warrior";
+// heroes
+export { HeroProps, HeroModel } from "./models/heroes";
+export { MageModel } from "./models/heroes/mage";
+export { WarriorModel } from "./models/heroes/warrior";
 
 // skills
 export { SkillProps, SkillModel } from './models/skills';

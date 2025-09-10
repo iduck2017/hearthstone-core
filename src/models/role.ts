@@ -13,7 +13,7 @@ import { SleepModel } from "./rules/sleep";
 import { FeaturesModel } from "./features/features";
 import { RoleEntriesModel } from "./entries/role";
 import { CardModel } from "./cards";
-import { CharacterModel } from "./characters";
+import { HeroModel } from "./heroes";
 
 export namespace RoleProps {
     export type S = {};
@@ -37,18 +37,16 @@ export class RoleModel extends Model<
 > {
     public get route() {
         const route = super.route;
+        const hero: HeroModel | undefined = route.order.find(item => item instanceof HeroModel);
         const card: CardModel | undefined = route.order.find(item => item instanceof CardModel);
         const minion: MinionCardModel | undefined = route.order.find(item => item instanceof MinionCardModel);
-        const character: CharacterModel | undefined = route.order.find(item => item instanceof CharacterModel);
-        const entity = character ?? card;
         return {
             ...super.route, 
             card, 
-            minion,
-            entity,
-            character,
+            hero,
             game: route.order.find(item => item instanceof GameModel),
             player: route.order.find(item => item instanceof PlayerModel),
+            minion,
             /** current position */
             hand: route.order.find(item => item instanceof HandModel),
             deck: route.order.find(item => item instanceof DeckModel),

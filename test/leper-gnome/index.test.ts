@@ -16,7 +16,7 @@ describe('leper-gnome', () => {
             playerA: new PlayerModel(() => ({
                 child: {
                     mana: new ManaModel(() => ({ state: { origin: 10 }})),
-                    character: new MageModel(),
+                    hero: new MageModel(),
                     board: new BoardModel(() => ({
                         child: { 
                             minions: [new LeperGnomeModel()] 
@@ -27,7 +27,7 @@ describe('leper-gnome', () => {
             playerB: new PlayerModel(() => ({
                 child: {
                     mana: new ManaModel(() => ({ state: { origin: 10 }})),
-                    character: new MageModel(),
+                    hero: new MageModel(),
                     board: new BoardModel(() => ({
                         child: { minions: [new WispModel()] }
                     })),
@@ -43,7 +43,7 @@ describe('leper-gnome', () => {
     const cardD = boardB.child.minions.find(item => item instanceof WispModel);
     const roleC = cardC?.child.role;
     const roleD = cardD?.child.role;
-    const roleB = playerB.child.character.child.role;
+    const roleB = playerB.child.hero.child.role;
     if (!roleC || !roleD) throw new Error();
 
     test('leper-gnome-deathrattle', async () => {

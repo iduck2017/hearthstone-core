@@ -8,13 +8,13 @@ describe('skill', () => {
             playerA: new PlayerModel(() => ({
                 child: {
                     mana: new ManaModel(() => ({ state: { origin: 10 }})),
-                    character: new MageModel(),
+                    hero: new MageModel(),
                 }
             })),
             playerB: new PlayerModel(() => ({
                 child: {
                     mana: new ManaModel(() => ({ state: { origin: 10 }})),
-                    character: new WarriorModel(),
+                    hero: new WarriorModel(),
                     board: new BoardModel(() => ({
                         child: { minions: [new WispModel()] }
                     })),
@@ -28,8 +28,8 @@ describe('skill', () => {
     const boardB = playerB.child.board;
     const handA = playerA.child.hand;
     const handB = playerB.child.hand;
-    const charA = playerA.child.character;
-    const charB = playerB.child.character;
+    const charA = playerA.child.hero;
+    const charB = playerB.child.hero;
     const roleA = charA.child.role;
     const roleB = charB.child.role;
     if (!roleA || !roleB) throw new Error();

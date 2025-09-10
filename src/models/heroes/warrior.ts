@@ -4,10 +4,10 @@ import { AttackModel } from "../rules/attack";
 import { PlayerModel } from "../player";
 import { ArmorUpModel } from "../skills/armor-up";
 import { Loader, StoreUtil } from "set-piece";
-import { CharacterModel } from ".";
+import { HeroModel } from ".";
 
 @StoreUtil.is('warrior')
-export class WarriorModel extends CharacterModel {
+export class WarriorModel extends HeroModel {
     constructor(loader?: Loader<WarriorModel>) {
         super(() => {
             const props = loader?.() ?? {};

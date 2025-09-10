@@ -2,7 +2,7 @@ import { Event, Method, Model, Props, TranxUtil } from "set-piece";
 import { BoardModel, CardModel, DeckModel, GraveyardModel, HandModel, MinionCardModel, PlayerModel, RoleModel } from "../..";
 import { GameModel } from "../..";
 import { DamageModel } from "../..";
-import { CharacterModel } from "../..";
+import { HeroModel } from "../..";
 import { RestoreModel } from "../actions/restore";
 
 export namespace FeatureProps {
@@ -37,13 +37,13 @@ export abstract class FeatureModel<
         const route = super.route;
         const minion: MinionCardModel | undefined = route.order.find(item => item instanceof MinionCardModel);
         const card: CardModel | undefined = route.order.find(item => item instanceof CardModel);
-        const character: CharacterModel | undefined = route.order.find(item => item instanceof CharacterModel);
-        const entity = card ?? character;
+        const hero: HeroModel | undefined = route.order.find(item => item instanceof HeroModel);
+        const entity = card ?? hero;
         return {
             ...route,
             minion,
             card,
-            character,
+            hero,
             entity,
             role: route.order.find(item => item instanceof RoleModel),
             board: route.order.find(item => item instanceof BoardModel),

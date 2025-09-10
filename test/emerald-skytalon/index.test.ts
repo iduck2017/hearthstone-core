@@ -19,7 +19,7 @@ describe('emerald-skytalon', () => {
             playerA: new PlayerModel(() => ({
                 child: {
                     mana: new ManaModel(() => ({ state: { origin: 10 }})),
-                    character: new MageModel(),
+                    hero: new MageModel(),
                     hand: new HandModel(() => ({
                         child: { minions: [new EmeraldSkytalonModel(), new WispModel()] }
                     })),
@@ -28,7 +28,7 @@ describe('emerald-skytalon', () => {
             playerB: new PlayerModel(() => ({
                 child: {
                     mana: new ManaModel(() => ({ state: { origin: 10 }})),
-                    character: new MageModel(),
+                    hero: new MageModel(),
                     board: new BoardModel(() => ({
                         child: { minions: [new WispModel()]}
                     })),
@@ -46,7 +46,7 @@ describe('emerald-skytalon', () => {
     const cardE = boardB.child.minions.find(item => item instanceof WispModel);
     const playerA = game.child.playerA;
     const playerB = game.child.playerB;
-    const roleB = playerB.child.character.child.role;
+    const roleB = playerB.child.hero.child.role;
     const roleC = cardC?.child.role;
     const roleD = cardD?.child.role;
     const roleE = cardE?.child.role;

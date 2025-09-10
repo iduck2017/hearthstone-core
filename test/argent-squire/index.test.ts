@@ -16,7 +16,7 @@ describe('argent-squire', () => {
             playerA: new PlayerModel(() => ({
                 child: {
                     mana: new ManaModel(() => ({ state: { origin: 10 }})),
-                    character: new MageModel(),
+                    hero: new MageModel(),
                     board: new BoardModel(() => ({
                         child: { minions: [new ArgentSquireModel()] }
                     })),
@@ -25,7 +25,7 @@ describe('argent-squire', () => {
             playerB: new PlayerModel(() => ({
                 child: {
                     mana: new ManaModel(() => ({ state: { origin: 10 }})),
-                    character: new MageModel(),
+                    hero: new MageModel(),
                     board: new BoardModel(() => ({
                         child: { minions: [new ArgentSquireModel()] }
                     }))

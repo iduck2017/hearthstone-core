@@ -10,7 +10,7 @@ describe('role', () => {
         child: {
             playerA: new PlayerModel(() => ({
                 child: {
-                    character: new MageModel(),
+                    hero: new MageModel(),
                     hand: new HandModel(),
                     deck: new DeckModel(),
                     board: new BoardModel(() => ({
@@ -22,7 +22,7 @@ describe('role', () => {
             })),
             playerB: new PlayerModel(() => ({
                 child: {
-                    character: new MageModel(),
+                    hero: new MageModel(),
                     hand: new HandModel(),
                     deck: new DeckModel(),
                     board: new BoardModel(() => ({
@@ -43,8 +43,8 @@ describe('role', () => {
     const cardD = boardB.child.minions.find(item => item instanceof WispModel);
     const roleC = cardC?.child.role;
     const roleD = cardD?.child.role;
-    const roleA = playerA.child.character.child.role;
-    const roleB = playerB.child.character.child.role;
+    const roleA = playerA.child.hero.child.role;
+    const roleB = playerB.child.hero.child.role;
     const turn = game.child.turn;
     if (!roleC || !roleD) throw new Error()
 

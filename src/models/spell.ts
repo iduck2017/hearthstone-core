@@ -1,5 +1,5 @@
 import { Loader, Method, Model, Props } from "set-piece";
-import { SelectEvent } from "../../dist/type";
+import { SelectEvent } from "../utils/select";
 
 export namespace SpellProps {
     export type E = {};
