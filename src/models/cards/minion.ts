@@ -10,7 +10,7 @@ import { BattlecryModel } from "../hooks/battlecry";
 import { DisposeModel } from "../rules/dispose";
 import { MinionDisposeModel } from "../rules/dispose/minion";
 
-export type MinionPlayEvent = { 
+export type MinionCardEvent = { 
     battlecry: Map<BattlecryModel, Model[]>;
     position: number;
 }
@@ -76,7 +76,7 @@ export abstract class MinionCardModel<
         await this.event.onPlay(new Event({}));
     }
 
-    protected async doPlay(event: MinionPlayEvent) {
+    protected async doPlay(event: MinionCardEvent) {
         const player = this.route.player;
         if (!player) return;
         const board = player.child.board;
@@ -96,12 +96,12 @@ export abstract class MinionCardModel<
         this.event.onSummon(new Event({}));
     }
     
-    protected async toPlay(): Promise<MinionPlayEvent | undefined> {
+    protected async toPlay(): Promise<MinionCardEvent | undefined> {
         // summon
         const position = await this.toSummon();
         if (position === undefined) return;
 
-        const event: MinionPlayEvent = {
+        const event: MinionCardEvent = {
             battlecry: new Map(),
             position,
         };

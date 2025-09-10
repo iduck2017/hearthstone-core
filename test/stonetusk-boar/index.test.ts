@@ -10,7 +10,6 @@ import { WispModel } from "../wisp";
 import { boot } from "../common/boot";
 import { DebugUtil, LogLevel } from "set-piece";
 
-DebugUtil.level = LogLevel.ERROR;
 describe('stonetusk-boar', () => {
     const game = new GameModel(() => ({
         child: {

@@ -18,7 +18,6 @@ export class RestoreModel extends Model<
     RestoreProps.C,
     RestoreProps.R
 > {
-    @DisposeModel.span()
     public static run(tasks: RestoreEvent[]) {
         tasks.forEach(item => item.detail.source.event.toRun(item));
         tasks.forEach(item => item.detail.target.child.health.toHeal(item));

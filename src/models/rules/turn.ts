@@ -61,20 +61,13 @@ export class TurnModel extends Model<
         const player = this.refer.current;
         const board = player?.child.board;
         if (!board) return;
-        const minions = board.child.minions;
+        const roles = player.refer.roles;
         player.child.mana.reset();
-        // rule
-        minions.forEach(item => {
-            const role = item.child.role;
-            const entries = role.child.entries;
-            role.child.action.reset();
-            role.child.sleep.deactive();
+        roles.forEach(item => {
+            const entries = item.child.entries;
+            item.child.action.reset();
+            item.child.sleep.deactive();
             entries.child.frozen.deactive();
-        });
-        // hooks
-        minions.forEach(item => {
-            const hooks = item.child.hooks;
-            hooks.child.startTurn.forEach(hook => hook.run());
         });
         this.event.onStart(new Event({}));
     }

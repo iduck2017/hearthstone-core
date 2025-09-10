@@ -103,7 +103,7 @@ export class HealthModel extends Model<
             return event;
         }
         this.draft.state.damage += result;
-        dispose.log(event.detail.source);
+        dispose.active(event.detail.source);
         event.reset(result);
         return event;
     }
@@ -151,7 +151,6 @@ export class HealthModel extends Model<
     private onChange(that: HealthModel, event: StateChangeEvent<HealthModel>) {
         const { memory, limit, damage } = event.detail.next;
         const offset = memory - limit;
-        if (offset !== 0) console.log('imbalance', memory, limit);
         if (offset !== 0) this.draft.state.memory = limit;
         if (offset > 0) this.draft.state.damage -= Math.min(damage, offset);
     }

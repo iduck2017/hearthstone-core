@@ -12,10 +12,10 @@
  * 2/3/2
  */
 
-import { ClassType, CostModel, DurabilityModel, RarityType, WeaponAttackModel, WeaponModel } from "hearthstone-core";
+import { ClassType, CostModel, DurabilityModel, RarityType, WeaponAttackModel, WeaponCardModel } from "hearthstone-core";
 import { Loader } from "set-piece";
 
-export class FieryWarAxeModel extends WeaponModel {
+export class FieryWarAxeModel extends WeaponCardModel {
     constructor(loader?: Loader<FieryWarAxeModel>) {
         super(() => {
             const props = loader?.() ?? {};

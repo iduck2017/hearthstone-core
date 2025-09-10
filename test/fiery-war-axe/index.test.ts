@@ -1,4 +1,4 @@
-import { BoardModel, GameModel, HandModel, MageModel, ManaModel, PlayerModel, WarriorModel } from "hearthstone-core";
+import { BoardModel, GameModel, HandModel, MageModel, ManaModel, PlayerModel, SelectUtil, WarriorModel } from "hearthstone-core";
 import { boot } from "../common/boot";
 import { WispModel } from "../wisp";
 import { FieryWarAxeModel } from ".";
@@ -31,9 +31,13 @@ describe('firey-war-axe', () => {
     const charA = playerA.child.character;
     const charB = playerB.child.character;
     const handA = playerA.child.hand;
+    const boardB = playerB.child.board;
+    const cardC = boardB.child.minions.find(item => item instanceof WispModel);
+    const roleC = cardC?.child.role;
     const roleA = charA.child.role;
     const roleB = charB.child.role;
-    if (!roleA || !roleB) throw new Error();
+    if (!roleC) throw new Error();
+    const turn = game.child.turn;
 
     const weapon = handA.child.weapons.find(item => item instanceof FieryWarAxeModel);
     expect(weapon).toBeDefined();
@@ -50,5 +54,59 @@ describe('firey-war-axe', () => {
         expect(weapon?.child.attack.state.origin).toBe(3);
         expect(roleA.child.attack.state.origin).toBe(0);
         expect(roleA.child.attack.state.offset).toBe(3);
+    })
+
+
+    test('warrior-attack', async () => {
+        const promise = roleA.child.action.run();
+        expect(SelectUtil.current).toBeDefined();
+        expect(SelectUtil.current?.options).toContain(roleC);
+        expect(SelectUtil.current?.options).toContain(roleB);
+        SelectUtil.set(roleC);
+        await promise;
+
+        expect(cardC.child.dispose.state.isActive).toBe(true);
+        expect(roleC.child.health.state.current).toBe(-2);
+        expect(roleC.child.health.state.damage).toBe(3);
+
+        expect(roleA.child.health.state.current).toBe(29);
+        expect(roleA.child.health.state.damage).toBe(1);
+
+        expect(weapon.child.durability.state.current).toBe(1);
+        expect(weapon.child.durability.state.reduce).toBe(1);
+        expect(weapon.child.durability.state.origin).toBe(2);
+
+        expect(boardB.child.minions.length).toBe(0);
+        expect(boardB.refer.order.length).toBe(0);
+    })
+
+    test('fiery-war-axe-deactive', () => {
+        expect(weapon.child.attack.state.isActive).toBe(true);
+        expect(roleA.child.attack.state.current).toBe(3);
+        turn.next();
+        expect(turn.refer.current).toBe(playerB);
+        expect(weapon.child.attack.state.isActive).toBe(false);
+        expect(roleA.child.attack.state.current).toBe(0);
+    }) 
+
+    test('warrior-attack-2', async () => {
+        turn.next();
+        expect(weapon.child.attack.state.isActive).toBe(true);
+        expect(roleA.child.action.state.isActive).toBe(true);
+
+        const promise = roleA.child.action.run();
+        expect(SelectUtil.current).toBeDefined();
+        expect(SelectUtil.current?.options).toContain(roleB);
+        SelectUtil.set(roleB);
+        await promise;
+
+        expect(roleB.child.health.state.current).toBe(27);
+        expect(roleB.child.health.state.damage).toBe(3);
+
+        expect(weapon.child.dispose.state.isActive).toBe(true);
+        expect(weapon.child.durability.state.current).toBe(0);
+        expect(charA.child.weapon).toBeUndefined();
+        
+        expect(roleA.child.attack.state.current).toBe(0);
     })
 })

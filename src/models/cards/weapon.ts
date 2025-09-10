@@ -1,4 +1,4 @@
-import { DebugUtil, Event, Format, LogLevel, Method, Model, Props, TranxUtil } from "set-piece";
+import { Event, Method, Model, Props, TranxUtil } from "set-piece";
 import { CardModel, CardProps } from ".";
 import { WeaponAttackModel } from "../rules/weapon-attack";
 import { DurabilityModel } from "../rules/durability";
@@ -7,7 +7,7 @@ import { WeaponHooksModel } from "../hooks/weapon";
 import { BattlecryModel } from "../hooks/battlecry";
 import { WeaponDisposeModel } from "../rules/dispose/weapon";
 
-export type WeaponPlayEvent = {
+export type WeaponCardEvent = {
     battlecry: Map<BattlecryModel, Model[]>;
 }
 
@@ -31,15 +31,15 @@ export class WeaponCardModel<
     C extends Partial<WeaponCardProps.C & CardProps.C> & Props.C = {},
     R extends Partial<WeaponCardProps.R & CardProps.R> & Props.R = {}
 > extends CardModel<
-    WeaponCardProps.E,
-    WeaponCardProps.S,
-    WeaponCardProps.C,
-    WeaponCardProps.R
+    E & WeaponCardProps.E,
+    S & WeaponCardProps.S,
+    C & WeaponCardProps.C,
+    R & WeaponCardProps.R
 > {
     constructor(loader: Method<WeaponCardModel['props'] & {
-        state: WeaponCardProps.S & Format.State<Omit<CardProps.S, 'isActive'>>;
-        child: Omit<WeaponCardProps.C, 'hooks' | 'dispose'> & Pick<CardProps.C, 'cost'>;
-        refer: WeaponCardProps.R;
+        state: S & WeaponCardProps.S & Omit<CardProps.S, 'isActive'>;
+        child: C & Omit<WeaponCardProps.C, 'hooks' | 'dispose'> & Pick<CardProps.C, 'cost'>;
+        refer: R & WeaponCardProps.R;
     }, []>) {
         super(() => {
             const props = loader();
@@ -63,7 +63,7 @@ export class WeaponCardModel<
         if (!player) return;
         const signal = this.event.toPlay(new Event({}));
         if (signal.isCancel) return;
-        const event: WeaponPlayEvent = {
+        const event: WeaponCardEvent = {
             battlecry: new Map(),
         };
         const hooks = this.child.hooks;
@@ -77,7 +77,7 @@ export class WeaponCardModel<
         await this.event.onPlay(new Event({}));
     }
 
-    protected async doPlay(event: WeaponPlayEvent) {
+    protected async doPlay(event: WeaponCardEvent) {
         const player = this.route.player;
         if (!player) return;
         const character = player.child.character;
@@ -90,8 +90,11 @@ export class WeaponCardModel<
         const player = this.route.player;
         const hand = player?.child.hand;
         if (hand) hand.del(this);
-        const weapon = character.child.weapon;
-        if (weapon) character.del(weapon);
+        const prev = character.child.weapon;
+        if (prev) {
+            prev.child.dispose.active(this, true);
+            character.del();
+        }
         character.add(this);
     }
 

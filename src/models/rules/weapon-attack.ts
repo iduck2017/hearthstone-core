@@ -1,5 +1,5 @@
-import { Decor, EventUtil, Method, Model, StateChangeEvent, StateUtil } from "set-piece";
-import { GameModel, PlayerModel, CharacterModel, CharacterProps, AttackProps, AttackModel } from "../..";
+import { Decor, Event, EventUtil, Method, Model, StateChangeEvent, StateUtil } from "set-piece";
+import { GameModel, PlayerModel, CharacterModel, CharacterProps, AttackProps, AttackModel, TurnModel } from "../..";
 
 export namespace WeaponAttackProps {
     export type E = {}
@@ -32,6 +32,7 @@ export class WeaponAttackModel extends Model<
         const state = super.state;
         return {
             ...state,
+            isActive: this.check(),
             current: state.origin + state.offset,
         }
     }
@@ -53,6 +54,25 @@ export class WeaponAttackModel extends Model<
         });
     }
 
+    private check() {
+        const player = this.route.player;
+        if (!player) return false
+
+        const game = this.route.game;
+        if (!game) return false;
+
+        const turn = game.child.turn;
+        const current = turn.refer.current;
+        if (current === player) return true;
+        return false;
+    }
+
+
+    @EventUtil.on(self => self.route.game?.proxy.child.turn.event.onStart)
+    @EventUtil.on(self => self.route.game?.proxy.child.turn.event.onEnd)
+    private deactive(that: TurnModel, event: Event) {
+        this.reload()
+    }
 
     @EventUtil.on(self => self.proxy.event.onStateChange)
     private onChange(that: WeaponAttackModel, event: StateChangeEvent<WeaponAttackModel>) {
@@ -62,6 +82,7 @@ export class WeaponAttackModel extends Model<
 
     @StateUtil.on(self => self.route.character?.proxy.child.role.child.attack.decor)
     private onCheck(that: AttackModel, decor: Decor<AttackProps.S>) {
+        if (!this.state.isActive) return;
         decor.current.offset += this.state.current;
     }
 }

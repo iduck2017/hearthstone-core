@@ -13,7 +13,6 @@ import { WispModel } from "../wisp";
 import { boot } from "../common/boot";
 import { DebugUtil, LogLevel } from "set-piece";
 
-DebugUtil.level = LogLevel.ERROR;
 describe('emerald-skytalon', () => {
     const game = new GameModel(() => ({
         child: {

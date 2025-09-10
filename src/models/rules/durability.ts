@@ -1,5 +1,5 @@
-import { Event, Method, Model } from "set-piece";
-import { CharacterModel, GameModel, PlayerModel } from "../..";
+import { Event, Method, Model, TranxUtil } from "set-piece";
+import { CharacterModel, DisposeModel, GameModel, PlayerModel, WeaponCardModel } from "../..";
 
 export namespace DurabilityProps {
     export type E = {
@@ -23,9 +23,11 @@ export class DurabilityModel extends Model<
 > {
     public get route() {
         const route = super.route;
+        const weapon: WeaponCardModel | undefined = route.order.find(item => item instanceof WeaponCardModel);
         const character: CharacterModel | undefined = route.order.find(item => item instanceof CharacterModel);
         return { 
             ...route, 
+            weapon,
             character,
             game: route.order.find(item => item instanceof GameModel),
             player: route.order.find(item => item instanceof PlayerModel),
@@ -63,10 +65,14 @@ export class DurabilityModel extends Model<
         });
     }
 
-    public consume() {
+    @DisposeModel.span()
+    @TranxUtil.span()
+    public consume(reason?: Model) {
         this.draft.state.reduce += 1;
-        // death
+        const weapon = this.route.weapon;
+        if (!weapon) return;
+        if (!reason) reason = weapon;
+        const dispose = weapon.child.dispose;
+        dispose.active(reason);
     }
-
-
 }

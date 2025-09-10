@@ -1,4 +1,4 @@
-import { DebugUtil, Loader, Model, TranxUtil } from "set-piece";
+import { DebugUtil, Loader, LogLevel, Model, TranxUtil } from "set-piece";
 import { DisposeModel } from ".";
 import { MinionCardModel, PlayerModel, WeaponCardModel } from "../../..";
 
@@ -33,6 +33,7 @@ export class WeaponDisposeModel extends DisposeModel {
         return false;
     }
 
+    @DebugUtil.log(LogLevel.WARN)
     protected run(): void {
         const weapon = this.route.weapon;
         if (!weapon) return;
@@ -49,6 +50,6 @@ export class WeaponDisposeModel extends DisposeModel {
         const player = this.route.player;
         if (!player) return;
         const character = player.child.character;
-        character.del(weapon)
+        character.del()
     }
 }

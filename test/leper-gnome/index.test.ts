@@ -10,7 +10,6 @@ import { WispModel } from "../wisp";
 import { boot } from "../common/boot";
 import { DebugUtil, LogLevel } from "set-piece";
 
-DebugUtil.level = LogLevel.ERROR;
 describe('leper-gnome', () => {
     const game = boot(new GameModel(() => ({
         child: {

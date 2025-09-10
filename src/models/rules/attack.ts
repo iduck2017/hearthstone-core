@@ -1,5 +1,5 @@
 import { DebugUtil, Event, Method, Model, StoreUtil } from "set-piece";
-import { DamageEvent, DamageModel, MinionCardModel, RoleModel, GameModel, PlayerModel } from "../..";
+import { DamageEvent, DamageModel, MinionCardModel, RoleModel, GameModel, PlayerModel, CharacterModel, WeaponCardModel } from "../..";
 import { DamageType } from "../../types/damage";
 
 export namespace AttackProps {
@@ -27,18 +27,30 @@ export class AttackModel extends Model<
     public get route() {
         const route = super.route;
         const minion: MinionCardModel | undefined = route.order.find(item => item instanceof MinionCardModel);
+        const character: CharacterModel | undefined = route.order.find(item => item instanceof CharacterModel);
         return { 
             ...route, 
             minion,
+            character,
             role: route.order.find(item => item instanceof RoleModel),
             game: route.order.find(item => item instanceof GameModel),
             player: route.order.find(item => item instanceof PlayerModel),
         }
     }
 
+    public get refer() {
+        const refer = super.refer;
+        const character = this.route.character;
+        const weapon: WeaponCardModel | undefined = character?.child.weapon;
+        return {
+            ...refer,
+            weapon
+        }
+    }
+
     public get state() {
         const state = super.state;
-        const current = state.origin + state.offset;
+        const current: number = state.origin + state.offset;
         return {
             ...state,
             isActive: current > 0,
@@ -78,7 +90,8 @@ export class AttackModel extends Model<
         
         const health = target.child.health.state.current;
         if (health <= 0) return;
-        
+
+        // execute
         DamageModel.run([
             new DamageEvent({
                 target,
@@ -93,7 +106,11 @@ export class AttackModel extends Model<
                 origin: target.child.attack.state.current,
             }),
         ])
-        
+        // weapon
+        const weapon = this.refer.weapon;
+        if (weapon) weapon.child.durability.consume();
+
+        // stealth
         const entries = role.child.entries;
         const stealth = entries.child.stealth;
         stealth.deactive();

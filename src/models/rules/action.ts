@@ -113,13 +113,16 @@ export class ActionModel extends Model<
         
         const roleA = this.route.role;
         if (!roleA) return;
+        // select
         const roleB = await this.select();
         if (!roleB) return;
 
         const event = this.event.toRun(new Event({}))
         if (event.isCancel) return;
 
+        // mana
         if (!this.consume()) return;
+        // atytack
         const attack = roleA.child.attack;
         await attack.run(roleB);
         
@@ -150,13 +153,14 @@ export class ActionModel extends Model<
         const attack = role.child.attack;
         const frozen = entries.child.frozen;
         const charge = entries.child.charge;
+
         if (frozen.state.isActive) return false;
         if (
             sleep.state.isActive &&
             !charge.state.isActive &&
             !rush.state.isActive
         ) return false;
-
+        
         if (!attack.state.isActive) return false;
         return true;
     }

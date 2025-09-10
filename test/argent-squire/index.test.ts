@@ -10,7 +10,6 @@ import { ArgentSquireModel } from "./index";
 import { boot } from "../common/boot";
 import { DebugUtil, LogLevel } from "set-piece";
 
-DebugUtil.level = LogLevel.ERROR;
 describe('argent-squire', () => {
     const game = new GameModel(() => ({
         child: {

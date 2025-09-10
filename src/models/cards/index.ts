@@ -95,6 +95,8 @@ export abstract class CardModel<
     public abstract play(): Promise<void>;
 
     private check(): boolean {
+        const hand = this.route.hand;
+        if (!hand) return false;
         const player = this.route.player;
         if (!player) return false;
         if (!player.state.isActive) return false;

@@ -49,7 +49,7 @@ export abstract class CharacterModel<
         })
     }
 
-    public del(weapon: WeaponCardModel) {
+    public del() {
         this.draft.child.weapon = undefined;
     }
 

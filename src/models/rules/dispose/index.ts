@@ -1,4 +1,4 @@
-import { Event, Loader, Method, Model, TranxUtil } from "set-piece";
+import { DebugUtil, Event, Loader, LogLevel, Method, Model, TranxUtil } from "set-piece";
 
 export namespace DisposeProps {
     export type E = {
@@ -27,7 +27,6 @@ export abstract class DisposeModel extends Model<
 
     private static tasks: Array<DisposeModel> = [];
 
-    @DisposeModel.span()
     protected static add(target: DisposeModel) {
         DisposeModel.tasks.push(target);
     }
@@ -92,18 +91,13 @@ export abstract class DisposeModel extends Model<
     }
 
     @TranxUtil.span()
-    public active(reason: Model) {
+    public active(reason: Model, isLock?: boolean) {
         if (this.state.isActive) return;
-        this.log(reason);
-        this.draft.state.isLock = true;
+        this.draft.refer.reason = reason;
+        this.draft.state.isLock = isLock ?? false;
         DisposeModel.add(this);
     }
 
-    public log(reason: Model) {
-        if (this.state.isActive) return;
-        this.draft.refer.reason = reason;
-        DisposeModel.add(this);
-    }
 
     protected abstract check(state: DisposeProps.S): boolean;
 

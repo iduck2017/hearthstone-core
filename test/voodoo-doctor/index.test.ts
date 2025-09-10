@@ -11,14 +11,13 @@ import { boot } from "../common/boot";
 import { WispModel } from "../wisp";
 import { VoodooDoctorModel } from ".";
 
-DebugUtil.level = LogLevel.ERROR;
 describe('voodoo-doctor', () => {
     const game = new GameModel(() => ({
         child: {
             playerA: new PlayerModel(() => ({
                 child: {
-                    mana: new ManaModel(() => ({ state: { origin: 10 }})),
                     character: new MageModel(),
+                    mana: new ManaModel(() => ({ state: { origin: 10 }})),
                     board: new BoardModel(() => ({
                         child: { minions: [new WispModel()] }
                     })),
