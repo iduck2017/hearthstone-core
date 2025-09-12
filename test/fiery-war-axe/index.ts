@@ -12,7 +12,7 @@
  * 2/3/2
  */
 
-import { ClassType, CostModel, DurabilityModel, RarityType, WeaponAttackModel, WeaponCardModel } from "hearthstone-core";
+import { ClassType, CostModel, WeaponActionModel, RarityType, WeaponAttackModel, WeaponCardModel } from "hearthstone-core";
 import { Loader } from "set-piece";
 
 export class FieryWarAxeModel extends WeaponCardModel {
@@ -33,7 +33,7 @@ export class FieryWarAxeModel extends WeaponCardModel {
                 child: {
                     cost: new CostModel(() => ({ state: { origin: 2 }})),
                     attack: new WeaponAttackModel(() => ({ state: { origin: 3 }})),
-                    durability: new DurabilityModel(() => ({ state: { origin: 2 }})),
+                    action: new WeaponActionModel(() => ({ state: { origin: 2 }})),
                     ...props.child
                 },
                 refer: { ...props.refer }

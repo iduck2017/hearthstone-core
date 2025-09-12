@@ -28,8 +28,8 @@ export class WeaponDisposeModel extends DisposeModel {
     protected check(): boolean {
         const weapon = this.route.weapon;
         if (!weapon) return true;
-        const durability = weapon.child.durability;
-        if (durability.state.current <= 0) return true;
+        const action = weapon.child.action;
+        if (action.state.current <= 0) return true;
         return false;
     }
 

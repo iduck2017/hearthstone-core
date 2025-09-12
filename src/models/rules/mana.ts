@@ -2,7 +2,7 @@ import { Event, Loader, Method, Model, StoreUtil, TranxUtil } from "set-piece";
 
 export namespace ManaProps {
     export type E = {
-        onConsume: Event<{ value: number }>;
+        onUse: Event<{ value: number }>;
     };
     export type S = {
         origin: number;
@@ -48,6 +48,6 @@ export class ManaModel extends Model<
     public use(value: number) {
         if (value > this.draft.state.current) value= this.draft.state.current;
         this.draft.state.current -= value;
-        this.event.onConsume(new Event({ value }));
+        this.event.onUse(new Event({ value }));
     }
 }

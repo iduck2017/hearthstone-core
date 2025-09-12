@@ -1,7 +1,7 @@
 import { Event, Method, Model, Props, TranxUtil } from "set-piece";
 import { CardModel, CardProps } from ".";
 import { WeaponAttackModel } from "../rules/attack/attack";
-import { DurabilityModel } from "../rules/durability";
+import { WeaponActionModel } from "../rules/action/weapon";
 import { HeroModel } from "../heroes";
 import { WeaponHooksModel } from "../hooks/weapon";
 import { BattlecryModel } from "../hooks/battlecry";
@@ -20,7 +20,7 @@ export namespace WeaponCardProps {
     export type C = {
         readonly hooks: WeaponHooksModel;
         readonly attack: WeaponAttackModel;
-        readonly durability: DurabilityModel;
+        readonly action: WeaponActionModel;
         readonly dispose: WeaponDisposeModel;
     };
     export type R = {};

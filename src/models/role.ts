@@ -6,7 +6,7 @@ import { HandModel } from "./containers/hand";
 import { DeckModel } from "./containers/deck";
 import { GraveyardModel } from "./containers/graveyard";
 import { MinionCardModel } from "..";
-import { ActionModel } from "./rules/action";
+import { RoleActionModel } from "./rules/action/role";
 import { RoleAttackModel } from "./rules/attack/role";
 import { HealthModel } from "./rules/health";
 import { SleepModel } from "./rules/sleep";
@@ -22,7 +22,7 @@ export namespace RoleProps {
         readonly sleep: SleepModel;
         readonly health: HealthModel;
         readonly attack: RoleAttackModel;
-        readonly action: ActionModel;
+        readonly action: RoleActionModel;
         readonly entries: RoleEntriesModel;
         readonly feats: FeaturesModel;
     };
@@ -75,7 +75,7 @@ export class RoleModel extends Model<
                 state: { ...props.state },
                 child: { 
                     sleep: props.child.sleep ?? new SleepModel(),
-                    action: props.child.action ?? new ActionModel(),
+                    action: props.child.action ?? new RoleActionModel(),
                     entries: props.child.entries ?? new RoleEntriesModel(),
                     feats: props.child.feats ?? new FeaturesModel(),
                     ...props.child,

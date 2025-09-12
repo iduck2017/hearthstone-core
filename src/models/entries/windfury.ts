@@ -1,6 +1,6 @@
 import { Decor, Event, Loader, StateUtil, StoreUtil, TranxUtil } from "set-piece";
 import { FeatureModel } from "../features";
-import { ActionProps, ActionModel } from "../rules/action";
+import { RoleActionProps, RoleActionModel } from "../rules/action/role";
 
 export namespace WindfuryProps {
     export type E = {
@@ -53,7 +53,7 @@ export class WindfuryModel extends FeatureModel<
     }
 
     @StateUtil.on(self => self.route.role?.proxy.child.action.decor)
-    protected onCheck(that: ActionModel, decor: Decor<ActionProps.S>) {
+    protected onCheck(that: RoleActionModel, decor: Decor<RoleActionProps.S>) {
         if (!this.state.isActive) return;
         const offset = this.state.isAdvance ? 3 : 1;
         decor.current.origin += offset;

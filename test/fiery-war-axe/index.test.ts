@@ -72,9 +72,9 @@ describe('firey-war-axe', () => {
         expect(roleA.child.health.state.current).toBe(29);
         expect(roleA.child.health.state.damage).toBe(1);
 
-        expect(weapon.child.durability.state.current).toBe(1);
-        expect(weapon.child.durability.state.reduce).toBe(1);
-        expect(weapon.child.durability.state.origin).toBe(2);
+        expect(weapon.child.action.state.current).toBe(1);
+        expect(weapon.child.action.state.reduce).toBe(1);
+        expect(weapon.child.action.state.origin).toBe(2);
 
         expect(boardB.child.minions.length).toBe(0);
         expect(boardB.refer.order.length).toBe(0);
@@ -104,7 +104,7 @@ describe('firey-war-axe', () => {
         expect(roleB.child.health.state.damage).toBe(3);
 
         expect(weapon.child.dispose.state.isActive).toBe(true);
-        expect(weapon.child.durability.state.current).toBe(0);
+        expect(weapon.child.action.state.current).toBe(0);
         expect(charA.child.weapon).toBeUndefined();
         
         expect(roleA.child.attack.state.current).toBe(0);

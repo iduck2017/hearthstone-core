@@ -1,10 +1,10 @@
 import { Event, Method, Model, TranxUtil } from "set-piece";
-import { HeroModel, DisposeModel, GameModel, PlayerModel, WeaponCardModel, CardModel } from "../..";
-import { DisposeEvent } from "./dispose";
+import { HeroModel, DisposeModel, GameModel, PlayerModel, WeaponCardModel, CardModel } from "../../..";
+import { DisposeEvent } from "../dispose";
 
-export namespace DurabilityProps {
+export namespace WeaponActionProps {
     export type E = {
-        onConsume: Event;
+        onUse: Event;
     };
     export type S = {
         origin: number;
@@ -16,11 +16,11 @@ export namespace DurabilityProps {
     export type R = {};
 }
 
-export class DurabilityModel extends Model<
-    DurabilityProps.E,
-    DurabilityProps.S,
-    DurabilityProps.C,
-    DurabilityProps.R
+export class WeaponActionModel extends Model<
+    WeaponActionProps.E,
+    WeaponActionProps.S,
+    WeaponActionProps.C,
+    WeaponActionProps.R
 > {
     public get route() {
         const route = super.route;
@@ -46,8 +46,8 @@ export class DurabilityModel extends Model<
         }
     }
 
-    constructor(loader: Method<DurabilityModel['props'] & {
-        state: Pick<DurabilityProps.S, 'origin'>
+    constructor(loader: Method<WeaponActionModel['props'] & {
+        state: Pick<WeaponActionProps.S, 'origin'>
     }, []>) {
         super(() => {
             const props = loader?.();

@@ -5,7 +5,7 @@ import { FeatureModel } from "../features";
 export namespace DivineSheildProps {
     export type E = {
         onActive: Event
-        onConsume: DamageEvent
+        onUse: DamageEvent
     }
     export type S = {
         count: number
@@ -60,7 +60,7 @@ export class DivineSheildModel extends FeatureModel<
     }
 
     public onUse(event: DamageEvent) {
-        this.event.onConsume(event);
+        this.event.onUse(event);
     }
 
     public disable() {

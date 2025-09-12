@@ -22,7 +22,7 @@ export { WeaponDisposeModel } from "./models/rules/dispose/weapon";
 
 export { RoleAttackProps, RoleAttackModel } from "./models/rules/attack/role";
 export { HealthProps, HealthModel } from "./models/rules/health";
-export { ActionProps, ActionModel } from "./models/rules/action";
+export { RoleActionProps as ActionProps, RoleActionModel as ActionModel } from "./models/rules/action/role";
 export { SleepProps, SleepModel } from './models/rules/sleep';
 export { ManaProps, ManaModel } from './models/rules/mana';
 export { TurnProps, TurnModel } from "./models/rules/turn";
@@ -32,7 +32,7 @@ export { DamageProps, DamageModel } from "./models/actions/damage";
 export { RestoreProps, RestoreModel } from "./models/actions/restore";
 
 export { WeaponAttackProps, WeaponAttackModel } from "./models/rules/attack/attack";
-export { DurabilityProps, DurabilityModel } from "./models/rules/durability";
+export { WeaponActionProps, WeaponActionModel } from "./models/rules/action/weapon";
 
 // card
 export { CardProps, CardModel } from "./models/cards";

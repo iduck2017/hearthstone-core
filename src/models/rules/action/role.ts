@@ -1,7 +1,7 @@
 import { DebugUtil, Event, Loader, Model, TranxUtil } from "set-piece";
-import { BoardModel, SelectEvent, SelectUtil, MinionCardModel, RoleModel, PlayerModel, GameModel } from "../..";
+import { BoardModel, SelectEvent, SelectUtil, MinionCardModel, RoleModel, PlayerModel, GameModel } from "../../..";
 
-export namespace ActionProps {
+export namespace RoleActionProps {
     export type S = {
         origin: number;
         reduce: number;
@@ -15,11 +15,11 @@ export namespace ActionProps {
     export type R = {};
 }
 
-export class ActionModel extends Model<
-    ActionProps.E,
-    ActionProps.S,
-    ActionProps.C,
-    ActionProps.R
+export class RoleActionModel extends Model<
+    RoleActionProps.E,
+    RoleActionProps.S,
+    RoleActionProps.C,
+    RoleActionProps.R
 > {
     public get route() {
         const route = super.route;
@@ -43,7 +43,7 @@ export class ActionModel extends Model<
         }
     }
 
-    constructor(loader?: Loader<ActionModel>) {
+    constructor(loader?: Loader<RoleActionModel>) {
         super(() => {
             const props = loader?.() ?? {};
             return {
@@ -129,7 +129,7 @@ export class ActionModel extends Model<
         this.event.onRun(new Event({}));
     }
 
-    private check(state: ActionProps.S): boolean {
+    private check(state: RoleActionProps.S): boolean {
         if (state.isLock) return false;
 
         const current = state.origin - state.reduce;
