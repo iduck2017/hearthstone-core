@@ -6,6 +6,7 @@ import { HeroModel } from "../heroes";
 import { WeaponHooksModel } from "../hooks/weapon";
 import { BattlecryModel } from "../hooks/battlecry";
 import { WeaponDisposeModel } from "../rules/dispose/weapon";
+import { SelectUtil } from "../../utils/select";
 
 export type WeaponCardEvent = {
     battlecry: Map<BattlecryModel, Model[]>;
@@ -56,16 +57,55 @@ export class WeaponCardModel<
         })
     }
 
-    // equip
+    // play
     public async play() {
+        const event = await this.toPlay();
+        if (!event) return;
+        await this.doPlay(event);
+        await this.event.onPlay(new Event({}));
+    }
+
+    protected async toPlay(): Promise<WeaponCardEvent | undefined> {
+        // status 
         if (!this.state.isActive) return;
-        const player = this.route.player;
-        if (!player) return;
-        const signal = this.event.toPlay(new Event({}));
-        if (signal.isCancel) return;
+        // battlecry
         const event: WeaponCardEvent = {
             battlecry: new Map(),
         };
+        const hooks = this.child.hooks;
+        const battlecry = hooks.child.battlecry;
+        for (const item of battlecry) {
+            const selectors = item.toRun();
+            // condition not match
+            if (!selectors) continue;
+            for (const item of selectors) {
+                if (!item.options.length) return;
+            }
+            const params: Model[] = [];
+            for (const item of selectors) {
+                const result = await SelectUtil.get(item);
+                // user cancel
+                if (result === undefined) return;
+                params.push(result);
+            }
+            event.battlecry.set(item, params);
+        }
+        // event
+        const signal = this.event.toPlay(new Event({}));
+        if (signal.isCancel) return;
+        return event;
+    }
+
+    protected async doPlay(event: WeaponCardEvent) {
+        const player = this.route.player;
+        if (!player) return;
+        // mana
+        const mana = player.child.mana;
+        const cost = this.child.cost;
+        mana.use(cost.state.current);
+        const hand = player.child.hand;
+        hand.use(this);
+        // battlecry
         const hooks = this.child.hooks;
         const battlecry = hooks.child.battlecry;
         for (const item of battlecry) {
@@ -73,16 +113,16 @@ export class WeaponCardModel<
             if (!params) continue;
             await item.run(...params);
         }
-        await this.doPlay(event);
-        await this.event.onPlay(new Event({}));
+        // equip
+        const hero = player.child.hero;
+        this.equip(hero);
     }
 
-    protected async doPlay(event: WeaponCardEvent) {
-        const player = this.route.player;
-        if (!player) return;
-        const hero = player.child.hero;
+
+    // equip
+    public equip(hero: HeroModel) {
         this.doEquip(hero);
-        this.event.onEquip(new Event({}));
+        this.event.onEquip(new Event({}))
     }
 
     @TranxUtil.span()

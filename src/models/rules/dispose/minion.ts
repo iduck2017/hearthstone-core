@@ -1,4 +1,4 @@
-import { DebugUtil, Loader, Model, TranxUtil } from "set-piece";
+import { DebugUtil, Loader, LogLevel, Model, TranxUtil } from "set-piece";
 import { DisposeModel } from ".";
 import { MinionCardModel, PlayerModel } from "../../..";
 

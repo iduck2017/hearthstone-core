@@ -36,6 +36,7 @@ export { DurabilityProps, DurabilityModel } from "./models/rules/durability";
 
 // card
 export { CardProps, CardModel } from "./models/cards";
+export { SpellCardProps, SpellCardModel } from './models/cards/spell';
 export { MinionCardProps, MinionCardModel } from "./models/cards/minion";
 export { WeaponCardProps, WeaponCardModel } from "./models/cards/weapon";
 
@@ -65,6 +66,7 @@ export { DivineSheildProps, DivineSheildModel } from "./models/entries/divine-sh
 export { FeaturesProps, FeaturesModel } from "./models/features/features";
 export { FeatureProps, FeatureModel } from './models/features'
 export { BuffProps, BuffModel } from "./models/features/buff";
+export { EffectProps, EffectModel } from './models/features/effect'; 
 
 // hooks
 export { MinionHooksProps, MinionHooksModel } from "./models/hooks/minion";

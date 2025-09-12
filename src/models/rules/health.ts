@@ -20,7 +20,6 @@ export namespace HealthProps {
     export type R = {};
 }
 
-
 export class HealthModel extends Model<
     HealthProps.E,
     HealthProps.S,
@@ -98,7 +97,7 @@ export class HealthModel extends Model<
             return event;
         }
         if (divineSheild.state.isActive) {
-            divineSheild.consume();
+            divineSheild.use();
             event.reset(0);
             return event;
         }

@@ -2,14 +2,16 @@ import { Loader, Model, TranxUtil } from "set-piece";
 import { PlayerModel } from "../player";
 import { GameModel } from "../game";
 import { CardModel } from "../cards";
-import { WeaponCardModel, MinionCardModel } from "../..";
+import { WeaponCardModel, MinionCardModel, SpellCardModel } from "../..";
 
 export namespace HandProps {
     export type E = {}
     export type S = {}
     export type C = {
         minions: MinionCardModel[],
-        weapons: WeaponCardModel[]
+        weapons: WeaponCardModel[],
+        spells: SpellCardModel[],
+        cache: CardModel[],
     }
     export type R = {
         order: CardModel[]
@@ -37,8 +39,10 @@ export class HandModel extends Model<
             return {
                 uuid: props.uuid,
                 child: { 
+                    spells: [],
                     minions: [],
                     weapons: [],
+                    cache: [],
                     ...props.child,
                 },
                 state: { ...props.state },
@@ -56,6 +60,7 @@ export class HandModel extends Model<
         if (!position) position = order.length;
 
         let cards: CardModel[] | undefined;
+        if (card instanceof SpellCardModel) cards = this.draft.child.spells;
         if (card instanceof MinionCardModel) cards = this.draft.child.minions;
         if (card instanceof WeaponCardModel) cards = this.draft.child.weapons;
         if (!cards) return;
@@ -65,10 +70,12 @@ export class HandModel extends Model<
         return card;
     }
 
-    public del(card: CardModel): CardModel | undefined {
+    @TranxUtil.span()
+    public use(card: CardModel) {
         const order = this.draft.refer.order;
 
         let cards: CardModel[] | undefined;
+        if (card instanceof SpellCardModel) cards = this.draft.child.spells;
         if (card instanceof MinionCardModel) cards = this.draft.child.minions;
         if (card instanceof WeaponCardModel) cards = this.draft.child.weapons;
         if (!cards) return;
@@ -77,6 +84,15 @@ export class HandModel extends Model<
         if (index !== -1) cards.splice(index, 1);
         index = order.indexOf(card);
         if (index !== -1) order.splice(index, 1);
+
+        this.draft.child.cache.push(card);
+    }
+
+    public del(card: CardModel): CardModel | undefined {
+        const cache = this.draft.child.cache;
+        const index = cache.indexOf(card);
+        if (index === -1) return;
+        cache.splice(index, 1);
         return card;
     }
 }

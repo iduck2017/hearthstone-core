@@ -108,7 +108,7 @@ export class RoleAttackModel extends Model<
         ])
         // weapon
         const weapon = this.refer.weapon;
-        if (weapon) weapon.child.durability.consume();
+        if (weapon) weapon.child.durability.use();
 
         // stealth
         const entries = role.child.entries;

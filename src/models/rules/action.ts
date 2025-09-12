@@ -121,7 +121,7 @@ export class ActionModel extends Model<
         if (event.isCancel) return;
 
         // mana
-        if (!this.consume()) return;
+        if (!this.use()) return;
         // atytack
         const attack = roleA.child.attack;
         await attack.run(roleB);
@@ -165,7 +165,7 @@ export class ActionModel extends Model<
         return true;
     }
 
-    public consume() {
+    public use() {
         if (!this.state.isActive) return false;
         this.draft.state.reduce ++;
         return true;

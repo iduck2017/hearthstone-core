@@ -90,6 +90,7 @@ export abstract class DisposeModel extends Model<
         });
     }
 
+    @DisposeModel.span()
     @TranxUtil.span()
     public active(reason: Model, isLock?: boolean) {
         if (this.state.isActive) return;

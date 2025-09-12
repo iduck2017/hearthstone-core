@@ -67,7 +67,7 @@ export class DurabilityModel extends Model<
 
     @DisposeModel.span()
     @TranxUtil.span()
-    public consume(reason?: Model) {
+    public use(reason?: Model) {
         this.draft.state.reduce += 1;
         const weapon = this.route.weapon;
         if (!weapon) return;

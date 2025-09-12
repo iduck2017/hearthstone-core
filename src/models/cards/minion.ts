@@ -65,11 +65,6 @@ export abstract class MinionCardModel<
 
 
     public async play() {
-        if (!this.state.isActive) return;
-        const player = this.route.player;
-        if (!player) return;
-        const signal = this.event.toPlay(new Event({}));
-        if (signal.isCancel) return;
         const event = await this.toPlay();
         if (!event) return;
         await this.doPlay(event);
@@ -79,12 +74,13 @@ export abstract class MinionCardModel<
     protected async doPlay(event: MinionCardEvent) {
         const player = this.route.player;
         if (!player) return;
-        const board = player.child.board;
-        this.doSummon(board, event.position);
         // mana
         const mana = player.child.mana;
         const cost = this.child.cost;
-        mana.consume(cost.state.current);
+        mana.use(cost.state.current);
+        // summon
+        const hand = player.child.hand;
+        hand.use(this);
         // battlecry
         const hooks = this.child.hooks;
         const battlecry = hooks.child.battlecry;
@@ -93,21 +89,24 @@ export abstract class MinionCardModel<
             if (!params) continue;
             await item.run(...params);
         }
-        this.event.onSummon(new Event({}));
+        // end
+        const board = player.child.board;
+        this.summon(board, event.position);
     }
     
     protected async toPlay(): Promise<MinionCardEvent | undefined> {
+        // status 
+        if (!this.state.isActive) return;
         // summon
         const position = await this.toSummon();
         if (position === undefined) return;
-
+        // battlecry
         const event: MinionCardEvent = {
             battlecry: new Map(),
             position,
         };
         const hooks = this.child.hooks;
         const battlecry = hooks.child.battlecry;
-        // battlecry
         for (const item of battlecry) {
             const selectors = item.toRun();
             // condition not match
@@ -118,15 +117,20 @@ export abstract class MinionCardModel<
             const params: Model[] = [];
             for (const item of selectors) {
                 const result = await SelectUtil.get(item);
+                // user cancel
                 if (result === undefined) return;
                 params.push(result);
             }
             event.battlecry.set(item, params);
         }
+        // event
+        const signal = this.event.toPlay(new Event({}));
+        if (signal.isCancel) return;
         return event;
     }
 
-    
+
+    // summon
     public summon(board: BoardModel, position?: number) {
         this.doSummon(board, position);
         this.event.onSummon(new Event({}));

@@ -84,7 +84,7 @@ export abstract class SkillModel<
         
         // execute
         const mana = player.child.mana;
-        mana.consume(cost.state.current);
+        mana.use(cost.state.current);
         const self: SkillModel = this;
         await self.doRun(...params);
         this.event.onRun(new Event({ params }));

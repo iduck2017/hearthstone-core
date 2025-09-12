@@ -9,9 +9,6 @@ import { GraveyardModel } from "../containers/graveyard";
 import { ClassType, RarityType } from "../../types/card";
 import { MinionHooksModel } from "../hooks/minion";
 import { FeaturesModel } from "../features/features";
-import { BattlecryModel } from "../hooks/battlecry";
-import { SelectUtil } from "../../utils/select";
-
 
 export namespace CardProps {
     export type E = {
@@ -31,7 +28,7 @@ export namespace CardProps {
     };
     export type C = {
         readonly cost: CostModel;
-        readonly features: FeaturesModel;
+        readonly feats: FeaturesModel;
     };
     export type R = {};
 }
@@ -84,7 +81,7 @@ export abstract class CardModel<
                 },
                 child: { 
                     hooks: props.child.hooks ?? new MinionHooksModel(),
-                    features: props.child.features ?? new FeaturesModel(),
+                    feats: props.child.feats ?? new FeaturesModel(),
                     ...props.child 
                 },
                 refer: { ...props.refer }
@@ -124,6 +121,4 @@ export abstract class CardModel<
         card = player.child.hand.add(card);
         return card;
     }
-
-
 }

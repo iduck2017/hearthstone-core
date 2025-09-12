@@ -39,7 +39,7 @@ export class DivineSheildModel extends FeatureModel<
         })
     }
 
-    public actve(): boolean {
+    public active(): boolean {
         if (this.state.isActive) return false; 
         this.doActive();
         this.event.onActive(new Event({}));
@@ -52,14 +52,14 @@ export class DivineSheildModel extends FeatureModel<
         this.draft.state.count = 1;
     }
 
-    public async consume() {
+    public async use() {
         if (!this.state.isActive) return false;
         if (this.draft.state.count <= 1) this.draft.state.isActive = false;
         this.draft.state.count =- 1;
         return true;
     }
 
-    public onConsume(event: DamageEvent) {
+    public onUse(event: DamageEvent) {
         this.event.onConsume(event);
     }
 

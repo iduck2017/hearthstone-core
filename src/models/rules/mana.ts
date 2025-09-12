@@ -45,7 +45,7 @@ export class ManaModel extends Model<
         this.draft.state.current = this.draft.state.origin;
     }
 
-    public consume(value: number) {
+    public use(value: number) {
         if (value > this.draft.state.current) value= this.draft.state.current;
         this.draft.state.current -= value;
         this.event.onConsume(new Event({ value }));
