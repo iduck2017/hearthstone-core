@@ -66,8 +66,8 @@ describe('battlecry', () => {
         expect(roleD.child.health.state.current).toBe(0);
         expect(roleD.child.health.state.origin).toBe(1);
         expect(cardD.child.dispose.state.isActive).toBe(true);
-        const reason = cardD.child.dispose.refer.reason;
-        expect(reason instanceof DamageModel).toBe(true);
-        if (reason instanceof DamageModel) expect(reason?.route.card).toBe(cardC);
+
+        const source = cardD.child.dispose.refer.source;
+        expect(source).toBe(cardC);
     })
 })

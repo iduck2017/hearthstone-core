@@ -1,6 +1,7 @@
-import { Event } from "set-piece";
+import { Event, Model } from "set-piece";
 import { RoleModel } from "../models/role";
 import { DamageModel } from "../models/actions/damage";
+import { CardModel, HeroModel } from "..";
 
 export enum DamageType {
     DEFAULT = 0,
@@ -12,20 +13,23 @@ export enum DamageType {
 
 export class DamageEvent extends Event<{
     type?: DamageType;
-    source: DamageModel;
+    source: CardModel | HeroModel;
+    detail: Model;
     target: RoleModel;
     origin: number;
     result: number;
 }> {
     constructor(props: {
         type?: DamageType;
-        source: DamageModel;
+        source: CardModel | HeroModel;
+        detail: Model;
         target: RoleModel;
         origin: number;
     }) {
         super({
             ...props,
             result: props.origin,
+            detail: props.detail,
             type: props.type ?? DamageType.DEFAULT,
         });
     }

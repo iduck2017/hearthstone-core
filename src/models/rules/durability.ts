@@ -1,5 +1,6 @@
 import { Event, Method, Model, TranxUtil } from "set-piece";
-import { HeroModel, DisposeModel, GameModel, PlayerModel, WeaponCardModel } from "../..";
+import { HeroModel, DisposeModel, GameModel, PlayerModel, WeaponCardModel, CardModel } from "../..";
+import { DisposeEvent } from "./dispose";
 
 export namespace DurabilityProps {
     export type E = {
@@ -67,12 +68,15 @@ export class DurabilityModel extends Model<
 
     @DisposeModel.span()
     @TranxUtil.span()
-    public use(reason?: Model) {
+    public use(event?: DisposeEvent) {
         this.draft.state.reduce += 1;
         const weapon = this.route.weapon;
         if (!weapon) return;
-        if (!reason) reason = weapon;
+        if (!event) event = {
+            detail: this,
+            source: weapon,
+        }
         const dispose = weapon.child.dispose;
-        dispose.active(reason);
+        dispose.active(event);
     }
 }

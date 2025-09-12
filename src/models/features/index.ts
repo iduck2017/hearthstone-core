@@ -15,10 +15,7 @@ export namespace FeatureProps {
         desc: string;
         isActive: boolean;
     }
-    export type C = {
-        damage: DamageModel;
-        restore: RestoreModel;
-    };
+    export type C = {};
     export type R = {};
 }
 
@@ -66,11 +63,7 @@ export abstract class FeatureModel<
             return {
                 uuid: props.uuid,
                 state: { ...props.state },
-                child: { 
-                    damage: props.child?.damage ?? new DamageModel(),
-                    restore: props.child?.restore ?? new RestoreModel(),
-                    ...props.child
-                },
+                child: { ...props.child },
                 refer: { ...props.refer },
             }
         })

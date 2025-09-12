@@ -1,4 +1,10 @@
 import { DebugUtil, Event, Loader, LogLevel, Method, Model, TranxUtil } from "set-piece";
+import { CardModel, HeroModel } from '../../..'
+
+export type DisposeEvent = {
+    detail: Model;
+    source: CardModel | HeroModel;
+}
 
 export namespace DisposeProps {
     export type E = {
@@ -10,7 +16,8 @@ export namespace DisposeProps {
     }
     export type C = {}
     export type R = {
-        reason?: Model;
+        detail?: Model;
+        source?: CardModel | HeroModel;
     }
 }
 
@@ -92,9 +99,10 @@ export abstract class DisposeModel extends Model<
 
     @DisposeModel.span()
     @TranxUtil.span()
-    public active(reason: Model, isLock?: boolean) {
+    public active(event: DisposeEvent, isLock?: boolean) {
         if (this.state.isActive) return;
-        this.draft.refer.reason = reason;
+        this.draft.refer.detail = event.detail;
+        this.draft.refer.source = event.source;
         this.draft.state.isLock = isLock ?? false;
         DisposeModel.add(this);
     }

@@ -27,10 +27,13 @@ export class FireballEffectModel extends EffectModel<[RoleModel]> {
     }
 
     protected async doRun(target: RoleModel) {
+        const card = this.route.card;
+        if (!card) return;
         DamageModel.run([
             new DamageEvent({
                 type: DamageType.SPELL,
-                source: this.child.damage,
+                source: card,
+                detail: this,
                 target,
                 origin: 6
             })

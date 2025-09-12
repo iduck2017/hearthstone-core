@@ -11,9 +11,7 @@ export namespace RoleAttackProps {
         origin: number;
         offset: number;
     }
-    export type C = {
-        damage: DamageModel;
-    }
+    export type C = {}
     export type R = {}
 }
 
@@ -41,10 +39,13 @@ export class RoleAttackModel extends Model<
     public get refer() {
         const refer = super.refer;
         const hero = this.route.hero;
+        const minion = this.route.minion;
         const weapon: WeaponCardModel | undefined = hero?.child.weapon;
+        const damage = hero?.child.damage ?? minion?.child.damage;
         return {
             ...refer,
-            weapon
+            weapon,
+            damage,
         }
     }
 
@@ -69,10 +70,7 @@ export class RoleAttackModel extends Model<
                     offset: 0,
                     ...props.state,
                 },
-                child: { 
-                    damage: props.child?.damage ?? new DamageModel(),
-                    ...props.child,
-                },
+                child: { ...props.child },
                 refer: { ...props.refer },
             }
         });
@@ -80,30 +78,37 @@ export class RoleAttackModel extends Model<
 
 
     @DebugUtil.log()
-    public async run(target: RoleModel) {
-        const role = this.route.role;
-        if (!role) return;
+    public async run(roleB: RoleModel) {
+        const roleA = this.route.role;
+        if (!roleA) return;
         if (!this.state.isActive) return;
         
-        const signal = this.event.toRun(new Event({ target }))
+        const signal = this.event.toRun(new Event({ target: roleB }))
         if (signal.isCancel) return;
         
-        const health = target.child.health.state.current;
-        if (health <= 0) return;
+        const healthB = roleB.child.health;
+        const attackB = roleB.child.attack;
+        if (healthB.state.current <= 0) return;
+
+        const sourceA = roleA.route.card ?? roleA.route.hero;
+        const sourceB = roleB.route.card ?? roleB.route.hero;
+        if (!sourceA || !sourceB) return;
 
         // execute
         DamageModel.run([
             new DamageEvent({
-                target,
+                target: roleB,
+                detail: this,
                 type: DamageType.ATTACK,
-                source: this.child.damage,
+                source: sourceA,
                 origin: this.state.current,
             }),
             new DamageEvent({
-                target: role,
+                target: roleA,
+                detail: this,
                 type: DamageType.DEFEND,
-                source: target.child.attack.child.damage,
-                origin: target.child.attack.state.current,
+                source: sourceB,
+                origin: attackB.state.current,
             }),
         ])
         // weapon
@@ -111,10 +116,10 @@ export class RoleAttackModel extends Model<
         if (weapon) weapon.child.durability.use();
 
         // stealth
-        const entries = role.child.entries;
+        const entries = roleA.child.entries;
         const stealth = entries.child.stealth;
         stealth.deactive();
 
-        this.event.onRun(new Event({ target: target })); 
+        this.event.onRun(new Event({ target: roleB })); 
     }
 }

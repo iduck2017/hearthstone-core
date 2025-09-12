@@ -128,11 +128,15 @@ export class WeaponCardModel<
     @TranxUtil.span()
     private doEquip(hero: HeroModel) {
         const player = this.route.player;
-        const hand = player?.child.hand;
+        if (!player) return;
+        const hand = player.child.hand;
         if (hand) hand.del(this);
         const prev = hero.child.weapon;
         if (prev) {
-            prev.child.dispose.active(this, true);
+            prev.child.dispose.active({
+                source: hero,
+                detail: this,
+            }, true);
             hero.del();
         }
         hero.add(this);

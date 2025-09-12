@@ -30,12 +30,13 @@ export class ElvenArcherBattlecryModel extends BattlecryModel<[RoleModel]> {
     }
 
     protected async doRun(target: RoleModel) {
-        const card = this.route;
+        const card = this.route.card;
         if (!card) return;
         DamageModel.run([
             new DamageEvent({
-                source: this.child.damage,
+                source: card,
                 target,
+                detail: this,
                 origin: 1,
                 type: DamageType.DEFAULT,
             })

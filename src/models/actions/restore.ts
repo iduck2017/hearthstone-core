@@ -1,6 +1,5 @@
 import { Loader, Model, TranxUtil } from "set-piece";
 import { RestoreEvent } from "../../types/restore";
-import { DisposeModel } from "../rules/dispose";
 
 export namespace RestoreProps {
     export type E = {
@@ -19,7 +18,7 @@ export class RestoreModel extends Model<
     RestoreProps.R
 > {
     public static run(tasks: RestoreEvent[]) {
-        tasks.forEach(item => item.detail.source.event.toRun(item));
+        tasks.forEach(item => item.detail.source.child.restore.event.toRun(item));
         tasks.forEach(item => item.detail.target.child.health.toHeal(item));
         
         tasks = tasks.filter(item => !item.isCancel);
@@ -27,7 +26,7 @@ export class RestoreModel extends Model<
 
         tasks = tasks.filter(item => item.detail.result > 0 && !item.isCancel);
         tasks.forEach(item => item.detail.target.child.health.onHeal(item));
-        tasks.forEach(item => item.detail.source.onRun(item));
+        tasks.forEach(item => item.detail.source.child.restore.onRun(item));
     }
 
     @TranxUtil.span()

@@ -110,10 +110,7 @@ describe('role', () => {
 
         expect(boardA.child.minions.length).toBe(0);
         expect(boardB.child.minions.length).toBe(0);
-
-        const reasonC = cardC.child.dispose.refer.reason;
-        const reasonD = cardD.child.dispose.refer.reason;
-        expect(reasonC).toBe(roleD.child.attack.child.damage);
-        expect(reasonD).toBe(roleC.child.attack.child.damage);
+        expect(cardC.child.dispose.refer.source).toBe(cardD);
+        expect(cardD.child.dispose.refer.source).toBe(cardC);
     })
 })

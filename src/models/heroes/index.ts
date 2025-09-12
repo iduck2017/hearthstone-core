@@ -3,6 +3,7 @@ import { SkillModel } from "../skills";
 import { RoleModel } from "../role";
 import { ArmorModel } from "../rules/armor";
 import { WeaponCardModel } from "../cards/weapon";
+import { DamageModel, RestoreModel } from "../..";
 import { HeroDisposeModel } from "../rules/dispose/hero";
 
 export namespace HeroProps {
@@ -14,6 +15,8 @@ export namespace HeroProps {
         readonly role: RoleModel;
         weapon?: WeaponCardModel;
         readonly dispose: HeroDisposeModel
+        readonly damage: DamageModel
+        readonly restore: RestoreModel;
     };
     export type R = {};
 }
@@ -42,6 +45,8 @@ export abstract class HeroModel<
                 child: {
                     armor: props.child.armor ?? new ArmorModel(),
                     dispose: props.child.dispose ?? new HeroDisposeModel(),
+                    damage: props.child.damage ?? new DamageModel(),
+                    restore: props.child.restore ?? new RestoreModel(),
                     ...props.child,
                 },
                 refer: { ...props.refer },

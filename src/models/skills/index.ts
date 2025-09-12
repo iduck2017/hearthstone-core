@@ -17,7 +17,6 @@ export namespace SkillProps {
     };
     export type C = {
         cost: CostModel,
-        damage: DamageModel,
     };
     export type R = {};
 }

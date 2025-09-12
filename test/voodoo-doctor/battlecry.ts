@@ -32,9 +32,12 @@ export class VoodooDoctorBattlecryModel extends BattlecryModel<[RoleModel]> {
     }
 
     public async doRun(target: RoleModel) {
+        const card = this.route.card;
+        if (!card) return;
         RestoreModel.run([
             new RestoreEvent({
-                source: this.child.restore,
+                source: card,
+                detail: this,
                 target: target,
                 origin: 2,
             })

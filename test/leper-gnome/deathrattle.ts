@@ -29,7 +29,8 @@ export class LeperGnomeDeathrattleModel extends DeathrattleModel {
         const target = opponent.child.hero.child.role;
         DamageModel.run([
             new DamageEvent({
-                source: this.child.damage,
+                source: card,
+                detail: this,
                 target,
                 origin: 2,
                 type: DamageType.DEFAULT,

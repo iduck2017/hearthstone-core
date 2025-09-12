@@ -23,7 +23,7 @@ export class DamageModel extends Model<
 > {
     @DisposeModel.span()
     public static run(tasks: DamageEvent[]) {
-        tasks.forEach(item => item.detail.source.event.toRun(item));
+        tasks.forEach(item => item.detail.source.child.damage.event.toRun(item));
         tasks.forEach(item => item.detail.target.child.health.toHurt(item));
         
         tasks = tasks.filter(item => !item.isCancel);
@@ -31,7 +31,7 @@ export class DamageModel extends Model<
 
         tasks = tasks.filter(item => item.detail.result > 0 && !item.isCancel);
         tasks.forEach(item => item.detail.target.child.health.onHurt(item));
-        tasks.forEach(item => item.detail.source.onRun(item));
+        tasks.forEach(item => item.detail.source.child.damage.onRun(item));
     }
 
     @TranxUtil.span()

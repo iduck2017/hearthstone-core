@@ -1,5 +1,5 @@
 import { DebugUtil, Model, TranxUtil, Props, Event, Method, Format } from "set-piece";
-import { CostModel, CostType } from "../rules/cost";
+import { CostModel } from "../rules/cost";
 import { GameModel } from "../game";
 import { PlayerModel } from "../player";
 import { HandModel } from "../containers/hand";
@@ -9,6 +9,7 @@ import { GraveyardModel } from "../containers/graveyard";
 import { ClassType, RarityType } from "../../types/card";
 import { MinionHooksModel } from "../hooks/minion";
 import { FeaturesModel } from "../features/features";
+import { DamageModel, RestoreModel } from "../..";
 
 export namespace CardProps {
     export type E = {
@@ -29,6 +30,8 @@ export namespace CardProps {
     export type C = {
         readonly cost: CostModel;
         readonly feats: FeaturesModel;
+        readonly damage: DamageModel
+        readonly restore: RestoreModel
     };
     export type R = {};
 }
@@ -80,8 +83,10 @@ export abstract class CardModel<
                     ...props.state
                 },
                 child: { 
-                    hooks: props.child.hooks ?? new MinionHooksModel(),
                     feats: props.child.feats ?? new FeaturesModel(),
+                    hooks: props.child.hooks ?? new MinionHooksModel(),
+                    damage: props.child.damage ?? new DamageModel(),
+                    restore: props.child.restore ?? new RestoreModel(),
                     ...props.child 
                 },
                 refer: { ...props.refer }

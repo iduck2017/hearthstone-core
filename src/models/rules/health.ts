@@ -102,7 +102,7 @@ export class HealthModel extends Model<
             return event;
         }
         this.draft.state.damage += result;
-        dispose.active(event.detail.source);
+        dispose.active(event.detail);
         event.reset(result);
         return event;
     }

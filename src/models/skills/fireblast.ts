@@ -30,10 +30,13 @@ export class FireBlastModel extends SkillModel<[RoleModel]> {
     }
 
     protected async doRun(target: RoleModel): Promise<void> {
+        const hero = this.route.hero;
+        if (!hero) return;
         DamageModel.run([
             new DamageEvent({
                 type: DamageType.SKILL,
-                source: this.child.damage,
+                source: hero,
+                detail: this,
                 target,
                 origin: 1,
             })

@@ -68,8 +68,7 @@ describe('fireball', () => {
         expect(roleC.child.health.state.damage).toBe(6);
         expect(cardC.child.dispose.state.isActive).toBe(true);
 
-        const source = cardD.child.spells[0]?.child.damage;
-        expect(cardC.child.dispose.refer.reason).toBe(source);
+        expect(cardC.child.dispose.refer.source).toBe(cardD);
     })
 
 })
