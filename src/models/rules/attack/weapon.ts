@@ -67,22 +67,9 @@ export class WeaponAttackModel extends Model<
         return false;
     }
 
-
-    @EventUtil.on(self => self.route.game?.proxy.child.turn.event.onStart)
-    @EventUtil.on(self => self.route.game?.proxy.child.turn.event.onEnd)
-    private deactive(that: TurnModel, event: Event) {
-        this.reload()
-    }
-
-    @EventUtil.on(self => self.proxy.event.onStateChange)
-    private onChange(that: WeaponAttackModel, event: StateChangeEvent<WeaponAttackModel>) {
-        const { prev, next } = event.detail;
-        if (prev.current !== next.current) this.reload();
-    }
-
     @StateUtil.on(self => self.route.hero?.proxy.child.role.child.attack.decor)
     private onCheck(that: RoleAttackModel, decor: Decor<RoleAttackProps.S>) {
         if (!this.state.isActive) return;
-        decor.current.offset += this.state.current;
+        decor.current.offset += this.state.origin;
     }
 }

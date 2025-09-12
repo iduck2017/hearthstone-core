@@ -31,7 +31,7 @@ export { ArmorProps, ArmorModel } from "./models/rules/armor";
 export { DamageProps, DamageModel } from "./models/actions/damage";
 export { RestoreProps, RestoreModel } from "./models/actions/restore";
 
-export { WeaponAttackProps, WeaponAttackModel } from "./models/rules/attack/attack";
+export { WeaponAttackProps, WeaponAttackModel } from "./models/rules/attack/weapon";
 export { WeaponActionProps, WeaponActionModel } from "./models/rules/action/weapon";
 
 // card
@@ -65,7 +65,7 @@ export { DivineSheildProps, DivineSheildModel } from "./models/entries/divine-sh
 // features
 export { FeaturesProps, FeaturesModel } from "./models/features/features";
 export { FeatureProps, FeatureModel } from './models/features'
-export { BuffProps, BuffModel } from "./models/features/buff";
+export { RoleBuffProps as BuffProps, RoleBuffModel as BuffModel } from "./models/features/buff/role";
 export { EffectProps, EffectModel } from './models/features/effect'; 
 
 // hooks

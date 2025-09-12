@@ -1,12 +1,13 @@
-import { Event, Method, Model, Props, TranxUtil } from "set-piece";
+import { Event, EventUtil, Method, Model, Props, TranxUtil } from "set-piece";
 import { CardModel, CardProps } from ".";
-import { WeaponAttackModel } from "../rules/attack/attack";
+import { WeaponAttackModel } from "../rules/attack/weapon";
 import { WeaponActionModel } from "../rules/action/weapon";
 import { HeroModel } from "../heroes";
 import { WeaponHooksModel } from "../hooks/weapon";
 import { BattlecryModel } from "../hooks/battlecry";
 import { WeaponDisposeModel } from "../rules/dispose/weapon";
 import { SelectUtil } from "../../utils/select";
+import { TurnModel } from "../rules/turn";
 
 export type WeaponCardEvent = {
     battlecry: Map<BattlecryModel, Model[]>;
@@ -140,6 +141,13 @@ export class WeaponCardModel<
             hero.del();
         }
         hero.add(this);
+    }
+
+    
+    @EventUtil.on(self => self.route.game?.proxy.child.turn.event.onStart)
+    @EventUtil.on(self => self.route.game?.proxy.child.turn.event.onEnd)
+    private onEnd(that: TurnModel, event: Event) {
+        this.reload()
     }
 
 }
