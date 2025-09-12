@@ -155,5 +155,4 @@ export abstract class MinionCardModel<
     }
 
 
-
 }

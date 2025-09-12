@@ -1,9 +1,10 @@
 import { ClassType, CostModel, LibraryUtil, RarityType, SpellCardModel } from "hearthstone-core";
 import { Loader } from "set-piece";
+import { FireballEffectModel } from "./effect";
 
-@LibraryUtil.is('fire-ball')
-export class FireBall extends SpellCardModel {
-    constructor(loader?: Loader<FireBall>) {
+@LibraryUtil.is('fireball')
+export class Fireball extends SpellCardModel {
+    constructor(loader?: Loader<Fireball>) {
         super(() => {
             const props = loader?.() ?? {}
             return {
@@ -20,6 +21,7 @@ export class FireBall extends SpellCardModel {
                 refer: { ...props.refer },
                 child: { 
                     cost: props.child?.cost ?? new CostModel(() => ({ state: { origin: 4 }})),
+                    spells: props.child?.spells ?? [new FireballEffectModel()],
                     ...props.child 
                 }
             }

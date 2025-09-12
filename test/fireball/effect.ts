@@ -1,9 +1,9 @@
 import { EffectModel, SelectEvent, RoleModel, DamageModel, DamageEvent, DamageType } from "hearthstone-core";
-import { Loader, Model, StoreUtil } from "set-piece";
+import { DebugUtil, Loader, LogLevel, Model, StoreUtil } from "set-piece";
 
-@StoreUtil.is('fire-ball-effect')
-export class FireBallEffectModel extends EffectModel<[RoleModel]> {
-    constructor(loader?: Loader<FireBallEffectModel>) {
+@StoreUtil.is('fireball-effect')
+export class FireballEffectModel extends EffectModel<[RoleModel]> {
+    constructor(loader?: Loader<FireballEffectModel>) {
         super(() => {
             const props = loader?.() ?? {}
             return {

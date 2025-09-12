@@ -1,7 +1,7 @@
 import { DebugUtil, Event, Method, Model, Props, TranxUtil } from "set-piece";
 import { CardModel, CardProps } from ".";
-import { EffectModel } from "../features/effect";
 import { SelectUtil } from "../../utils/select";
+import { EffectModel } from "../features/effect";
 
 export type SpellCardEvent = {
     spell: Map<EffectModel, Model[]>;
