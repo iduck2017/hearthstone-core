@@ -1,5 +1,6 @@
 import { Event, Loader, StoreUtil } from "set-piece";
 import { FeatureModel } from "../features";
+import { RoleFeatureModel } from "../features/role";
 
 export namespace TauntProps {
     export type E = {
@@ -11,7 +12,7 @@ export namespace TauntProps {
 }
 
 @StoreUtil.is('taunt')
-export class TauntModel extends FeatureModel<
+export class TauntModel extends RoleFeatureModel<
     TauntProps.E, 
     TauntProps.S, 
     TauntProps.C, 
@@ -30,7 +31,6 @@ export class TauntModel extends FeatureModel<
                 },
                 child: { ...props.child },
                 refer: { ...props.refer },
-                route: {},
             }
         })
     }

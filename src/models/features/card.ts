@@ -1,5 +1,6 @@
 import { Loader, Method, Model, Props, StoreUtil } from "set-piece";
 import { FeatureModel, FeatureProps } from ".";
+import { BoardModel, CardModel, DeckModel, GameModel, GraveyardModel, HandModel, HeroModel, MinionCardModel, PlayerModel, RoleModel } from "../.."
 
 export namespace CardFeaturesProps {
     export type E = {};
@@ -42,7 +43,19 @@ export class CardFeaturesModel extends Model<
 
 
 export namespace CardFeatureProps {
-    export type P = {};
+    export type E = {};
+    export type S = {};
+    export type C = {};
+    export type R = {};
+    export type P = {
+        card: CardModel;
+        hero: HeroModel;
+        role: RoleModel;
+        board: BoardModel;
+        hand: HandModel;
+        deck: DeckModel;
+        graveyard: GraveyardModel;
+    };
 }
 
 @StoreUtil.is('card-features')
@@ -51,12 +64,11 @@ export class CardFeatureModel<
     S extends Partial<FeatureProps.S> & Props.S = {},
     C extends Partial<FeatureProps.C> & Props.C = {},
     R extends Partial<FeatureProps.R> & Props.R = {},
-    P extends Partial<FeatureProps.P> & Props.P = {}
 > extends FeatureModel<
-    E,
-    S,
-    C,
-    R,
+    E & CardFeatureProps.E,
+    S & CardFeatureProps.S,
+    C & CardFeatureProps.C,
+    R & CardFeatureProps.R,
     CardFeatureProps.P
 > {
     constructor(loader: Method<CardFeatureModel['props'] & {
@@ -72,7 +84,15 @@ export class CardFeatureModel<
                 state: { ...props.state },
                 child: { ...props.child },
                 refer: { ...props.refer },
-                route: {},
+                route: {
+                    card: CardModel.prototype,
+                    hero: HeroModel.prototype,
+                    role: RoleModel.prototype,
+                    board: BoardModel.prototype,
+                    hand: HandModel.prototype,
+                    deck: DeckModel.prototype,
+                    graveyard: GraveyardModel.prototype,
+                },
             }
         })
     }

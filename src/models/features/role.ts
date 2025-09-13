@@ -1,5 +1,6 @@
 import { Loader, Method, Model, Props, StoreUtil } from "set-piece";
 import { FeatureModel, FeatureProps } from ".";
+import { BoardModel, CardModel, DeckModel, GameModel, GraveyardModel, HandModel, HeroModel, MinionCardModel, PlayerModel, RoleModel } from "../.."
 
 export namespace RoleFeaturesProps {
     export type E = {};
@@ -7,16 +8,13 @@ export namespace RoleFeaturesProps {
     export type C = {
         items: FeatureModel[];
     };
-    export type P = {};
-    export type R = {};
 }
 
 @StoreUtil.is('features')
 export class RoleFeaturesModel extends Model<
     RoleFeaturesProps.E,
     RoleFeaturesProps.S,
-    RoleFeaturesProps.C,
-    RoleFeaturesProps.R
+    RoleFeaturesProps.C
 > {
     constructor(loader?: Loader<RoleFeaturesModel>) {
         super(() => {
@@ -46,7 +44,16 @@ export namespace RoleFeatureProps {
     export type S = {};
     export type C = {};
     export type R = {};
-    export type P = {};
+    export type P = {
+        minion: MinionCardModel;
+        card: CardModel;
+        hero: HeroModel;
+        role: RoleModel;
+        board: BoardModel;
+        hand: HandModel;
+        deck: DeckModel;
+        graveyard: GraveyardModel;
+    };
 }
 
 @StoreUtil.is('role-features')
@@ -55,20 +62,18 @@ export class RoleFeatureModel<
     S extends Partial<FeatureProps.S> & Props.S = {},
     C extends Partial<FeatureProps.C> & Props.C = {},
     R extends Partial<FeatureProps.R> & Props.R = {},
-    P extends Partial<FeatureProps.P> & Props.P = {}
 > extends FeatureModel<
     E & RoleFeatureProps.E,
     S & RoleFeatureProps.S,
     C & RoleFeatureProps.C,
     R & RoleFeatureProps.R,
-    P & RoleFeatureProps.P
+    RoleFeatureProps.P
 > {
     constructor(loader: Method<RoleFeatureModel['props'] & {
         uuid: string | undefined,
         state: S & FeatureProps.S,
         child: C,
         refer: R,
-        route: P,
     }, []>) {
         super(() => {
             const props = loader();
@@ -77,7 +82,18 @@ export class RoleFeatureModel<
                 state: { ...props.state },
                 child: { ...props.child },
                 refer: { ...props.refer },
-                route: { ...props.route },
+                route: {
+                    game: GameModel.prototype,
+                    player: PlayerModel.prototype,
+                    minion: MinionCardModel.prototype,
+                    card: CardModel.prototype,
+                    hero: HeroModel.prototype,
+                    role: RoleModel.prototype,
+                    board: BoardModel.prototype,
+                    hand: HandModel.prototype,
+                    deck: DeckModel.prototype,
+                    graveyard: GraveyardModel.prototype,
+                }
             }
         })
     }

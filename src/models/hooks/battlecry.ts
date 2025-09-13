@@ -1,6 +1,7 @@
 import { Event, Method, Model, Props } from "set-piece";
 import { SelectEvent } from "../../utils/select";
 import { FeatureModel, FeatureProps } from "../features";
+import { CardFeatureModel } from "../features/card";
 
 export namespace BattlecryProps {
     export type E = {
@@ -18,7 +19,7 @@ export abstract class BattlecryModel<
     S extends Partial<BattlecryProps.S> & Props.S = {},
     C extends Partial<BattlecryProps.C> & Props.C = {},
     R extends Partial<BattlecryProps.R> & Props.R = {}
-> extends FeatureModel<
+> extends CardFeatureModel<
     E & BattlecryProps.E, 
     S & BattlecryProps.S, 
     C & BattlecryProps.C, 

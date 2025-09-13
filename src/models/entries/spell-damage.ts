@@ -1,5 +1,6 @@
 import { Event, Method, StoreUtil } from "set-piece";
 import { FeatureModel } from "../features";
+import { RoleFeatureModel } from "../features/role";
 
 export namespace SpellDamageProps {
     export type E = {
@@ -13,7 +14,7 @@ export namespace SpellDamageProps {
 }
 
 @StoreUtil.is('spell-damage')
-export class SpellDamageModel extends FeatureModel<
+export class SpellDamageModel extends RoleFeatureModel<
     SpellDamageProps.E,
     SpellDamageProps.S,
     SpellDamageProps.C,

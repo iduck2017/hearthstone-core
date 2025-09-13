@@ -1,5 +1,6 @@
 import { Event, Loader, StoreUtil } from "set-piece";
 import { FeatureModel } from "../features";
+import { RoleFeatureModel } from "../features/role";
 
 export namespace StealthProps {
     export type E = {
@@ -12,7 +13,7 @@ export namespace StealthProps {
 }
 
 @StoreUtil.is('stealth')
-export class StealthModel extends FeatureModel<
+export class StealthModel extends RoleFeatureModel<
     StealthProps.E,
     StealthProps.S,
     StealthProps.C,
@@ -31,7 +32,6 @@ export class StealthModel extends FeatureModel<
                 },
                 child: { ...props.child },
                 refer: { ...props.refer },
-                route: {},
             }
         });
     }

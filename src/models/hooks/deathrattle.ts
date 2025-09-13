@@ -1,5 +1,6 @@
 import { Event, Method, Model, Props } from "set-piece";
 import { FeatureModel, FeatureProps } from "../features";
+import { CardFeatureModel } from "../features/card";
 
 export namespace DeathrattleProps {
     export type E = {
@@ -16,7 +17,7 @@ export abstract class DeathrattleModel<
     S extends Partial<DeathrattleProps.S> & Props.S = {},
     C extends Partial<DeathrattleProps.C> & Props.C = {},
     R extends Partial<DeathrattleProps.R> & Props.R = {}
-> extends FeatureModel<
+> extends CardFeatureModel<
     E & DeathrattleProps.E, 
     S & DeathrattleProps.S, 
     C & DeathrattleProps.C, 

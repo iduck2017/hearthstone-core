@@ -1,7 +1,5 @@
 import { Event, Method, Model, Props, TranxUtil } from "set-piece";
-import { BoardModel, CardModel, DeckModel, GraveyardModel, HandModel, MinionCardModel, PlayerModel, RoleModel } from "../..";
-import { GameModel } from "../..";
-import { HeroModel } from "../..";
+import { GameModel, PlayerModel } from "../..";
 
 export namespace FeatureProps {
     export type E = {
@@ -14,19 +12,11 @@ export namespace FeatureProps {
         isActive: boolean;
     }
     export type C = {};
+    export type R = {};
     export type P = {
         game: GameModel;
         player: PlayerModel;
-        minion: MinionCardModel;
-        card: CardModel;
-        hero: HeroModel;
-        role: RoleModel;
-        board: BoardModel;
-        hand: HandModel;
-        deck: DeckModel;
-        graveyard: GraveyardModel;
     };
-    export type R = {};
 }
 
 export abstract class FeatureModel<
@@ -59,16 +49,8 @@ export abstract class FeatureModel<
                 route: {
                     game: GameModel.prototype,
                     player: PlayerModel.prototype,
-                    minion: MinionCardModel.prototype,
-                    card: CardModel.prototype,
-                    hero: HeroModel.prototype,
-                    role: RoleModel.prototype,
-                    board: BoardModel.prototype,
-                    hand: HandModel.prototype,
-                    deck: DeckModel.prototype,
-                    graveyard: GraveyardModel.prototype,
                     ...props.route,
-                }
+                },
             }
         })
     }

@@ -1,6 +1,7 @@
 import { Event, Method, Model, Props } from "set-piece";
 import { MinionCardModel } from "../cards/minion";
 import { FeatureModel, FeatureProps } from "../features";
+import { CardFeatureModel } from "../features/card";
 
 export namespace EndTurnHookProps {
     export type E = {
@@ -17,7 +18,7 @@ export abstract class EndTurnHookModel<
     S extends Partial<EndTurnHookProps.S> & Props.S = {},
     C extends Partial<EndTurnHookProps.C> & Props.C = {},
     R extends Partial<EndTurnHookProps.R> & Props.R = {}
-> extends FeatureModel<
+> extends CardFeatureModel<
     E & EndTurnHookProps.E,
     S & EndTurnHookProps.S,
     C & EndTurnHookProps.C,

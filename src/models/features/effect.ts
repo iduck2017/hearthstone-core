@@ -7,7 +7,6 @@ export namespace EffectProps {
     export type E = {};
     export type S = {};
     export type C = {};
-    export type P = {};
     export type R = {};
 }
 
@@ -17,20 +16,17 @@ export abstract class EffectModel<
     S extends Partial<EffectProps.S & FeatureProps.S> & Props.S = {},
     C extends Partial<EffectProps.C & FeatureProps.C> & Props.C = {},
     R extends Partial<EffectProps.R & FeatureProps.R> & Props.R = {},
-    P extends Partial<EffectProps.P & FeatureProps.P> & Props.P = {}
 > extends CardFeatureModel<
     E & EffectProps.E, 
     S & EffectProps.S,
     C & EffectProps.C, 
-    R & EffectProps.R,
-    P & EffectProps.P
+    R & EffectProps.R
 > {
     constructor(loader: Method<EffectModel['props'] & {
         uuid: string | undefined,
         state: S & Pick<FeatureProps.S, 'desc' | 'name'>,
         child: C,
         refer: R,
-        route: P,
     }, []>) {
         super(() => {
             const props = loader();
@@ -42,7 +38,6 @@ export abstract class EffectModel<
                 },
                 child: { ...props.child },
                 refer: { ...props.refer },
-                route: { ...props.route },
             }
         })
     }

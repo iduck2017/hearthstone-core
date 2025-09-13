@@ -2,6 +2,7 @@ import { Decor, Method, Model, Props, StateUtil, StoreUtil } from "set-piece";
 import { FeatureModel, FeatureProps } from "..";
 import { RoleAttackModel, RoleAttackProps } from "../../rules/attack/role";
 import { HealthModel, HealthProps } from "../../rules/health";
+import { RoleFeatureModel } from "../role";
 
 export namespace RoleBuffProps {
     export type S = {
@@ -18,7 +19,7 @@ export abstract class RoleBuffModel<
     S extends Partial<RoleBuffProps.S & FeatureProps.S> & Props.S = {},
     C extends Partial<RoleBuffProps.C & FeatureProps.C> & Props.C = {},
     R extends Partial<RoleBuffProps.R & FeatureProps.R> & Props.R = {}
-> extends FeatureModel<
+> extends RoleFeatureModel<
     E & RoleBuffProps.E,
     S & RoleBuffProps.S,
     C & RoleBuffProps.C,

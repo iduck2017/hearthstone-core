@@ -1,5 +1,6 @@
 import { Event, Loader, StoreUtil } from "set-piece";
 import { FeatureModel } from "../features";
+import { RoleFeatureModel } from "../features/role";
 
 export namespace ElusiveProps {
     export type E = {
@@ -13,7 +14,7 @@ export namespace ElusiveProps {
 }
 
 @StoreUtil.is('elusive')
-export class ElusiveModel extends FeatureModel<
+export class ElusiveModel extends RoleFeatureModel<
     ElusiveProps.E,
     ElusiveProps.S,
     ElusiveProps.C,
