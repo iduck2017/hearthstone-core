@@ -29,6 +29,7 @@ export class SleepModel extends Model<
                 },
                 child: { ...props.child },
                 refer: { ...props.refer },
+                route: {},
             }
         })
     }

@@ -18,30 +18,23 @@ export namespace HealthProps {
     };
     export type C = {};
     export type R = {};
+    export type P = {
+        card: CardModel;
+        minion: MinionCardModel;
+        role: RoleModel;
+        game: GameModel;
+        hero: HeroModel;
+        player: PlayerModel;
+    }
 }
 
 export class HealthModel extends Model<
     HealthProps.E,
     HealthProps.S,
     HealthProps.C,
-    HealthProps.R
+    HealthProps.R,
+    HealthProps.P
 > {
-    public get route() {
-        const route = super.route;
-        const card: CardModel | undefined = route.order.find(item => item instanceof CardModel);
-        const minion: MinionCardModel | undefined = route.order.find(item => item instanceof MinionCardModel);
-        const hero: HeroModel | undefined = route.order.find(item => item instanceof HeroModel);
-        const entity = hero ?? minion;
-        return { 
-            ...route, 
-            card,
-            minion,
-            entity,
-            role: route.order.find(item => item instanceof RoleModel),
-            game: route.order.find(item => item instanceof GameModel),
-            player: route.order.find(item => item instanceof PlayerModel),
-        }
-    }
 
     public get state() {
         const state = super.state;
@@ -70,6 +63,14 @@ export class HealthModel extends Model<
                 },
                 child: { ...props.child },
                 refer: { ...props.refer },
+                route: {
+                    card: CardModel.prototype,
+                    minion: MinionCardModel.prototype,
+                    role: RoleModel.prototype,
+                    game: GameModel.prototype,
+                    player: PlayerModel.prototype,
+                    hero: HeroModel.prototype,
+                },
             }
         });
     }
@@ -82,16 +83,17 @@ export class HealthModel extends Model<
 
     @TranxUtil.span()
     public doHurt(event: DamageEvent): DamageEvent {
-        const result = event.detail.result;
         const role = this.route.role;
         if (!role) return event;
         const entries = role.child.entries;
         const divineSheild = entries.child.divineShield;
 
-        const entity = this.route.entity;
-        if (!entity) return event;
-        const dispose = entity.child.dispose;
-        
+        const minion = this.route.minion;
+        const hero = this.route.hero;
+        const dispose = minion?.child.dispose ?? hero?.child.dispose;
+        if (!dispose) return event;
+
+        const result = event.detail.result;
         if (result <= 0) {
             event.reset(0);
             return event;

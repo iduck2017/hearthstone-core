@@ -2,16 +2,11 @@ import { DebugUtil, Loader, LogLevel, Model, TranxUtil } from "set-piece";
 import { DisposeModel } from ".";
 import { MinionCardModel, PlayerModel } from "../../..";
 
-export class MinionDisposeModel extends DisposeModel {
-    public get route() {
-        const route = super.route;
-        const minion: MinionCardModel | undefined = route.order.find(item => item instanceof MinionCardModel);
-        return {
-            ...route,
-            minion,
-            player: route.order.find(item => item instanceof PlayerModel)
-        }
-    }
+export namespace MinionDisposeProps {
+    export type P = { minion: MinionCardModel; }
+}
+
+export class MinionDisposeModel extends DisposeModel<MinionDisposeProps.P> {
 
     constructor(loader?: Loader<MinionDisposeModel>) {
         super(() => {
@@ -21,6 +16,7 @@ export class MinionDisposeModel extends DisposeModel {
                 state: { ...props.state },
                 child: { ...props.child },
                 refer: { ...props.refer },
+                route: { minion: MinionCardModel.prototype },
             }
         });
     }

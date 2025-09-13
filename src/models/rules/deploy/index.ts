@@ -1,5 +1,6 @@
-import { Event, Loader, Model } from "set-piece"
+import { Event, Loader, Method, Model, Props } from "set-piece"
 import { BoardModel } from "../../containers/board"
+import { PlayerModel } from "../../.."
 
 export namespace DeployProps {
     export type E = {
@@ -9,23 +10,35 @@ export namespace DeployProps {
     export type S = {}
     export type C = {}
     export type R = {}
+    export type P = {
+        player: PlayerModel;
+    }
 }
 
 
-export abstract class DeployModel extends Model<
+export abstract class DeployModel<
+    P extends Partial<DeployProps.P> & Props.P = {}
+> extends Model<
     DeployProps.E,
     DeployProps.S,
     DeployProps.C,
-    DeployProps.R
+    DeployProps.R,
+    P & DeployProps.P
 > {
-    constructor(loader: Loader<DeployModel>) {
+    constructor(loader: Method<DeployModel['props'] & {
+        route: P;
+    }, []>) {
         super(() => {
             const props = loader() ?? {}
             return {
                 uuid: props.uuid,
                 state: { ...props.state },
                 child: { ...props.child },
-                refer: { ...props.refer }
+                refer: { ...props.refer },
+                route: {
+                    player: PlayerModel.prototype,
+                    ...props.route,
+                },
             }
         })
     }

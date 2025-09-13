@@ -7,15 +7,13 @@ export namespace AppProps {
     export type C = {
         game?: GameModel
     };
-    export type R = {};
 }
 
 @StoreUtil.is('app')
 export class AppModel extends Model<
     AppProps.E, 
     AppProps.S, 
-    AppProps.C, 
-    AppProps.R
+    AppProps.C
 > {
     constructor(loader?: Loader<AppModel>) {
         super(() => {
@@ -25,6 +23,7 @@ export class AppModel extends Model<
                 state: { ...props.state },
                 child: { ...props.child },
                 refer: { ...props.refer },
+                route: {},
             }
         });
     }

@@ -5,16 +5,11 @@ import { WeaponCardModel } from "../../cards/weapon";
 import { PlayerModel } from "../../player";
 import { SecretCardModel } from "../../cards/secret";
 
-export class SecretDeployModel extends DeployModel {
-    public get route() {
-        const route = super.route;
-        const secret: SecretCardModel | undefined = route.order.find(item => item instanceof SecretCardModel);
-        return {
-            ...route,
-            secret,
-            player: route.order.find(item => item instanceof PlayerModel),
-        }
-    }
+export namespace SecretDeployProps {
+    export type P = { secret: SecretCardModel; }
+}
+
+export class SecretDeployModel extends DeployModel<SecretDeployProps.P> {
 
     constructor(loader?: Loader<SecretDeployModel>) {
         super(() => {
@@ -24,6 +19,7 @@ export class SecretDeployModel extends DeployModel {
                 state: { ...props.state },
                 child: { ...props.child },
                 refer: { ...props.refer },
+                route: { secret: SecretCardModel.prototype },
             }
         });
     }

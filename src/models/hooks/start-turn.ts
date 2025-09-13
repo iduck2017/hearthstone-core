@@ -39,6 +39,7 @@ export abstract class StartTurnHookModel<
                 },
                 child: { ...props.child },
                 refer: { ...props.refer },
+                route: {},
             }
         });
     }

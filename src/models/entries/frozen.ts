@@ -9,6 +9,7 @@ export namespace FrozenProps {
     export type S = {}
     export type C = {}
     export type R = {}
+    export type P = {}
 }
 
 @StoreUtil.is('frozen')
@@ -16,7 +17,8 @@ export class FrozenModel extends FeatureModel<
     FrozenProps.E,
     FrozenProps.S,
     FrozenProps.C,
-    FrozenProps.R
+    FrozenProps.R,
+    FrozenProps.P
 > {
     constructor(loader?: Loader<FrozenModel>) {
         super(() => {
@@ -31,6 +33,7 @@ export class FrozenModel extends FeatureModel<
                 },
                 child: { ...props.child },
                 refer: { ...props.refer },
+                route: {},
             }
         });
     }

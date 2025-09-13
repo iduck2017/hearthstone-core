@@ -1,5 +1,5 @@
-import { DebugUtil, Event, Loader, LogLevel, Method, Model, TranxUtil } from "set-piece";
-import { CardModel, HeroModel } from '../../..'
+import { DebugUtil, Event, Loader, LogLevel, Method, Model, Props, TranxUtil } from "set-piece";
+import { CardModel, HeroModel, PlayerModel } from '../../..'
 
 export type DisposeEvent = {
     detail: Model;
@@ -19,13 +19,19 @@ export namespace DisposeProps {
         detail?: Model;
         source?: CardModel | HeroModel;
     }
+    export type P = {
+        player: PlayerModel;
+    }
 }
 
-export abstract class DisposeModel extends Model<
+export abstract class DisposeModel<
+    P extends Partial<DisposeProps.P> & Props.P = {}
+> extends Model<
     DisposeProps.E,
     DisposeProps.S,
     DisposeProps.C,
-    DisposeProps.R
+    DisposeProps.R,
+    P & DisposeProps.P
 > {
     private static _isLock = false;
     public static get isLock() {
@@ -82,9 +88,11 @@ export abstract class DisposeModel extends Model<
         tasks.forEach(item => item.run());
     }
 
-    constructor(loader?: Loader<DisposeModel>) {
+    constructor(loader: Method<DisposeModel['props'] & {
+        route: P;
+    }, []>) {
         super(() => {
-            const props = loader?.() ?? {};
+            const props = loader() ?? {};
             return {
                 uuid: props.uuid,
                 state: { 
@@ -93,6 +101,10 @@ export abstract class DisposeModel extends Model<
                 },
                 child: { ...props.child },
                 refer: { ...props.refer },
+                route: {
+                    player: PlayerModel.prototype,
+                    ...props.route,
+                },
             }
         });
     }

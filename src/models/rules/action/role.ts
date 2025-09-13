@@ -13,26 +13,21 @@ export namespace RoleActionProps {
     };
     export type C = {};
     export type R = {};
+    export type P = {
+        role: RoleModel;
+        board: BoardModel;
+        game: GameModel;
+        player: PlayerModel;
+    };
 }
 
 export class RoleActionModel extends Model<
     RoleActionProps.E,
     RoleActionProps.S,
     RoleActionProps.C,
-    RoleActionProps.R
+    RoleActionProps.R,
+    RoleActionProps.P
 > {
-    public get route() {
-        const route = super.route;
-        const minion: MinionCardModel | undefined = route.order.find(item => item instanceof MinionCardModel);
-        return { 
-            ...route, 
-            minion,
-            role: route.order.find(item => item instanceof RoleModel),
-            board: route.order.find(item => item instanceof BoardModel),
-            game: route.order.find(item => item instanceof GameModel),
-            player: route.order.find(item => item instanceof PlayerModel),
-        }
-    }
 
     public get state() {
         const state = super.state;
@@ -56,6 +51,12 @@ export class RoleActionModel extends Model<
                 },
                 child: { ...props.child },
                 refer: { ...props.refer },
+                route: {
+                    role: RoleModel.prototype,
+                    board: BoardModel.prototype,
+                    game: GameModel.prototype,
+                    player: PlayerModel.prototype,
+                }
             }
         });
     }

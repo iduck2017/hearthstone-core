@@ -13,6 +13,10 @@ export namespace HandProps {
         spells: SpellCardModel[],
         cache: CardModel[],
     }
+    export type P = {
+        game: GameModel;
+        player: PlayerModel;
+    };
     export type R = {
         order: CardModel[]
     }
@@ -22,17 +26,9 @@ export class HandModel extends Model<
     HandProps.E,
     HandProps.S,
     HandProps.C,
-    HandProps.R
+    HandProps.R,
+    HandProps.P
 > {
-    public get route() {
-        const route = super.route;
-        return { 
-            ...route,
-            game: route.order.find(item => item instanceof GameModel),
-            player: route.order.find(item => item instanceof PlayerModel),
-        }
-    }
-
     constructor(loader?: Loader<HandModel>) {
         super(() => {
             const props = loader?.() ?? {};
@@ -49,6 +45,10 @@ export class HandModel extends Model<
                 refer: { 
                     order: props.child?.minions ?? [],
                     ...props.refer 
+                },
+                route: {
+                    game: GameModel.prototype,
+                    player: PlayerModel.prototype,
                 }
             }
         })

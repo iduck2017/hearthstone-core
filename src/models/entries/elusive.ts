@@ -9,6 +9,7 @@ export namespace ElusiveProps {
     export type S = {}
     export type C = {}
     export type R = {}
+    export type P = {}
 }
 
 @StoreUtil.is('elusive')
@@ -31,6 +32,7 @@ export class ElusiveModel extends FeatureModel<
                 },
                 child: { ...props.child },
                 refer: { ...props.refer },
+                route: {},
             }
         })
     }

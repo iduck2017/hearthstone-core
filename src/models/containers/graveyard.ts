@@ -1,9 +1,7 @@
 import { Loader, Model } from "set-piece";
 import { MinionCardModel } from "../cards/minion";
 import { GameModel } from "../game";
-import { PlayerModel } from "../player";
-import { CardModel } from "../cards";
-import { WeaponCardModel } from "../..";
+import { WeaponCardModel, PlayerModel, CardModel } from "../..";
 
 export namespace GraveyardProps {
     export type E = {}
@@ -12,6 +10,10 @@ export namespace GraveyardProps {
         minions: MinionCardModel[]
         weapons: WeaponCardModel[]
     }
+    export type P = {
+        game: GameModel;
+        player: PlayerModel;
+    };
     export type R = {}
 }
 
@@ -19,17 +21,9 @@ export class GraveyardModel extends Model<
     GraveyardProps.E,
     GraveyardProps.S,
     GraveyardProps.C,
-    GraveyardProps.R
+    GraveyardProps.R,
+    GraveyardProps.P
 > {
-    public get route() {
-        const route = super.route;
-        return { 
-            ...route,
-            game: route.order.find(item => item instanceof GameModel),
-            player: route.order.find(item => item instanceof PlayerModel),
-        }
-    }
-
     constructor(loader?: Loader<GraveyardModel>) {
         super(() => {
             const props = loader?.() ?? {};
@@ -42,6 +36,10 @@ export class GraveyardModel extends Model<
                     ...props.child,
                 },
                 refer: { ...props.refer },
+                route: {
+                    game: GameModel.prototype,
+                    player: PlayerModel.prototype,
+                }
             }
         });
     }

@@ -63,7 +63,7 @@ export { SpellDamageProps, SpellDamageModel } from "./models/entries/spell-damag
 export { DivineSheildProps, DivineSheildModel } from "./models/entries/divine-shield";
 
 // features
-export { FeaturesProps, FeaturesModel } from "./models/features/features";
+export { RoleFeaturesProps as FeaturesProps, RoleFeaturesModel as FeaturesModel } from "./models/features/role";
 export { FeatureProps, FeatureModel } from './models/features'
 export { RoleBuffProps as BuffProps, RoleBuffModel as BuffModel } from "./models/features/buff/role";
 export { EffectProps, EffectModel } from './models/features/effect'; 

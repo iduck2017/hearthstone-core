@@ -4,16 +4,11 @@ import { DeployModel } from "./index"
 import { WeaponCardModel } from "../../cards/weapon";
 import { PlayerModel } from "../../player";
 
-export class WeaponDeployModel extends DeployModel {
-    public get route() {
-        const route = super.route;
-        const weapon: WeaponCardModel | undefined = route.order.find(item => item instanceof WeaponCardModel);
-        return {
-            ...route,
-            weapon,
-            player: route.order.find(item => item instanceof PlayerModel),
-        }
-    }
+export namespace WeaponDeployProps {
+    export type P = { weapon: WeaponCardModel; }
+}
+
+export class WeaponDeployModel extends DeployModel<WeaponDeployProps.P> {
 
     constructor(loader?: Loader<WeaponDeployModel>) {
         super(() => {
@@ -23,6 +18,7 @@ export class WeaponDeployModel extends DeployModel {
                 state: { ...props.state },
                 child: { ...props.child },
                 refer: { ...props.refer },
+                route: { weapon: WeaponCardModel.prototype },
             }
         });
     }

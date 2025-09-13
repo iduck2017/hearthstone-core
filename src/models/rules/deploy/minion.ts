@@ -6,17 +6,11 @@ import { PlayerModel } from "../../player";
 import { SecretCardModel } from "../../cards/secret";
 import { MinionCardModel } from "../../cards/minion";
 
-export class MinionDeployModel extends DeployModel {
-    public get route() {
-        const route = super.route;
-        const minion: MinionCardModel | undefined = route.order.find(item => item instanceof MinionCardModel);
-        return {
-            ...route,
-            minion,
-            player: route.order.find(item => item instanceof PlayerModel),
-        }
-    }
+export namespace MinionDeployProps {
+    export type P = { minion: MinionCardModel; }
+}
 
+export class MinionDeployModel extends DeployModel<MinionDeployProps.P> {
 
     constructor(loader?: Loader<MinionDeployModel>) {
         super(() => {
@@ -26,6 +20,7 @@ export class MinionDeployModel extends DeployModel {
                 state: { ...props.state },
                 child: { ...props.child },
                 refer: { ...props.refer },
+                route: { minion: MinionCardModel.prototype },
             }
         });
     }

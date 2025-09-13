@@ -4,7 +4,7 @@ import { SelectEvent, SelectUtil } from "../../utils/select";
 import { MinionHooksModel } from "../hooks/minion";
 import { CardModel, CardProps } from ".";
 import { RaceType } from "../../types/card";
-import { FeaturesModel } from "../features/features";
+import { RoleFeaturesModel } from "../features/role";
 import { RoleModel } from "../role";
 import { BattlecryModel } from "../hooks/battlecry";
 import { DisposeModel } from "../rules/dispose";
@@ -30,6 +30,7 @@ export namespace MinionCardProps {
         readonly deploy: MinionDeployModel;
         readonly dispose: MinionDisposeModel
     };
+    export type P = {};
     export type R = {};
 }
 
@@ -65,7 +66,6 @@ export abstract class MinionCardModel<
             }
         });
     }
-
 
     public async play() {
         const event = await this.toPlay();
@@ -142,5 +142,4 @@ export abstract class MinionCardModel<
         const position = await SelectUtil.get(new SelectEvent(options));
         return position;
     }
-
 }

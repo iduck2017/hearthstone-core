@@ -40,6 +40,7 @@ export abstract class RoleBuffModel<
                 },
                 child: { ...props.child },
                 refer: { ...props.refer },
+                route: {},
             }
         });
     }

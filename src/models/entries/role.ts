@@ -61,7 +61,8 @@ export class RoleEntriesModel extends Model<
                         new DivineSheildModel(() => ({ state: { isActive: false }})),
                     ...props.child 
                 },
-                refer: { ...props.refer }
+                refer: { ...props.refer },
+                route: {},
             }
         });
     }

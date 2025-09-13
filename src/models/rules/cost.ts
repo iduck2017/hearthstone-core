@@ -16,6 +16,10 @@ export namespace CostProps {
     export type E = {}
     export type C = {}
     export type R = {}
+    export type P = {
+        game: GameModel;
+        player: PlayerModel;
+    }
 }
 
 
@@ -23,16 +27,9 @@ export class CostModel extends Model<
     CostProps.E, 
     CostProps.S, 
     CostProps.C, 
-    CostProps.R
+    CostProps.R,
+    CostProps.P
 > {
-    public get route() {
-        const route = super.route;
-        return {
-            ...route,
-            game: route.order.find(item => item instanceof GameModel),
-            player: route.order.find(item => item instanceof PlayerModel)
-        }
-    }
 
     public get state() {
         const state = super.state;
@@ -58,6 +55,10 @@ export class CostModel extends Model<
                 },
                 child: { ...props.child },
                 refer: { ...props.refer },
+                route: {
+                    game: GameModel.prototype,
+                    player: PlayerModel.prototype,
+                },
             }
         });
     }

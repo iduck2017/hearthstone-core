@@ -33,6 +33,7 @@ export class ManaModel extends Model<
                 },
                 child: { ...props.child },
                 refer: { ...props.refer }, 
+                route: {},
             }
         })
     }

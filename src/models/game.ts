@@ -11,7 +11,6 @@ export namespace GameProps {
         readonly playerA: PlayerModel;
         readonly playerB: PlayerModel;
     };
-    export type R = {};
 }
 
 
@@ -19,8 +18,7 @@ export namespace GameProps {
 export class GameModel extends Model<
     GameProps.E, 
     GameProps.S, 
-    GameProps.C, 
-    GameProps.R
+    GameProps.C
 > {
     public get refer() {
         return {
@@ -52,6 +50,7 @@ export class GameModel extends Model<
                     ...props.child
                 },
                 refer: { ...props.refer },
+                route: {},
             }
         });
     }

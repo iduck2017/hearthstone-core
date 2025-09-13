@@ -1,9 +1,7 @@
 import { Event, Method, Model, Props, TranxUtil } from "set-piece";
 import { BoardModel, CardModel, DeckModel, GraveyardModel, HandModel, MinionCardModel, PlayerModel, RoleModel } from "../..";
 import { GameModel } from "../..";
-import { DamageModel } from "../..";
 import { HeroModel } from "../..";
-import { RestoreModel } from "../actions/restore";
 
 export namespace FeatureProps {
     export type E = {
@@ -16,6 +14,18 @@ export namespace FeatureProps {
         isActive: boolean;
     }
     export type C = {};
+    export type P = {
+        game: GameModel;
+        player: PlayerModel;
+        minion: MinionCardModel;
+        card: CardModel;
+        hero: HeroModel;
+        role: RoleModel;
+        board: BoardModel;
+        hand: HandModel;
+        deck: DeckModel;
+        graveyard: GraveyardModel;
+    };
     export type R = {};
 }
 
@@ -23,40 +33,21 @@ export abstract class FeatureModel<
     E extends Partial<FeatureProps.E> & Props.E = {},
     S extends Partial<FeatureProps.S> & Props.S = {},
     C extends Partial<FeatureProps.C> & Props.C = {},
-    R extends Partial<FeatureProps.R> & Props.R = {}
+    R extends Partial<FeatureProps.R> & Props.R = {},
+    P extends Partial<FeatureProps.P> & Props.P = {},
 > extends Model<
     E & FeatureProps.E,
     S & FeatureProps.S,
     C & FeatureProps.C,
-    R & FeatureProps.R
+    R & FeatureProps.R,
+    P & FeatureProps.P
 > {
-    public get route() {
-        const route = super.route;
-        const minion: MinionCardModel | undefined = route.order.find(item => item instanceof MinionCardModel);
-        const card: CardModel | undefined = route.order.find(item => item instanceof CardModel);
-        const hero: HeroModel | undefined = route.order.find(item => item instanceof HeroModel);
-        const entity = card ?? hero;
-        return {
-            ...route,
-            minion,
-            card,
-            hero,
-            entity,
-            role: route.order.find(item => item instanceof RoleModel),
-            board: route.order.find(item => item instanceof BoardModel),
-            hand: route.order.find(item => item instanceof HandModel),
-            deck: route.order.find(item => item instanceof DeckModel),
-            graveyard: route.order.find(item => item instanceof GraveyardModel),
-            game: route.order.find(item => item instanceof GameModel),
-            player: route.order.find(item => item instanceof PlayerModel)
-        }
-    }
-
     constructor(loader: Method<FeatureModel['props'] & {
         uuid: string | undefined;
         state: S & FeatureProps.S;
         child: C,
         refer: R,
+        route: P,
     }, []>) {
         super(() => {
             const props = loader?.();
@@ -65,10 +56,22 @@ export abstract class FeatureModel<
                 state: { ...props.state },
                 child: { ...props.child },
                 refer: { ...props.refer },
+                route: {
+                    game: GameModel.prototype,
+                    player: PlayerModel.prototype,
+                    minion: MinionCardModel.prototype,
+                    card: CardModel.prototype,
+                    hero: HeroModel.prototype,
+                    role: RoleModel.prototype,
+                    board: BoardModel.prototype,
+                    hand: HandModel.prototype,
+                    deck: DeckModel.prototype,
+                    graveyard: GraveyardModel.prototype,
+                    ...props.route,
+                }
             }
         })
     }
-
 
     public silence(): boolean {
         const signal = this.event.toSilence(new Event({}));

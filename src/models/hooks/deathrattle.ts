@@ -39,6 +39,7 @@ export abstract class DeathrattleModel<
                 },
                 child: { ...props.child },
                 refer: { ...props.refer },
+                route: {},
             }
         });
     }

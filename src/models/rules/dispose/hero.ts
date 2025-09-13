@@ -2,15 +2,11 @@ import { Loader, Model } from "set-piece";
 import { DisposeModel } from ".";
 import { CardModel, HeroModel } from "../../..";
 
-export class HeroDisposeModel extends DisposeModel {
-    public get route() {
-        const route = super.route;
-        const hero: HeroModel | undefined = route.order.find(item => item instanceof HeroModel)
-        return {
-            ...route,
-            hero,
-        }
-    }
+export namespace HeroDisposeProps {
+    export type P = { hero: HeroModel; }
+}
+
+export class HeroDisposeModel extends DisposeModel<HeroDisposeProps.P> {
 
     constructor(loader?: Loader<HeroDisposeModel>) {
         super(() => {
@@ -20,6 +16,7 @@ export class HeroDisposeModel extends DisposeModel {
                 state: { ...props.state },
                 child: { ...props.child },
                 refer: { ...props.refer },
+                route: { hero: HeroModel.prototype },
             }
         });
     }

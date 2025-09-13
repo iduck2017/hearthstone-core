@@ -14,27 +14,20 @@ export namespace WeaponActionProps {
     };
     export type C = {};
     export type R = {};
+    export type P = {
+        weapon: WeaponCardModel;
+        game: GameModel;
+        player: PlayerModel;
+    };
 }
 
 export class WeaponActionModel extends Model<
     WeaponActionProps.E,
     WeaponActionProps.S,
     WeaponActionProps.C,
-    WeaponActionProps.R
+    WeaponActionProps.R,
+    WeaponActionProps.P
 > {
-    public get route() {
-        const route = super.route;
-        const weapon: WeaponCardModel | undefined = route.order.find(item => item instanceof WeaponCardModel);
-        const hero: HeroModel | undefined = route.order.find(item => item instanceof HeroModel);
-        return { 
-            ...route, 
-            weapon,
-            hero,
-            game: route.order.find(item => item instanceof GameModel),
-            player: route.order.find(item => item instanceof PlayerModel),
-        }
-    }
-
     public get state() {
         const state = super.state;
         const limit = state.origin + state.offset;
@@ -62,6 +55,11 @@ export class WeaponActionModel extends Model<
                 },
                 child: { ...props.child },
                 refer: { ...props.refer },
+                route: {
+                    weapon: WeaponCardModel.prototype,
+                    game: GameModel.prototype,
+                    player: PlayerModel.prototype,
+                }
             }
         });
     }

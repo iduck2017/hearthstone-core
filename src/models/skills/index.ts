@@ -19,6 +19,11 @@ export namespace SkillProps {
         cost: CostModel,
     };
     export type R = {};
+    export type P = {
+        hero: HeroModel;
+        game: GameModel;
+        player: PlayerModel;
+    }
 }
 
 export abstract class SkillModel<
@@ -31,19 +36,9 @@ export abstract class SkillModel<
     E & SkillProps.E,
     S & SkillProps.S,
     C & SkillProps.C,
-    R & SkillProps.R
+    R & SkillProps.R,
+    SkillProps.P
 > {
-    public get route() {
-        const route = super.route;
-        const hero: HeroModel | undefined = route.order.find(item => item instanceof HeroModel);
-        return {
-            ...route,
-            hero,
-            game: route.order.find(item => item instanceof GameModel),
-            player: route.order.find(item => item instanceof PlayerModel),
-        }
-    }
-
     constructor(loader: Method<SkillModel['props'] & {
         uuid: string | undefined;
         state: S & SkillProps.S;
@@ -60,6 +55,11 @@ export abstract class SkillModel<
                     ...props.child
                 },
                 refer: { ...props.refer },
+                route: {
+                    hero: HeroModel.prototype,
+                    game: GameModel.prototype,
+                    player: PlayerModel.prototype,
+                },
             }
         });
     }

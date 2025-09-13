@@ -10,7 +10,7 @@ import { RoleActionModel } from "./rules/action/role";
 import { RoleAttackModel } from "./rules/attack/role";
 import { HealthModel } from "./rules/health";
 import { SleepModel } from "./rules/sleep";
-import { FeaturesModel } from "./features/features";
+import { RoleFeaturesModel } from "./features/role";
 import { RoleEntriesModel } from "./entries/role";
 import { CardModel } from "./cards";
 import { HeroModel } from "./heroes";
@@ -24,37 +24,29 @@ export namespace RoleProps {
         readonly attack: RoleAttackModel;
         readonly action: RoleActionModel;
         readonly entries: RoleEntriesModel;
-        readonly feats: FeaturesModel;
+        readonly feats: RoleFeaturesModel;
     };
     export type R = {};
+    export type P = {
+        game: GameModel;
+        player: PlayerModel;
+        hero: HeroModel;
+        card: CardModel;
+        minion: MinionCardModel;
+        hand: HandModel;
+        deck: DeckModel;
+        board: BoardModel;
+        graveyard: GraveyardModel;
+    }
 }
 
 export class RoleModel extends Model<
     RoleProps.E,
     RoleProps.S,
     RoleProps.C,
-    RoleProps.R
+    RoleProps.R,
+    RoleProps.P
 > {
-    public get route() {
-        const route = super.route;
-        const hero: HeroModel | undefined = route.order.find(item => item instanceof HeroModel);
-        const card: CardModel | undefined = route.order.find(item => item instanceof CardModel);
-        const minion: MinionCardModel | undefined = route.order.find(item => item instanceof MinionCardModel);
-        return {
-            ...super.route, 
-            card, 
-            hero,
-            game: route.order.find(item => item instanceof GameModel),
-            player: route.order.find(item => item instanceof PlayerModel),
-            minion,
-            /** current position */
-            hand: route.order.find(item => item instanceof HandModel),
-            deck: route.order.find(item => item instanceof DeckModel),
-            board: route.order.find(item => item instanceof BoardModel),
-            graveyard: route.order.find(item => item instanceof GraveyardModel),
-        };
-    }
-
     public get state() {
         const state = super.state;
         return {
@@ -77,10 +69,21 @@ export class RoleModel extends Model<
                     sleep: props.child.sleep ?? new SleepModel(),
                     action: props.child.action ?? new RoleActionModel(),
                     entries: props.child.entries ?? new RoleEntriesModel(),
-                    feats: props.child.feats ?? new FeaturesModel(),
+                    feats: props.child.feats ?? new RoleFeaturesModel(),
                     ...props.child,
                 },
                 refer: { ...props.refer },
+                route: {
+                    game: GameModel.prototype,
+                    player: PlayerModel.prototype,
+                    hero: HeroModel.prototype,
+                    card: CardModel.prototype,
+                    minion: MinionCardModel.prototype,
+                    hand: HandModel.prototype,
+                    deck: DeckModel.prototype,
+                    board: BoardModel.prototype,
+                    graveyard: GraveyardModel.prototype,
+                },
             }
         })
     }

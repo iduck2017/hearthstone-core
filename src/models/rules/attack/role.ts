@@ -13,6 +13,13 @@ export namespace RoleAttackProps {
     }
     export type C = {}
     export type R = {}
+    export type P = {
+        role: RoleModel;
+        minion: MinionCardModel;
+        hero: HeroModel;
+        game: GameModel;
+        player: PlayerModel;
+    }
 }
 
 @StoreUtil.is('attack')
@@ -20,22 +27,9 @@ export class RoleAttackModel extends Model<
     RoleAttackProps.E,
     RoleAttackProps.S,
     RoleAttackProps.C,
-    RoleAttackProps.R
+    RoleAttackProps.R,
+    RoleAttackProps.P
 > {
-    public get route() {
-        const route = super.route;
-        const minion: MinionCardModel | undefined = route.order.find(item => item instanceof MinionCardModel);
-        const hero: HeroModel | undefined = route.order.find(item => item instanceof HeroModel);
-        return { 
-            ...route, 
-            minion,
-            hero,
-            role: route.order.find(item => item instanceof RoleModel),
-            game: route.order.find(item => item instanceof GameModel),
-            player: route.order.find(item => item instanceof PlayerModel),
-        }
-    }
-
     public get refer() {
         const refer = super.refer;
         const hero = this.route.hero;
@@ -74,6 +68,13 @@ export class RoleAttackModel extends Model<
                 },
                 child: { ...props.child },
                 refer: { ...props.refer },
+                route: {
+                    role: RoleModel.prototype,
+                    minion: MinionCardModel.prototype,
+                    hero: HeroModel.prototype,
+                    game: GameModel.prototype,
+                    player: PlayerModel.prototype,
+                }
             }
         });
     }

@@ -3,16 +3,11 @@ import { DisposeModel } from ".";
 import { MinionCardModel, PlayerModel, WeaponCardModel } from "../../..";
 import { SecretCardModel } from "../../cards/secret";
 
-export class SecretDisposeModel extends DisposeModel {
-    public get route() {
-        const route = super.route;
-        const secret: SecretCardModel | undefined = route.order.find(item => item instanceof SecretCardModel);
-        return {
-            ...route,
-            secret,
-            player: route.order.find(item => item instanceof PlayerModel)
-        }
-    }
+export namespace SecretDisposeProps {
+    export type P = { secret: SecretCardModel; }
+}
+
+export class SecretDisposeModel extends DisposeModel<SecretDisposeProps.P> {
 
     constructor(loader?: Loader<SecretDisposeModel>) {
         super(() => {
@@ -22,6 +17,7 @@ export class SecretDisposeModel extends DisposeModel {
                 state: { ...props.state },
                 child: { ...props.child },
                 refer: { ...props.refer },
+                route: { secret: SecretCardModel.prototype },
             }
         });
     }

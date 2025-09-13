@@ -36,7 +36,8 @@ export class WeaponHooksModel extends Model<
                     deathrattle: [],
                     ...props.child 
                 },
-                refer: { ...props.refer }
+                refer: { ...props.refer },
+                route: {},
             }
         });
     }

@@ -31,6 +31,7 @@ export class RushModel extends FeatureModel<
                 },
                 child: { ...props.child },
                 refer: { ...props.refer },
+                route: {},
             }
         });
     }

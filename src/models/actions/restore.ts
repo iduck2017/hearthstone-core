@@ -8,6 +8,7 @@ export namespace RestoreProps {
     };
     export type S = {};
     export type C = {};
+    export type P = {};
     export type R = {};
 }
 
@@ -15,7 +16,8 @@ export class RestoreModel extends Model<
     RestoreProps.E,
     RestoreProps.S,
     RestoreProps.C,
-    RestoreProps.R
+    RestoreProps.R,
+    RestoreProps.P
 > {
     public static run(tasks: RestoreEvent[]) {
         tasks.forEach(item => item.detail.source.child.restore.event.toRun(item));
@@ -41,7 +43,8 @@ export class RestoreModel extends Model<
                 uuid: props.uuid,
                 state: { ...props.state },
                 child: { ...props.child },
-                refer: { ...props.refer }
+                refer: { ...props.refer },
+                route: {},
             }
         })
     }

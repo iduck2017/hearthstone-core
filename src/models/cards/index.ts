@@ -1,15 +1,10 @@
 import { DebugUtil, Model, TranxUtil, Props, Event, Method, Format } from "set-piece";
 import { CostModel } from "../rules/cost";
-import { GameModel } from "../game";
-import { PlayerModel } from "../player";
-import { HandModel } from "../containers/hand";
-import { DeckModel } from "../containers/deck";
-import { BoardModel } from "../containers/board";
-import { GraveyardModel } from "../containers/graveyard";
 import { ClassType, RarityType } from "../../types/card";
 import { MinionHooksModel } from "../hooks/minion";
-import { FeaturesModel } from "../features/features";
+import { RoleFeaturesModel } from "../features/role";
 import { DamageModel, RestoreModel } from "../..";
+import { MinionCardModel, PlayerModel, GameModel, HandModel, DeckModel, BoardModel, GraveyardModel } from "../..";
 
 export namespace CardProps {
     export type E = {
@@ -29,9 +24,18 @@ export namespace CardProps {
     };
     export type C = {
         readonly cost: CostModel;
-        readonly feats: FeaturesModel;
+        readonly feats: RoleFeaturesModel;
         readonly damage: DamageModel
         readonly restore: RestoreModel
+    };
+    export type P = {
+        minion: MinionCardModel;
+        player: PlayerModel;
+        deck: DeckModel;
+        hand: HandModel;
+        board: BoardModel;
+        game: GameModel;
+        graveyard: GraveyardModel;
     };
     export type R = {};
 }
@@ -45,22 +49,9 @@ export abstract class CardModel<
    E & CardProps.E,
    S & CardProps.S,
    C & CardProps.C,
-   R & CardProps.R
+   R & CardProps.R,
+   CardProps.P
 > {
-    public get route() {
-        const route = super.route;
-        return {
-            ...route,
-            game: route.order.find(item => item instanceof GameModel),
-            player: route.order.find(item => item instanceof PlayerModel),
-            /** current position */
-            hand: route.order.find(item => item instanceof HandModel),
-            deck: route.order.find(item => item instanceof DeckModel),
-            board: route.order.find(item => item instanceof BoardModel),
-            graveyard: route.order.find(item => item instanceof GraveyardModel),
-        }
-    }
-
     public get state(): Readonly<Format.State<S & CardProps.S>> {
         const state = super.state;
         return {
@@ -83,13 +74,22 @@ export abstract class CardModel<
                     ...props.state
                 },
                 child: { 
-                    feats: props.child.feats ?? new FeaturesModel(),
+                    feats: props.child.feats ?? new RoleFeaturesModel(),
                     hooks: props.child.hooks ?? new MinionHooksModel(),
                     damage: props.child.damage ?? new DamageModel(),
                     restore: props.child.restore ?? new RestoreModel(),
                     ...props.child 
                 },
-                refer: { ...props.refer }
+                refer: { ...props.refer },
+                route: {
+                    deck: DeckModel.prototype,
+                    hand: HandModel.prototype,
+                    board: BoardModel.prototype,
+                    graveyard: GraveyardModel.prototype,
+                    player: PlayerModel.prototype,
+                    minion: MinionCardModel.prototype,
+                    game: GameModel.prototype,
+                }
             }
         })
     }
@@ -106,7 +106,6 @@ export abstract class CardModel<
         if (!cost.state.isActive) return false;
         return true;
     }
-
 
     @DebugUtil.log()
     public draw() {

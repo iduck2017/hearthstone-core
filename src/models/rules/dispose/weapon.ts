@@ -2,16 +2,11 @@ import { DebugUtil, Loader, LogLevel, Model, TranxUtil } from "set-piece";
 import { DisposeModel } from ".";
 import { MinionCardModel, PlayerModel, WeaponCardModel } from "../../..";
 
-export class WeaponDisposeModel extends DisposeModel {
-    public get route() {
-        const route = super.route;
-        const weapon: WeaponCardModel | undefined = route.order.find(item => item instanceof WeaponCardModel);
-        return {
-            ...route,
-            weapon,
-            player: route.order.find(item => item instanceof PlayerModel)
-        }
-    }
+export namespace WeaponDisposeProps {
+    export type P = { weapon: WeaponCardModel; }
+}
+
+export class WeaponDisposeModel extends DisposeModel<WeaponDisposeProps.P> {
 
     constructor(loader?: Loader<WeaponDisposeModel>) {
         super(() => {
@@ -21,6 +16,7 @@ export class WeaponDisposeModel extends DisposeModel {
                 state: { ...props.state },
                 child: { ...props.child },
                 refer: { ...props.refer },
+                route: { weapon: WeaponCardModel.prototype },
             }
         });
     }

@@ -30,6 +30,7 @@ export class TauntModel extends FeatureModel<
                 },
                 child: { ...props.child },
                 refer: { ...props.refer },
+                route: {},
             }
         })
     }

@@ -40,6 +40,7 @@ export abstract class BattlecryModel<
                 },
                 child: { ...props.child },
                 refer: { ...props.refer },
+                route: {},
             }
         });
     }

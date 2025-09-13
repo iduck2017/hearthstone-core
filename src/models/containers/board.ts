@@ -1,6 +1,5 @@
 import { Loader, Model, TranxUtil } from "set-piece";
-import { GameModel } from "../game";
-import { PlayerModel } from "../player";
+import { GameModel, PlayerModel } from "../..";
 import { MinionCardModel } from "../cards/minion";
 import { CardModel } from "../cards";
 import { SecretCardModel } from "../cards/secret";
@@ -14,6 +13,10 @@ export namespace BoardProps {
         readonly secrets: SecretCardModel[]
         weapon?: WeaponCardModel;
     };
+    export type P = {
+        game: GameModel;
+        player: PlayerModel;
+    };
     export type R = {
         readonly order: CardModel[];
     };
@@ -23,16 +26,9 @@ export class BoardModel extends Model<
     BoardProps.E,
     BoardProps.S,
     BoardProps.C,
-    BoardProps.R
+    BoardProps.R,
+    BoardProps.P
 > {
-    public get route() {
-        const route = super.route;
-        return { 
-            ...route,
-            game: route.order.find(item => item instanceof GameModel),
-            player: route.order.find(item => item instanceof PlayerModel),
-        }
-    }
 
     constructor(loader?: Loader<BoardModel>) {
         super(() => {
@@ -48,6 +44,10 @@ export class BoardModel extends Model<
                 refer: { 
                     order: props.child?.minions ?? [],
                     ...props.refer
+                },
+                route: {
+                    game: GameModel.prototype,
+                    player: PlayerModel.prototype,
                 }
             }
         })

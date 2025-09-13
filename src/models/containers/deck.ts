@@ -1,14 +1,17 @@
 import { DebugUtil, Loader, Model } from "set-piece";
 import { MinionCardModel } from "../cards/minion";
 import { GameModel } from "../game";
-import { PlayerModel } from "../player";
-import { CardModel } from "../cards";
+import { CardModel, PlayerModel } from "../..";
 
 export namespace DeckProps {
     export type E = {}
     export type S = {}
     export type C = {
         minions: MinionCardModel[]
+    }
+    export type P = {
+        game: GameModel;
+        player: PlayerModel;
     }
     export type R = {}
 }
@@ -17,16 +20,9 @@ export class DeckModel extends Model<
     DeckProps.E,
     DeckProps.S,
     DeckProps.C,
-    DeckProps.R
+    DeckProps.R,
+    DeckProps.P
 > {
-    public get route() {
-        const route = super.route;
-        return { 
-            ...route,
-            game: route.order.find(item => item instanceof GameModel),
-            player: route.order.find(item => item instanceof PlayerModel),
-        }
-    }
 
     constructor(loader?: Loader<DeckModel>) {
         super(() => {
@@ -41,6 +37,10 @@ export class DeckModel extends Model<
                 refer: { 
                     order: props.child?.minions ?? [],
                     ...props.refer 
+                },
+                route: {
+                    game: GameModel.prototype,
+                    player: PlayerModel.prototype,
                 }
             }
         })

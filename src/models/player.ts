@@ -23,22 +23,18 @@ export namespace PlayerProps {
         readonly graveyard: GraveyardModel;
     };
     export type R = {}
+    export type P = {
+        game: GameModel;
+    }
 }
 
 export class PlayerModel extends Model<
     PlayerProps.E, 
     PlayerProps.S, 
     PlayerProps.C, 
-    PlayerProps.R
+    PlayerProps.R,
+    PlayerProps.P
 > {
-    public get route() {
-        const route = super.route;
-        return { 
-            ...route,
-            game: route.order.find(item => item instanceof GameModel),
-        }
-    }
-
     public get refer() {
         const minions: MinionCardModel[] = this.child.board.child.minions.filter(item => !item.child.dispose.state.isActive);
         const entities: (MinionCardModel | HeroModel)[] = [this.child.hero, ...minions].filter(item => !item.child.dispose.state.isActive);
@@ -83,6 +79,7 @@ export class PlayerModel extends Model<
                     ...props.child
                 },
                 refer: { ...props.refer },
+                route: { game: GameModel.prototype },
             }
         });
     }

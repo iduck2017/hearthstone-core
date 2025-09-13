@@ -11,6 +11,7 @@ export namespace WindfuryProps {
     };
     export type C = {};
     export type R = {};
+    export type P = {}
 }
 
 @StoreUtil.is('windfury')
@@ -18,7 +19,8 @@ export class WindfuryModel extends FeatureModel<
     WindfuryProps.E,
     WindfuryProps.S,
     WindfuryProps.C,
-    WindfuryProps.R
+    WindfuryProps.R,
+    WindfuryProps.P
 > {
     constructor(loader?: Loader<WindfuryModel>) {
         super(() => {
@@ -34,6 +36,7 @@ export class WindfuryModel extends FeatureModel<
                 },
                 child: { ...props.child },
                 refer: { ...props.refer },
+                route: {},
             }
         });
     }

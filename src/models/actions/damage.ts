@@ -1,9 +1,7 @@
 import { Event, Loader, Model, TranxUtil } from "set-piece";
-import { PlayerModel } from "../player";
-import { CardModel } from "../cards";
-import { MinionCardModel } from "../cards/minion";
 import { DamageEvent } from "../../types/damage";
 import { DisposeModel } from "../rules/dispose";
+import { CardModel, MinionCardModel, PlayerModel } from "../..";
 
 export namespace DamageProps {
     export type E = {
@@ -12,6 +10,11 @@ export namespace DamageProps {
     };
     export type S = {};
     export type C = {};
+    export type P = {
+        card: CardModel;
+        minion: MinionCardModel;
+        player: PlayerModel;
+    };
     export type R = {};
 }
 
@@ -19,7 +22,8 @@ export class DamageModel extends Model<
     DamageProps.E,
     DamageProps.S,
     DamageProps.C,
-    DamageProps.R
+    DamageProps.R,
+    DamageProps.P
 > {
     @DisposeModel.span()
     public static run(tasks: DamageEvent[]) {
@@ -39,18 +43,6 @@ export class DamageModel extends Model<
         return tasks.forEach(item => item.detail.target.child.health.doHurt(item));
     }
 
-    public get route() {
-        const route = super.route;
-        const card: CardModel | undefined = route.order.find(item => item instanceof CardModel);
-        const minion: MinionCardModel | undefined = route.order.find(item => item instanceof MinionCardModel);
-        return {
-            ...route,
-            card,
-            minion,
-            player: route.order.find(item => item instanceof PlayerModel)
-        }
-    } 
-
     constructor(loader?: Loader<DamageModel>) {
         super(() => {
             const props = loader?.() ?? {};
@@ -58,7 +50,12 @@ export class DamageModel extends Model<
                 uuid: props.uuid,
                 state: { ...props.state },
                 child: { ...props.child },
-                refer: { ...props.refer }
+                refer: { ...props.refer },
+                route: {
+                    card: CardModel.prototype,
+                    minion: MinionCardModel.prototype,
+                    player: PlayerModel.prototype
+                }
             }
         })
     }

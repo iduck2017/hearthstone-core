@@ -1,5 +1,5 @@
 import { Decor, Event, EventUtil, Method, Model, StateChangeEvent, StateUtil } from "set-piece";
-import { GameModel, PlayerModel, HeroModel, RoleAttackModel, RoleAttackProps, TurnModel, BoardModel } from "../../..";
+import { GameModel, PlayerModel, HeroModel, RoleAttackModel, RoleAttackProps, TurnModel, BoardModel, WeaponCardModel } from "../../..";
 
 export namespace WeaponAttackProps {
     export type E = {}
@@ -9,26 +9,22 @@ export namespace WeaponAttackProps {
     }
     export type C = {}
     export type R = {}
+    export type P = {
+        weapon: WeaponCardModel;
+        hero: HeroModel;
+        game: GameModel;
+        player: PlayerModel;
+        board: BoardModel;
+    }
 }
 
 export class WeaponAttackModel extends Model<
     WeaponAttackProps.E,
     WeaponAttackProps.S,
     WeaponAttackProps.C,
-    WeaponAttackProps.R
+    WeaponAttackProps.R,
+    WeaponAttackProps.P
 > {
-    public get route() {
-        const route = super.route;
-        const hero: HeroModel | undefined = route.order.find(item => item instanceof HeroModel);
-        return { 
-            ...route, 
-            hero,
-            game: route.order.find(item => item instanceof GameModel),
-            player: route.order.find(item => item instanceof PlayerModel),
-            board: route.order.find(item => item instanceof BoardModel),
-        }
-    }
-
     public get state() {
         const state = super.state;
         return {
@@ -51,6 +47,13 @@ export class WeaponAttackModel extends Model<
                 },
                 child: { ...props.child },
                 refer: { ...props.refer },
+                route: {
+                    weapon: WeaponCardModel.prototype,
+                    hero: HeroModel.prototype,
+                    game: GameModel.prototype,
+                    player: PlayerModel.prototype,
+                    board: BoardModel.prototype,
+                }
             }
         });
     }

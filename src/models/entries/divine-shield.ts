@@ -35,6 +35,7 @@ export class DivineSheildModel extends FeatureModel<
                 },
                 child: { ...props.child },
                 refer: { ...props.refer },
+                route: {},
             }
         })
     }

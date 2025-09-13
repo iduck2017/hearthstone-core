@@ -39,6 +39,7 @@ export abstract class EndTurnHookModel<
                 },
                 child: { ...props.child },
                 refer: { ...props.refer },
+                route: {},
             }
         })
     }

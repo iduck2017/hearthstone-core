@@ -18,18 +18,20 @@ export namespace HeroProps {
         readonly restore: RestoreModel;
     };
     export type R = {};
+    export type P = {};
 }
 
 export abstract class HeroModel<
     E extends Partial<HeroProps.E> & Props.E = {},
     S extends Partial<HeroProps.S> & Props.S = {},
     C extends Partial<HeroProps.C> & Props.C = {},
-    R extends Partial<HeroProps.R> & Props.R = {}
+    R extends Partial<HeroProps.R> & Props.R = {},
 > extends Model<
     E & HeroProps.E,
     S & HeroProps.S,
     C & HeroProps.C,
-    R & HeroProps.R
+    R & HeroProps.R,
+    HeroProps.P
 > {
     constructor(loader: Method<HeroModel['props'] & {
         state: S & HeroProps.S;
@@ -49,6 +51,7 @@ export abstract class HeroModel<
                     ...props.child,
                 },
                 refer: { ...props.refer },
+                route: {},
             }
         })
     }

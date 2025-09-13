@@ -16,22 +16,18 @@ export namespace TurnProps {
     export type R = {
         current?: PlayerModel;
     };
+    export type P = {
+        game: GameModel;
+    }
 }
 
 export class TurnModel extends Model<
     TurnProps.E, 
     TurnProps.S, 
     TurnProps.C, 
-    TurnProps.R
+    TurnProps.R,
+    TurnProps.P
 > {
-    public get route() {
-        const route = super.route;
-        return {
-            ...route,
-            game: route.order.find(item => item instanceof GameModel)
-        }
-    }
-
     constructor(loader?: Loader<TurnModel>) {
         super(() => {
             const props = loader?.() ?? {};
@@ -43,6 +39,7 @@ export class TurnModel extends Model<
                 },
                 child: { ...props.child },
                 refer: { ...props.refer },
+                route: { game: GameModel.prototype },
             }
         })
     }
