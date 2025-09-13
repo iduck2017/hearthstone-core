@@ -1,43 +1,6 @@
 import { Loader, Method, Model, Props, StoreUtil } from "set-piece";
 import { FeatureModel, FeatureProps } from ".";
-import { BoardModel, CardModel, DeckModel, GameModel, GraveyardModel, HandModel, HeroModel, MinionCardModel, PlayerModel, RoleModel, SpellCardModel, WeaponCardModel } from "../.."
-
-export namespace CardFeaturesProps {
-    export type E = {};
-    export type S = {};
-    export type C = {
-        items: FeatureModel[];
-    };
-}
-
-@StoreUtil.is('features')
-export class CardFeaturesModel extends Model<
-    CardFeaturesProps.E,
-    CardFeaturesProps.S,
-    CardFeaturesProps.C
-> {
-    constructor(loader?: Loader<CardFeaturesModel>) {
-        super(() => {
-            const props = loader?.() ?? {};
-            return {
-                uuid: props.uuid,
-                state: { ...props.state },
-                child: {
-                    items: props.child?.items ?? [],
-                    ...props.child
-                },
-                refer: { ...props.refer },
-                route: {},
-            }
-        })
-    }
-
-    public add(feature: FeatureModel) {
-        this.draft.child.items.push(feature);
-        return feature;
-    }
-}
-
+import { BoardModel, CardModel, DeckModel, GraveyardModel, HandModel, HeroModel, MinionCardModel, RoleModel, SpellCardModel, WeaponCardModel } from "../.."
 
 export namespace CardFeatureProps {
     export type E = {};

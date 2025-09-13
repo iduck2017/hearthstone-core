@@ -4,7 +4,6 @@ import { SelectEvent, SelectUtil } from "../../utils/select";
 import { MinionHooksModel } from "../hooks/minion";
 import { CardModel, CardProps } from ".";
 import { RaceType } from "../../types/card";
-import { RoleFeaturesModel } from "../features/role";
 import { RoleModel } from "../role";
 import { BattlecryModel } from "../hooks/battlecry";
 import { DisposeModel } from "../rules/dispose";

@@ -2,9 +2,9 @@ import { DebugUtil, Model, TranxUtil, Props, Event, Method, Format } from "set-p
 import { CostModel } from "../rules/cost";
 import { ClassType, RarityType } from "../../types/card";
 import { MinionHooksModel } from "../hooks/minion";
-import { RoleFeaturesModel } from "../features/role";
 import { DamageModel, RestoreModel } from "../..";
 import { MinionCardModel, PlayerModel, GameModel, HandModel, DeckModel, BoardModel, GraveyardModel } from "../..";
+import { CardFeatureModel } from "../features/card";
 
 export namespace CardProps {
     export type E = {
@@ -24,7 +24,7 @@ export namespace CardProps {
     };
     export type C = {
         readonly cost: CostModel;
-        readonly feats: RoleFeaturesModel;
+        readonly feats: CardFeatureModel[];
         readonly damage: DamageModel
         readonly restore: RestoreModel
     };
@@ -74,7 +74,7 @@ export abstract class CardModel<
                     ...props.state
                 },
                 child: { 
-                    feats: props.child.feats ?? new RoleFeaturesModel(),
+                    feats: [],
                     hooks: props.child.hooks ?? new MinionHooksModel(),
                     damage: props.child.damage ?? new DamageModel(),
                     restore: props.child.restore ?? new RestoreModel(),

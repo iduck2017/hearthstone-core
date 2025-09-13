@@ -2,43 +2,6 @@ import { Loader, Method, Model, Props, StoreUtil } from "set-piece";
 import { FeatureModel, FeatureProps } from ".";
 import { BoardModel, CardModel, DeckModel, GameModel, GraveyardModel, HandModel, HeroModel, MinionCardModel, PlayerModel, RoleModel } from "../.."
 
-export namespace RoleFeaturesProps {
-    export type E = {};
-    export type S = {};
-    export type C = {
-        items: FeatureModel[];
-    };
-}
-
-@StoreUtil.is('features')
-export class RoleFeaturesModel extends Model<
-    RoleFeaturesProps.E,
-    RoleFeaturesProps.S,
-    RoleFeaturesProps.C
-> {
-    constructor(loader?: Loader<RoleFeaturesModel>) {
-        super(() => {
-            const props = loader?.() ?? {};
-            return {
-                uuid: props.uuid,
-                state: { ...props.state },
-                child: {
-                    items: props.child?.items ?? [],
-                    ...props.child
-                },
-                refer: { ...props.refer },
-                route: {},
-            }
-        })
-    }
-
-    public add(feature: FeatureModel) {
-        this.draft.child.items.push(feature);
-        return feature;
-    }
-}
-
-
 export namespace RoleFeatureProps {
     export type E = {};
     export type S = {};

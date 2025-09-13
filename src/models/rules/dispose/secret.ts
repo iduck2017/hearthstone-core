@@ -3,21 +3,7 @@ import { DisposeModel } from ".";
 import { MinionCardModel, PlayerModel, WeaponCardModel } from "../../..";
 import { SecretCardModel } from "../../cards/secret";
 
-export namespace SecretDisposeProps {
-    export type E = {};
-    export type S = {};
-    export type C = {};
-    export type R = {};
-    export type P = { secret: SecretCardModel; }
-}
-
-export class SecretDisposeModel extends DisposeModel<
-    SecretDisposeProps.E, 
-    SecretDisposeProps.S, 
-    SecretDisposeProps.C,
-    SecretDisposeProps.R,
-    SecretDisposeProps.P
-> {
+export class SecretDisposeModel extends DisposeModel {
 
     constructor(loader?: Loader<SecretDisposeModel>) {
         super(() => {
@@ -42,5 +28,13 @@ export class SecretDisposeModel extends DisposeModel<
 
     @TranxUtil.span()
     public doRemove() {
+        const secret = this.route.secret;
+        if (!secret) return;
+        const player = this.route.player;
+        if (!player) return;
+        const board = player.child.board;
+        board.del(secret);
+        const graveyard = player.child.graveyard;
+        graveyard.add(secret);
     }
 }

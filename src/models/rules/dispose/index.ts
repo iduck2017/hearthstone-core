@@ -1,5 +1,5 @@
 import { DebugUtil, Event, Format, Loader, LogLevel, Method, Model, Props, TranxUtil } from "set-piece";
-import { CardModel, HeroModel, PlayerModel } from '../../..'
+import { CardModel, GraveyardModel, HeroModel, MinionCardModel, PlayerModel, SecretCardModel, WeaponCardModel } from '../../..'
 
 export type DisposeEvent = {
     detail: Model;
@@ -21,21 +21,20 @@ export namespace DisposeProps {
     }
     export type P = {
         player: PlayerModel;
+        graveyard: GraveyardModel;
+        minion: MinionCardModel;
+        weapon: WeaponCardModel;
+        secret: SecretCardModel;
+        hero: HeroModel;
     }
 }
 
-export abstract class DisposeModel<
-    E extends Partial<DisposeProps.E> & Props.E = {},
-    S extends Partial<DisposeProps.S> & Props.S = {},
-    C extends Partial<DisposeProps.C> & Props.C = {},
-    R extends Partial<DisposeProps.R> & Props.R = {},
-    P extends Partial<DisposeProps.P> & Props.P = {}
-> extends Model<
-    E & DisposeProps.E,
-    S & DisposeProps.S,
-    C & DisposeProps.C,
-    R & DisposeProps.R,
-    P & DisposeProps.P
+export abstract class DisposeModel extends Model<
+    DisposeProps.E,
+    DisposeProps.S,
+    DisposeProps.C,
+    DisposeProps.R,
+    DisposeProps.P
 > {
     private static _isLock = false;
     public static get isLock() {
@@ -92,12 +91,7 @@ export abstract class DisposeModel<
         tasks.forEach(item => item.run());
     }
 
-    constructor(loader: Method<DisposeModel['props'] & {
-        state: S,
-        child: C,
-        refer: R,
-        route: P;
-    }, []>) {
+    constructor(loader: Loader<DisposeModel>) {
         super(() => {
             const props = loader() ?? {};
             return {
@@ -110,7 +104,11 @@ export abstract class DisposeModel<
                 refer: { ...props.refer },
                 route: {
                     player: PlayerModel.prototype,
-                    ...props.route,
+                    graveyard: GraveyardModel.prototype,
+                    minion: MinionCardModel.prototype,
+                    weapon: WeaponCardModel.prototype,
+                    secret: SecretCardModel.prototype,
+                    hero: HeroModel.prototype,
                 },
             }
         });
@@ -127,7 +125,7 @@ export abstract class DisposeModel<
     }
 
 
-    protected abstract check(state: Readonly<Format.State<S & DisposeProps.S>>): boolean;
+    protected abstract check(state: DisposeProps.S): boolean;
 
     protected abstract run(): void;
 

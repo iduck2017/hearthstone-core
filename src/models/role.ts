@@ -10,7 +10,7 @@ import { RoleActionModel } from "./rules/action/role";
 import { RoleAttackModel } from "./rules/attack/role";
 import { HealthModel } from "./rules/health";
 import { SleepModel } from "./rules/sleep";
-import { RoleFeaturesModel } from "./features/role";
+import { RoleFeatureModel } from "./features/role";
 import { RoleEntriesModel } from "./entries/role";
 import { CardModel } from "./cards";
 import { HeroModel } from "./heroes";
@@ -24,7 +24,7 @@ export namespace RoleProps {
         readonly attack: RoleAttackModel;
         readonly action: RoleActionModel;
         readonly entries: RoleEntriesModel;
-        readonly feats: RoleFeaturesModel;
+        readonly feats: RoleFeatureModel[];
     };
     export type R = {};
     export type P = {
@@ -69,7 +69,7 @@ export class RoleModel extends Model<
                     sleep: props.child.sleep ?? new SleepModel(),
                     action: props.child.action ?? new RoleActionModel(),
                     entries: props.child.entries ?? new RoleEntriesModel(),
-                    feats: props.child.feats ?? new RoleFeaturesModel(),
+                    feats: [],
                     ...props.child,
                 },
                 refer: { ...props.refer },
@@ -86,5 +86,9 @@ export class RoleModel extends Model<
                 },
             }
         })
+    }
+
+    public add(feature: RoleFeatureModel) {
+        this.draft.child.feats.push(feature);
     }
 }

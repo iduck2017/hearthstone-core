@@ -22,7 +22,7 @@ export { WeaponDisposeModel } from "./models/rules/dispose/weapon";
 
 export { RoleAttackProps, RoleAttackModel } from "./models/rules/attack/role";
 export { HealthProps, HealthModel } from "./models/rules/health";
-export { RoleActionProps as ActionProps, RoleActionModel as ActionModel } from "./models/rules/action/role";
+export { RoleActionProps, RoleActionModel } from "./models/rules/action/role";
 export { SleepProps, SleepModel } from './models/rules/sleep';
 export { ManaProps, ManaModel } from './models/rules/mana';
 export { TurnProps, TurnModel } from "./models/rules/turn";
@@ -36,6 +36,7 @@ export { WeaponActionProps, WeaponActionModel } from "./models/rules/action/weap
 
 // card
 export { CardProps, CardModel } from "./models/cards";
+export { SecretCardProps, SecretCardModel } from "./models/cards/secret";
 export { SpellCardProps, SpellCardModel } from './models/cards/spell';
 export { MinionCardProps, MinionCardModel } from "./models/cards/minion";
 export { WeaponCardProps, WeaponCardModel } from "./models/cards/weapon";
@@ -63,9 +64,10 @@ export { SpellDamageProps, SpellDamageModel } from "./models/entries/spell-damag
 export { DivineSheildProps, DivineSheildModel } from "./models/entries/divine-shield";
 
 // features
-export { RoleFeaturesProps as FeaturesProps, RoleFeaturesModel as FeaturesModel } from "./models/features/role";
 export { FeatureProps, FeatureModel } from './models/features'
-export { RoleBuffProps as BuffProps, RoleBuffModel as BuffModel } from "./models/features/buff/role";
+export { CardFeatureProps, CardFeatureModel } from "./models/features/card";
+export { RoleFeatureProps, RoleFeatureModel } from "./models/features/role";
+export { RoleBuffProps, RoleBuffModel } from "./models/features/buff/role";
 export { EffectProps, EffectModel } from './models/features/effect'; 
 
 // hooks
