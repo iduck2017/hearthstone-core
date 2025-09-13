@@ -10,12 +10,12 @@ export namespace DamageProps {
     };
     export type S = {};
     export type C = {};
+    export type R = {};
     export type P = {
         card: CardModel;
         minion: MinionCardModel;
         player: PlayerModel;
     };
-    export type R = {};
 }
 
 export class DamageModel extends Model<

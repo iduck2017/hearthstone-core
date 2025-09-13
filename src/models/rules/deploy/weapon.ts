@@ -3,21 +3,7 @@ import { BoardModel } from "../../containers/board";
 import { DeployModel } from "./index"
 import { WeaponCardModel } from "../../cards/weapon";
 
-export namespace WeaponDeployProps {
-    export type E = {};
-    export type S = {};
-    export type C = {};
-    export type R = {};
-    export type P = { weapon: WeaponCardModel; }
-}
-
-export class WeaponDeployModel extends DeployModel<
-    WeaponDeployProps.E, 
-    WeaponDeployProps.S, 
-    WeaponDeployProps.C,
-    WeaponDeployProps.R,
-    WeaponDeployProps.P
-> {
+export class WeaponDeployModel extends DeployModel {
     constructor(loader?: Loader<WeaponDeployModel>) {
         super(() => {
             const props = loader?.() ?? {};

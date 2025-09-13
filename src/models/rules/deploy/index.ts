@@ -1,6 +1,6 @@
 import { Event, Loader, Method, Model, Props } from "set-piece"
 import { BoardModel } from "../../containers/board"
-import { PlayerModel } from "../../.."
+import { MinionCardModel, PlayerModel, SecretCardModel, WeaponCardModel } from "../../.."
 
 export namespace DeployProps {
     export type E = {
@@ -12,29 +12,20 @@ export namespace DeployProps {
     export type R = {}
     export type P = {
         player: PlayerModel;
+        minion: MinionCardModel;
+        weapon: WeaponCardModel;
+        secret: SecretCardModel;
     }
 }
 
-
-export abstract class DeployModel<
-    E extends Partial<DeployProps.E> & Props.E = {},
-    S extends Partial<DeployProps.S> & Props.S = {},
-    C extends Partial<DeployProps.C> & Props.C = {},
-    R extends Partial<DeployProps.R> & Props.R = {},
-    P extends Partial<DeployProps.P> & Props.P = {}
-> extends Model<
-    E & DeployProps.E,
-    S & DeployProps.S,
-    C & DeployProps.C,
-    R & DeployProps.R,
-    P & DeployProps.P
+export abstract class DeployModel extends Model<
+    DeployProps.E,
+    DeployProps.S,
+    DeployProps.C,
+    DeployProps.R,
+    DeployProps.P
 > {
-    constructor(loader: Method<DeployModel['props'] & {
-        state: S,
-        child: C,
-        refer: R,
-        route: P;
-    }, []>) {
+    constructor(loader: Loader<DeployModel>) {
         super(() => {
             const props = loader() ?? {}
             return {
@@ -44,7 +35,9 @@ export abstract class DeployModel<
                 refer: { ...props.refer },
                 route: {
                     player: PlayerModel.prototype,
-                    ...props.route,
+                    minion: MinionCardModel.prototype,
+                    weapon: WeaponCardModel.prototype,
+                    secret: SecretCardModel.prototype,
                 },
             }
         })

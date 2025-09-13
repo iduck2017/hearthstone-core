@@ -1,5 +1,6 @@
 import { Loader, Model, TranxUtil } from "set-piece";
 import { RestoreEvent } from "../../types/restore";
+import { CardModel, MinionCardModel, PlayerModel } from "../..";
 
 export namespace RestoreProps {
     export type E = {
@@ -8,8 +9,12 @@ export namespace RestoreProps {
     };
     export type S = {};
     export type C = {};
-    export type P = {};
     export type R = {};
+    export type P = {
+        player: PlayerModel;
+        card: CardModel;
+        minion: MinionCardModel;
+    };
 }
 
 export class RestoreModel extends Model<
@@ -44,7 +49,11 @@ export class RestoreModel extends Model<
                 state: { ...props.state },
                 child: { ...props.child },
                 refer: { ...props.refer },
-                route: {},
+                route: {
+                    player: PlayerModel.prototype,
+                    card: CardModel.prototype,
+                    minion: MinionCardModel.prototype,
+                },
             }
         })
     }
