@@ -3,11 +3,20 @@ import { DisposeModel } from ".";
 import { MinionCardModel, PlayerModel, WeaponCardModel } from "../../..";
 
 export namespace WeaponDisposeProps {
+    export type E = {};
+    export type S = {};
+    export type C = {};
+    export type R = {};
     export type P = { weapon: WeaponCardModel; }
 }
 
-export class WeaponDisposeModel extends DisposeModel<WeaponDisposeProps.P> {
-
+export class WeaponDisposeModel extends DisposeModel<
+    WeaponDisposeProps.E, 
+    WeaponDisposeProps.S, 
+    WeaponDisposeProps.C,
+    WeaponDisposeProps.R,
+    WeaponDisposeProps.P
+> {
     constructor(loader?: Loader<WeaponDisposeModel>) {
         super(() => {
             const props = loader?.() ?? {};

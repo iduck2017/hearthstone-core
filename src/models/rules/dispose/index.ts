@@ -1,4 +1,4 @@
-import { DebugUtil, Event, Loader, LogLevel, Method, Model, Props, TranxUtil } from "set-piece";
+import { DebugUtil, Event, Format, Loader, LogLevel, Method, Model, Props, TranxUtil } from "set-piece";
 import { CardModel, HeroModel, PlayerModel } from '../../..'
 
 export type DisposeEvent = {
@@ -25,12 +25,16 @@ export namespace DisposeProps {
 }
 
 export abstract class DisposeModel<
+    E extends Partial<DisposeProps.E> & Props.E = {},
+    S extends Partial<DisposeProps.S> & Props.S = {},
+    C extends Partial<DisposeProps.C> & Props.C = {},
+    R extends Partial<DisposeProps.R> & Props.R = {},
     P extends Partial<DisposeProps.P> & Props.P = {}
 > extends Model<
-    DisposeProps.E,
-    DisposeProps.S,
-    DisposeProps.C,
-    DisposeProps.R,
+    E & DisposeProps.E,
+    S & DisposeProps.S,
+    C & DisposeProps.C,
+    R & DisposeProps.R,
     P & DisposeProps.P
 > {
     private static _isLock = false;
@@ -89,6 +93,9 @@ export abstract class DisposeModel<
     }
 
     constructor(loader: Method<DisposeModel['props'] & {
+        state: S,
+        child: C,
+        refer: R,
         route: P;
     }, []>) {
         super(() => {
@@ -120,7 +127,7 @@ export abstract class DisposeModel<
     }
 
 
-    protected abstract check(state: DisposeProps.S): boolean;
+    protected abstract check(state: Readonly<Format.State<S & DisposeProps.S>>): boolean;
 
     protected abstract run(): void;
 

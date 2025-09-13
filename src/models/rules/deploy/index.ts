@@ -17,15 +17,22 @@ export namespace DeployProps {
 
 
 export abstract class DeployModel<
+    E extends Partial<DeployProps.E> & Props.E = {},
+    S extends Partial<DeployProps.S> & Props.S = {},
+    C extends Partial<DeployProps.C> & Props.C = {},
+    R extends Partial<DeployProps.R> & Props.R = {},
     P extends Partial<DeployProps.P> & Props.P = {}
 > extends Model<
-    DeployProps.E,
-    DeployProps.S,
-    DeployProps.C,
-    DeployProps.R,
+    E & DeployProps.E,
+    S & DeployProps.S,
+    C & DeployProps.C,
+    R & DeployProps.R,
     P & DeployProps.P
 > {
     constructor(loader: Method<DeployModel['props'] & {
+        state: S,
+        child: C,
+        refer: R,
         route: P;
     }, []>) {
         super(() => {

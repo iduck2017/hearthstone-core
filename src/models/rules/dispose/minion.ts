@@ -3,10 +3,20 @@ import { DisposeModel } from ".";
 import { MinionCardModel, PlayerModel } from "../../..";
 
 export namespace MinionDisposeProps {
+    export type E = {};
+    export type S = {};
+    export type C = {};
+    export type R = {};
     export type P = { minion: MinionCardModel; }
 }
 
-export class MinionDisposeModel extends DisposeModel<MinionDisposeProps.P> {
+export class MinionDisposeModel extends DisposeModel<
+    MinionDisposeProps.E, 
+    MinionDisposeProps.S, 
+    MinionDisposeProps.C,
+    MinionDisposeProps.R,
+    MinionDisposeProps.P
+> {
 
     constructor(loader?: Loader<MinionDisposeModel>) {
         super(() => {
