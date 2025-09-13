@@ -13,7 +13,6 @@ export namespace HeroProps {
         readonly armor: ArmorModel;
         readonly skill: SkillModel;
         readonly role: RoleModel;
-        weapon?: WeaponCardModel;
         readonly dispose: HeroDisposeModel
         readonly damage: DamageModel
         readonly restore: RestoreModel;
@@ -52,13 +51,5 @@ export abstract class HeroModel<
                 refer: { ...props.refer },
             }
         })
-    }
-
-    public del() {
-        this.draft.child.weapon = undefined;
-    }
-
-    public add(weapon: WeaponCardModel) {
-        this.draft.child.weapon = weapon;
     }
 }

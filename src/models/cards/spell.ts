@@ -1,7 +1,9 @@
 import { DebugUtil, Event, Method, Model, Props, TranxUtil } from "set-piece";
-import { CardModel, CardProps } from "..";
-import { SelectUtil } from "../../../utils/select";
-import { EffectModel } from "../../features/effect";
+import { CardModel, CardProps } from ".";
+import { SelectUtil } from "../../utils/select";
+import { EffectModel } from "../features/effect";
+import { PlayerModel } from "../player";
+import { DeployModel } from "../rules/deploy";
 
 export type SpellCardEvent = {
     spell: Map<EffectModel, Model[]>;
@@ -12,6 +14,7 @@ export namespace SpellCardProps {
     export type E = {};
     export type C = {
         spells: EffectModel[],
+        deploy?: DeployModel;
     };
     export type R = {};
 }
@@ -101,6 +104,9 @@ export class SpellCardModel<
             if (!params) continue;
             await item.run(...params);
         }
+        const board = player.child.board;
+        this.child.deploy?.run(board);
         hand.del(this);
     }
+
 }

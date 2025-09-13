@@ -9,6 +9,7 @@ import { RoleModel } from "../role";
 import { BattlecryModel } from "../hooks/battlecry";
 import { DisposeModel } from "../rules/dispose";
 import { MinionDisposeModel } from "../rules/dispose/minion";
+import { MinionDeployModel } from "../rules/deploy/minion";
 
 export type MinionCardEvent = { 
     battlecry: Map<BattlecryModel, Model[]>;
@@ -26,6 +27,7 @@ export namespace MinionCardProps {
     export type C = {
         readonly hooks: MinionHooksModel;
         readonly role: RoleModel;
+        readonly deploy: MinionDeployModel;
         readonly dispose: MinionDisposeModel
     };
     export type R = {};
@@ -55,6 +57,7 @@ export abstract class MinionCardModel<
                 state: { ...props.state },
                 child: { 
                     hooks: props.child.hooks ?? new MinionHooksModel(),
+                    deploy: props.child.deploy ?? new MinionDeployModel(),
                     dispose: props.child.dispose ?? new MinionDisposeModel(),
                     ...props.child 
                 },
@@ -91,7 +94,8 @@ export abstract class MinionCardModel<
         }
         // end
         const board = player.child.board;
-        this.summon(board, event.position);
+        if (!board) return;
+        this.child.deploy.run(board, event.position);
     }
     
     protected async toPlay(): Promise<MinionCardEvent | undefined> {
@@ -129,13 +133,6 @@ export abstract class MinionCardModel<
         return event;
     }
 
-
-    // summon
-    public summon(board: BoardModel, position?: number) {
-        this.doSummon(board, position);
-        this.event.onSummon(new Event({}));
-    }
-
     private async toSummon(): Promise<number | undefined> {
         const player = this.route.player;
         if (!player) return;
@@ -145,14 +142,5 @@ export abstract class MinionCardModel<
         const position = await SelectUtil.get(new SelectEvent(options));
         return position;
     }
-
-    @TranxUtil.span()
-    private doSummon(board: BoardModel, position?: number) {
-        const player = this.route.player;
-        const hand = player?.child.hand;
-        if (hand) hand.del(this);
-        board.add(this, position); 
-    }
-
 
 }

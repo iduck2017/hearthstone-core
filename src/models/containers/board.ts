@@ -3,12 +3,16 @@ import { GameModel } from "../game";
 import { PlayerModel } from "../player";
 import { MinionCardModel } from "../cards/minion";
 import { CardModel } from "../cards";
+import { SecretCardModel } from "../cards/secret";
+import { WeaponCardModel } from "../cards/weapon";
 
 export namespace BoardProps {
     export type E = {};
     export type S = {};
     export type C = {
         readonly minions: MinionCardModel[]
+        readonly secrets: SecretCardModel[]
+        weapon?: WeaponCardModel;
     };
     export type R = {
         readonly order: CardModel[];
@@ -38,6 +42,7 @@ export class BoardModel extends Model<
                 state: {},
                 child: { 
                     minions: [],
+                    secrets: [],
                     ...props.child,
                 },
                 refer: { 
@@ -48,23 +53,33 @@ export class BoardModel extends Model<
         })
     }
 
-    @TranxUtil.span()
-    public add(card: MinionCardModel, position?: number) {
+    public add(card: CardModel) {
+        let cards: CardModel[] | undefined;
+        if (card instanceof MinionCardModel) cards = this.draft.child.minions;
+        if (card instanceof SecretCardModel) cards = this.draft.child.secrets;
+        if (card instanceof WeaponCardModel) this.draft.child.weapon = card;
+        if (cards) cards.push(card);
+    }
+
+    public sort(card: CardModel, position?: number) {
         const order = this.draft.refer.order;
         if (position === -1) position = order.length;
         if (position === undefined) position = order.length;
-        const cards = this.draft.child.minions;
-        cards.push(card);
         order.splice(position, 0, card);
         return card;
     }
 
-    public del(card: MinionCardModel) {
-        const cards = this.draft.child.minions;
+    public del(card: CardModel) {
+        let cards: CardModel[] | undefined;
+        if (card instanceof MinionCardModel) cards = this.draft.child.minions;
+        if (card instanceof SecretCardModel) cards = this.draft.child.secrets;
+        if (card instanceof WeaponCardModel) this.draft.child.weapon = undefined;
+        if (cards) {
+            const index = cards.indexOf(card);
+            if (index !== -1) cards.splice(index, 1);
+        } 
         const order = this.draft.refer.order;
-        let index = cards.indexOf(card);
-        if (index !== -1) cards.splice(index, 1);
-        index = order.indexOf(card);
+        const index = order.indexOf(card);
         if (index !== -1) order.splice(index, 1);
         return card;
     }

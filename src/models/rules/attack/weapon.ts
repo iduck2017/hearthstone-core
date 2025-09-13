@@ -1,5 +1,5 @@
 import { Decor, Event, EventUtil, Method, Model, StateChangeEvent, StateUtil } from "set-piece";
-import { GameModel, PlayerModel, HeroModel, RoleAttackModel, RoleAttackProps, TurnModel } from "../../..";
+import { GameModel, PlayerModel, HeroModel, RoleAttackModel, RoleAttackProps, TurnModel, BoardModel } from "../../..";
 
 export namespace WeaponAttackProps {
     export type E = {}
@@ -25,6 +25,7 @@ export class WeaponAttackModel extends Model<
             hero,
             game: route.order.find(item => item instanceof GameModel),
             player: route.order.find(item => item instanceof PlayerModel),
+            board: route.order.find(item => item instanceof BoardModel),
         }
     }
 
@@ -67,9 +68,10 @@ export class WeaponAttackModel extends Model<
         return false;
     }
 
-    @StateUtil.on(self => self.route.hero?.proxy.child.role.child.attack.decor)
+    @StateUtil.on(self => self.route.player?.proxy.child.hero.all(RoleAttackModel).decor)
     private onCheck(that: RoleAttackModel, decor: Decor<RoleAttackProps.S>) {
         if (!this.state.isActive) return;
+        if (!this.route.board) return;
         decor.current.offset += this.state.origin;
     }
 }

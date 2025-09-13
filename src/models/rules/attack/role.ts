@@ -39,8 +39,10 @@ export class RoleAttackModel extends Model<
     public get refer() {
         const refer = super.refer;
         const hero = this.route.hero;
+        const player = this.route.player;
         const minion = this.route.minion;
-        const weapon: WeaponCardModel | undefined = hero?.child.weapon;
+        const board = player?.child.board;
+        const weapon = board?.child.weapon;
         const damage = hero?.child.damage ?? minion?.child.damage;
         return {
             ...refer,

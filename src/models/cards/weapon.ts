@@ -8,6 +8,7 @@ import { BattlecryModel } from "../hooks/battlecry";
 import { WeaponDisposeModel } from "../rules/dispose/weapon";
 import { SelectUtil } from "../../utils/select";
 import { TurnModel } from "../rules/turn";
+import { WeaponDeployModel } from "../rules/deploy/weapon";
 
 export type WeaponCardEvent = {
     battlecry: Map<BattlecryModel, Model[]>;
@@ -22,6 +23,7 @@ export namespace WeaponCardProps {
         readonly hooks: WeaponHooksModel;
         readonly attack: WeaponAttackModel;
         readonly action: WeaponActionModel;
+        readonly deploy: WeaponDeployModel;
         readonly dispose: WeaponDisposeModel;
     };
     export type R = {};
@@ -40,7 +42,7 @@ export class WeaponCardModel<
 > {
     constructor(loader: Method<WeaponCardModel['props'] & {
         state: S & WeaponCardProps.S & Omit<CardProps.S, 'isActive'>;
-        child: C & Omit<WeaponCardProps.C, 'hooks' | 'dispose'> & Pick<CardProps.C, 'cost'>;
+        child: C & Pick<WeaponCardProps.C, 'attack' | 'action'> & Pick<CardProps.C, 'cost'>;
         refer: R & WeaponCardProps.R;
     }, []>) {
         super(() => {
@@ -49,6 +51,7 @@ export class WeaponCardModel<
                 uuid: props.uuid,
                 state: { ...props.state },
                 child: {
+                    deploy: props.child.deploy ?? new WeaponDeployModel(),
                     dispose: props.child.dispose ?? new WeaponDisposeModel(),
                     hooks: props.child.hooks ?? new WeaponHooksModel(),
                     ...props.child,
@@ -115,32 +118,9 @@ export class WeaponCardModel<
             await item.run(...params);
         }
         // equip
-        const hero = player.child.hero;
-        this.equip(hero);
-    }
-
-
-    // equip
-    public equip(hero: HeroModel) {
-        this.doEquip(hero);
-        this.event.onEquip(new Event({}))
-    }
-
-    @TranxUtil.span()
-    private doEquip(hero: HeroModel) {
-        const player = this.route.player;
-        if (!player) return;
-        const hand = player.child.hand;
-        if (hand) hand.del(this);
-        const prev = hero.child.weapon;
-        if (prev) {
-            prev.child.dispose.active({
-                source: hero,
-                detail: this,
-            }, true);
-            hero.del();
-        }
-        hero.add(this);
+        const board = player.child.board;
+        if (!board) return;
+        this.child.deploy.run(board);
     }
 
     
@@ -149,5 +129,4 @@ export class WeaponCardModel<
     private onEnd(that: TurnModel, event: Event) {
         this.reload()
     }
-
 }
