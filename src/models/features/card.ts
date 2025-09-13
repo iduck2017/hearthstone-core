@@ -1,6 +1,6 @@
 import { Loader, Method, Model, Props, StoreUtil } from "set-piece";
 import { FeatureModel, FeatureProps } from ".";
-import { BoardModel, CardModel, DeckModel, GameModel, GraveyardModel, HandModel, HeroModel, MinionCardModel, PlayerModel, RoleModel } from "../.."
+import { BoardModel, CardModel, DeckModel, GameModel, GraveyardModel, HandModel, HeroModel, MinionCardModel, PlayerModel, RoleModel, SpellCardModel, WeaponCardModel } from "../.."
 
 export namespace CardFeaturesProps {
     export type E = {};
@@ -8,16 +8,13 @@ export namespace CardFeaturesProps {
     export type C = {
         items: FeatureModel[];
     };
-    export type P = {};
-    export type R = {};
 }
 
 @StoreUtil.is('features')
 export class CardFeaturesModel extends Model<
     CardFeaturesProps.E,
     CardFeaturesProps.S,
-    CardFeaturesProps.C,
-    CardFeaturesProps.R
+    CardFeaturesProps.C
 > {
     constructor(loader?: Loader<CardFeaturesModel>) {
         super(() => {
@@ -55,6 +52,10 @@ export namespace CardFeatureProps {
         hand: HandModel;
         deck: DeckModel;
         graveyard: GraveyardModel;
+
+        minion: MinionCardModel;
+        weapon: WeaponCardModel;
+        spell: SpellCardModel;
     };
 }
 
@@ -92,6 +93,9 @@ export class CardFeatureModel<
                     hand: HandModel.prototype,
                     deck: DeckModel.prototype,
                     graveyard: GraveyardModel.prototype,
+                    minion: MinionCardModel.prototype,
+                    weapon: WeaponCardModel.prototype,
+                    spell: SpellCardModel.prototype,
                 },
             }
         })

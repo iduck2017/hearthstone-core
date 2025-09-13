@@ -12,10 +12,10 @@ export namespace EffectProps {
 
 export abstract class EffectModel<
     T extends Model[] = Model[],
-    E extends Partial<EffectProps.E & FeatureProps.E> & Props.E = {},
-    S extends Partial<EffectProps.S & FeatureProps.S> & Props.S = {},
-    C extends Partial<EffectProps.C & FeatureProps.C> & Props.C = {},
-    R extends Partial<EffectProps.R & FeatureProps.R> & Props.R = {},
+    E extends Partial<FeatureProps.E> & Props.E = {},
+    S extends Partial<FeatureProps.S> & Props.S = {},
+    C extends Partial<FeatureProps.C> & Props.C = {},
+    R extends Partial<FeatureProps.R> & Props.R = {},
 > extends CardFeatureModel<
     E & EffectProps.E, 
     S & EffectProps.S,
@@ -38,6 +38,7 @@ export abstract class EffectModel<
                 },
                 child: { ...props.child },
                 refer: { ...props.refer },
+                route: {},
             }
         })
     }

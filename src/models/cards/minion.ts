@@ -22,7 +22,6 @@ export namespace MinionCardProps {
     };
     export type E = {
         onPlay: Event;
-        onSummon: Event;
     };
     export type C = {
         readonly hooks: MinionHooksModel;
@@ -101,7 +100,6 @@ export abstract class MinionCardModel<
     protected async toPlay(): Promise<MinionCardEvent | undefined> {
         // status 
         if (!this.state.isActive) return;
-        // summon
         const position = await this.toSummon();
         if (position === undefined) return;
         // battlecry
