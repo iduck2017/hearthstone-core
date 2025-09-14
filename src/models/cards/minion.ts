@@ -80,6 +80,18 @@ export abstract class MinionCardModel<
         // summon
         const hand = player.child.hand;
         hand.use(this);
+        await this.run(event);
+        hand.del(this);
+    }
+
+    private async run(event: MinionCardEvent) {
+        const signal = this.event.toRun(new Event({}));
+        if (signal.isCancel) return;
+        const player = this.route.player;
+        if (!player) return;
+        // summon
+        const hand = player.child.hand;
+        hand.use(this);
         // battlecry
         const hooks = this.child.hooks;
         const battlecry = hooks.child.battlecry;
@@ -91,7 +103,8 @@ export abstract class MinionCardModel<
         // end
         const board = player.child.board;
         if (!board) return;
-        this.child.deploy.run(board, event.position);
+        const deploy = this.child.deploy;
+        deploy.run(board, event.position);
     }
     
     protected async toPlay(): Promise<MinionCardEvent | undefined> {
@@ -100,28 +113,13 @@ export abstract class MinionCardModel<
         const position = await this.toSummon();
         if (position === undefined) return;
         // battlecry
+        const hooks = this.child.hooks;
+        const battlecry = await BattlecryModel.toRun(hooks.child.battlecry);
+        if (!battlecry) return;
         const event: MinionCardEvent = {
-            battlecry: new Map(),
+            battlecry,
             position,
         };
-        const hooks = this.child.hooks;
-        const battlecry = hooks.child.battlecry;
-        for (const item of battlecry) {
-            const selectors = item.toRun();
-            // condition not match
-            if (!selectors) continue;
-            for (const item of selectors) {
-                if (!item.options.length) return;
-            }
-            const params: Model[] = [];
-            for (const item of selectors) {
-                const result = await SelectUtil.get(item);
-                // user cancel
-                if (result === undefined) return;
-                params.push(result);
-            }
-            event.battlecry.set(item, params);
-        }
         // event
         const signal = this.event.toPlay(new Event({}));
         if (signal.isCancel) return;

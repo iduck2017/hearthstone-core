@@ -83,6 +83,7 @@ export class SpellCardModel<
         }
         // event
         const signal = this.event.toPlay(new Event({}));
+        console.log('cancel?', signal.isCancel);
         if (signal.isCancel) return;
         return event;
     }
@@ -97,6 +98,16 @@ export class SpellCardModel<
         // hand
         const hand = player.child.hand;
         hand.use(this);
+        await this.run(event);
+        hand.del(this);
+    }
+
+    
+    private async run(event: SpellCardEvent) {
+        const signal = this.event.toRun(new Event({}));
+        if (signal.isCancel) return;
+        const player = this.route.player;
+        if (!player) return;
         // spell
         const spells = this.child.spells;
         for (const item of spells) {
@@ -106,7 +117,6 @@ export class SpellCardModel<
         }
         const board = player.child.board;
         this.child.deploy?.run(board);
-        hand.del(this);
     }
 
 }

@@ -1,6 +1,6 @@
 import { Loader, Method, Model, Props, StoreUtil } from "set-piece";
 import { FeatureModel, FeatureProps } from ".";
-import { BoardModel, CardModel, DeckModel, GraveyardModel, HandModel, HeroModel, MinionCardModel, RoleModel, SpellCardModel, WeaponCardModel } from "../.."
+import { BoardModel, CardModel, DeckModel, GraveyardModel, HandModel, HeroModel, MinionCardModel, RoleModel, SecretCardModel, SpellCardModel, WeaponCardModel } from "../.."
 
 export namespace CardFeatureProps {
     export type E = {};
@@ -19,6 +19,7 @@ export namespace CardFeatureProps {
         minion: MinionCardModel;
         weapon: WeaponCardModel;
         spell: SpellCardModel;
+        secret: SecretCardModel;
     };
 }
 
@@ -59,6 +60,7 @@ export class CardFeatureModel<
                     minion: MinionCardModel.prototype,
                     weapon: WeaponCardModel.prototype,
                     spell: SpellCardModel.prototype,
+                    secret: SecretCardModel.prototype,
                 },
             }
         })

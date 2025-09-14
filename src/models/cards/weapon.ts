@@ -73,27 +73,12 @@ export class WeaponCardModel<
         // status 
         if (!this.state.isActive) return;
         // battlecry
-        const event: WeaponCardEvent = {
-            battlecry: new Map(),
-        };
         const hooks = this.child.hooks;
-        const battlecry = hooks.child.battlecry;
-        for (const item of battlecry) {
-            const selectors = item.toRun();
-            // condition not match
-            if (!selectors) continue;
-            for (const item of selectors) {
-                if (!item.options.length) return;
-            }
-            const params: Model[] = [];
-            for (const item of selectors) {
-                const result = await SelectUtil.get(item);
-                // user cancel
-                if (result === undefined) return;
-                params.push(result);
-            }
-            event.battlecry.set(item, params);
-        }
+        const battlecry = await BattlecryModel.toRun(hooks.child.battlecry);
+        if (!battlecry) return;
+        const event: WeaponCardEvent = {
+            battlecry,
+        };
         // event
         const signal = this.event.toPlay(new Event({}));
         if (signal.isCancel) return;

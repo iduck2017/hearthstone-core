@@ -9,9 +9,11 @@ import { CardFeatureModel } from "../features/card";
 export namespace CardProps {
     export type E = {
         toPlay: Event;
-        toDraw: Event;
         onPlay: Event,
+        toDraw: Event;
         onDraw: Event,
+        toRun: Event,
+        onRun: Event,
     };
     export type S = {
         readonly name: string;
@@ -95,6 +97,7 @@ export abstract class CardModel<
     }
 
     public abstract play(): Promise<void>;
+
 
     private check(): boolean {
         const hand = this.route.hand;

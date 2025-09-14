@@ -3,8 +3,8 @@ import { Loader } from "set-piece";
 import { FireballEffectModel } from "./effect";
 
 @LibraryUtil.is('fireball')
-export class Fireball extends SpellCardModel {
-    constructor(loader?: Loader<Fireball>) {
+export class FireballModel extends SpellCardModel {
+    constructor(loader?: Loader<FireballModel>) {
         super(() => {
             const props = loader?.() ?? {}
             return {

@@ -1,5 +1,5 @@
 import { Event, Method, Model, Props } from "set-piece";
-import { SelectEvent } from "../../utils/select";
+import { SelectEvent, SelectUtil } from "../../utils/select";
 import { FeatureModel, FeatureProps } from "../features";
 import { CardFeatureModel } from "../features/card";
 
@@ -25,6 +25,28 @@ export abstract class BattlecryModel<
     C & BattlecryProps.C, 
     R & BattlecryProps.R
 > {
+    public static async toRun(items: Readonly<BattlecryModel[]>): Promise<Map<BattlecryModel, Model[]> | undefined> {
+        const result = new Map<BattlecryModel, Model[]>();
+        for (const item of items) {
+            const selectors = item.toRun();
+            // condition not match
+            if (!selectors) continue;
+            for (const item of selectors) {
+                // invalid selector
+                if (!item.options.length) return;
+            }
+            const params: Model[] = [];
+            for (const item of selectors) {
+                const result = await SelectUtil.get(item);
+                // canceled by user
+                if (result === undefined) return;
+                params.push(result);
+            }
+            result.set(item, params);
+        }
+        return result;
+    }
+
     constructor(loader: Method<BattlecryModel['props'] & {
         uuid: string | undefined;
         state: S & Pick<FeatureProps.S, 'desc' | 'name'>;

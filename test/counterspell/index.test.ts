@@ -4,12 +4,12 @@
  * 1. fireball-damage: Player A plays Fireball and deals 6 damage to Player B's hero
  * 2. fireball-minion: Player A plays Fireball and deals 6 damage to a minion
  */
-
 import { GameModel, PlayerModel, MageModel, BoardModel, HandModel, SelectUtil, ManaModel } from "hearthstone-core";
-import { FireballModel } from "./index";
 import { WispModel } from "../wisp";
 import { boot } from "../common/boot";
 import { DebugUtil, LogLevel } from "set-piece";
+import { CounterspellModel } from ".";
+import { FireballModel } from "../fireball";
 
 DebugUtil.level = LogLevel.ERROR;
 describe('fireball', () => {
@@ -23,7 +23,7 @@ describe('fireball', () => {
                         child: { minions: [] }
                     })),
                     hand: new HandModel(() => ({
-                        child: { spells: [new FireballModel()] }
+                        child: { spells: [new CounterspellModel()] }
                     }))
                 }
             })),
@@ -35,7 +35,7 @@ describe('fireball', () => {
                         child: { minions: [new WispModel()] }
                     })),
                     hand: new HandModel(() => ({
-                        child: { spells: [] }
+                        child: { spells: [new FireballModel()] }
                     }))
                 }
             }))
@@ -43,32 +43,38 @@ describe('fireball', () => {
     }));
     boot(game);
     
-    const handA = game.child.playerA.child.hand;
-    const boardB = game.child.playerB.child.board;
-    const cardD = handA.child.spells.find(item => item instanceof FireballModel);
-    const cardC = boardB.child.minions.find(item => item instanceof WispModel);
-    const roleA = game.child.playerA.child.hero.child.role;
-    const roleB = game.child.playerB.child.hero.child.role;
-    const roleC = cardC?.child.role;
-    if (!cardD || !roleC) throw new Error();
+    const playerA = game.child.playerA;
+    const playerB = game.child.playerB;
+    const handA = playerA.child.hand;
+    const handB = playerB.child.hand;
+    const heroA = playerA.child.hero;
+    const heroB = playerB.child.hero;
+    const roleA = heroA.child.role;
+    const roleB = heroB.child.role;
+    const spellC = handA.child.spells.find(item => item instanceof CounterspellModel);
+    const spellD = handB.child.spells.find(item => item instanceof FireballModel);
+    if (!spellC || !spellD) throw new Error();
+    const boardA = game.child.playerA.child.board;
+    const turn = game.child.turn;
 
-    test('fireball-cast', async () => {
-        expect(roleC.child.health.state.current).toBe(1);
-        
-        // Play Fireball targeting enemy hero
-        let promise = cardD.play();
+    test('counterspell-cast', async () => {
+        expect(boardA.child.secrets.length).toBe(0);
+        await spellC.play();
+        expect(boardA.child.secrets.length).toBe(1);
+    })
+
+
+    test('counterspell-trigger', async () => {
+        turn.next();
+        let promise = spellD.play();
         expect(SelectUtil.current?.options).toContain(roleA);
         expect(SelectUtil.current?.options).toContain(roleB);
-        expect(SelectUtil.current?.options).toContain(roleC);
-        SelectUtil.set(roleC);
+        SelectUtil.set(roleA);
         await promise;
-        
-        // Hero should take 6 damage
-        expect(roleC.child.health.state.current).toBe(-5);
-        expect(roleC.child.health.state.damage).toBe(6);
-        expect(cardC.child.dispose.state.isActive).toBe(true);
-
-        expect(cardC.child.dispose.refer.source).toBe(cardD);
+        expect(handB.child.spells.length).toBe(0);
+        expect(playerB.child.mana.state.current).toBe(6);
+        expect(roleA.child.health.state.current).toBe(30);
+        expect(boardA.child.secrets.length).toBe(0);
     })
 
 })
