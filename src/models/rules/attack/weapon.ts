@@ -61,14 +61,18 @@ export class WeaponAttackModel extends Model<
     private check() {
         const player = this.route.player;
         if (!player) return false
-
         const game = this.route.game;
         if (!game) return false;
-
         const turn = game.child.turn;
         const current = turn.refer.current;
         if (current === player) return true;
         return false;
+    }
+
+    @EventUtil.on(self => self.route.game?.proxy.child.turn.event.onStart)
+    @EventUtil.on(self => self.route.game?.proxy.child.turn.event.onEnd)
+    private onEnd(that: TurnModel, event: Event) {
+        this.reload()
     }
 
     @StateUtil.on(self => self.route.player?.proxy.child.hero.all(RoleAttackModel).decor)

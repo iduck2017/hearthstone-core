@@ -72,7 +72,8 @@ export { EffectProps, EffectModel } from './models/features/effect';
 
 // hooks
 export { MinionHooksProps, MinionHooksModel } from "./models/hooks/minion";
-export { BattlecryProps, BattlecryModel } from "./models/hooks/battlecry";
+export { RoleBattlecryProps, RoleBattlecryModel } from "./models/hooks/battlecry/role";
+export { WeaponBattlecryProps, WeaponBattlecryModel } from "./models/hooks/battlecry/weapon";
 export { DeathrattleProps, DeathrattleModel } from "./models/hooks/deathrattle";
 export { EndTurnHookProps, EndTurnHookModel } from "./models/hooks/end-turn";
 export { StartTurnHookProps, StartTurnHookModel } from "./models/hooks/start-turn";

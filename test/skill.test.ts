@@ -1,6 +1,6 @@
 import { BoardModel, GameModel, MageModel, ManaModel, PlayerModel, SelectUtil, TimeUtil, WarriorModel } from "hearthstone-core";
+import { WispModel } from "./wisp";
 import { boot } from "./boot";
-import { WispModel } from "../wisp";
 
 describe('skill', () => {
     const game = boot(new GameModel(() => ({

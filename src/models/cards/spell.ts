@@ -1,19 +1,17 @@
-import { DebugUtil, Event, Method, Model, Props, TranxUtil } from "set-piece";
+import { Event, Method, Model, Props } from "set-piece";
 import { CardModel, CardProps } from ".";
-import { SelectUtil } from "../../utils/select";
 import { EffectModel } from "../features/effect";
-import { PlayerModel } from "../player";
 import { DeployModel } from "../rules/deploy";
 
 export type SpellCardEvent = {
-    spell: Map<EffectModel, Model[]>;
+    effect: Map<EffectModel, Model[]>;
 }
 
 export namespace SpellCardProps {
     export type S = {};
     export type E = {};
     export type C = {
-        spells: EffectModel[],
+        effects: EffectModel[],
         deploy?: DeployModel;
     };
     export type R = {};
@@ -41,7 +39,7 @@ export class SpellCardModel<
                 uuid: props.uuid,
                 state: { ...props.state },
                 child: { 
-                    spells: [],
+                    effects: [],
                     ...props.child,
                 },
                 refer: { ...props.refer },
@@ -61,29 +59,13 @@ export class SpellCardModel<
         // status 
         if (!this.state.isActive) return;
         // spell
+        const effect = await EffectModel.toRun(this.child.effects);
+        if (!effect) return;
         const event: SpellCardEvent = {
-            spell: new Map(),
+            effect
         };
-        const spells = this.child.spells;
-        for (const item of spells) {
-            const selectors = item.toRun();
-            // condition not match
-            if (!selectors) continue;
-            for (const item of selectors) {
-                if (!item.options.length) return;
-            }
-            const params: Model[] = [];
-            for (const item of selectors) {
-                const result = await SelectUtil.get(item);
-                // user cancel
-                if (result === undefined) return;
-                params.push(result);
-            }
-            event.spell.set(item, params);
-        }
         // event
         const signal = this.event.toPlay(new Event({}));
-        console.log('cancel?', signal.isCancel);
         if (signal.isCancel) return;
         return event;
     }
@@ -109,9 +91,9 @@ export class SpellCardModel<
         const player = this.route.player;
         if (!player) return;
         // spell
-        const spells = this.child.spells;
+        const spells = this.child.effects;
         for (const item of spells) {
-            const params = event.spell.get(item);
+            const params = event.effect.get(item);
             if (!params) continue;
             await item.run(...params);
         }

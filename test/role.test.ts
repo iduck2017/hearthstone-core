@@ -1,9 +1,9 @@
 import { GameModel, MageModel, PlayerModel, SelectUtil, TimeUtil } from "hearthstone-core";
-import { boot } from "../common/boot";
+import { boot } from "./boot";
 import { HandModel } from "hearthstone-core";
 import { DeckModel } from "hearthstone-core";
 import { BoardModel } from "hearthstone-core";
-import { WispModel } from ".";
+import { WispModel } from "./wisp";
 
 describe('role', () => {
     const game = new GameModel(() => ({

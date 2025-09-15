@@ -1,17 +1,12 @@
-import { DebugUtil, Model, TranxUtil, Props, Event, Format, Loader, Method } from "set-piece";
+import { DebugUtil, Model, Props, Event, Format, Loader, Method } from "set-piece";
 import { SelectEvent, SelectUtil } from "../../utils/select";
-import { MinionHooksModel } from "../hooks/minion";
+import { MinionHooksEvent, MinionHooksModel } from "../hooks/minion";
 import { CardModel, CardProps } from ".";
 import { RaceType } from "../../types/card";
 import { RoleModel } from "../role";
-import { BattlecryModel } from "../hooks/battlecry";
+import { RoleBattlecryModel } from "../hooks/battlecry/role";
 import { MinionDisposeModel } from "../rules/dispose/minion";
 import { MinionDeployModel } from "../rules/deploy/minion";
-
-export type MinionCardEvent = { 
-    battlecry: Map<BattlecryModel, Model[]>;
-    position: number;
-}
 
 export namespace MinionCardProps {
     export type S = {
@@ -64,13 +59,13 @@ export abstract class MinionCardModel<
     }
 
     public async play() {
-        const event = await this.toPlay();
-        if (!event) return;
-        await this.doPlay(event);
+        const params = await this.toPlay();
+        if (!params) return;
+        await this.doPlay(...params);
         await this.event.onPlay(new Event({}));
     }
 
-    protected async doPlay(event: MinionCardEvent) {
+    protected async doPlay(to: number, event: MinionHooksEvent) {
         const player = this.route.player;
         if (!player) return;
         // mana
@@ -79,51 +74,47 @@ export abstract class MinionCardModel<
         mana.use(cost.state.current);
         // summon
         const hand = player.child.hand;
+        const from = hand.refer.order.indexOf(this);
         hand.use(this);
-        await this.run(event);
+        await this.run(from, to, event);
         hand.del(this);
     }
 
-    private async run(event: MinionCardEvent) {
+    private async run(from: number, to: number, event: MinionHooksEvent) {
         const signal = this.event.toRun(new Event({}));
         if (signal.isCancel) return;
         const player = this.route.player;
         if (!player) return;
-        // summon
-        const hand = player.child.hand;
-        hand.use(this);
         // battlecry
         const hooks = this.child.hooks;
         const battlecry = hooks.child.battlecry;
         for (const item of battlecry) {
             const params = event.battlecry.get(item);
             if (!params) continue;
-            await item.run(...params);
+            await item.run(from, to, ...params);
         }
         // end
         const board = player.child.board;
         if (!board) return;
         const deploy = this.child.deploy;
-        deploy.run(board, event.position);
+        deploy.run(board, to);
     }
     
-    protected async toPlay(): Promise<MinionCardEvent | undefined> {
+    protected async toPlay(): Promise<[number, MinionHooksEvent] | undefined> {
         // status 
         if (!this.state.isActive) return;
-        const position = await this.toSummon();
-        if (position === undefined) return;
+        const to = await this.toSummon();
+        if (to === undefined) return;
         // battlecry
         const hooks = this.child.hooks;
-        const battlecry = await BattlecryModel.toRun(hooks.child.battlecry);
+        const battlecry = await RoleBattlecryModel.toRun(hooks.child.battlecry);
         if (!battlecry) return;
-        const event: MinionCardEvent = {
-            battlecry,
-            position,
-        };
         // event
         const signal = this.event.toPlay(new Event({}));
         if (signal.isCancel) return;
-        return event;
+        return [to, {
+            battlecry
+        }];
     }
 
     private async toSummon(): Promise<number | undefined> {

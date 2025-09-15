@@ -35,7 +35,6 @@ export class HealthModel extends Model<
     HealthProps.R,
     HealthProps.P
 > {
-
     public get state() {
         const state = super.state;
         const limit = state.origin + state.offset;
@@ -104,7 +103,7 @@ export class HealthModel extends Model<
             return event;
         }
         this.draft.state.damage += result;
-        dispose.active(event.detail);
+        dispose.active(false, event.detail.source, event.detail.detail);
         event.reset(result);
         return event;
     }

@@ -1,9 +1,9 @@
 import { Event, Method, Model, Props } from "set-piece";
-import { SelectEvent, SelectUtil } from "../../utils/select";
-import { FeatureModel, FeatureProps } from "../features";
-import { CardFeatureModel } from "../features/card";
+import { SelectEvent, SelectUtil } from "../../../utils/select";
+import { FeatureModel, FeatureProps } from "../../features";
+import { CardFeatureModel } from "../../features/card";
 
-export namespace BattlecryProps {
+export namespace WeaponBattlecryProps {
     export type E = {
         toRun: Event;
         onRun: Event;
@@ -13,20 +13,22 @@ export namespace BattlecryProps {
     export type R = {};
 }
 
-export abstract class BattlecryModel<
+export abstract class WeaponBattlecryModel<
     T extends Model[] = Model[],
-    E extends Partial<BattlecryProps.E> & Props.E = {},
-    S extends Partial<BattlecryProps.S> & Props.S = {},
-    C extends Partial<BattlecryProps.C> & Props.C = {},
-    R extends Partial<BattlecryProps.R> & Props.R = {}
+    E extends Partial<WeaponBattlecryProps.E> & Props.E = {},
+    S extends Partial<WeaponBattlecryProps.S> & Props.S = {},
+    C extends Partial<WeaponBattlecryProps.C> & Props.C = {},
+    R extends Partial<WeaponBattlecryProps.R> & Props.R = {}
 > extends CardFeatureModel<
-    E & BattlecryProps.E, 
-    S & BattlecryProps.S, 
-    C & BattlecryProps.C, 
-    R & BattlecryProps.R
+    E & WeaponBattlecryProps.E, 
+    S & WeaponBattlecryProps.S, 
+    C & WeaponBattlecryProps.C, 
+    R & WeaponBattlecryProps.R
 > {
-    public static async toRun(items: Readonly<BattlecryModel[]>): Promise<Map<BattlecryModel, Model[]> | undefined> {
-        const result = new Map<BattlecryModel, Model[]>();
+    public static async toRun(
+        items: Readonly<WeaponBattlecryModel[]>
+    ): Promise<Map<WeaponBattlecryModel, Model[]> | undefined> {
+        const result = new Map<WeaponBattlecryModel, Model[]>();
         for (const item of items) {
             const selectors = item.toRun();
             // condition not match
@@ -47,7 +49,7 @@ export abstract class BattlecryModel<
         return result;
     }
 
-    constructor(loader: Method<BattlecryModel['props'] & {
+    constructor(loader: Method<WeaponBattlecryModel['props'] & {
         uuid: string | undefined;
         state: S & Pick<FeatureProps.S, 'desc' | 'name'>;
         child: C;
@@ -68,15 +70,15 @@ export abstract class BattlecryModel<
         });
     }
 
-    public async run(...params: T) {
+    public async run(from: number, ...params: T) {
         if (!this.state.isActive) return;
         const signal = this.event.toRun(new Event({}));
         if (signal.isCancel) return;
-        await this.doRun(...params);
+        await this.doRun(from, ...params);
         this.event.onRun(new Event({}));
     }   
 
-    protected abstract doRun(...params: T): Promise<void>;
+    protected abstract doRun(from: number, ...params: T): Promise<void>;
 
     public abstract toRun(): { [K in keyof T]: SelectEvent<T[K]> } | undefined;
 }

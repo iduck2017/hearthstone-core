@@ -1,11 +1,6 @@
 import { DebugUtil, Event, Format, Loader, LogLevel, Method, Model, Props, TranxUtil } from "set-piece";
 import { CardModel, GraveyardModel, HeroModel, MinionCardModel, PlayerModel, SecretCardModel, WeaponCardModel } from '../../..'
 
-export type DisposeEvent = {
-    detail: Model;
-    source: CardModel | HeroModel;
-}
-
 export namespace DisposeProps {
     export type E = {
         toRun: Event;
@@ -116,14 +111,13 @@ export abstract class DisposeModel extends Model<
 
     @DisposeModel.span()
     @TranxUtil.span()
-    public active(event: DisposeEvent, isLock?: boolean) {
+    public active(isLock?: boolean, source?: CardModel | HeroModel, detail?: Model) {
         if (this.state.isActive) return;
-        this.draft.refer.detail = event.detail;
-        this.draft.refer.source = event.source;
+        this.draft.refer.detail = detail;
+        this.draft.refer.source = source;
         this.draft.state.isLock = isLock ?? false;
         DisposeModel.add(this);
     }
-
 
     protected abstract check(state: DisposeProps.S): boolean;
 

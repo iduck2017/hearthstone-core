@@ -3,16 +3,12 @@ import { CardModel, CardProps } from ".";
 import { WeaponAttackModel } from "../rules/attack/weapon";
 import { WeaponActionModel } from "../rules/action/weapon";
 import { HeroModel } from "../heroes";
-import { WeaponHooksModel } from "../hooks/weapon";
-import { BattlecryModel } from "../hooks/battlecry";
+import { WeaponHooksEvent, WeaponHooksModel } from "../hooks/weapon";
+import { RoleBattlecryModel } from "../hooks/battlecry/role";
 import { WeaponDisposeModel } from "../rules/dispose/weapon";
-import { SelectUtil } from "../../utils/select";
 import { TurnModel } from "../rules/turn";
 import { WeaponDeployModel } from "../rules/deploy/weapon";
-
-export type WeaponCardEvent = {
-    battlecry: Map<BattlecryModel, Model[]>;
-}
+import { WeaponBattlecryModel } from "../hooks/battlecry/weapon";
 
 export namespace WeaponCardProps {
     export type S = {};
@@ -69,23 +65,22 @@ export class WeaponCardModel<
         await this.event.onPlay(new Event({}));
     }
 
-    protected async toPlay(): Promise<WeaponCardEvent | undefined> {
+    protected async toPlay(): Promise<WeaponHooksEvent | undefined> {
         // status 
         if (!this.state.isActive) return;
         // battlecry
         const hooks = this.child.hooks;
-        const battlecry = await BattlecryModel.toRun(hooks.child.battlecry);
+        const battlecry = await WeaponBattlecryModel.toRun(hooks.child.battlecry);
         if (!battlecry) return;
-        const event: WeaponCardEvent = {
-            battlecry,
-        };
         // event
         const signal = this.event.toPlay(new Event({}));
         if (signal.isCancel) return;
-        return event;
+        return {
+            battlecry
+        };
     }
 
-    protected async doPlay(event: WeaponCardEvent) {
+    protected async doPlay(event: WeaponHooksEvent) {
         const player = this.route.player;
         if (!player) return;
         // mana
@@ -94,24 +89,27 @@ export class WeaponCardModel<
         mana.use(cost.state.current);
         const hand = player.child.hand;
         hand.use(this);
-        // battlecry
+        const from = hand.refer.order.indexOf(this);
+        await this.run(from, event)
+        hand.del(this)
+    }
+
+    private async run(from: number, event: WeaponHooksEvent) {
+        const player = this.route.player;
+        if (!player) return;
+        const signal = this.event.toRun(new Event({}));
+        if (signal.isCancel) return;
         const hooks = this.child.hooks;
         const battlecry = hooks.child.battlecry;
         for (const item of battlecry) {
             const params = event.battlecry.get(item);
             if (!params) continue;
-            await item.run(...params);
+            await item.run(from, ...params);
         }
-        // equip
         const board = player.child.board;
         if (!board) return;
         this.child.deploy.run(board);
     }
 
     
-    @EventUtil.on(self => self.route.game?.proxy.child.turn.event.onStart)
-    @EventUtil.on(self => self.route.game?.proxy.child.turn.event.onEnd)
-    private onEnd(that: TurnModel, event: Event) {
-        this.reload()
-    }
 }

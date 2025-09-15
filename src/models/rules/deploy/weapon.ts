@@ -35,10 +35,7 @@ export class WeaponDeployModel extends DeployModel {
         if (hand) hand.del(weapon);
         const prev = board.child.weapon;
         if (prev) {
-            prev.child.dispose.active({
-                source: weapon,
-                detail: this,
-            }, true);
+            prev.child.dispose.active(true);
             board.del(prev);
         }
         board.add(weapon);

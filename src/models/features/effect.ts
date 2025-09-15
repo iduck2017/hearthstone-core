@@ -1,5 +1,5 @@
 import { Loader, Method, Model, Props } from "set-piece";
-import { SelectEvent } from "../../utils/select";
+import { SelectEvent, SelectUtil } from "../../utils/select";
 import { FeatureModel, FeatureProps } from "../features";
 import { CardFeatureModel } from "./card";
 
@@ -22,6 +22,25 @@ export abstract class EffectModel<
     C & EffectProps.C, 
     R & EffectProps.R
 > {
+    public static async toRun(items: Readonly<EffectModel[]>): Promise<Map<EffectModel, Model[]> | undefined> {
+        const result = new Map<EffectModel, Model[]>();
+        for (const item of items) {
+            const selectors = item.toRun();
+            if (!selectors) continue;
+            for (const item of selectors) {
+                if (!item.options.length) return;
+            }
+            const params: Model[] = [];
+            for (const item of selectors) {
+                const result = await SelectUtil.get(item);
+                if (result === undefined) return;
+                params.push(result);
+            }
+            result.set(item, params);
+        }
+        return result;
+    }
+
     constructor(loader: Method<EffectModel['props'] & {
         uuid: string | undefined,
         state: S & Pick<FeatureProps.S, 'desc' | 'name'>,

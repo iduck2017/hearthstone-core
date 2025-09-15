@@ -1,7 +1,9 @@
 import { RoleAttackModel, BoardModel, CostModel, DeckModel, GameModel, HandModel, HealthModel, MageModel, PlayerModel, RoleModel, SelectUtil, TimeUtil } from "hearthstone-core";
+import { WispModel } from "./wisp";
+import { DebugUtil } from "set-piece";
 import { boot } from "./boot";
-import { WispModel } from "../wisp";
 
+const dispose = DebugUtil.mute()
 describe('game', () => {
     const game = new GameModel(() => ({
         child: {
@@ -135,7 +137,7 @@ describe('game', () => {
         // hand
         expect(hand.child.minions.length).toBe(1);
 
-
+        dispose();
         card = hand.child.minions[0];
         promise = card?.play();
         await TimeUtil.sleep();
@@ -144,6 +146,8 @@ describe('game', () => {
         expect(selector?.options.length).toBe(3);
         SelectUtil.set(1);
         await promise;
+        DebugUtil.mute()
+        expect(board.refer.order.length).toBe(3);
         expect(board.child.minions[2]).toBe(card);
         expect(board.refer.order[1]).toBe(card);
     })

@@ -1,8 +1,9 @@
 import { Loader, Model, StoreUtil } from "set-piece";
-import { BattlecryModel } from "./battlecry";
+import { RoleBattlecryModel } from "./battlecry/role";
 import { DeathrattleModel } from "./deathrattle";
 import { StartTurnHookModel } from "./start-turn";
 import { EndTurnHookModel } from "./end-turn";
+import { WeaponBattlecryModel } from "./battlecry/weapon";
 
 export namespace WeaponHooksProps {
     export type E = {};
@@ -10,10 +11,15 @@ export namespace WeaponHooksProps {
     export type C = {
         readonly endTurn: EndTurnHookModel[];
         readonly startTurn: StartTurnHookModel[];
-        readonly battlecry: BattlecryModel[];
+        readonly battlecry: WeaponBattlecryModel[];
         readonly deathrattle: DeathrattleModel[];
     };
     export type R = {};
+}
+
+
+export type WeaponHooksEvent = {
+    battlecry: Map<WeaponBattlecryModel, Model[]>
 }
 
 @StoreUtil.is('card-hooks')
@@ -43,17 +49,17 @@ export class WeaponHooksModel extends Model<
     }
 
 
-    public add(hook: BattlecryModel): BattlecryModel;
+    public add(hook: WeaponBattlecryModel): RoleBattlecryModel;
     public add(hook: DeathrattleModel): DeathrattleModel;
     public add(hook: StartTurnHookModel): StartTurnHookModel;
     public add(hook: EndTurnHookModel): EndTurnHookModel;
     public add<T extends 
-        BattlecryModel | 
+        WeaponBattlecryModel | 
         DeathrattleModel | 
         StartTurnHookModel | 
         EndTurnHookModel
     >(hook: T): T {
-        if (hook instanceof BattlecryModel) this.draft.child.battlecry.push(hook);
+        if (hook instanceof WeaponBattlecryModel) this.draft.child.battlecry.push(hook);
         if (hook instanceof DeathrattleModel) this.draft.child.deathrattle.push(hook);
         if (hook instanceof StartTurnHookModel) this.draft.child.startTurn.push(hook);
         if (hook instanceof EndTurnHookModel) this.draft.child.endTurn.push(hook);
