@@ -27,7 +27,7 @@ export class MinionDeployModel extends DeployModel {
         if (!board) board = player?.child.board;
         if (!board) return;
         this.doRun(board, index);
-        this.event.onRun(new Event({}))
+        this.event.onRun();
     }
 
     @TranxUtil.span()

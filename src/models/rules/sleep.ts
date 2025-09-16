@@ -2,8 +2,8 @@ import { Event, Loader, Model } from "set-piece";
 
 export namespace SleepProps {
     export type E = {
-        onActive: Event;
-        onDeactive: Event;
+        onActive: void;
+        onDeactive: void;
     };
     export type S = {
         isActive: boolean;
@@ -36,11 +36,11 @@ export class SleepModel extends Model<
 
     public active() {
         this.draft.state.isActive = true;
-        this.event.onActive(new Event({}));
+        this.event.onActive();
     }
 
     public deactive(): void {
         this.draft.state.isActive = false;
-        this.event.onDeactive(new Event({}));
+        this.event.onDeactive();
     }
 }

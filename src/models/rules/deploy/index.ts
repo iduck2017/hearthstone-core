@@ -4,8 +4,8 @@ import { MinionCardModel, PlayerModel, SecretCardModel, WeaponCardModel } from "
 
 export namespace DeployProps {
     export type E = {
-        toRun: Event;
-        onRun: Event;
+        toRun: void;
+        onRun: void;
     }
     export type S = {}
     export type C = {}

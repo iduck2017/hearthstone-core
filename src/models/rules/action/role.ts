@@ -9,7 +9,7 @@ export namespace RoleActionProps {
     };
     export type E = {
         toRun: Event;
-        onRun: Event;
+        onRun: void;
     };
     export type C = {};
     export type R = {};
@@ -127,7 +127,7 @@ export class RoleActionModel extends Model<
         const attack = roleA.child.attack;
         await attack.run(roleB);
         
-        this.event.onRun(new Event({}));
+        this.event.onRun();
     }
 
     private check(state: RoleActionProps.S): boolean {

@@ -5,7 +5,6 @@ import { RoleFeatureModel } from "../features/role";
 
 export namespace DivineSheildProps {
     export type E = {
-        onActive: Event
         onUse: DamageEvent
     }
     export type S = {

@@ -4,8 +4,7 @@ import { RoleFeatureModel } from "../features/role";
 
 export namespace ElusiveProps {
     export type E = {
-        onActive: Event
-        onDeactive: Event
+        onActive: void
     }
     export type S = {}
     export type C = {}
@@ -41,7 +40,7 @@ export class ElusiveModel extends RoleFeatureModel<
     public active(): boolean {
         if (this.state.isActive) return false;
         this.draft.state.isActive = true;
-        this.event.onActive(new Event({}));
+        this.event.onActive();
         return true;
     }
 }

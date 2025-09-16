@@ -1,9 +1,7 @@
 import { Event, Loader, Model } from "set-piece";
 
 export namespace ArmorProps {
-    export type E = {
-        onGain: Event<{ value: number }>;
-    }
+    export type E = {}
     export type S = {
         origin: number;
     }
@@ -35,6 +33,5 @@ export class ArmorModel extends Model<
 
     public gain(value: number) {
         this.draft.state.origin += value;
-        this.event.onGain(new Event({ value }));
     }
 }

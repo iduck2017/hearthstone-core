@@ -13,9 +13,7 @@ import { WeaponPerformModel } from "../rules/perform/weapon";
 
 export namespace WeaponCardProps {
     export type S = {};
-    export type E = {
-        onEquip: Event;
-    };
+    export type E = {};
     export type C = {
         readonly hooks: WeaponHooksModel;
         readonly attack: WeaponAttackModel;

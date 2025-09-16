@@ -11,8 +11,7 @@ import { MinionCardModel } from "./cards/minion";
 
 export namespace PlayerProps {
     export type S= {};
-    export type E = {
-    };
+    export type E = {};
     export type C = {
         readonly hero: HeroModel;
         readonly mana: ManaModel;

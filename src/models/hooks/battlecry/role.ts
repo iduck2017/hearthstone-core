@@ -6,7 +6,7 @@ import { CardFeatureModel } from "../../features/card";
 export namespace RoleBattlecryProps {
     export type E = {
         toRun: Event;
-        onRun: Event;
+        onRun: void;
     };
     export type S = {};
     export type C = {};
@@ -78,7 +78,7 @@ export abstract class RoleBattlecryModel<
         if (signal.isCancel) return;
         
         await this.doRun(from, to, ...params);
-        this.event.onRun(new Event({}));
+        this.event.onRun(undefined);
     }   
 
     protected abstract doRun(from: number, to: number, ...params: T): Promise<void>;

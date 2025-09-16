@@ -23,7 +23,7 @@ export class WeaponDeployModel extends DeployModel {
         if (!board) board = player?.child.board;
         if (!board) return;
         this.doRun(board);
-        this.event.onRun(new Event({}))
+        this.event.onRun();
     }
 
     @TranxUtil.span()

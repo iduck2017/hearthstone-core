@@ -7,10 +7,8 @@ export namespace TurnProps {
         count: number;
     };
     export type E = {
-        toEnd: Event;
-        onEnd: Event;
-        toStart: Event;
-        onStart: Event;
+        onEnd: void;
+        onStart: void;
     };
     export type C = {};
     export type R = {
@@ -54,7 +52,6 @@ export class TurnModel extends Model<
     }
 
     private start() {
-        this.event.toStart(new Event({}));
         const player = this.refer.current;
         const board = player?.child.board;
         if (!board) return;
@@ -65,11 +62,10 @@ export class TurnModel extends Model<
             item.child.action.reset();
             item.child.sleep.deactive();
         });
-        this.event.onStart(new Event({}));
+        this.event.onStart();
     }
     
     private end() {
-        this.event.toEnd(new Event({}));
         const player = this.refer.current;
         const board = player?.child.board;
         if (!board) return;
@@ -80,6 +76,6 @@ export class TurnModel extends Model<
             if (!item.child.action.state.isActive) return;
             entries.child.frozen.deactive();
         });
-        this.event.onEnd(new Event({}));
+        this.event.onEnd();
     }
 }

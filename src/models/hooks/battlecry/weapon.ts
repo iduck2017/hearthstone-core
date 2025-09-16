@@ -6,7 +6,7 @@ import { CardFeatureModel } from "../../features/card";
 export namespace WeaponBattlecryProps {
     export type E = {
         toRun: Event;
-        onRun: Event;
+        onRun: void;
     };
     export type S = {};
     export type C = {};
@@ -76,9 +76,9 @@ export abstract class WeaponBattlecryModel<
         const signal = new Event({})
         this.event.toRun(signal);
         if (signal.isCancel) return;
-        
+
         await this.doRun(from, ...params);
-        this.event.onRun(new Event({}));
+        this.event.onRun(undefined);
     }   
 
     protected abstract doRun(from: number, ...params: T): Promise<void>;
