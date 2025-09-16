@@ -3,7 +3,6 @@ import { GameModel, PlayerModel } from "../..";
 
 export namespace FeatureProps {
     export type E = {
-        toSilence: Event;
         onSilence: Event;
     };
     export type S = {
@@ -56,8 +55,6 @@ export abstract class FeatureModel<
     }
 
     public silence(): boolean {
-        const signal = this.event.toSilence(new Event({}));
-        if (signal.isCancel) return false;
         this.disable();
         this.event.onSilence(new Event({}));
         return true;

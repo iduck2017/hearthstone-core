@@ -58,7 +58,7 @@ export class WindfuryModel extends RoleFeatureModel<
     protected onCheck(that: RoleActionModel, decor: Decor<RoleActionProps.S>) {
         if (!this.state.isActive) return;
         const offset = this.state.isAdvance ? 3 : 1;
-        decor.current.origin += offset;
+        decor.draft.origin += offset;
     }
 
     @TranxUtil.span()

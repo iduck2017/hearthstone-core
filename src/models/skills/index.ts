@@ -70,8 +70,11 @@ export abstract class SkillModel<
         if (!player) return;
         const cost = this.child.cost;
         if (!cost.state.isActive) return;
-        const signal = this.event.toRun(new Event({}));
+        
+        const signal = new Event({});
+        this.event.toRun(signal);
         if (signal.isCancel) return;
+
         const event = this.toRun();
         if (!event) return;
         const params: Model[] = [];

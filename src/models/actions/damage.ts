@@ -1,7 +1,7 @@
 import { Event, Loader, Model, TranxUtil } from "set-piece";
 import { DamageEvent } from "../../types/damage";
 import { DisposeModel } from "../rules/dispose";
-import { CardModel, MinionCardModel, PlayerModel } from "../..";
+import { CardModel, HeroModel, MinionCardModel, PlayerModel } from "../..";
 
 export namespace DamageProps {
     export type E = {
@@ -9,7 +9,8 @@ export namespace DamageProps {
         toRun: DamageEvent
     };
     export type S = {};
-    export type C = {};
+    export type C = {
+    };
     export type R = {};
     export type P = {
         card: CardModel;
@@ -27,6 +28,8 @@ export class DamageModel extends Model<
 > {
     @DisposeModel.span()
     public static run(tasks: DamageEvent[]) {
+        tasks.forEach(item => item.detail.source.child.damage.toRun(item))
+
         tasks.forEach(item => item.detail.source.child.damage.event.toRun(item));
         tasks.forEach(item => item.detail.target.child.health.toHurt(item));
         
@@ -58,6 +61,15 @@ export class DamageModel extends Model<
                 }
             }
         })
+    }
+
+    private toRun(event: DamageEvent) {
+        const source = event.detail.source;
+        const player = source.route.player;
+        if (!player) return;
+        const hero = player.child.hero;
+        const spellAttack = hero.child.spellAttack;
+        event.reset(event.detail.result + spellAttack.state.current);
     }
 
     private onRun(event: DamageEvent) {

@@ -1,7 +1,7 @@
 import { Loader, Model } from "set-piece";
 import { MinionCardModel } from "../cards/minion";
 import { GameModel } from "../game";
-import { WeaponCardModel, PlayerModel, CardModel } from "../..";
+import { WeaponCardModel, PlayerModel, CardModel, SpellCardModel } from "../..";
 
 export namespace GraveyardProps {
     export type E = {}
@@ -9,6 +9,7 @@ export namespace GraveyardProps {
     export type C = {
         minions: MinionCardModel[]
         weapons: WeaponCardModel[]
+        spells: SpellCardModel[]
     }
     export type P = {
         game: GameModel;
@@ -33,6 +34,7 @@ export class GraveyardModel extends Model<
                 child: { 
                     minions: [],
                     weapons: [],
+                    spells: [],
                     ...props.child,
                 },
                 refer: { ...props.refer },
@@ -44,12 +46,13 @@ export class GraveyardModel extends Model<
         });
     }
     
-    public add(card: CardModel) {
+    public add(card: CardModel): boolean {
         let cards: CardModel[] | undefined;
         if (card instanceof MinionCardModel) cards = this.draft.child.minions;
         if (card instanceof WeaponCardModel) cards = this.draft.child.weapons;
-        if (!cards) return;
+        if (card instanceof SpellCardModel) cards = this.draft.child.spells;
+        if (!cards) return false;
         cards.push(card);
-        return card;
+        return true;
     }
 }

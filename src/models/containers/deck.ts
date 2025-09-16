@@ -54,13 +54,13 @@ export class DeckModel extends Model<
         return card;
     }
 
-    public del(card: CardModel): CardModel | undefined {
+    public del(card: CardModel): boolean {
         let cards: CardModel[] | undefined;
         if (card instanceof MinionCardModel) cards = this.draft.child.minions;
-        if (!cards) return;
+        if (!cards) return false;
         const index = cards.indexOf(card);
-        if (index === -1) return;
+        if (index === -1) return false;
         cards.splice(index, 1);
-        return card;
+        return true;
     }
 }

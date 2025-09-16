@@ -28,7 +28,6 @@ export class RoleActionModel extends Model<
     RoleActionProps.R,
     RoleActionProps.P
 > {
-
     public get state() {
         const state = super.state;
         return {
@@ -118,8 +117,9 @@ export class RoleActionModel extends Model<
         const roleB = await this.select();
         if (!roleB) return;
 
-        const event = this.event.toRun(new Event({}))
-        if (event.isCancel) return;
+        const signal = new Event({})
+        this.event.toRun(signal)
+        if (signal.isCancel) return;
 
         // mana
         if (!this.use()) return;

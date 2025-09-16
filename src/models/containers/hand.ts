@@ -54,7 +54,7 @@ export class HandModel extends Model<
         })
     }
    
-    public add(card: CardModel, position?: number) {
+    public add(card: CardModel, position?: number): boolean {
         const order = this.draft.refer.order;
         if (position === -1) position = order.length;
         if (!position) position = order.length;
@@ -63,11 +63,11 @@ export class HandModel extends Model<
         if (card instanceof SpellCardModel) cards = this.draft.child.spells;
         if (card instanceof MinionCardModel) cards = this.draft.child.minions;
         if (card instanceof WeaponCardModel) cards = this.draft.child.weapons;
-        if (!cards) return;
+        if (!cards) return false;
         
         cards.push(card);
         order.splice(position, 0, card);
-        return card;
+        return true;
     }
 
     @TranxUtil.span()
@@ -81,6 +81,7 @@ export class HandModel extends Model<
         if (!cards) return;
         
         let index = cards.indexOf(card);
+        if (index === -1) return;
         if (index !== -1) cards.splice(index, 1);
         index = order.indexOf(card);
         if (index !== -1) order.splice(index, 1);
@@ -88,11 +89,11 @@ export class HandModel extends Model<
         this.draft.child.cache.push(card);
     }
 
-    public del(card: CardModel): CardModel | undefined {
+    public del(card: CardModel): boolean {
         const cache = this.draft.child.cache;
         const index = cache.indexOf(card);
-        if (index === -1) return;
+        if (index === -1) return false;
         cache.splice(index, 1);
-        return card;
+        return true;
     }
 }

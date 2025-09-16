@@ -79,6 +79,6 @@ export class WeaponAttackModel extends Model<
     private onCheck(that: RoleAttackModel, decor: Decor<RoleAttackProps.S>) {
         if (!this.state.isActive) return;
         if (!this.route.board) return;
-        decor.current.offset += this.state.origin;
+        decor.draft.offset += this.state.origin;
     }
 }

@@ -41,17 +41,12 @@ export class DivineSheildModel extends RoleFeatureModel<
         })
     }
 
+    @TranxUtil.span()
     public active(): boolean {
         if (this.state.isActive) return false; 
-        this.doActive();
-        this.event.onActive(new Event({}));
-        return true;
-    }
-
-    @TranxUtil.span()
-    private doActive() {
         this.draft.state.isActive = true;
         this.draft.state.count = 1;
+        return true;
     }
 
     public async use() {

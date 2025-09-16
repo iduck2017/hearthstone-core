@@ -20,6 +20,16 @@ export { MinionDisposeModel } from "./models/rules/dispose/minion";
 export { HeroDisposeModel } from "./models/rules/dispose/hero";
 export { WeaponDisposeModel } from "./models/rules/dispose/weapon";
 
+export { PerformProps, PerformModel } from "./models/rules/perform";
+export { SpellPerformModel } from "./models/rules/perform/spell";
+export { MinionPerformModel } from "./models/rules/perform/minion";
+export { WeaponPerformModel } from "./models/rules/perform/weapon";
+
+export { DeployProps, DeployModel } from "./models/rules/deploy";
+export { MinionDeployModel } from "./models/rules/deploy/minion";
+export { WeaponDeployModel } from "./models/rules/deploy/weapon";
+export { SecretDeployModel } from "./models/rules/deploy/secret";
+
 export { RoleAttackProps, RoleAttackModel } from "./models/rules/attack/role";
 export { HealthProps, HealthModel } from "./models/rules/health";
 export { RoleActionProps, RoleActionModel } from "./models/rules/action/role";
@@ -60,7 +70,7 @@ export { TauntProps, TauntModel } from "./models/entries/taunt";
 export { StealthProps, StealthModel } from './models/entries/stealth';
 export { ElusiveProps, ElusiveModel } from './models/entries/elusive';
 export { WindfuryProps, WindfuryModel } from "./models/entries/windfury";
-export { SpellDamageProps, SpellDamageModel } from "./models/entries/spell-damage";
+export { SpellBuffProps, SpellBuffModel } from "./models/features/buff/spell";
 export { DivineSheildProps, DivineSheildModel } from "./models/entries/divine-shield";
 
 // features

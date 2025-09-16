@@ -1,11 +1,11 @@
-import { Method, Model } from "set-piece";
+import { Method, Model, TranxUtil } from "set-piece";
 import { GameModel } from "./game";
 import { PlayerModel } from "./player";
 import { BoardModel } from "./containers/board";
 import { HandModel } from "./containers/hand";
 import { DeckModel } from "./containers/deck";
 import { GraveyardModel } from "./containers/graveyard";
-import { MinionCardModel } from "..";
+import { MinionCardModel, RoleBuffModel } from "..";
 import { RoleActionModel } from "./rules/action/role";
 import { RoleAttackModel } from "./rules/attack/role";
 import { HealthModel } from "./rules/health";
@@ -90,5 +90,13 @@ export class RoleModel extends Model<
 
     public add(feature: RoleFeatureModel) {
         this.draft.child.feats.push(feature);
+    }
+
+    @TranxUtil.span()
+    public reset(buff: RoleBuffModel) {
+        this.child.feats.forEach(item => {
+            if (item instanceof RoleBuffModel) item.override()
+        })
+        this.add(buff);
     }
 }

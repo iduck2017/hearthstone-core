@@ -1,12 +1,11 @@
-import { DebugUtil, Model, Props, Event, Format, Loader, Method } from "set-piece";
-import { SelectEvent, SelectUtil } from "../../utils/select";
+import { Props, Event, Format, Method } from "set-piece";
 import { MinionHooksEvent, MinionHooksModel } from "../hooks/minion";
 import { CardModel, CardProps } from ".";
 import { RaceType } from "../../types/card";
 import { RoleModel } from "../role";
-import { RoleBattlecryModel } from "../hooks/battlecry/role";
 import { MinionDisposeModel } from "../rules/dispose/minion";
 import { MinionDeployModel } from "../rules/deploy/minion";
+import { MinionPerformModel } from "../rules/perform/minion";
 
 export namespace MinionCardProps {
     export type S = {
@@ -20,6 +19,7 @@ export namespace MinionCardProps {
         readonly role: RoleModel;
         readonly deploy: MinionDeployModel;
         readonly dispose: MinionDisposeModel
+        readonly perform: MinionPerformModel;
     };
     export type P = {};
     export type R = {};
@@ -31,6 +31,7 @@ export abstract class MinionCardModel<
     C extends Partial<MinionCardProps.C & CardProps.C> & Props.C = {},
     R extends Partial<MinionCardProps.R & CardProps.R> & Props.R = {}
 > extends CardModel<
+    [number, MinionHooksEvent],
     E & MinionCardProps.E, 
     S & MinionCardProps.S, 
     C & MinionCardProps.C,
@@ -51,79 +52,11 @@ export abstract class MinionCardModel<
                     hooks: props.child.hooks ?? new MinionHooksModel(),
                     deploy: props.child.deploy ?? new MinionDeployModel(),
                     dispose: props.child.dispose ?? new MinionDisposeModel(),
+                    perform: props.child.perform ?? new MinionPerformModel(),
                     ...props.child 
                 },
                 refer: { ...props.refer },
             }
         });
-    }
-
-    public async play() {
-        const params = await this.toPlay();
-        if (!params) return;
-        await this.doPlay(...params);
-        await this.event.onPlay(new Event({}));
-    }
-
-    protected async doPlay(to: number, event: MinionHooksEvent) {
-        const player = this.route.player;
-        if (!player) return;
-        // mana
-        const mana = player.child.mana;
-        const cost = this.child.cost;
-        mana.use(cost.state.current);
-        // summon
-        const hand = player.child.hand;
-        const from = hand.refer.order.indexOf(this);
-        hand.use(this);
-        await this.run(from, to, event);
-        hand.del(this);
-    }
-
-    private async run(from: number, to: number, event: MinionHooksEvent) {
-        const signal = this.event.toRun(new Event({}));
-        if (signal.isCancel) return;
-        const player = this.route.player;
-        if (!player) return;
-        // battlecry
-        const hooks = this.child.hooks;
-        const battlecry = hooks.child.battlecry;
-        for (const item of battlecry) {
-            const params = event.battlecry.get(item);
-            if (!params) continue;
-            await item.run(from, to, ...params);
-        }
-        // end
-        const board = player.child.board;
-        if (!board) return;
-        const deploy = this.child.deploy;
-        deploy.run(board, to);
-    }
-    
-    protected async toPlay(): Promise<[number, MinionHooksEvent] | undefined> {
-        // status 
-        if (!this.state.isActive) return;
-        const to = await this.toSummon();
-        if (to === undefined) return;
-        // battlecry
-        const hooks = this.child.hooks;
-        const battlecry = await RoleBattlecryModel.toRun(hooks.child.battlecry);
-        if (!battlecry) return;
-        // event
-        const signal = this.event.toPlay(new Event({}));
-        if (signal.isCancel) return;
-        return [to, {
-            battlecry
-        }];
-    }
-
-    private async toSummon(): Promise<number | undefined> {
-        const player = this.route.player;
-        if (!player) return;
-        const board = player.child.board;
-        const size = board.child.minions.length;
-        const options = new Array(size + 1).fill(0).map((item, index) => index);
-        const position = await SelectUtil.get(new SelectEvent(options));
-        return position;
     }
 }

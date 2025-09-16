@@ -2,18 +2,16 @@ import { DebugUtil, Model, TranxUtil, Props, Event, Method, Format } from "set-p
 import { CostModel } from "../rules/cost";
 import { ClassType, RarityType } from "../../types/card";
 import { MinionHooksModel } from "../hooks/minion";
-import { DamageModel, RestoreModel } from "../..";
+import { DamageModel, DisposeModel, RestoreModel } from "../..";
 import { MinionCardModel, PlayerModel, GameModel, HandModel, DeckModel, BoardModel, GraveyardModel } from "../..";
 import { CardFeatureModel } from "../features/card";
+import { DeployModel } from "../rules/deploy";
+import { PerformModel } from "../rules/perform";
 
 export namespace CardProps {
     export type E = {
-        toPlay: Event;
         onPlay: Event,
-        toDraw: Event;
         onDraw: Event,
-        toRun: Event,
-        onRun: Event,
     };
     export type S = {
         readonly name: string;
@@ -29,6 +27,9 @@ export namespace CardProps {
         readonly feats: CardFeatureModel[];
         readonly damage: DamageModel
         readonly restore: RestoreModel
+        readonly deploy?: DeployModel;
+        readonly dispose?: DisposeModel;
+        readonly perform: PerformModel;
     };
     export type P = {
         minion: MinionCardModel;
@@ -43,10 +44,11 @@ export namespace CardProps {
 }
 
 export abstract class CardModel<
-   E extends Partial<CardProps.E> & Props.E = {},
-   S extends Partial<CardProps.S> & Props.S = {},
-   C extends Partial<CardProps.C> & Props.C = {},
-   R extends Partial<CardProps.R> & Props.R = {}
+    T extends any[] = any[],
+    E extends Partial<CardProps.E> & Props.E = {},
+    S extends Partial<CardProps.S> & Props.S = {},
+    C extends Partial<CardProps.C> & Props.C = {},
+    R extends Partial<CardProps.R> & Props.R = {}
 > extends Model<
    E & CardProps.E,
    S & CardProps.S,
@@ -64,7 +66,7 @@ export abstract class CardModel<
 
     constructor(loader: Method<CardModel['props'] & {
         state: S & Omit<CardProps.S, 'isActive'>,
-        child: C & Pick<CardProps.C, 'cost'>,
+        child: C & Pick<CardProps.C, 'cost' | 'perform' | 'dispose'>,
         refer: R & CardProps.R,
     }, []>) {
         super(() => {
@@ -96,8 +98,40 @@ export abstract class CardModel<
         })
     }
 
-    public abstract play(): Promise<void>;
+    public async play() {
+        const perform = this.child.perform;
+        const params = await perform.toRun();
+        if (!params) return;
+        await this.doPlay(...params);
+        await this.event.onPlay(new Event({}));
+    }
 
+    protected async doPlay(...params: any[]) {
+        const player = this.route.player;
+        if (!player) return;
+        // mana
+        const mana = player.child.mana;
+        const cost = this.child.cost;
+        mana.use(cost.state.current);
+        // use
+        const hand = player.child.hand;
+        const from = hand.refer.order.indexOf(this);
+        hand.use(this);
+        const perform = this.child.perform;
+        // run
+        await perform.run(from, ...params);
+        this.dispose();
+    }
+
+    @TranxUtil.span()
+    private dispose() {
+        const player = this.route.player;
+        if (!player) return;
+        const hand = player.child.hand;
+        if (!hand.del(this)) return;
+        const graveyard = player.child.graveyard;
+        graveyard.add(this);
+    }
 
     private check(): boolean {
         const hand = this.route.hand;
@@ -112,20 +146,17 @@ export abstract class CardModel<
 
     @DebugUtil.log()
     public draw() {
-        const event = this.event.toDraw(new Event({}));
-        if (event.isCancel) return;
-        const card = this.doDraw();
-        if (!card) return;
+        if (!this.doDraw()) return;
         this.event.onDraw(new Event({}));
     }
 
     @TranxUtil.span()
-    protected doDraw() {
+    protected doDraw(): boolean {
         const player = this.route.player;
-        if (!player) return;
-        let card = player.child.deck.del(this);
-        if (!card) return;
-        card = player.child.hand.add(card);
-        return card;
+        if (!player) return false;
+        const deck = player.child.deck;
+        if (!deck.del(this)) return false;
+        player.child.hand.add(this);
+        return true;
     }
 }
