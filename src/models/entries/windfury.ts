@@ -4,9 +4,7 @@ import { RoleActionProps, RoleActionModel } from "../rules/action/role";
 import { RoleFeatureModel } from "../features/role";
 
 export namespace WindfuryProps {
-    export type E = {
-        onActive: Event;
-    };
+    export type E = {};
     export type S = {
         isAdvance: boolean;
     };

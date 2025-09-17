@@ -3,10 +3,7 @@ import { FeatureModel } from "../features";
 import { RoleFeatureModel } from "../features/role";
 
 export namespace StealthProps {
-    export type E = {
-        onActive: Event;
-        onDeactive: Event;
-    };
+    export type E = {};
     export type S = {};
     export type C = {};
     export type R = {};

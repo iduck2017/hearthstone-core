@@ -3,9 +3,7 @@ import { FeatureModel } from "../features";
 import { RoleFeatureModel } from "../features/role";
 
 export namespace ElusiveProps {
-    export type E = {
-        onActive: Event
-    }
+    export type E = {}
     export type S = {}
     export type C = {}
     export type R = {}

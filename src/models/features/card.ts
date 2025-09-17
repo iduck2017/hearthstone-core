@@ -11,10 +11,6 @@ export namespace CardFeatureProps {
         card: CardModel;
         hero: HeroModel;
         role: RoleModel;
-        board: BoardModel;
-        hand: HandModel;
-        deck: DeckModel;
-        graveyard: GraveyardModel;
 
         minion: MinionCardModel;
         weapon: WeaponCardModel;
@@ -53,10 +49,6 @@ export class CardFeatureModel<
                     card: CardModel.prototype,
                     hero: HeroModel.prototype,
                     role: RoleModel.prototype,
-                    board: BoardModel.prototype,
-                    hand: HandModel.prototype,
-                    deck: DeckModel.prototype,
-                    graveyard: GraveyardModel.prototype,
                     minion: MinionCardModel.prototype,
                     weapon: WeaponCardModel.prototype,
                     spell: SpellCardModel.prototype,

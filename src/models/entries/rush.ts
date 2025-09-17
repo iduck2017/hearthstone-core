@@ -4,9 +4,7 @@ import { SleepModel, SleepProps } from "../rules/sleep";
 import { RoleFeatureModel } from "../features/role";
 
 export namespace RushProps {
-    export type E = {
-        onActive: Event;
-    };
+    export type E = {};
     export type S = {}
     export type C = {};
     export type R = {};

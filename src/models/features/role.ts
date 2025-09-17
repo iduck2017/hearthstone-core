@@ -12,10 +12,6 @@ export namespace RoleFeatureProps {
         card: CardModel;
         hero: HeroModel;
         role: RoleModel;
-        board: BoardModel;
-        hand: HandModel;
-        deck: DeckModel;
-        graveyard: GraveyardModel;
     };
 }
 
@@ -52,10 +48,6 @@ export class RoleFeatureModel<
                     card: CardModel.prototype,
                     hero: HeroModel.prototype,
                     role: RoleModel.prototype,
-                    board: BoardModel.prototype,
-                    hand: HandModel.prototype,
-                    deck: DeckModel.prototype,
-                    graveyard: GraveyardModel.prototype,
                 }
             }
         })

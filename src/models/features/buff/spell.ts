@@ -1,14 +1,9 @@
-import { Decor, Event, Method, StateUtil, StoreUtil } from "set-piece";
+import { Decor, Method, StateUtil, StoreUtil } from "set-piece";
 import { FeatureModel } from "..";
-import { RoleFeatureModel } from "../role";
-import { CardModel } from "../../cards";
-import { PlayerModel } from "../../player";
 import { SpellAttackModel, SpellAttackProps } from "../../rules/attack/spell";
 
 export namespace SpellBuffProps {
-    export type E = {
-        onActive: Event;
-    };
+    export type E = {};
     export type S = {
         offset: number;
     };
@@ -17,7 +12,7 @@ export namespace SpellBuffProps {
 }
 
 @StoreUtil.is('spell-damage')
-export class SpellBuffModel extends RoleFeatureModel<
+export class SpellBuffModel extends FeatureModel<
     SpellBuffProps.E,
     SpellBuffProps.S,
     SpellBuffProps.C,

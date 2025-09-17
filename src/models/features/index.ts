@@ -1,5 +1,5 @@
 import { Event, Method, Model, Props, TranxUtil } from "set-piece";
-import { GameModel, PlayerModel } from "../..";
+import { BoardModel, DeckModel, GameModel, GraveyardModel, HandModel, PlayerModel } from "../..";
 
 export namespace FeatureProps {
     export type E = {
@@ -17,6 +17,10 @@ export namespace FeatureProps {
     export type P = {
         game: GameModel;
         player: PlayerModel;
+        board: BoardModel;
+        hand: HandModel;
+        deck: DeckModel;
+        graveyard: GraveyardModel;
     };
 }
 
@@ -50,6 +54,10 @@ export abstract class FeatureModel<
                 route: {
                     game: GameModel.prototype,
                     player: PlayerModel.prototype,
+                    board: BoardModel.prototype,
+                    hand: HandModel.prototype,
+                    deck: DeckModel.prototype,
+                    graveyard: GraveyardModel.prototype,
                     ...props.route,
                 },
             }

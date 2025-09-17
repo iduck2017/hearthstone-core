@@ -3,10 +3,7 @@ import { FeatureModel } from "../features";
 import { RoleFeatureModel } from "../features/role";
 
 export namespace FrozenProps {
-    export type E = {
-        onActive: Event
-        onDeactive: Event
-    }
+    export type E = {}
     export type S = {}
     export type C = {}
 }
