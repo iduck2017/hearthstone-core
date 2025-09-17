@@ -5,7 +5,7 @@ import { CardFeatureModel } from "../features/card";
 
 export namespace EndTurnHookProps {
     export type E = {
-        onRun: void;
+        onRun: Event;
     };
     export type S = {};
     export type C = {};
@@ -47,8 +47,8 @@ export abstract class EndTurnHookModel<
     public run() {
         if (!this.state.isActive) return;
         this.doRun();
-        this.event.onRun(undefined);
+        this.event.onRun(new Event());
     }
 
-    protected abstract doRun(): void;
+    protected abstract doRun(): Event;
 }

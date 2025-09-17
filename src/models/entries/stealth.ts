@@ -4,8 +4,8 @@ import { RoleFeatureModel } from "../features/role";
 
 export namespace StealthProps {
     export type E = {
-        onActive: void;
-        onDeactive: void;
+        onActive: Event;
+        onDeactive: Event;
     };
     export type S = {};
     export type C = {};
@@ -39,13 +39,13 @@ export class StealthModel extends RoleFeatureModel<
     public active() {
         if (this.state.isActive) return false; 
         this.draft.state.isActive = true;
-        this.event.onActive();
+        this.event.onActive(new Event());
         return true;
     }
 
     public deactive() {
         this.disable();
-        this.event.onDeactive();
+        this.event.onDeactive(new Event());
     }
 
 }

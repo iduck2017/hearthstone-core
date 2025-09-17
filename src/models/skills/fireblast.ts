@@ -46,7 +46,7 @@ export class FireBlastModel extends SkillModel<[RoleModel]> {
     protected toRun(): [SelectEvent<RoleModel>] | undefined {
         const game = this.route.game;
         if (!game) return;
-        const roles = game.refer.roles;
+        const roles = game.query();
         return [new SelectEvent(roles)];
     }
 }

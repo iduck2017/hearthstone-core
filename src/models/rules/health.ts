@@ -92,19 +92,19 @@ export class HealthModel extends Model<
         const dispose = minion?.child.dispose ?? hero?.child.dispose;
         if (!dispose) return event;
 
-        const result = event.detail.result;
+        const result = event.result;
         if (result <= 0) {
-            event.reset(0);
+            event.result = 0;
             return event;
         }
         if (divineSheild.state.isActive) {
             divineSheild.use();
-            event.reset(0);
+            event.result = 0;
             return event;
         }
         this.draft.state.damage += result;
-        dispose.active(false, event.detail.source, event.detail.detail);
-        event.reset(result);
+        dispose.active(false, event.source, event.detail);
+        event.result = result;
         return event;
     }
 
@@ -122,17 +122,17 @@ export class HealthModel extends Model<
     }
 
     public doHeal(event: RestoreEvent): RestoreEvent {
-        let result = event.detail.result;
+        let result = event.result;
         const role = this.route.role;
         if (!role) return event;
         if (result <= 0) {
-            event.reset(0);
+            event.result = 0;
             return event;
         }
         const damage = this.draft.state.damage;
         if (damage < result) result = damage;
         this.draft.state.damage -= result;
-        event.reset(result);
+        event.result = result;
         return event;
     }
 
@@ -140,7 +140,7 @@ export class HealthModel extends Model<
         const role = this.route.role;
         if (!role) return;
         if (event.isCancel) return;
-        if (event.detail.result <= 0) return;
+        if (event.result <= 0) return;
         return this.event.onHeal(event);
     }
 
@@ -149,7 +149,7 @@ export class HealthModel extends Model<
     @DebugUtil.log()
     @TranxUtil.span()
     private onChange(that: HealthModel, event: StateChangeEvent<HealthModel>) {
-        const { memory, limit, damage } = event.detail.next;
+        const { memory, limit, damage } = event.next;
         const offset = memory - limit;
         if (offset !== 0) this.draft.state.memory = limit;
         if (offset > 0) this.draft.state.damage -= Math.min(damage, offset);

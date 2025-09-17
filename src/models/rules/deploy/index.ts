@@ -4,8 +4,8 @@ import { PlayerModel } from "../../.."
 
 export namespace DeployProps {
     export type E = {
-        toRun: void;
-        onRun: void;
+        toRun: Event;
+        onRun: Event;
     }
     export type S = {}
     export type C = {}

@@ -2,10 +2,16 @@ import { DebugUtil, Event, Method, Model, StoreUtil } from "set-piece";
 import { DamageEvent, DamageModel, MinionCardModel, RoleModel, GameModel, PlayerModel, HeroModel, WeaponCardModel } from "../../..";
 import { DamageType } from "../../../types/damage";
 
+export class AttackEvent extends Event {
+    constructor(
+        public readonly target: RoleModel,
+    ) { super(); }
+}
+
 export namespace RoleAttackProps {
     export type E = {
-        toRun: Event<{ target: RoleModel }>;
-        onRun: Event<{ target: RoleModel }>;
+        toRun: Event;
+        onRun: Event;
     }
     export type S = {
         origin: number;
@@ -89,7 +95,7 @@ export class RoleAttackModel extends Model<
         if (!roleA) return;
         if (!this.status) return;
         
-        const signal = new Event({ target: roleB })
+        const signal = new AttackEvent(roleB)
         this.event.toRun(signal);
         if (signal.isCancel) return;
         
@@ -127,7 +133,7 @@ export class RoleAttackModel extends Model<
         const stealth = entries.child.stealth;
         stealth.deactive();
 
-        this.event.onRun(new Event({ target: roleB })); 
+        this.event.onRun(new AttackEvent(roleB)); 
     }
 
 }

@@ -43,7 +43,6 @@ export namespace CardProps {
 }
 
 export abstract class CardModel<
-    T extends any[] = any[],
     E extends Partial<CardProps.E> & Props.E = {},
     S extends Partial<CardProps.S> & Props.S = {},
     C extends Partial<CardProps.C> & Props.C = {},
@@ -106,7 +105,7 @@ export abstract class CardModel<
         const params = await perform.toRun();
         if (!params) return;
         await this.doPlay(...params);
-        await this.event.onPlay(new Event({}));
+        await this.event.onPlay(new Event());
     }
 
     protected async doPlay(...params: any[]) {
@@ -140,7 +139,7 @@ export abstract class CardModel<
     @DebugUtil.log()
     public draw() {
         if (!this.doDraw()) return;
-        this.event.onDraw(new Event({}));
+        this.event.onDraw(new Event());
     }
 
     @TranxUtil.span()

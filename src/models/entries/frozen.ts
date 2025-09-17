@@ -4,8 +4,8 @@ import { RoleFeatureModel } from "../features/role";
 
 export namespace FrozenProps {
     export type E = {
-        onActive: void
-        onDeactive: void
+        onActive: Event
+        onDeactive: Event
     }
     export type S = {}
     export type C = {}
@@ -38,7 +38,7 @@ export class FrozenModel extends RoleFeatureModel<
     public active(): boolean {
         if (this.state.isActive) return false;
         this.draft.state.isActive = true;
-        this.event.onActive();
+        this.event.onActive(new Event());
         return true;
     }
 
@@ -48,7 +48,7 @@ export class FrozenModel extends RoleFeatureModel<
         const action = role.child.action;
         if (action.state.current <= 0) return false;
         this.disable();
-        this.event.onDeactive();
+        this.event.onDeactive(new Event());
         return true;
     }
 }

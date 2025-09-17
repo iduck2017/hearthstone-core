@@ -3,8 +3,8 @@ import { CardModel, GraveyardModel, HeroModel, MinionCardModel, PlayerModel, Sec
 
 export namespace DisposeProps {
     export type E = {
-        toRun: void;
-        onRun: void;
+        toRun: Event;
+        onRun: Event;
     }
     export type S = {
         isLock: boolean;

@@ -9,8 +9,7 @@ export namespace DamageProps {
         toRun: DamageEvent
     };
     export type S = {};
-    export type C = {
-    };
+    export type C = {};
     export type R = {};
     export type P = {
         card: CardModel;
@@ -28,22 +27,22 @@ export class DamageModel extends Model<
 > {
     @DisposeModel.span()
     public static run(tasks: DamageEvent[]) {
-        tasks.forEach(item => item.detail.source.child.damage.toRun(item))
+        tasks.forEach(item => item.source.child.damage.toRun(item))
 
-        tasks.forEach(item => item.detail.source.child.damage.event.toRun(item));
-        tasks.forEach(item => item.detail.target.child.health.toHurt(item));
+        tasks.forEach(item => item.source.child.damage.event.toRun(item));
+        tasks.forEach(item => item.target.child.health.toHurt(item));
         
         tasks = tasks.filter(item => !item.isCancel);
         DamageModel.doRun(tasks);
 
-        tasks = tasks.filter(item => item.detail.result > 0 && !item.isCancel);
-        tasks.forEach(item => item.detail.target.child.health.onHurt(item));
-        tasks.forEach(item => item.detail.source.child.damage.onRun(item));
+        tasks = tasks.filter(item => item.result > 0 && !item.isCancel);
+        tasks.forEach(item => item.target.child.health.onHurt(item));
+        tasks.forEach(item => item.source.child.damage.onRun(item));
     }
 
     @TranxUtil.span()
     private static doRun(tasks: DamageEvent[]) {
-        return tasks.forEach(item => item.detail.target.child.health.doHurt(item));
+        return tasks.forEach(item => item.target.child.health.doHurt(item));
     }
 
     constructor(loader?: Loader<DamageModel>) {
@@ -64,12 +63,12 @@ export class DamageModel extends Model<
     }
 
     private toRun(event: DamageEvent) {
-        const source = event.detail.source;
+        const source = event.source;
         const player = source.route.player;
         if (!player) return;
         const hero = player.child.hero;
         const spellAttack = hero.child.spellAttack;
-        event.reset(event.detail.result + spellAttack.state.current);
+        event.result = event.result + spellAttack.state.current;
     }
 
     private onRun(event: DamageEvent) {

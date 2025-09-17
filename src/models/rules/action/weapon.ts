@@ -3,7 +3,7 @@ import { HeroModel, DisposeModel, GameModel, PlayerModel, WeaponCardModel, CardM
 
 export namespace WeaponActionProps {
     export type E = {
-        onUse: void;
+        onUse: Event;
     };
     export type S = {
         origin: number;

@@ -39,6 +39,5 @@ export class HeroDisposeModel extends DisposeModel<
         return false;
     }
 
-    protected run(): void {
-    }
+    protected run() {}
 }

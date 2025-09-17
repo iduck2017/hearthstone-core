@@ -6,8 +6,7 @@ import { RoleFeatureModel } from "../role";
 
 export namespace RoleBuffProps {
     export type S = {
-        offsetAttack: number;
-        offsetHealth: number;
+        readonly offset: Readonly<[number, number]>;
     };
     export type E = {};
     export type C = {};
@@ -50,14 +49,14 @@ export abstract class RoleBuffModel<
     protected onAttackCheck(that: RoleAttackModel, decor: Decor<RoleAttackProps.S>) {
         if (!this.state.isActive) return;
         const self: RoleBuffModel = this;
-        decor.draft.offset += self.state.offsetAttack;
+        decor.draft.offset += self.state.offset[0];
     }
 
     @StateUtil.on(self => self.route.role?.proxy.child.health.decor)
     protected onHealthCheck(that: HealthModel, decor: Decor<HealthProps.S>) {
         if (!this.state.isActive) return;
         const self: RoleBuffModel = this;
-        decor.draft.offset += self.state.offsetHealth;
+        decor.draft.offset += self.state.offset[1];
     }
 
     public override() {

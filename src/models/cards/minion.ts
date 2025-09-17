@@ -11,9 +11,7 @@ export namespace MinionCardProps {
     export type S = {
         readonly races: RaceType[];
     };
-    export type E = {
-        onPlay: Event;
-    };
+    export type E = {};
     export type C = {
         readonly hooks: MinionHooksModel;
         readonly role: RoleModel;
@@ -31,7 +29,6 @@ export abstract class MinionCardModel<
     C extends Partial<MinionCardProps.C & CardProps.C> & Props.C = {},
     R extends Partial<MinionCardProps.R & CardProps.R> & Props.R = {}
 > extends CardModel<
-    [number, MinionHooksEvent],
     E & MinionCardProps.E, 
     S & MinionCardProps.S, 
     C & MinionCardProps.C,

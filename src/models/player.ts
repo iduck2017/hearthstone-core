@@ -35,12 +35,8 @@ export class PlayerModel extends Model<
     PlayerProps.P
 > {
     public get refer() {
-        const minions: MinionCardModel[] = this.child.board.child.minions.filter(item => !item.child.dispose.status);
-        const entities= [this.child.hero, ...minions].filter(item => !item.child.dispose.status);
         return { 
             ...super.refer, 
-            roles: entities.map(item => item.child.role),
-            minions: minions.map(item => item.child.role),
             opponent: this.opponent, 
         }
     }
@@ -83,6 +79,12 @@ export class PlayerModel extends Model<
         });
     }
 
+    public query(isMinion?: boolean): RoleModel[] {
+        const minions = this.child.board.child.minions.filter(item => !item.child.dispose.status);
+        const roles = minions.map(item => item.child.role);
+        if (isMinion) return roles;
+        return [this.child.hero.child.role, ...roles];
+    }
 }
 
 

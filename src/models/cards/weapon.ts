@@ -1,14 +1,10 @@
-import { Event, EventUtil, Method, Model, Props, TranxUtil } from "set-piece";
+import { Method, Props } from "set-piece";
 import { CardModel, CardProps } from ".";
 import { WeaponAttackModel } from "../rules/attack/weapon";
 import { WeaponActionModel } from "../rules/action/weapon";
-import { HeroModel } from "../heroes";
-import { WeaponHooksEvent, WeaponHooksModel } from "../hooks/weapon";
-import { RoleBattlecryModel } from "../hooks/battlecry/role";
+import { WeaponHooksModel } from "../hooks/weapon";
 import { WeaponDisposeModel } from "../rules/dispose/weapon";
-import { TurnModel } from "../rules/turn";
 import { WeaponDeployModel } from "../rules/deploy/weapon";
-import { WeaponBattlecryModel } from "../hooks/battlecry/weapon";
 import { WeaponPerformModel } from "../rules/perform/weapon";
 
 export namespace WeaponCardProps {
@@ -31,7 +27,6 @@ export class WeaponCardModel<
     C extends Partial<WeaponCardProps.C & CardProps.C> & Props.C = {},
     R extends Partial<WeaponCardProps.R & CardProps.R> & Props.R = {}
 > extends CardModel<
-    [WeaponHooksEvent],
     E & WeaponCardProps.E,
     S & WeaponCardProps.S,
     C & WeaponCardProps.C,

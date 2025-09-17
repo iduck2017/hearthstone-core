@@ -56,7 +56,7 @@ export class RoleEntriesModel extends Model<
                     windfury: child.windfury ?? 
                         new WindfuryModel(() => ({ state: { isActive: false }})),
                     spellDamage: child.spellDamage ?? 
-                        new SpellBuffModel(() => ({ state: { isActive: false, current: 0 }})),
+                        new SpellBuffModel(() => ({ state: { isActive: false, offset: 0 }})),
                     divineShield: child.divineShield ?? 
                         new DivineSheildModel(() => ({ state: { isActive: false }})),
                     ...props.child 

@@ -5,7 +5,7 @@ import { RoleFeatureModel } from "../features/role";
 
 export namespace WindfuryProps {
     export type E = {
-        onActive: void;
+        onActive: Event;
     };
     export type S = {
         isAdvance: boolean;
@@ -44,7 +44,7 @@ export class WindfuryModel extends RoleFeatureModel<
         if (!isAdvance && this.state.isActive) return false;
         if (this.state.isActive && this.state.isAdvance) return false; 
         this.doActive(isAdvance);
-        this.event.onActive();
+        this.event.onActive(new Event());
         return true;
     }
 
@@ -62,7 +62,7 @@ export class WindfuryModel extends RoleFeatureModel<
     }
 
     @TranxUtil.span()
-    public disable(): void {
+    public disable() {
         super.disable();
         this.draft.state.isAdvance = false;
     }

@@ -5,7 +5,7 @@ import { CardFeatureModel } from "../features/card";
 
 export namespace StartTurnHookProps {
     export type E = {
-        onRun: void;
+        onRun: Event;
     };
     export type S = {};
     export type C = {};
@@ -47,7 +47,7 @@ export abstract class StartTurnHookModel<
     public async run() {
         if (!this.state.isActive) return;
         await this.doRun();
-        this.event.onRun(undefined);
+        this.event.onRun(new Event());
     }
 
     protected abstract doRun(): Promise<void>;

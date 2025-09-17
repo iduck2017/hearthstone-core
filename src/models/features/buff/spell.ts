@@ -10,7 +10,7 @@ export namespace SpellBuffProps {
         onActive: Event;
     };
     export type S = {
-        current: number;
+        offset: number;
     };
     export type C = {};
     export type R = {};
@@ -24,7 +24,7 @@ export class SpellBuffModel extends RoleFeatureModel<
     SpellBuffProps.R
 >  {
     constructor(loader: Method<SpellBuffModel['props'] & {
-        state: Pick<SpellBuffProps.S, 'current'>
+        state: Pick<SpellBuffProps.S, 'offset'>
     }>) {
         super(() => {
             const props = loader?.() ?? {};
@@ -47,7 +47,7 @@ export class SpellBuffModel extends RoleFeatureModel<
     onCheck(that: SpellAttackModel, decor: Decor<SpellAttackProps.S>) {
         if (!this.route.board) return;
         if (!this.state.isActive) return;
-        decor.draft.current += this.state.current;
+        decor.draft.current += this.state.offset;
     }
 
 }

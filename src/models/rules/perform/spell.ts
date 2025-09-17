@@ -46,7 +46,7 @@ export class SpellPerformModel extends PerformModel<
         const spell = this.route.spell;
         if (!spell) return;
         
-        const signal = new Event({})
+        const signal = new Event()
         this.event.toRun(signal);
         if (signal.isCancel) return;
         

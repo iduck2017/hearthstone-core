@@ -4,7 +4,7 @@ import { CardModel, MinionCardModel, PlayerModel, SpellCardModel, WeaponCardMode
 export namespace PerformProps {
     export type E = {
         toRun: Event;
-        onRun: void;
+        onRun: Event;
     }
     export type S = {}
     export type C = {}

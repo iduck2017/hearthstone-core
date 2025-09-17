@@ -1,8 +1,14 @@
 import { Event, Loader, Method, Model, StoreUtil, TranxUtil } from "set-piece";
 
+export class SpendEvent extends Event {
+    constructor(
+        public readonly value: number,
+    ) { super(); }
+}
+
 export namespace ManaProps {
     export type E = {
-        onUse: Event<{ value: number }>;
+        onUse: SpendEvent;
     };
     export type S = {
         origin: number;
@@ -49,6 +55,6 @@ export class ManaModel extends Model<
     public use(value: number) {
         if (value > this.draft.state.current) value= this.draft.state.current;
         this.draft.state.current -= value;
-        this.event.onUse(new Event({ value }));
+        this.event.onUse(new SpendEvent(value));
     }
 }

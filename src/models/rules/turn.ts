@@ -7,8 +7,8 @@ export namespace TurnProps {
         count: number;
     };
     export type E = {
-        onEnd: void;
-        onStart: void;
+        onEnd: Event;
+        onStart: Event;
     };
     export type C = {};
     export type R = {
@@ -55,27 +55,27 @@ export class TurnModel extends Model<
         const player = this.refer.current;
         const board = player?.child.board;
         if (!board) return;
-        const roles = player.refer.roles;
+        const roles = player.query();
         player.child.mana.reset();
         roles.forEach(item => {
             const entries = item.child.entries;
             item.child.action.reset();
             item.child.sleep.deactive();
         });
-        this.event.onStart();
+        this.event.onStart(new Event());
     }
     
     private end() {
         const player = this.refer.current;
         const board = player?.child.board;
         if (!board) return;
-        const roles = player.refer.roles;
+        const roles = player.query();
         player.child.mana.reset();
         roles.forEach(item => {
             const entries = item.child.entries;
             if (!item.child.action.state.isActive) return;
             entries.child.frozen.deactive();
         });
-        this.event.onEnd();
+        this.event.onEnd(new Event());
     }
 }

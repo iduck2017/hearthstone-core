@@ -4,8 +4,8 @@ import { CardFeatureModel } from "../features/card";
 
 export namespace DeathrattleProps {
     export type E = {
-        toRun: void;
-        onRun: void;
+        toRun: Event;
+        onRun: Event;
     };
     export type S = {};
     export type C = {};
@@ -48,12 +48,12 @@ export abstract class DeathrattleModel<
     public run() {
         if (!this.state.isActive) return;
         
-        const signal = new Event({})
-        this.event.toRun(undefined);
+        const signal = new Event()
+        this.event.toRun(new Event());
         if (signal.isCancel) return;
 
         this.doRun();
-        this.event.onRun(undefined);
+        this.event.onRun(new Event());
     }
 
     protected abstract doRun(): Promise<void>;

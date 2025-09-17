@@ -32,7 +32,7 @@ export class SecretDisposeModel extends DisposeModel<
         });
     }
 
-    protected run(): void {
+    protected run() {
         const secret = this.route.secret;
         if (!secret) return;
         this.doRemove();

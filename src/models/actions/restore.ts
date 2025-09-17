@@ -25,20 +25,20 @@ export class RestoreModel extends Model<
     RestoreProps.P
 > {
     public static run(tasks: RestoreEvent[]) {
-        tasks.forEach(item => item.detail.source.child.restore.event.toRun(item));
-        tasks.forEach(item => item.detail.target.child.health.toHeal(item));
+        tasks.forEach(item => item.source.child.restore.event.toRun(item));
+        tasks.forEach(item => item.target.child.health.toHeal(item));
         
         tasks = tasks.filter(item => !item.isCancel);
         tasks = RestoreModel.doRun(tasks);
 
-        tasks = tasks.filter(item => item.detail.result > 0 && !item.isCancel);
-        tasks.forEach(item => item.detail.target.child.health.onHeal(item));
-        tasks.forEach(item => item.detail.source.child.restore.onRun(item));
+        tasks = tasks.filter(item => item.result > 0 && !item.isCancel);
+        tasks.forEach(item => item.target.child.health.onHeal(item));
+        tasks.forEach(item => item.source.child.restore.onRun(item));
     }
 
     @TranxUtil.span()
     private static doRun(tasks: RestoreEvent[]) {
-        return tasks.map(item => item.detail.target.child.health.doHeal(item));
+        return tasks.map(item => item.target.child.health.doHeal(item));
     }
 
     constructor(loader?: Loader<RestoreModel>) {

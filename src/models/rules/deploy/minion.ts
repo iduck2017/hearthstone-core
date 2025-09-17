@@ -1,9 +1,6 @@
 import { Event, Loader, TranxUtil } from "set-piece";
 import { BoardModel } from "../../containers/board";
 import { DeployModel } from "./index"
-import { WeaponCardModel } from "../../cards/weapon";
-import { PlayerModel } from "../../player";
-import { SecretCardModel } from "../../cards/secret";
 import { MinionCardModel } from "../../cards/minion";
 
 export namespace MinionDeployProps {
@@ -42,7 +39,7 @@ export class MinionDeployModel extends DeployModel<
         if (!board) board = player?.child.board;
         if (!board) return;
         this.doRun(board, index);
-        this.event.onRun();
+        this.event.onRun(new Event());
     }
 
     @TranxUtil.span()

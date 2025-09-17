@@ -20,19 +20,6 @@ export class GameModel extends Model<
     GameProps.S, 
     GameProps.C
 > {
-    public get refer() {
-        return {
-            ...super.refer,
-            roles: [
-                ...this.child.playerA.refer.roles,
-                ...this.child.playerB.refer.roles
-            ],
-            minions: [
-                ...this.child.playerA.refer.minions,
-                ...this.child.playerB.refer.minions
-            ]
-        }
-    }
 
     constructor(loader: Method<GameModel['props'] & {
         child: Pick<GameProps.C, 'playerA' | 'playerB'>;
@@ -55,5 +42,15 @@ export class GameModel extends Model<
         });
     }
 
+
+    public query(isMinion?: boolean) {
+        const playerA = this.child.playerA;
+        const playerB = this.child.playerB;
+        const minions = [
+            ...playerA.query(isMinion),
+            ...playerB.query(isMinion)
+        ];
+        return minions;
+    }
 
 }

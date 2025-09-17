@@ -39,7 +39,7 @@ export class MinionDisposeModel extends DisposeModel<
         });
     }
 
-    protected run(): void {
+    protected run() {
         const minion = this.route.minion;
         if (!minion) return;
         this.doRemove();

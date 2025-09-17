@@ -37,7 +37,7 @@ export class WeaponPerformModel extends PerformModel<
     }
 
     public async run(from: number, event: WeaponHooksEvent) {
-        const signal = new Event({})
+        const signal = new Event()
         this.event.toRun(signal);
         if (signal.isCancel) return;
 
@@ -58,7 +58,7 @@ export class WeaponPerformModel extends PerformModel<
         if (!board) return;
         const deploy = weapon.child.deploy;
         deploy.run(board);
-        this.event.onRun();
+        this.event.onRun(new Event());
     }
 
     public async toRun(): Promise<[WeaponHooksEvent] | undefined> {

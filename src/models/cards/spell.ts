@@ -20,7 +20,6 @@ export class SpellCardModel<
     C extends Partial<SpellCardProps.C & CardProps.C> & Props.C = {},
     R extends Partial<SpellCardProps.R & CardProps.R> & Props.R = {}
 > extends CardModel<
-    [SpellHooksEvent],
     E & SpellCardProps.E,
     S & SpellCardProps.S,
     C & SpellCardProps.C,

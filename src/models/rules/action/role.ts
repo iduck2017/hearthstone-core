@@ -3,13 +3,13 @@ import { BoardModel, SelectEvent, SelectUtil, MinionCardModel, RoleModel, Player
 
 export namespace RoleActionProps {
     export type S = {
-        origin: number;
         reduce: number;
+        origin: number;
         isLock: boolean;
     };
     export type E = {
         toRun: Event;
-        onRun: void;
+        onRun: Event;
     };
     export type C = {};
     export type R = {};
@@ -117,7 +117,7 @@ export class RoleActionModel extends Model<
         const roleB = await this.select();
         if (!roleB) return;
 
-        const signal = new Event({})
+        const signal = new Event()
         this.event.toRun(signal)
         if (signal.isCancel) return;
 
@@ -127,7 +127,7 @@ export class RoleActionModel extends Model<
         const attack = roleA.child.attack;
         await attack.run(roleB);
         
-        this.event.onRun();
+        this.event.onRun(new Event());
     }
 
     private check(state: RoleActionProps.S): boolean {

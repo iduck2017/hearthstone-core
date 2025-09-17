@@ -39,7 +39,7 @@ export class WeaponDisposeModel extends DisposeModel<
     }
 
     @DebugUtil.log(LogLevel.WARN)
-    protected run(): void {
+    protected run() {
         const weapon = this.route.weapon;
         if (!weapon) return;
         this.doRemove();

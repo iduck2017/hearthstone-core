@@ -5,7 +5,7 @@ import { RoleFeatureModel } from "../features/role";
 
 export namespace RushProps {
     export type E = {
-        onActive: void;
+        onActive: Event;
     };
     export type S = {}
     export type C = {};
@@ -40,7 +40,7 @@ export class RushModel extends RoleFeatureModel<
     public active(): boolean {
         if (this.state.isActive) return false;
         this.draft.state.isActive = true;
-        this.event.onActive();
+        this.event.onActive(new Event());
         return true;
     }
 
