@@ -1,6 +1,6 @@
 import { Loader, Model } from "set-piece";
 
-export namespace SpellAttackProps {
+export namespace SpellDamageProps {
     export type E = {};
     export type S = {
         current: number;
@@ -10,14 +10,14 @@ export namespace SpellAttackProps {
     export type P = {};
 }
 
-export class SpellAttackModel extends Model<
-    SpellAttackProps.E,
-    SpellAttackProps.S,
-    SpellAttackProps.C,
-    SpellAttackProps.R,
-    SpellAttackProps.P
+export class SpellDamageModel extends Model<
+    SpellDamageProps.E,
+    SpellDamageProps.S,
+    SpellDamageProps.C,
+    SpellDamageProps.R,
+    SpellDamageProps.P
 > {
-    constructor(loader?: Loader<SpellAttackModel>) {
+    constructor(loader?: Loader<SpellDamageModel>) {
         super(() => {
             const props = loader?.() ?? {};
             return {

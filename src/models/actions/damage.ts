@@ -67,8 +67,8 @@ export class DamageModel extends Model<
         const player = source.route.player;
         if (!player) return;
         const hero = player.child.hero;
-        const spellAttack = hero.child.spellAttack;
-        event.result = event.result + spellAttack.state.current;
+        const damage = hero.child.spellDamage;
+        event.result = event.result + damage.state.current;
     }
 
     private onRun(event: DamageEvent) {

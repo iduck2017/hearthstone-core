@@ -5,7 +5,7 @@ import { ArmorModel } from "../rules/armor";
 import { WeaponCardModel } from "../cards/weapon";
 import { DamageModel, PlayerModel, RestoreModel } from "../..";
 import { HeroDisposeModel } from "../rules/dispose/hero";
-import { SpellAttackModel } from "../rules/attack/spell";
+import { SpellDamageModel } from "../rules/attack/spell";
 
 export namespace HeroProps {
     export type E = {};
@@ -17,7 +17,7 @@ export namespace HeroProps {
         readonly dispose: HeroDisposeModel
         readonly damage: DamageModel;
         readonly restore: RestoreModel;
-        readonly spellAttack: SpellAttackModel;
+        readonly spellDamage: SpellDamageModel;
     };
     export type R = {};
     export type P = {
@@ -48,7 +48,7 @@ export abstract class HeroModel<
                 uuid: props.uuid,
                 state: { ...props.state },
                 child: {
-                    spellAttack: props.child.spellAttack ?? new SpellAttackModel(),
+                    spellDamage: props.child.spellDamage ?? new SpellDamageModel(),
                     armor: props.child.armor ?? new ArmorModel(),
                     dispose: props.child.dispose ?? new HeroDisposeModel(),
                     damage: props.child.damage ?? new DamageModel(),

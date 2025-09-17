@@ -3,7 +3,7 @@ import { BoardModel, SelectEvent, SelectUtil, MinionCardModel, RoleModel, Player
 
 export namespace RoleActionProps {
     export type S = {
-        reduce: number;
+        used: number;
         origin: number;
         isLock: boolean;
     };
@@ -33,7 +33,7 @@ export class RoleActionModel extends Model<
         return {
             ...state,
             isActive: this.check(state),
-            current: state.origin - state.reduce,
+            current: state.origin - state.used,
         }
     }
 
@@ -44,7 +44,7 @@ export class RoleActionModel extends Model<
                 uuid: props.uuid,
                 state: {
                     origin: 1,
-                    reduce: 0,
+                    used: 0,
                     isLock: false,
                     ...props.state,
                 },
@@ -62,7 +62,7 @@ export class RoleActionModel extends Model<
 
     @TranxUtil.span()
     public reset() {
-        this.draft.state.reduce = 0;
+        this.draft.state.used = 0;
     }
 
     private async select(): Promise<RoleModel | undefined> {
@@ -133,7 +133,7 @@ export class RoleActionModel extends Model<
     private check(state: RoleActionProps.S): boolean {
         if (state.isLock) return false;
 
-        const current = state.origin - state.reduce;
+        const current = state.origin - state.used;
         if (current <= 0) return false;
 
         const player = this.route.player;
@@ -168,7 +168,7 @@ export class RoleActionModel extends Model<
 
     public use() {
         if (!this.state.isActive) return false;
-        this.draft.state.reduce ++;
+        this.draft.state.used ++;
         return true;
     }
 }
