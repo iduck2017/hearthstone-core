@@ -36,8 +36,6 @@ export class MinionPerformModel extends PerformModel<
     public async toRun(): Promise<[number, MinionHooksEvent] | undefined> {
         const minion = this.route.minion;
         if (!minion) return;
-        // status 
-        if (!minion.state.isActive) return;
         const to = await this.select();
         if (to === undefined) return;
         // battlecry

@@ -162,7 +162,7 @@ export class RoleActionModel extends Model<
             !rush.state.isActive
         ) return false;
         
-        if (!attack.state.isActive) return false;
+        if (!attack.status) return false;
         return true;
     }
 

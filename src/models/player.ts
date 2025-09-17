@@ -35,8 +35,8 @@ export class PlayerModel extends Model<
     PlayerProps.P
 > {
     public get refer() {
-        const minions: MinionCardModel[] = this.child.board.child.minions.filter(item => !item.child.dispose.state.isActive);
-        const entities: (MinionCardModel | HeroModel)[] = [this.child.hero, ...minions].filter(item => !item.child.dispose.state.isActive);
+        const minions: MinionCardModel[] = this.child.board.child.minions.filter(item => !item.child.dispose.status);
+        const entities= [this.child.hero, ...minions].filter(item => !item.child.dispose.status);
         return { 
             ...super.refer, 
             roles: entities.map(item => item.child.role),
@@ -44,13 +44,13 @@ export class PlayerModel extends Model<
             opponent: this.opponent, 
         }
     }
-
-    public get state() {
-        const state = super.state;
-        return {
-            ...state,
-            isActive: this.check(),
-        }
+    
+    public get status(): boolean {
+        const game = this.route.game;
+        if (!game) return false;
+        const turn = game.child.turn;
+        if (turn.refer.current !== this) return false;
+        return true;
     }
 
     private get opponent(): PlayerModel | undefined {
@@ -83,13 +83,6 @@ export class PlayerModel extends Model<
         });
     }
 
-    private check(): boolean {
-        const game = this.route.game;
-        if (!game) return false;
-        const turn = game.child.turn;
-        if (turn.refer.current !== this) return false;
-        return true;
-    }
 }
 
 

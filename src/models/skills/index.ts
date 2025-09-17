@@ -69,7 +69,7 @@ export abstract class SkillModel<
         const player = this.route.player;
         if (!player) return;
         const cost = this.child.cost;
-        if (!cost.state.isActive) return;
+        if (!cost.status) return;
         
         const signal = new Event({});
         this.event.toRun(signal);

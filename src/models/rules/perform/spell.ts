@@ -7,10 +7,8 @@ export class SpellPerformModel extends PerformModel<
     [SpellHooksEvent]
 > {
     public async toRun(): Promise<[SpellHooksEvent] | undefined> {
-        // status 
         const spell = this.route.spell;
         if (!spell) return;
-        if (!spell.state.isActive) return;
         // spell
         const effect = await EffectModel.toRun(spell.child.effects);
         if (!effect) return;

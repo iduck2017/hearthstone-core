@@ -5,7 +5,23 @@ import { WeaponCardModel } from "../../cards/weapon";
 import { PlayerModel } from "../../player";
 import { SecretCardModel } from "../../cards/secret";
 
-export class SecretDeployModel extends DeployModel {
+export namespace SecretDeployProps {
+    export type E = {};
+    export type S = {};
+    export type C = {};
+    export type R = {};
+    export type P = {
+        secret: SecretCardModel;
+    };
+}
+
+export class SecretDeployModel extends DeployModel<
+    SecretDeployProps.E,
+    SecretDeployProps.S,
+    SecretDeployProps.C,
+    SecretDeployProps.R,
+    SecretDeployProps.P
+> {
 
     constructor(loader?: Loader<SecretDeployModel>) {
         super(() => {

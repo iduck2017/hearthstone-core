@@ -3,6 +3,15 @@ import { DisposeModel } from ".";
 import { MinionCardModel, PlayerModel, WeaponCardModel } from "../../..";
 
 export class WeaponDisposeModel extends DisposeModel {
+
+    public get status(): boolean {
+        const weapon = this.route.weapon;
+        if (!weapon) return true;
+        const action = weapon.child.action;
+        if (action.state.current <= 0) return true;
+        return super.status || false;
+    }
+
     constructor(loader?: Loader<WeaponDisposeModel>) {
         super(() => {
             const props = loader?.() ?? {};
@@ -14,14 +23,6 @@ export class WeaponDisposeModel extends DisposeModel {
                 route: { weapon: WeaponCardModel.prototype },
             }
         });
-    }
-
-    protected check(): boolean {
-        const weapon = this.route.weapon;
-        if (!weapon) return true;
-        const action = weapon.child.action;
-        if (action.state.current <= 0) return true;
-        return false;
     }
 
     @DebugUtil.log(LogLevel.WARN)

@@ -50,11 +50,14 @@ export class RoleAttackModel extends Model<
         const current: number = state.origin + state.offset;
         return {
             ...state,
-            isActive: current > 0,
             current,
         }
     }
-    
+
+    public get status() {
+        return this.state.current > 0;
+    }
+
     constructor(loader: Method<RoleAttackModel['props'] & {
         state: Pick<RoleAttackProps.S, 'origin'>
     }, []>) {
@@ -84,7 +87,7 @@ export class RoleAttackModel extends Model<
     public async run(roleB: RoleModel) {
         const roleA = this.route.role;
         if (!roleA) return;
-        if (!this.state.isActive) return;
+        if (!this.status) return;
         
         const signal = new Event({ target: roleB })
         this.event.toRun(signal);
@@ -126,4 +129,5 @@ export class RoleAttackModel extends Model<
 
         this.event.onRun(new Event({ target: roleB })); 
     }
+
 }

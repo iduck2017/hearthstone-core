@@ -38,8 +38,6 @@ export class WeaponPerformModel extends PerformModel<
     public async toRun(): Promise<[WeaponHooksEvent] | undefined> {
         const weapon = this.route.weapon;
         if (!weapon) return;
-        // status 
-        if (!weapon.state.isActive) return;
         // battlecry
         const hooks = weapon.child.hooks;
         const battlecry = await WeaponBattlecryModel.toRun(hooks.child.battlecry);

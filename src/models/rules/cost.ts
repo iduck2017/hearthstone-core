@@ -36,9 +36,19 @@ export class CostModel extends Model<
         const current = state.origin + state.offset;
         return {
             ...state,
-            isActive: this.check(state),
             current,
         }
+    }
+
+    public get status() {
+        const player = this.route.player;
+        if (!player) return false;
+        if (super.state.type === CostType.MANA) {
+            const mana = player.child.mana;
+            if (mana.state.current < this.state.current) return false;
+            return true;
+        }
+        return false;
     }
 
     constructor(loader: Method<CostModel['props'] & {
@@ -63,15 +73,4 @@ export class CostModel extends Model<
         });
     }
 
-    private check(state: CostProps.S) {
-        const player = this.route.player;
-        const current = state.origin + state.offset
-        if (!player) return false;
-        if (super.state.type === CostType.MANA) {
-            const mana = player.child.mana;
-            if (mana.state.current < current) return false;
-            return true;
-        }
-        return false;
-    }
 }

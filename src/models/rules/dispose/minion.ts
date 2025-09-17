@@ -3,6 +3,15 @@ import { DisposeModel } from ".";
 import { MinionCardModel, PlayerModel } from "../../..";
 
 export class MinionDisposeModel extends DisposeModel {
+    public get status(): boolean {
+        const minion = this.route.minion;
+        if (!minion) return true;
+        const role = minion.child.role;
+        const health = role.child.health;
+        if (health.state.current <= 0) return true;
+        return super.status || false;
+    }
+
     constructor(loader?: Loader<MinionDisposeModel>) {
         super(() => {
             const props = loader?.() ?? {};
@@ -14,15 +23,6 @@ export class MinionDisposeModel extends DisposeModel {
                 route: { minion: MinionCardModel.prototype },
             }
         });
-    }
-
-    protected check(): boolean {
-        const minion = this.route.minion;
-        if (!minion) return true;
-        const role = minion.child.role;
-        const health = role.child.health;
-        if (health.state.current <= 0) return true;
-        return false;
     }
 
     protected run(): void {

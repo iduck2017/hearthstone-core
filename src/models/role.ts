@@ -47,16 +47,6 @@ export class RoleModel extends Model<
     RoleProps.R,
     RoleProps.P
 > {
-    public get state() {
-        const state = super.state;
-        return {
-            ...state,
-            health: this.child.health.state.current,
-            attack: this.child.attack.state.current,
-            action: this.child.action.state.current,
-        }
-    }
-
     public constructor(loader: Method<RoleModel['props'] & {
         child: Pick<RoleProps.C, 'health' | 'attack'>;
     }, []>) {

@@ -6,8 +6,23 @@ import { PlayerModel } from "../../player";
 import { SecretCardModel } from "../../cards/secret";
 import { MinionCardModel } from "../../cards/minion";
 
-export class MinionDeployModel extends DeployModel {
+export namespace MinionDeployProps {
+    export type E = {};
+    export type C = {};
+    export type S = {};
+    export type R = {};
+    export type P = {
+        minion: MinionCardModel;
+    };
+}
 
+export class MinionDeployModel extends DeployModel<
+    MinionDeployProps.E,
+    MinionDeployProps.S,
+    MinionDeployProps.C,
+    MinionDeployProps.R,
+    MinionDeployProps.P
+> {
     constructor(loader?: Loader<MinionDeployModel>) {
         super(() => {
             const props = loader?.() ?? {};

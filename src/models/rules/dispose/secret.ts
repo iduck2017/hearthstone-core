@@ -18,8 +18,6 @@ export class SecretDisposeModel extends DisposeModel {
         });
     }
 
-    protected check(): boolean { return false; }
-
     protected run(): void {
         const secret = this.route.secret;
         if (!secret) return;

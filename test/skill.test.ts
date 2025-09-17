@@ -35,8 +35,8 @@ describe('skill', () => {
     if (!roleA || !roleB) throw new Error();
 
     test('fireblast', async () => {
-        expect(roleA.state.health).toBe(30);
-        expect(roleB.state.health).toBe(30);
+        expect(roleA.child.health.state.current).toBe(30);
+        expect(roleB.child.health.state.current).toBe(30);
         expect(playerA.child.mana.state.current).toBe(10);
 
         const promise = charA.child.skill.run();
@@ -46,7 +46,7 @@ describe('skill', () => {
         SelectUtil.set(roleB);
         await promise;
 
-        expect(roleB.state.health).toBe(29);
+        expect(roleB.child.health.state.current).toBe(29);
         expect(playerA.child.mana.state.current).toBe(8);
     })
 })

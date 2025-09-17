@@ -20,7 +20,6 @@ export namespace CardProps {
         readonly class: ClassType;
         readonly rarity: RarityType;
         readonly isCollectible: boolean;
-        readonly isActive: boolean;
     };
     export type C = {
         readonly cost: CostModel;
@@ -56,12 +55,15 @@ export abstract class CardModel<
    R & CardProps.R,
    CardProps.P
 > {
-    public get state(): Readonly<Format.State<S & CardProps.S>> {
-        const state = super.state;
-        return {
-            ...state,
-            isActive: this.check(),
-        }
+    public get status(): boolean {
+        const hand = this.route.hand;
+        if (!hand) return false;
+        const player = this.route.player;
+        if (!player) return false;
+        if (!player.status) return false;
+        const cost = this.child.cost;
+        if (!cost.status) return false;
+        return true;
     }
 
     constructor(loader: Method<CardModel['props'] & {
@@ -99,6 +101,7 @@ export abstract class CardModel<
     }
 
     public async play() {
+        if (!this.status) return;
         const perform = this.child.perform;
         const params = await perform.toRun();
         if (!params) return;
@@ -133,16 +136,6 @@ export abstract class CardModel<
         graveyard.add(this);
     }
 
-    private check(): boolean {
-        const hand = this.route.hand;
-        if (!hand) return false;
-        const player = this.route.player;
-        if (!player) return false;
-        if (!player.state.isActive) return false;
-        const cost = this.child.cost;
-        if (!cost.state.isActive) return false;
-        return true;
-    }
 
     @DebugUtil.log()
     public draw() {

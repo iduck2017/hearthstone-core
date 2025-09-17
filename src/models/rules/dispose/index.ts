@@ -42,12 +42,8 @@ export abstract class DisposeModel extends Model<
         DisposeModel.tasks.push(target);
     }
 
-    public get state() {
-        const state = super.state;
-        return {
-            ...state,
-            isActive: state.isLock || this.check(state),
-        }
+    public get status() {
+        return this.state.isLock;
     }
 
     public static span() {
@@ -81,7 +77,7 @@ export abstract class DisposeModel extends Model<
     }
 
     public static end() {
-        const tasks = DisposeModel.tasks.filter(item => item.state.isActive);
+        const tasks = DisposeModel.tasks.filter(item => item.status);
         DisposeModel.tasks = [];
         tasks.forEach(item => item.run());
     }
@@ -112,14 +108,12 @@ export abstract class DisposeModel extends Model<
     @DisposeModel.span()
     @TranxUtil.span()
     public active(isLock?: boolean, source?: CardModel | HeroModel, detail?: Model) {
-        if (this.state.isActive) return;
+        if (this.status) return;
         this.draft.refer.detail = detail;
         this.draft.refer.source = source;
         this.draft.state.isLock = isLock ?? false;
         DisposeModel.add(this);
     }
-
-    protected abstract check(state: DisposeProps.S): boolean;
 
     protected abstract run(): void;
 
