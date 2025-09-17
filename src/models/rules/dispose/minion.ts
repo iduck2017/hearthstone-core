@@ -2,7 +2,21 @@ import { DebugUtil, Loader, LogLevel, Model, TranxUtil } from "set-piece";
 import { DisposeModel } from ".";
 import { MinionCardModel, PlayerModel } from "../../..";
 
-export class MinionDisposeModel extends DisposeModel {
+export namespace MinionDisposeProps {
+    export type E = {};
+    export type S = {};
+    export type C = {};
+    export type R = {};
+    export type P = { minion: MinionCardModel; };
+}
+
+export class MinionDisposeModel extends DisposeModel<
+    MinionDisposeProps.E,
+    MinionDisposeProps.S,
+    MinionDisposeProps.C,
+    MinionDisposeProps.R,
+    MinionDisposeProps.P
+> {
     public get status(): boolean {
         const minion = this.route.minion;
         if (!minion) return true;

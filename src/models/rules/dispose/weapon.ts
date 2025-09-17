@@ -1,9 +1,22 @@
 import { DebugUtil, Loader, LogLevel, Model, TranxUtil } from "set-piece";
 import { DisposeModel } from ".";
-import { MinionCardModel, PlayerModel, WeaponCardModel } from "../../..";
+import { WeaponCardModel } from "../../..";
 
-export class WeaponDisposeModel extends DisposeModel {
+export namespace WeaponDisposeProps {
+    export type E = {};
+    export type S = {};
+    export type C = {};
+    export type R = {};
+    export type P = { weapon: WeaponCardModel; };
+}
 
+export class WeaponDisposeModel extends DisposeModel<
+    WeaponDisposeProps.E,
+    WeaponDisposeProps.S,
+    WeaponDisposeProps.C,
+    WeaponDisposeProps.R,
+    WeaponDisposeProps.P
+> {
     public get status(): boolean {
         const weapon = this.route.weapon;
         if (!weapon) return true;

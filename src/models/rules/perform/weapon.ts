@@ -1,14 +1,40 @@
-import { Event } from "set-piece";
+import { Event, Loader } from "set-piece";
 import { PerformModel } from ".";
 import { SelectEvent, SelectUtil } from "../../../utils/select";
 import { RoleBattlecryModel } from "../../hooks/battlecry/role";
 import { MinionHooksEvent } from "../../hooks/minion";
 import { WeaponHooksEvent } from "../../hooks/weapon";
 import { WeaponBattlecryModel } from "../../hooks/battlecry/weapon";
+import { WeaponCardModel } from "../../cards/weapon";
+
+export namespace WeaponPerformProps {
+    export type E = {};
+    export type S = {};
+    export type C = {};
+    export type R = {};
+    export type P = { weapon: WeaponCardModel; }
+}
 
 export class WeaponPerformModel extends PerformModel<
-    [WeaponHooksEvent]
+    [WeaponHooksEvent],
+    WeaponPerformProps.E,
+    WeaponPerformProps.S,
+    WeaponPerformProps.C,
+    WeaponPerformProps.R,
+    WeaponPerformProps.P
 > {
+    constructor(loader?: Loader<WeaponPerformModel>) {
+        super(() => {
+            const props = loader?.() ?? {};
+            return {
+                uuid: props.uuid,
+                state: { ...props.state },
+                child: { ...props.child },
+                refer: { ...props.refer },
+                route: { weapon: WeaponCardModel.prototype },
+            }
+        });
+    }
 
     public async run(from: number, event: WeaponHooksEvent) {
         const signal = new Event({})

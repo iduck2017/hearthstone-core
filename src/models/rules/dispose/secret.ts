@@ -3,7 +3,21 @@ import { DisposeModel } from ".";
 import { MinionCardModel, PlayerModel, WeaponCardModel } from "../../..";
 import { SecretCardModel } from "../../cards/secret";
 
-export class SecretDisposeModel extends DisposeModel {
+export namespace SecretDisposeProps {
+    export type E = {};
+    export type S = {};
+    export type C = {};
+    export type R = {};
+    export type P = { secret: SecretCardModel; };
+}
+
+export class SecretDisposeModel extends DisposeModel<
+    SecretDisposeProps.E,
+    SecretDisposeProps.S,
+    SecretDisposeProps.C,
+    SecretDisposeProps.R,
+    SecretDisposeProps.P
+> {
 
     constructor(loader?: Loader<SecretDisposeModel>) {
         super(() => {

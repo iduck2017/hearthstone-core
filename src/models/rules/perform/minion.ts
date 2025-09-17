@@ -1,12 +1,39 @@
-import { Event } from "set-piece";
+import { Event, Loader } from "set-piece";
 import { PerformModel } from ".";
 import { SelectEvent, SelectUtil } from "../../../utils/select";
 import { RoleBattlecryModel } from "../../hooks/battlecry/role";
 import { MinionHooksEvent } from "../../hooks/minion";
+import { MinionCardModel } from "../../cards/minion";
+
+export namespace MinionPerformProps {
+    export type E = {};
+    export type S = {};
+    export type C = {};
+    export type R = {};
+    export type P = { minion: MinionCardModel; };
+}
 
 export class MinionPerformModel extends PerformModel<
-    [number, MinionHooksEvent]
+    [number, MinionHooksEvent],
+    MinionPerformProps.E,
+    MinionPerformProps.S,
+    MinionPerformProps.C,
+    MinionPerformProps.R,
+    MinionPerformProps.P
 > {
+    constructor(loader?: Loader<MinionPerformModel>) {
+        super(() => {
+            const props = loader?.() ?? {};
+            return {
+                uuid: props.uuid,
+                state: { ...props.state },
+                child: { ...props.child },
+                refer: { ...props.refer },
+                route: { minion: MinionCardModel.prototype },
+            }
+        });
+    }
+
     public async run(from: number, to: number, event: MinionHooksEvent) {
         
         const signal = new Event({})

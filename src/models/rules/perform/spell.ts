@@ -1,11 +1,38 @@
-import { Event } from "set-piece";
+import { Event, Loader } from "set-piece";
 import { PerformModel } from ".";
 import { EffectModel } from "../../features/effect";
 import { SpellHooksEvent } from "../../hooks/spell";
+import { SpellCardModel } from "../../cards/spell";
+
+export namespace SpellPerformProps {
+    export type E = {};
+    export type S = {};
+    export type C = {};
+    export type R = {};
+    export type P = { spell: SpellCardModel; };
+}
 
 export class SpellPerformModel extends PerformModel<
-    [SpellHooksEvent]
+    [SpellHooksEvent],
+    SpellPerformProps.E,
+    SpellPerformProps.S,
+    SpellPerformProps.C,
+    SpellPerformProps.R,
+    SpellPerformProps.P
 > {
+    constructor(loader?: Loader<SpellPerformModel>) {
+        super(() => {
+            const props = loader?.() ?? {};
+            return {
+                uuid: props.uuid,
+                state: { ...props.state },
+                child: { ...props.child },
+                refer: { ...props.refer },
+                route: { spell: SpellCardModel.prototype },
+            }
+        });
+    }
+    
     public async toRun(): Promise<[SpellHooksEvent] | undefined> {
         const spell = this.route.spell;
         if (!spell) return;

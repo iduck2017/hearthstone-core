@@ -16,20 +16,21 @@ export namespace DisposeProps {
     }
     export type P = {
         player: PlayerModel;
-        graveyard: GraveyardModel;
-        minion: MinionCardModel;
-        weapon: WeaponCardModel;
-        secret: SecretCardModel;
-        hero: HeroModel;
     }
 }
 
-export abstract class DisposeModel extends Model<
-    DisposeProps.E,
-    DisposeProps.S,
-    DisposeProps.C,
-    DisposeProps.R,
-    DisposeProps.P
+export abstract class DisposeModel<
+    E extends Props.E & Partial<DisposeProps.E> = {},
+    S extends Props.S & Partial<DisposeProps.S> = {},
+    C extends Props.C & Partial<DisposeProps.C> = {},
+    R extends Props.R & Partial<DisposeProps.R> = {},
+    P extends Props.P & Partial<DisposeProps.P> = {}
+> extends Model<
+    E & DisposeProps.E,
+    S & DisposeProps.S,
+    C & DisposeProps.C,
+    R & DisposeProps.R,
+    P & DisposeProps.P
 > {
     private static _isLock = false;
     public static get isLock() {
@@ -82,7 +83,13 @@ export abstract class DisposeModel extends Model<
         tasks.forEach(item => item.run());
     }
 
-    constructor(loader: Loader<DisposeModel>) {
+    constructor(loader: Method<DisposeModel['props'] & {
+        uuid: string | undefined;
+        state: S;
+        child: C;
+        refer: R;
+        route: P;
+    }, []>) {
         super(() => {
             const props = loader() ?? {};
             return {
@@ -95,11 +102,7 @@ export abstract class DisposeModel extends Model<
                 refer: { ...props.refer },
                 route: {
                     player: PlayerModel.prototype,
-                    graveyard: GraveyardModel.prototype,
-                    minion: MinionCardModel.prototype,
-                    weapon: WeaponCardModel.prototype,
-                    secret: SecretCardModel.prototype,
-                    hero: HeroModel.prototype,
+                    ...props.route,
                 },
             }
         });

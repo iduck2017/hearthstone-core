@@ -12,22 +12,32 @@ export namespace PerformProps {
     export type P = {
         card: CardModel;
         player: PlayerModel;
-        minion: MinionCardModel;
-        weapon: WeaponCardModel;
-        spell: SpellCardModel
     }
 }
 
-export abstract class PerformModel<T extends any[] = any[]> extends Model<
-    PerformProps.E,
-    PerformProps.S,
-    PerformProps.C,
-    PerformProps.R,
-    PerformProps.P
+export abstract class PerformModel<
+    T extends any[] = any[],
+    E extends Props.E & Partial<PerformProps.E> = {},
+    S extends Props.S & Partial<PerformProps.S> = {},
+    C extends Props.C & Partial<PerformProps.C> = {},
+    R extends Props.R & Partial<PerformProps.R> = {},
+    P extends Props.P & Partial<PerformProps.P> = {}
+> extends Model<
+    E & PerformProps.E,
+    S & PerformProps.S,
+    C & PerformProps.C,
+    R & PerformProps.R,
+    P & PerformProps.P
 > {
-    constructor(loader?: Loader<PerformModel>) {
+    constructor(loader: Method<PerformModel['props'] & {
+        uuid: string | undefined;
+        state: S;
+        child: C;
+        refer: R;
+        route: P;
+    }, []>) {
         super(() => {
-            const props = loader?.() ?? {}
+            const props = loader() ?? {}
             return {
                 uuid: props.uuid,
                 state: { ...props.state },
@@ -39,6 +49,7 @@ export abstract class PerformModel<T extends any[] = any[]> extends Model<
                     minion: MinionCardModel.prototype,
                     weapon: WeaponCardModel.prototype,
                     spell: SpellCardModel.prototype,
+                    ...props.route,
                 },
             }
         })
