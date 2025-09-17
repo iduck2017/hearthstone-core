@@ -38,7 +38,7 @@ export class MinionPerformModel extends PerformModel<
         
         const signal = new Event()
         this.event.toRun(signal);
-        if (signal.isCancel) return;
+        if (signal.isAbort) return;
 
         const player = this.route.player;
         if (!player) return;

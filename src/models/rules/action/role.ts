@@ -119,7 +119,7 @@ export class RoleActionModel extends Model<
 
         const signal = new Event()
         this.event.toRun(signal)
-        if (signal.isCancel) return;
+        if (signal.isAbort) return;
 
         // mana
         if (!this.use()) return;

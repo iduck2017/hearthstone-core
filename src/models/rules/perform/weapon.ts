@@ -39,7 +39,7 @@ export class WeaponPerformModel extends PerformModel<
     public async run(from: number, event: WeaponHooksEvent) {
         const signal = new Event()
         this.event.toRun(signal);
-        if (signal.isCancel) return;
+        if (signal.isAbort) return;
 
         const player = this.route.player;
         if (!player) return;

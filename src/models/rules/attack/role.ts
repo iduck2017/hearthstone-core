@@ -97,7 +97,7 @@ export class RoleAttackModel extends Model<
         
         const signal = new AttackEvent(roleB)
         this.event.toRun(signal);
-        if (signal.isCancel) return;
+        if (signal.isAbort) return;
         
         const healthB = roleB.child.health;
         const attackB = roleB.child.attack;

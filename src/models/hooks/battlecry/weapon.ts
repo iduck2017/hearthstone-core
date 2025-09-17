@@ -75,7 +75,7 @@ export abstract class WeaponBattlecryModel<
         
         const signal = new Event()
         this.event.toRun(signal);
-        if (signal.isCancel) return;
+        if (signal.isAbort) return;
 
         await this.doRun(from, ...params);
         this.event.onRun(new Event());

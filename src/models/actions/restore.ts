@@ -28,10 +28,10 @@ export class RestoreModel extends Model<
         tasks.forEach(item => item.source.child.restore.event.toRun(item));
         tasks.forEach(item => item.target.child.health.toHeal(item));
         
-        tasks = tasks.filter(item => !item.isCancel);
+        tasks = tasks.filter(item => !item.isAbort);
         tasks = RestoreModel.doRun(tasks);
 
-        tasks = tasks.filter(item => item.result > 0 && !item.isCancel);
+        tasks = tasks.filter(item => item.result > 0 && !item.isAbort);
         tasks.forEach(item => item.target.child.health.onHeal(item));
         tasks.forEach(item => item.source.child.restore.onRun(item));
     }

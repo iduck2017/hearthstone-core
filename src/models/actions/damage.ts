@@ -32,10 +32,10 @@ export class DamageModel extends Model<
         tasks.forEach(item => item.source.child.damage.event.toRun(item));
         tasks.forEach(item => item.target.child.health.toHurt(item));
         
-        tasks = tasks.filter(item => !item.isCancel);
+        tasks = tasks.filter(item => !item.isAbort);
         DamageModel.doRun(tasks);
 
-        tasks = tasks.filter(item => item.result > 0 && !item.isCancel);
+        tasks = tasks.filter(item => item.result > 0 && !item.isAbort);
         tasks.forEach(item => item.target.child.health.onHurt(item));
         tasks.forEach(item => item.source.child.damage.onRun(item));
     }

@@ -75,7 +75,7 @@ export abstract class RoleBattlecryModel<
       
         const signal = new Event()
         this.event.toRun(signal);
-        if (signal.isCancel) return;
+        if (signal.isAbort) return;
         
         await this.doRun(from, to, ...params);
         this.event.onRun(new Event());

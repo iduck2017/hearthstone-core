@@ -111,7 +111,7 @@ export class HealthModel extends Model<
     public onHurt(event: DamageEvent) {
         const role = this.route.role;
         if (!role) return;
-        if (event.isCancel) return;
+        if (event.isAbort) return;
         return this.event.onHurt(event);
     }
 
@@ -139,7 +139,7 @@ export class HealthModel extends Model<
     public onHeal(event: RestoreEvent) {
         const role = this.route.role;
         if (!role) return;
-        if (event.isCancel) return;
+        if (event.isAbort) return;
         if (event.result <= 0) return;
         return this.event.onHeal(event);
     }

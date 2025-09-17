@@ -73,7 +73,7 @@ export abstract class SkillModel<
         
         const signal = new Event();
         this.event.toRun(signal);
-        if (signal.isCancel) return;
+        if (signal.isAbort) return;
 
         const event = this.toRun();
         if (!event) return;
