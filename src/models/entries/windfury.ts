@@ -62,8 +62,8 @@ export class WindfuryModel extends RoleFeatureModel<
     }
 
     @TranxUtil.span()
-    public disable() {
-        super.disable();
+    public deactive() {
+        super.deactive();
         this.draft.state.isAdvance = false;
     }
 }

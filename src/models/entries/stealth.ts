@@ -43,9 +43,4 @@ export class StealthModel extends RoleFeatureModel<
         return true;
     }
 
-    public deactive() {
-        this.disable();
-        this.event.onDeactive(new Event());
-    }
-
 }

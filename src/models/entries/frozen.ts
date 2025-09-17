@@ -41,14 +41,4 @@ export class FrozenModel extends RoleFeatureModel<
         this.event.onActive(new Event());
         return true;
     }
-
-    public deactive(): boolean {
-        const role = this.route.role;
-        if (!role) return false;
-        const action = role.child.action;
-        if (action.state.current <= 0) return false;
-        this.disable();
-        this.event.onDeactive(new Event());
-        return true;
-    }
 }

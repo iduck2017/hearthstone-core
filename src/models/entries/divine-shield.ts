@@ -59,8 +59,8 @@ export class DivineSheildModel extends RoleFeatureModel<
         this.event.onUse(event);
     }
 
-    public disable() {
-        super.disable();
+    public deactive() {
+        super.deactive();
         this.draft.state.count = 0;
     }
 }

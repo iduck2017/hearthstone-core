@@ -4,6 +4,8 @@ import { GameModel, PlayerModel } from "../..";
 export namespace FeatureProps {
     export type E = {
         onSilence: Event;
+        onActive: Event;
+        onDeactive: Event;
     };
     export type S = {
         name: string;
@@ -55,14 +57,14 @@ export abstract class FeatureModel<
     }
 
     public silence(): boolean {
-        this.disable();
+        this.deactive();
         this.event.onSilence(new Event());
         return true;
     }
 
-    @TranxUtil.span()
-    public disable() {
+    public deactive() {
         this.draft.state.isActive = false;
         this.reload();
+        this.event.onDeactive(new Event());
     }
 }
