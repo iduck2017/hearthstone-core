@@ -47,7 +47,7 @@ export abstract class StartTurnHookModel<
     public async run() {
         if (!this.state.isActive) return;
         await this.doRun();
-        this.event.onRun(new Event());
+        this.event.onRun(new Event({}));
     }
 
     protected abstract doRun(): Promise<void>;

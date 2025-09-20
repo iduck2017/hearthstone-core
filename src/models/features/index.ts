@@ -66,13 +66,13 @@ export abstract class FeatureModel<
 
     public silence(): boolean {
         this.deactive();
-        this.event.onSilence(new Event());
+        this.event.onSilence(new Event({}));
         return true;
     }
 
     public deactive() {
         this.draft.state.isActive = false;
         this.reload();
-        this.event.onDeactive(new Event());
+        this.event.onDeactive(new Event({}));
     }
 }

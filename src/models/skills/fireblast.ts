@@ -36,7 +36,7 @@ export class FireBlastModel extends SkillModel<[RoleModel]> {
             new DamageEvent({
                 type: DamageType.SKILL,
                 source: hero,
-                detail: this,
+                method: this,
                 target,
                 origin: 1,
             })

@@ -42,7 +42,7 @@ export class WindfuryModel extends RoleFeatureModel<
         if (!isAdvance && this.state.isActive) return false;
         if (this.state.isActive && this.state.isAdvance) return false; 
         this.doActive(isAdvance);
-        this.event.onActive(new Event());
+        this.event.onActive(new Event({}));
         return true;
     }
 

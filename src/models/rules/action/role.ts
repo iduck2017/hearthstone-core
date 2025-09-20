@@ -32,9 +32,39 @@ export class RoleActionModel extends Model<
         const state = super.state;
         return {
             ...state,
-            isActive: this.check(state),
             current: state.origin - state.used,
         }
+    }
+    
+    public get status(): boolean {
+        if (this.state.isLock) return false;
+        const current = this.state.current;
+        if (current <= 0) return false;
+        const player = this.route.player;
+        if (!player) return false;
+        const game = this.route.game;
+        if (!game) return false;
+        const turn = game.child.turn;
+        if (turn.refer.current !== player) return false;
+        const role = this.route.role;
+        if (!role) return false;
+
+        const entries = role.child.entries;
+        const rush = entries.child.rush;
+        const sleep = role.child.sleep;
+        const attack = role.child.attack;
+        const frozen = entries.child.frozen;
+        const charge = entries.child.charge;
+
+        if (frozen.state.isActive) return false;
+        if (
+            sleep.state.isActive &&
+            !charge.state.isActive &&
+            !rush.state.isActive
+        ) return false;
+        
+        if (!attack.status) return false;
+        return true;
     }
 
     constructor(loader?: Loader<RoleActionModel>) {
@@ -106,7 +136,7 @@ export class RoleActionModel extends Model<
 
     @DebugUtil.log()
     public async run() {
-        if (!this.state.isActive) return;
+        if (!this.status) return;
 
         const game = this.route.game;
         if (!game) return;
@@ -117,7 +147,7 @@ export class RoleActionModel extends Model<
         const roleB = await this.select();
         if (!roleB) return;
 
-        const signal = new Event()
+        const signal = new Event({})
         this.event.toRun(signal)
         if (signal.isAbort) return;
 
@@ -127,47 +157,11 @@ export class RoleActionModel extends Model<
         const attack = roleA.child.attack;
         await attack.run(roleB);
         
-        this.event.onRun(new Event());
-    }
-
-    private check(state: RoleActionProps.S): boolean {
-        if (state.isLock) return false;
-
-        const current = state.origin - state.used;
-        if (current <= 0) return false;
-
-        const player = this.route.player;
-        if (!player) return false;
-
-        const game = this.route.game;
-        if (!game) return false;
-
-        const turn = game.child.turn;
-        if (turn.refer.current !== player) return false;
-
-        const role = this.route.role;
-        if (!role) return false;
-
-        const entries = role.child.entries;
-        const rush = entries.child.rush;
-        const sleep = role.child.sleep;
-        const attack = role.child.attack;
-        const frozen = entries.child.frozen;
-        const charge = entries.child.charge;
-
-        if (frozen.state.isActive) return false;
-        if (
-            sleep.state.isActive &&
-            !charge.state.isActive &&
-            !rush.state.isActive
-        ) return false;
-        
-        if (!attack.status) return false;
-        return true;
+        this.event.onRun(new Event({}));
     }
 
     public use() {
-        if (!this.state.isActive) return false;
+        if (!this.status) return false;
         this.draft.state.used ++;
         return true;
     }

@@ -36,7 +36,7 @@ export abstract class MinionCardModel<
 > {
     constructor(loader: Method<MinionCardModel['props'] & {
         uuid: string | undefined;
-        state: S & Format.State<Omit<CardProps.S, 'isActive'> & MinionCardProps.S>;
+        state: S & Format.S<Omit<CardProps.S, 'isActive'> & MinionCardProps.S>;
         child: C & Pick<MinionCardProps.C, 'role'> & Pick<CardProps.C, 'cost'>;
         refer: R;
     }, []>) {

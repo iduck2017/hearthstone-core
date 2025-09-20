@@ -47,7 +47,7 @@ export abstract class EndTurnHookModel<
     public run() {
         if (!this.state.isActive) return;
         this.doRun();
-        this.event.onRun(new Event());
+        this.event.onRun(new Event({}));
     }
 
     protected abstract doRun(): Event;

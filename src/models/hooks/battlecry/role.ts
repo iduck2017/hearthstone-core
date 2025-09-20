@@ -73,12 +73,12 @@ export abstract class RoleBattlecryModel<
     public async run(from: number, to: number, ...params: T) {
         if (!this.state.isActive) return;
       
-        const signal = new Event()
+        const signal = new Event({})
         this.event.toRun(signal);
         if (signal.isAbort) return;
         
         await this.doRun(from, to, ...params);
-        this.event.onRun(new Event());
+        this.event.onRun(new Event({}));
     }   
 
     protected abstract doRun(from: number, to: number, ...params: T): Promise<void>;

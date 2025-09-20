@@ -48,12 +48,12 @@ export abstract class DeathrattleModel<
     public run() {
         if (!this.state.isActive) return;
         
-        const signal = new Event()
-        this.event.toRun(new Event());
+        const signal = new Event({})
+        this.event.toRun(new Event({}));
         if (signal.isAbort) return;
 
         this.doRun();
-        this.event.onRun(new Event());
+        this.event.onRun(new Event({}));
     }
 
     protected abstract doRun(): Promise<void>;

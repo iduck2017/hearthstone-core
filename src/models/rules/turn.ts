@@ -58,11 +58,10 @@ export class TurnModel extends Model<
         const roles = player.query();
         player.child.mana.reset();
         roles.forEach(item => {
-            const entries = item.child.entries;
             item.child.action.reset();
             item.child.sleep.deactive();
         });
-        this.event.onStart(new Event());
+        this.event.onStart(new Event({}));
     }
     
     private end() {
@@ -73,9 +72,9 @@ export class TurnModel extends Model<
         player.child.mana.reset();
         roles.forEach(item => {
             const entries = item.child.entries;
-            if (!item.child.action.state.isActive) return;
+            if (item.child.action.state.current <= 0) return;
             entries.child.frozen.deactive();
         });
-        this.event.onEnd(new Event());
+        this.event.onEnd(new Event({}));
     }
 }

@@ -36,11 +36,11 @@ export class SleepModel extends Model<
 
     public active() {
         this.draft.state.isActive = true;
-        this.event.onActive(new Event());
+        this.event.onActive(new Event({}));
     }
 
     public deactive() {
         this.draft.state.isActive = false;
-        this.event.onDeactive(new Event());
+        this.event.onDeactive(new Event({}));
     }
 }

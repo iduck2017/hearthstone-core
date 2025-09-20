@@ -1,4 +1,4 @@
-import { DebugUtil, EventUtil, Method, Model, StateChangeEvent, TranxUtil } from "set-piece";
+import { DebugUtil, Event, EventUtil, Memory, Method, Model, TranxUtil } from "set-piece";
 import { RoleModel, MinionCardModel, GameModel, PlayerModel, CardModel, HeroModel } from "../..";
 import { DamageEvent } from "../../types/damage";
 import { RestoreEvent } from "../../types/restore";
@@ -92,19 +92,18 @@ export class HealthModel extends Model<
         const dispose = minion?.child.dispose ?? hero?.child.dispose;
         if (!dispose) return event;
 
-        const result = event.result;
+        const result = event.detail.result;
         if (result <= 0) {
-            event.result = 0;
+            event.set(0)
             return event;
         }
         if (divineSheild.state.isActive) {
             divineSheild.use();
-            event.result = 0;
+            event.set(0)
             return event;
         }
         this.draft.state.damage += result;
-        dispose.active(false, event.source, event.detail);
-        event.result = result;
+        dispose.active(false, event.detail.source, event.detail.method);
         return event;
     }
 
@@ -122,17 +121,17 @@ export class HealthModel extends Model<
     }
 
     public doHeal(event: RestoreEvent): RestoreEvent {
-        let result = event.result;
+        let result = event.detail.result;
         const role = this.route.role;
         if (!role) return event;
         if (result <= 0) {
-            event.result = 0;
+            event.set(0)
             return event;
         }
         const damage = this.draft.state.damage;
         if (damage < result) result = damage;
         this.draft.state.damage -= result;
-        event.result = result;
+        event.set(result)
         return event;
     }
 
@@ -140,16 +139,16 @@ export class HealthModel extends Model<
         const role = this.route.role;
         if (!role) return;
         if (event.isAbort) return;
-        if (event.result <= 0) return;
+        if (event.detail.result <= 0) return;
         return this.event.onHeal(event);
     }
 
 
-    @EventUtil.on(self => self.proxy.event.onStateChange)
+    @EventUtil.on(self => self.proxy.event.onChange)
     @DebugUtil.log()
     @TranxUtil.span()
-    private onChange(that: HealthModel, event: StateChangeEvent<HealthModel>) {
-        const { memory, limit, damage } = event.next;
+    private onChange(that: HealthModel, event: Event<Memory<HealthModel>>) {
+        const { memory, limit, damage } = that.state;
         const offset = memory - limit;
         if (offset !== 0) this.draft.state.memory = limit;
         if (offset > 0) this.draft.state.damage -= Math.min(damage, offset);

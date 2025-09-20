@@ -36,7 +36,7 @@ export class MinionPerformModel extends PerformModel<
 
     public async run(from: number, to: number, event: MinionHooksEvent) {
         
-        const signal = new Event()
+        const signal = new Event({})
         this.event.toRun(signal);
         if (signal.isAbort) return;
 
@@ -57,7 +57,7 @@ export class MinionPerformModel extends PerformModel<
         if (!board) return;
         const deploy = minion.child.deploy;
         deploy.run(board, to);
-        this.event.onRun(new Event());
+        this.event.onRun(new Event({}));
     }
 
     public async toRun(): Promise<[number, MinionHooksEvent] | undefined> {

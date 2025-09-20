@@ -1,4 +1,4 @@
-import { Decor, Event, EventUtil, Method, Model, StateChangeEvent, StateUtil } from "set-piece";
+import { Decor, Event, EventUtil, Method, Model, StateUtil } from "set-piece";
 import { GameModel, PlayerModel, HeroModel, RoleAttackModel, RoleAttackProps, TurnModel, BoardModel, WeaponCardModel } from "../../..";
 
 export namespace WeaponAttackProps {

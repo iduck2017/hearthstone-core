@@ -71,7 +71,7 @@ export abstract class SkillModel<
         const cost = this.child.cost;
         if (!cost.status) return;
         
-        const signal = new Event();
+        const signal = new Event({});
         this.event.toRun(signal);
         if (signal.isAbort) return;
 
@@ -89,7 +89,7 @@ export abstract class SkillModel<
         mana.use(cost.state.current);
         const self: SkillModel = this;
         await self.doRun(...params);
-        this.event.onRun(new Event());
+        this.event.onRun(new Event({}));
     }
 
     protected abstract doRun(...params: T): Promise<void>;

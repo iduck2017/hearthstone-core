@@ -38,7 +38,7 @@ export class RushModel extends RoleFeatureModel<
     public active(): boolean {
         if (this.state.isActive) return false;
         this.draft.state.isActive = true;
-        this.event.onActive(new Event());
+        this.event.onActive(new Event({}));
         return true;
     }
 

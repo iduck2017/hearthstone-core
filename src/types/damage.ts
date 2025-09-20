@@ -11,30 +11,28 @@ export enum DamageType {
     SKILL
 }
 
-export class DamageEvent extends Event {
-    public readonly type?: DamageType;
-    public readonly source: CardModel | HeroModel;
-    public readonly detail: Model;
-    public readonly target: RoleModel;
-    public readonly origin: number;
-
-    private _result: number;
-    public get result() { return this._result; }
-    public set result(value: number) { this._result = value; }
-
+export class DamageEvent extends Event<{
+    type?: DamageType,
+    source: CardModel | HeroModel;
+    method: Model;
+    target: RoleModel;
+    origin: number;
+    result: number;
+}> {
     constructor(props: {
         type?: DamageType;
         source: CardModel | HeroModel;
-        detail: Model;
+        method: Model;
         target: RoleModel;
         origin: number;
     }) {
-        super();
-        this.type = props.type;
-        this.source = props.source;
-        this.detail = props.detail;
-        this.target = props.target;
-        this.origin = props.origin;
-        this._result = props.origin;
+        super({
+            ...props,
+            result: props.origin
+        });
+    }
+
+    public set(value: number) {
+        this._detail.result = value;
     }
 }
