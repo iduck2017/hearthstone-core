@@ -1,4 +1,4 @@
-import { DebugUtil, Event, Loader, Model, TranxUtil } from "set-piece";
+import { DebugUtil, Decor, Event, Loader, Model, StateUtil, TranxUtil } from "set-piece";
 import { BoardModel, SelectEvent, SelectUtil, MinionCardModel, RoleModel, PlayerModel, GameModel } from "../../..";
 
 export namespace RoleActionProps {
@@ -21,6 +21,11 @@ export namespace RoleActionProps {
     };
 }
 
+export class RoleActionDecor extends Decor<RoleActionProps.S> {
+    public add(value: number) { this.detail.origin += value }
+}
+
+@StateUtil.use(RoleActionDecor)
 export class RoleActionModel extends Model<
     RoleActionProps.E,
     RoleActionProps.S,
@@ -35,7 +40,7 @@ export class RoleActionModel extends Model<
             current: state.origin - state.used,
         }
     }
-    
+
     public get status(): boolean {
         if (this.state.isLock) return false;
         const current = this.state.current;

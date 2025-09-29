@@ -1,4 +1,4 @@
-import { Loader, Model } from "set-piece";
+import { Decor, Loader, Model, StateUtil, StoreUtil } from "set-piece";
 
 export namespace SpellDamageProps {
     export type E = {};
@@ -10,6 +10,12 @@ export namespace SpellDamageProps {
     export type P = {};
 }
 
+export class SpellDamageDecor extends Decor<SpellDamageProps.S> {
+    public add(value: number) { this.detail.current += value }
+}
+
+@StateUtil.use(SpellDamageDecor)
+@StoreUtil.is('spell-damage')
 export class SpellDamageModel extends Model<
     SpellDamageProps.E,
     SpellDamageProps.S,

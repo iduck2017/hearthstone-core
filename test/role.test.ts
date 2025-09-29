@@ -55,11 +55,10 @@ describe('role', () => {
         expect(roleC.child.action.state.current).toBe(1);
         expect(roleC.child.health.state.current).toBe(1);
         expect(roleC.child.health.state.damage).toBe(0);
-        expect(roleC.child.health.state.limit).toBe(1);
+        expect(roleC.child.health.state.maxium).toBe(1);
         expect(roleC.child.attack.state.current).toBe(1);
         expect(cardC.child.dispose.status).toBe(false);
     })
-
 
     test('wisp-attack', async () => {
         const promise = roleC.child.action.run();
@@ -75,42 +74,41 @@ describe('role', () => {
 
         expect(roleB.child.health.state.current).toBe(29);
         expect(roleB.child.health.state.damage).toBe(1);
-        expect(roleB.child.health.state.limit).toBe(30);
+        expect(roleB.child.health.state.maxium).toBe(30);
 
         expect(roleC.child.health.state.current).toBe(1);
         expect(cardC.child.dispose.status).toBe(false);
         expect(roleC.child.action.state.current).toBe(0);
     })
 
+    test('wisp-attack-2', async () => {
+        turn.next();
 
-    // test('wisp-attack-2', async () => {
-    //     turn.next();
-
-    //     const promise = roleD.child.action.run();
-    //     await TimeUtil.sleep();
-    //     const selector = SelectUtil.current;
-    //     expect(selector).toBeDefined();
-    //     if (!selector) return;
-    //     expect(selector.options).toContain(roleA);
-    //     expect(selector?.options).toContain(roleC);
-    //     expect(selector?.options.length).toBe(2);
-    //     SelectUtil.set(roleC);
-    //     await promise;
+        const promise = roleD.child.action.run();
+        await TimeUtil.sleep();
+        const selector = SelectUtil.current;
+        expect(selector).toBeDefined();
+        if (!selector) return;
+        expect(selector.options).toContain(roleA);
+        expect(selector?.options).toContain(roleC);
+        expect(selector?.options.length).toBe(2);
+        SelectUtil.set(roleC);
+        await promise;
         
-    //     expect(roleC.child.health.state.current).toBe(0);
-    //     expect(roleC.child.health.state.damage).toBe(1);
-    //     expect(roleC.child.health.state.limit).toBe(1);
-    //     expect(cardC.child.dispose.state.isActive).toBe(true);
+        expect(roleC.child.health.state.current).toBe(0);
+        expect(roleC.child.health.state.damage).toBe(1);
+        expect(roleC.child.health.state.maxium).toBe(1);
+        expect(cardC.child.dispose.status).toBe(true);
 
-    //     expect(roleD.child.health.state.current).toBe(0);
-    //     expect(roleD.child.health.state.damage).toBe(1);
-    //     expect(roleD.child.health.state.limit).toBe(1);
-    //     expect(cardD.child.dispose.state.isActive).toBe(true);
-    //     expect(roleD.child.action.state.current).toBe(0);
+        expect(roleD.child.health.state.current).toBe(0);
+        expect(roleD.child.health.state.damage).toBe(1);
+        expect(roleD.child.health.state.maxium).toBe(1);
+        expect(cardD.child.dispose.status).toBe(true);
+        expect(roleD.child.action.state.current).toBe(0);
 
-    //     expect(boardA.child.minions.length).toBe(0);
-    //     expect(boardB.child.minions.length).toBe(0);
-    //     expect(cardC.child.dispose.refer.source).toBe(cardD);
-    //     expect(cardD.child.dispose.refer.source).toBe(cardC);
-    // })
+        expect(boardA.child.minions.length).toBe(0);
+        expect(boardB.child.minions.length).toBe(0);
+        expect(cardC.child.dispose.refer.source).toBe(cardD);
+        expect(cardD.child.dispose.refer.source).toBe(cardC);
+    })
 })

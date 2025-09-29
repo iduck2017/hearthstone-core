@@ -1,4 +1,4 @@
-import { DebugUtil, Event, Method, Model, StoreUtil } from "set-piece";
+import { DebugUtil, Decor, Event, Method, Model, StateUtil, StoreUtil } from "set-piece";
 import { DamageEvent, DamageModel, MinionCardModel, RoleModel, GameModel, PlayerModel, HeroModel, WeaponCardModel } from "../../..";
 import { DamageType } from "../../../types/damage";
 
@@ -22,6 +22,11 @@ export namespace RoleAttackProps {
     }
 }
 
+export class RoleAttackDecor extends Decor<RoleAttackProps.S> {
+    public add(value: number) { this.detail.offset += value }
+}
+
+@StateUtil.use(RoleAttackDecor)
 @StoreUtil.is('attack')
 export class RoleAttackModel extends Model<
     RoleAttackProps.E,
@@ -32,16 +37,12 @@ export class RoleAttackModel extends Model<
 > {
     public get refer() {
         const refer = super.refer;
-        const hero = this.route.hero;
         const player = this.route.player;
-        const minion = this.route.minion;
         const board = player?.child.board;
         const weapon = board?.child.weapon;
-        const damage = hero?.child.damage ?? minion?.child.damage;
         return {
             ...refer,
             weapon,
-            damage,
         }
     }
 
@@ -54,9 +55,7 @@ export class RoleAttackModel extends Model<
         }
     }
 
-    public get status() {
-        return this.state.current > 0;
-    }
+    public get status() { return this.state.current > 0; }
 
     constructor(loader: Method<RoleAttackModel['props'] & {
         state: Pick<RoleAttackProps.S, 'origin'>

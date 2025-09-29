@@ -9,9 +9,9 @@ export enum CostType {
 
 export namespace CostProps {
     export type S = {
+        type: CostType;
         origin: number;
         offset: number;
-        type: CostType;
     }
     export type E = {}
     export type C = {}
@@ -30,7 +30,6 @@ export class CostModel extends Model<
     CostProps.R,
     CostProps.P
 > {
-
     public get state() {
         const state = super.state;
         const current = state.origin + state.offset;

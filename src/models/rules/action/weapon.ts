@@ -29,12 +29,12 @@ export class WeaponActionModel extends Model<
 > {
     public get state() {
         const state = super.state;
-        const limit = state.origin + state.offset;
-        const baseline = Math.max(state.memory, limit);
+        const maxium = state.origin + state.offset;
+        const baseline = Math.max(state.memory, maxium);
         return {
             ...state,
-            limit,
-            current: Math.min(baseline - state.used, limit),
+            maxium,
+            current: Math.min(baseline - state.used, maxium),
         }
     }
 

@@ -1,4 +1,4 @@
-import { DebugUtil, Event, Format, Loader, LogLevel, Method, Model, Props, TranxUtil } from "set-piece";
+import { DebugUtil, Event, Loader, LogLevel, Method, Model, Props, TranxUtil } from "set-piece";
 import { CardModel, GraveyardModel, HeroModel, MinionCardModel, PlayerModel, SecretCardModel, WeaponCardModel } from '../../..'
 
 export namespace DisposeProps {
@@ -23,7 +23,7 @@ export abstract class DisposeModel<
     E extends Props.E & Partial<DisposeProps.E> = {},
     S extends Props.S & Partial<DisposeProps.S> = {},
     C extends Props.C & Partial<DisposeProps.C> = {},
-    R extends Props.R & Partial<DisposeProps.R> = {},
+    R extends Props.R & Partial<DisposeProps.R> = Props.R,
     P extends Props.P & Partial<DisposeProps.P> = {}
 > extends Model<
     E & DisposeProps.E,
@@ -44,7 +44,7 @@ export abstract class DisposeModel<
     }
 
     public get status() {
-        return this.state.isLock;
+        return Boolean(this.state.isLock);
     }
 
     public static span() {

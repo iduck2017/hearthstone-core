@@ -1,4 +1,4 @@
-import { DebugUtil, Event, EventUtil, Memory, Method, Model, TranxUtil } from "set-piece";
+import { DebugUtil, Decor, Event, EventUtil, Memory, Method, Model, Producer, TranxUtil } from "set-piece";
 import { RoleModel, MinionCardModel, GameModel, PlayerModel, CardModel, HeroModel } from "../..";
 import { DamageEvent } from "../../types/damage";
 import { RestoreEvent } from "../../types/restore";
@@ -28,6 +28,10 @@ export namespace HealthProps {
     }
 }
 
+export class HealthDecor extends Decor<HealthProps.S> {
+    public add(value: number) { this.detail.offset += value }
+}
+
 export class HealthModel extends Model<
     HealthProps.E,
     HealthProps.S,
@@ -37,12 +41,12 @@ export class HealthModel extends Model<
 > {
     public get state() {
         const state = super.state;
-        const limit = state.origin + state.offset;
-        const baseline = Math.max(state.memory, limit);
+        const maxium = state.origin + state.offset;
+        const baseline = Math.max(state.memory, maxium);
         return {
             ...state,
-            limit,
-            current: Math.min(baseline - state.damage, limit),
+            maxium,
+            current: Math.min(baseline - state.damage, maxium),
         }
     }
 
@@ -147,10 +151,10 @@ export class HealthModel extends Model<
     @EventUtil.on(self => self.proxy.event.onChange)
     @DebugUtil.log()
     @TranxUtil.span()
-    private onChange(that: HealthModel, event: Event<Memory<HealthModel>>) {
-        const { memory, limit, damage } = that.state;
-        const offset = memory - limit;
-        if (offset !== 0) this.draft.state.memory = limit;
+    private onChange(that: HealthModel, event: Event) {
+        const { memory, maxium, damage } = that.state;
+        const offset = memory - maxium;
+        if (offset !== 0) this.draft.state.memory = maxium;
         if (offset > 0) this.draft.state.damage -= Math.min(damage, offset);
     }
 }

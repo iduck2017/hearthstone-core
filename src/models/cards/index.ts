@@ -1,4 +1,4 @@
-import { DebugUtil, Model, TranxUtil, Props, Event, Method, Format } from "set-piece";
+import { DebugUtil, Model, TranxUtil, Props, Event, Method } from "set-piece";
 import { CostModel } from "../rules/cost";
 import { ClassType, RarityType } from "../../types/card";
 import { MinionHooksModel } from "../hooks/minion";

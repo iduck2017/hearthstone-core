@@ -1,4 +1,4 @@
-import { Props, Event, Format, Method } from "set-piece";
+import { Props, Event, Method, State } from "set-piece";
 import { MinionHooksEvent, MinionHooksModel } from "../hooks/minion";
 import { CardModel, CardProps } from ".";
 import { RaceType } from "../../types/card";
@@ -36,7 +36,7 @@ export abstract class MinionCardModel<
 > {
     constructor(loader: Method<MinionCardModel['props'] & {
         uuid: string | undefined;
-        state: S & Format.S<Omit<CardProps.S, 'isActive'> & MinionCardProps.S>;
+        state: S & State<Omit<CardProps.S, 'isActive'> & MinionCardProps.S>;
         child: C & Pick<MinionCardProps.C, 'role'> & Pick<CardProps.C, 'cost'>;
         refer: R;
     }, []>) {

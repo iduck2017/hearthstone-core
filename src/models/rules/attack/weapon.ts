@@ -1,5 +1,7 @@
-import { Decor, Event, EventUtil, Method, Model, StateUtil } from "set-piece";
-import { GameModel, PlayerModel, HeroModel, RoleAttackModel, RoleAttackProps, TurnModel, BoardModel, WeaponCardModel } from "../../..";
+import { Decor, Event, EventUtil, Method, Model, Producer, StateUtil } from "set-piece";
+import { GameModel, PlayerModel, HeroModel, RoleAttackModel, RoleAttackProps, TurnModel, BoardModel, WeaponCardModel, DamageEvent } from "../../..";
+import { RoleAttackDecor } from "./role";
+import { RoleActionDecor } from "../action/role";
 
 export namespace WeaponAttackProps {
     export type E = {}
@@ -73,12 +75,19 @@ export class WeaponAttackModel extends Model<
     @EventUtil.on(self => self.route.game?.proxy.child.turn.event.onEnd)
     private onNext(that: TurnModel, event: Event) {
         this.reload()
+        bind(this.route.game?.proxy.child.turn.event.onStart, (event: DamageEvent) => event.set(0))
     }
 
     @StateUtil.on(self => self.route.player?.proxy.child.hero.all(RoleAttackModel).decor)
-    private onCheck(that: RoleAttackModel, decor: Decor<RoleAttackProps.S>) {
+    private onCheck(that: RoleAttackModel, decor: RoleAttackDecor) {
         if (!this.status) return;
         if (!this.route.board) return;
-        decor.draft.offset += this.state.origin;
+        decor.add(this.state.origin);
     }
+}
+
+
+
+function bind<E extends Event>(producer: Producer<E> | undefined, handler: (event: E) => void) {
+
 }

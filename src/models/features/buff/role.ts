@@ -1,7 +1,7 @@
 import { Decor, Method, Model, Props, StateUtil, StoreUtil } from "set-piece";
 import { FeatureModel, FeatureProps } from "..";
-import { RoleAttackModel, RoleAttackProps } from "../../rules/attack/role";
-import { HealthModel, HealthProps } from "../../rules/health";
+import { RoleAttackDecor, RoleAttackModel, RoleAttackProps } from "../../rules/attack/role";
+import { HealthDecor, HealthModel, HealthProps } from "../../rules/health";
 import { RoleFeatureModel } from "../role";
 
 export namespace RoleBuffProps {
@@ -46,17 +46,15 @@ export abstract class RoleBuffModel<
     }
 
     @StateUtil.on(self => self.route.role?.proxy.child.attack.decor)
-    protected onAttackCheck(that: RoleAttackModel, decor: Decor<RoleAttackProps.S>) {
+    protected onAttackCheck(that: RoleAttackModel, decor: RoleAttackDecor) {
         if (!this.state.isActive) return;
-        const self: RoleBuffModel = this;
-        decor.draft.offset += self.state.offset[0];
+        decor.add(this.state.offset[0]);
     }
 
     @StateUtil.on(self => self.route.role?.proxy.child.health.decor)
-    protected onHealthCheck(that: HealthModel, decor: Decor<HealthProps.S>) {
+    protected onHealthCheck(that: HealthModel, decor: HealthDecor) {
         if (!this.state.isActive) return;
-        const self: RoleBuffModel = this;
-        decor.draft.offset += self.state.offset[1];
+        decor.add(this.state.offset[1]);
     }
 
     public override() {
