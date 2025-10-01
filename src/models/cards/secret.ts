@@ -28,24 +28,6 @@ export abstract class SecretCardModel<
     R & SecretCardProps.R
 > {
 
-    // public span() {
-    //     return function(
-    //         prototype: SecretCardModel,
-    //         key: string,
-    //         descriptor: TypedPropertyDescriptor<Method>
-    //     ): TypedPropertyDescriptor<Method> {
-    //         const handler = descriptor.value;
-    //         if (!handler) return descriptor;
-    //         const instance = {
-    //             [key](this: SecretCardModel, ...args: any[]) {
-    //                 if (!this.status) return;
-    //                 const result = handler.call(this, ...args);
-    //             }
-    //         }
-    //         descriptor.value = instance[key];
-    //         return descriptor;
-    //     }
-    // }
 
     constructor(loader: Method<SecretCardModel['props'] & {
         state: S & State<Omit<CardProps.S, 'isActive'> & SpellCardProps.S>;

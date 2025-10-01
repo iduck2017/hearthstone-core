@@ -1,6 +1,6 @@
 import { Loader, Method, Model, Props } from "set-piece";
 import { SelectEvent, SelectUtil } from "../../utils/select";
-import { FeatureModel, FeatureProps } from "../features";
+import { FeatureModel, FeatureProps } from ".";
 import { CardFeatureModel } from "./card";
 
 export namespace EffectProps {

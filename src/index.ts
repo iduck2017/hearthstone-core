@@ -73,6 +73,7 @@ export { DivineSheildProps, DivineSheildModel } from "./models/entries/divine-sh
 
 // features
 export { FeatureProps, FeatureModel } from './models/features'
+export { SecretFeatureProps, SecretFeatureModel } from "./models/features/secret";
 export { CardFeatureProps, CardFeatureModel } from "./models/features/card";
 export { RoleFeatureProps, RoleFeatureModel } from "./models/features/role";
 export { RoleBuffProps, RoleBuffModel } from "./models/features/buff/role";
