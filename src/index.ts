@@ -43,7 +43,7 @@ export { WeaponAttackProps, WeaponAttackModel } from "./models/rules/attack/weap
 export { WeaponActionProps, WeaponActionModel } from "./models/rules/action/weapon";
 
 // card
-export { CardProps, CardModel } from "./models/cards";
+export { CardProps, CardModel, CardPlayEvent } from "./models/cards";
 export { SecretCardProps, SecretCardModel } from "./models/cards/secret";
 export { SpellCardProps, SpellCardModel } from './models/cards/spell';
 export { MinionCardProps, MinionCardModel } from "./models/cards/minion";
@@ -96,4 +96,3 @@ export { WarriorModel } from "./models/heroes/warrior";
 export { SkillProps, SkillModel } from './models/skills';
 export { FireBlastModel } from './models/skills/fireblast';
 export { ArmorUpModel } from './models/skills/armor-up';
-

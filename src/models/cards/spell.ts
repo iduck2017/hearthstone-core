@@ -18,11 +18,12 @@ export namespace SpellCardProps {
 }
 
 export class SpellCardModel<
-    E extends Partial<SpellCardProps.E & CardProps.E> & Props.E = {},
+    E extends Partial<SpellCardProps.E & CardProps.E<[SpellHooksEvent]>> & Props.E = {},
     S extends Partial<SpellCardProps.S & CardProps.S> & Props.S = {},
-    C extends Partial<SpellCardProps.C & CardProps.C> & Props.C = {},
+    C extends Partial<SpellCardProps.C & CardProps.C<[SpellHooksEvent]>> & Props.C = {},
     R extends Partial<SpellCardProps.R & CardProps.R> & Props.R = {}
 > extends CardModel<
+    [SpellHooksEvent],
     E & SpellCardProps.E,
     S & SpellCardProps.S,
     C & SpellCardProps.C,
@@ -30,7 +31,7 @@ export class SpellCardModel<
 > {
     constructor(loader: Method<SpellCardModel['props'] & {
         state: S & State<Omit<CardProps.S, 'isActive'> & SpellCardProps.S>;
-        child: C & Pick<CardProps.C, 'cost'>
+        child: C & Pick<CardProps.C<[SpellHooksEvent]>, 'cost'>
         refer: R;
     }, []>) {
         super(() => {

@@ -5,6 +5,7 @@ import { DisposeModel } from "../rules/dispose";
 import { SecretDisposeModel } from "../rules/dispose/secret";
 import { PlayerModel } from "../player";
 import { SecretDeployModel } from "../rules/deploy/secret";
+import { SpellHooksEvent } from "../hooks/spell";
 
 export namespace SecretCardProps {
     export type S = {};
@@ -17,9 +18,9 @@ export namespace SecretCardProps {
 }
 
 export abstract class SecretCardModel<
-    E extends Partial<SecretCardProps.E & SpellCardProps.E & CardProps.E> & Props.E = {},
+    E extends Partial<SecretCardProps.E & SpellCardProps.E & CardProps.E<[SpellHooksEvent]>> & Props.E = {},
     S extends Partial<SecretCardProps.S & SpellCardProps.S & CardProps.S> & Props.S = {},
-    C extends Partial<SecretCardProps.C & SpellCardProps.C & CardProps.C> & Props.C = {},
+    C extends Partial<SecretCardProps.C & SpellCardProps.C & CardProps.C<[SpellHooksEvent]>> & Props.C = {},
     R extends Partial<SecretCardProps.R & SpellCardProps.R & CardProps.R> & Props.R = {}
 > extends SpellCardModel<
     E & SecretCardProps.E,
@@ -27,11 +28,9 @@ export abstract class SecretCardModel<
     C & SecretCardProps.C,
     R & SecretCardProps.R
 > {
-
-
     constructor(loader: Method<SecretCardModel['props'] & {
         state: S & State<Omit<CardProps.S, 'isActive'> & SpellCardProps.S>;
-        child: C & Pick<CardProps.C, 'cost'>;
+        child: C & Pick<CardProps.C<[SpellHooksEvent]>, 'cost'>;
         refer: R;
     }, []>) {
         super(() => {
