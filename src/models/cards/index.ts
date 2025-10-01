@@ -8,15 +8,9 @@ import { CardFeatureModel } from "../features/card";
 import { DeployModel } from "../rules/deploy";
 import { PerformModel } from "../rules/perform";
 
-export class CardPlayEvent<
-    T extends any[]
-> extends Event<{ params: T }> {
-    public set(params: T) { this._detail.params = params; }
-}
 
 export namespace CardProps {
-    export type E<T extends any[]> = {
-        toPlay: Event<{ params: T }>,
+    export type E = {
         onPlay: Event,
         onDraw: Event,
     };
@@ -28,14 +22,14 @@ export namespace CardProps {
         readonly rarity: RarityType;
         readonly isCollectible: boolean;
     };
-    export type C<T extends any[]> = {
+    export type C = {
         readonly cost: CostModel;
         readonly feats: CardFeatureModel[];
         readonly damage: DamageModel
         readonly restore: RestoreModel
         readonly deploy?: DeployModel;
         readonly dispose?: DisposeModel;
-        readonly perform: PerformModel<T>;
+        readonly perform: PerformModel;
     };
     export type P = {
         minion: MinionCardModel;
@@ -50,15 +44,14 @@ export namespace CardProps {
 }
 
 export abstract class CardModel<
-    T extends any[] = any[],
-    E extends Partial<CardProps.E<T>> & Props.E = {},
+    E extends Partial<CardProps.E> & Props.E = {},
     S extends Partial<CardProps.S> & Props.S = {},
-    C extends Partial<CardProps.C<T>> & Props.C = {},
+    C extends Partial<CardProps.C> & Props.C = {},
     R extends Partial<CardProps.R> & Props.R = {}
 > extends Model<
-   E & CardProps.E<T>,
+   E & CardProps.E,
    S & CardProps.S,
-   C & CardProps.C<T>,
+   C & CardProps.C,
    R & CardProps.R,
    CardProps.P
 > {
@@ -75,7 +68,7 @@ export abstract class CardModel<
 
     constructor(loader: Method<CardModel['props'] & {
         state: S & Omit<CardProps.S, 'isActive'>,
-        child: C & Pick<CardProps.C<T>, 'cost' | 'perform' | 'dispose'>,
+        child: C & Pick<CardProps.C, 'cost' | 'perform' | 'dispose'>,
         refer: R & CardProps.R,
     }, []>) {
         super(() => {
@@ -113,14 +106,11 @@ export abstract class CardModel<
         const params = await perform.toRun();
         // cancel by user
         if (!params) return;
-
-        const event = new CardPlayEvent({ params });
-        this.event.toPlay(event);
-        await this.doPlay(...event.detail.params);
+        await this.doPlay(...params);
         await this.event.onPlay(new Event({}));
     }
 
-    protected async doPlay(...params: T) {
+    protected async doPlay(...params: any[]) {
         const player = this.route.player;
         if (!player) return;
         // mana

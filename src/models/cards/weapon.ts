@@ -22,12 +22,11 @@ export namespace WeaponCardProps {
 }
 
 export class WeaponCardModel<
-    E extends Partial<WeaponCardProps.E & CardProps.E<[WeaponHooksEvent]>> & Props.E = {},
+    E extends Partial<WeaponCardProps.E & CardProps.E> & Props.E = {},
     S extends Partial<WeaponCardProps.S & CardProps.S> & Props.S = {},
-    C extends Partial<WeaponCardProps.C & CardProps.C<[WeaponHooksEvent]>> & Props.C = {},
+    C extends Partial<WeaponCardProps.C & CardProps.C> & Props.C = {},
     R extends Partial<WeaponCardProps.R & CardProps.R> & Props.R = {}
 > extends CardModel<
-    [WeaponHooksEvent],
     E & WeaponCardProps.E,
     S & WeaponCardProps.S,
     C & WeaponCardProps.C,
@@ -35,7 +34,7 @@ export class WeaponCardModel<
 > {
     constructor(loader: Method<WeaponCardModel['props'] & {
         state: S & WeaponCardProps.S & Omit<CardProps.S, 'isActive'>;
-        child: C & Pick<WeaponCardProps.C, 'attack' | 'action'> & Pick<CardProps.C<[WeaponHooksEvent]>, 'cost'>;
+        child: C & Pick<WeaponCardProps.C, 'attack' | 'action'> & Pick<CardProps.C, 'cost'>;
         refer: R & WeaponCardProps.R;
     }, []>) {
         super(() => {

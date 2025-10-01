@@ -24,12 +24,11 @@ export namespace MinionCardProps {
 }
 
 export abstract class MinionCardModel<
-    E extends Partial<MinionCardProps.E & CardProps.E<[number, MinionHooksEvent]>> & Props.E = {},
+    E extends Partial<MinionCardProps.E & CardProps.E> & Props.E = {},
     S extends Partial<MinionCardProps.S & CardProps.S> & Props.S = {},
-    C extends Partial<MinionCardProps.C & CardProps.C<[number, MinionHooksEvent]>> & Props.C = {},
+    C extends Partial<MinionCardProps.C & CardProps.C> & Props.C = {},
     R extends Partial<MinionCardProps.R & CardProps.R> & Props.R = {}
 > extends CardModel<
-    [number, MinionHooksEvent],
     E & MinionCardProps.E, 
     S & MinionCardProps.S, 
     C & MinionCardProps.C,
@@ -38,7 +37,7 @@ export abstract class MinionCardModel<
     constructor(loader: Method<MinionCardModel['props'] & {
         uuid: string | undefined;
         state: S & State<Omit<CardProps.S, 'isActive'> & MinionCardProps.S>;
-        child: C & Pick<MinionCardProps.C, 'role'> & Pick<CardProps.C<[number, MinionHooksEvent]>, 'cost'>;
+        child: C & Pick<MinionCardProps.C, 'role'> & Pick<CardProps.C, 'cost'>;
         refer: R;
     }, []>) {
         super(() => {

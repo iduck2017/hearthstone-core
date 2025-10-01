@@ -43,7 +43,7 @@ export { WeaponAttackProps, WeaponAttackModel } from "./models/rules/attack/weap
 export { WeaponActionProps, WeaponActionModel } from "./models/rules/action/weapon";
 
 // card
-export { CardProps, CardModel, CardPlayEvent } from "./models/cards";
+export { CardProps, CardModel } from "./models/cards";
 export { SecretCardProps, SecretCardModel } from "./models/cards/secret";
 export { SpellCardProps, SpellCardModel } from './models/cards/spell';
 export { MinionCardProps, MinionCardModel } from "./models/cards/minion";
@@ -86,6 +86,7 @@ export { WeaponBattlecryProps, WeaponBattlecryModel } from "./models/hooks/battl
 export { DeathrattleProps, DeathrattleModel } from "./models/hooks/deathrattle";
 export { EndTurnHookProps, EndTurnHookModel } from "./models/hooks/end-turn";
 export { StartTurnHookProps, StartTurnHookModel } from "./models/hooks/start-turn";
+export { SpellHooksEvent } from './models/hooks/spell';
 
 // heroes
 export { HeroProps, HeroModel } from "./models/heroes";
@@ -96,3 +97,5 @@ export { WarriorModel } from "./models/heroes/warrior";
 export { SkillProps, SkillModel } from './models/skills';
 export { FireBlastModel } from './models/skills/fireblast';
 export { ArmorUpModel } from './models/skills/armor-up';
+
+export { SpellPerformEvent } from './models/rules/perform/spell';

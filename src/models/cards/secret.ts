@@ -18,9 +18,9 @@ export namespace SecretCardProps {
 }
 
 export abstract class SecretCardModel<
-    E extends Partial<SecretCardProps.E & SpellCardProps.E & CardProps.E<[SpellHooksEvent]>> & Props.E = {},
+    E extends Partial<SecretCardProps.E & SpellCardProps.E & CardProps.E> & Props.E = {},
     S extends Partial<SecretCardProps.S & SpellCardProps.S & CardProps.S> & Props.S = {},
-    C extends Partial<SecretCardProps.C & SpellCardProps.C & CardProps.C<[SpellHooksEvent]>> & Props.C = {},
+    C extends Partial<SecretCardProps.C & SpellCardProps.C & CardProps.C> & Props.C = {},
     R extends Partial<SecretCardProps.R & SpellCardProps.R & CardProps.R> & Props.R = {}
 > extends SpellCardModel<
     E & SecretCardProps.E,
@@ -30,7 +30,7 @@ export abstract class SecretCardModel<
 > {
     constructor(loader: Method<SecretCardModel['props'] & {
         state: S & State<Omit<CardProps.S, 'isActive'> & SpellCardProps.S>;
-        child: C & Pick<CardProps.C<[SpellHooksEvent]>, 'cost'>;
+        child: C & Pick<CardProps.C, 'cost'>;
         refer: R;
     }, []>) {
         super(() => {

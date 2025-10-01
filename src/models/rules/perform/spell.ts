@@ -4,8 +4,14 @@ import { EffectModel } from "../../features/effect";
 import { SpellHooksEvent } from "../../hooks/spell";
 import { SpellCardModel } from "../../cards/spell";
 
+export class SpellPerformEvent extends Event<{ params: SpellHooksEvent }> {
+    public set(params: SpellHooksEvent) { this._detail.params = params; }
+}
+
 export namespace SpellPerformProps {
-    export type E = {};
+    export type E = {
+        toRun: SpellPerformEvent;
+    };
     export type S = {};
     export type C = {};
     export type R = {};
@@ -46,9 +52,10 @@ export class SpellPerformModel extends PerformModel<
         const spell = this.route.spell;
         if (!spell) return;
         
-        const signal = new Event({})
+        const signal = new SpellPerformEvent({ params: event })
         this.event.toRun(signal);
         if (signal.isAbort) return;
+        event = signal.detail.params;
         
         const player = this.route.player;
         if (!player) return;
