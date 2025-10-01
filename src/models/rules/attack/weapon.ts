@@ -78,8 +78,8 @@ export class WeaponAttackModel extends Model<
         bind(this.route.game?.proxy.child.turn.event.onStart, (event: DamageEvent) => event.set(0))
     }
 
-    @StateUtil.on(self => self.route.player?.proxy.child.hero.all(RoleAttackModel).decor)
-    private onCheck(that: RoleAttackModel, decor: RoleAttackDecor) {
+    @StateUtil.on(self => self.route.player?.proxy.child.hero.child.role.child.attack.decor)
+    private onCompute(that: RoleAttackModel, decor: RoleAttackDecor) {
         if (!this.status) return;
         if (!this.route.board) return;
         decor.add(this.state.origin);

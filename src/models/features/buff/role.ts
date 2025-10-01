@@ -46,13 +46,13 @@ export abstract class RoleBuffModel<
     }
 
     @StateUtil.on(self => self.route.role?.proxy.child.attack.decor)
-    protected onAttackCheck(that: RoleAttackModel, decor: RoleAttackDecor) {
+    protected onAttackCompute(that: RoleAttackModel, decor: RoleAttackDecor) {
         if (!this.state.isActive) return;
         decor.add(this.state.offset[0]);
     }
 
     @StateUtil.on(self => self.route.role?.proxy.child.health.decor)
-    protected onHealthCheck(that: HealthModel, decor: HealthDecor) {
+    protected onHealthCompute(that: HealthModel, decor: HealthDecor) {
         if (!this.state.isActive) return;
         decor.add(this.state.offset[1]);
     }

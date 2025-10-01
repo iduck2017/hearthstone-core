@@ -33,7 +33,7 @@ export class MinionDeployModel extends DeployModel<
         });
     }
 
-    // equip
+    // summon
     public run(board?: BoardModel, index?: number) {
         const player = this.route.player;
         if (!board) board = player?.child.board;

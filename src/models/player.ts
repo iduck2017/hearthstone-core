@@ -8,6 +8,7 @@ import { ManaModel } from "./rules/mana";
 import { HeroModel } from "./heroes";
 import { RoleModel } from "./role";
 import { MinionCardModel } from "./cards/minion";
+import { FeatureModel } from "./features";
 
 export namespace PlayerProps {
     export type S= {};
@@ -20,6 +21,7 @@ export namespace PlayerProps {
         readonly deck: DeckModel;
         readonly board: BoardModel;
         readonly graveyard: GraveyardModel;
+        readonly feats: FeatureModel[];
     };
     export type R = {}
     export type P = {
@@ -66,6 +68,7 @@ export class PlayerModel extends Model<
                 uuid: props.uuid,
                 state: { ...props.state },
                 child: {
+                    feats: [],
                     mana: props.child.mana ?? new ManaModel(),
                     hand: props.child.hand ?? new HandModel(),
                     deck: props.child.deck ?? new DeckModel(),
@@ -77,6 +80,10 @@ export class PlayerModel extends Model<
                 route: { game: GameModel.prototype },
             }
         });
+    }
+
+    public add(feature: FeatureModel) {
+        this.draft.child.feats.push(feature);
     }
 
     public query(isMinion?: boolean): RoleModel[] {

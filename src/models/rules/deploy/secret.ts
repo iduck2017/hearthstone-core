@@ -36,7 +36,7 @@ export class SecretDeployModel extends DeployModel<
         });
     }
 
-    // equip
+    // deploy
     public run(board?: BoardModel) {
         const player = this.route.player;
         if (!board) board = player?.child.board;

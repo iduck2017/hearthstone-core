@@ -5,6 +5,7 @@ import { DamageType } from "../../../types/damage";
 export namespace RoleAttackProps {
     export type E = {
         toRun: Event<{ target: RoleModel }>;
+        toRecv: Event<{ target: RoleModel }>;
         onRun: Event<{ target: RoleModel }>;
     }
     export type S = {
@@ -35,17 +36,6 @@ export class RoleAttackModel extends Model<
     RoleAttackProps.R,
     RoleAttackProps.P
 > {
-    public get refer() {
-        const refer = super.refer;
-        const player = this.route.player;
-        const board = player?.child.board;
-        const weapon = board?.child.weapon;
-        return {
-            ...refer,
-            weapon,
-        }
-    }
-
     public get state() {
         const state = super.state;
         const current: number = state.origin + state.offset;
@@ -87,13 +77,17 @@ export class RoleAttackModel extends Model<
         const roleA = this.route.role;
         if (!roleA) return;
         if (!this.status) return;
+
+        const attackB = roleB.child.attack;
+        let signal = new Event({ target: roleB })
+        attackB.event.toRecv(signal);
+        if (signal.isAbort) return;
         
-        const signal = new Event({ target: roleB })
+        signal = new Event({ target: roleB })
         this.event.toRun(signal);
         if (signal.isAbort) return;
         
         const healthB = roleB.child.health;
-        const attackB = roleB.child.attack;
         if (healthB.state.current <= 0) return;
 
         const sourceA = roleA.route.card ?? roleA.route.hero;
@@ -117,9 +111,22 @@ export class RoleAttackModel extends Model<
                 origin: attackB.state.current,
             }),
         ])
-        // weapon
-        const weapon = this.refer.weapon;
-        if (weapon) weapon.child.action.use();
+        this.onRun(roleB);
+    }
+
+
+    protected onRun(roleB: RoleModel) {
+        const roleA = this.route.role;
+        if (!roleA) return;
+
+        const hero = this.route.hero;
+        if (hero) {
+            const player = this.route.player;
+            if (!player) return;
+            const board = player.child.board;
+            const weapon = board.child.weapon;
+            if (weapon) weapon.child.action.use();
+        }
 
         // stealth
         const entries = roleA.child.entries;

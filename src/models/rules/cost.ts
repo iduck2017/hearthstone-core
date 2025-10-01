@@ -1,6 +1,7 @@
-import { Method, Model } from "set-piece";
+import { Decor, Method, Model, StateUtil } from "set-piece";
 import { PlayerModel } from "../player";
 import { GameModel } from "../game";
+import { CardModel } from "../cards";
 
 export enum CostType {
     MANA = 1,
@@ -18,11 +19,39 @@ export namespace CostProps {
     export type R = {}
     export type P = {
         game: GameModel;
+        card: CardModel;
         player: PlayerModel;
     }
 }
 
+export class CostDecor extends Decor<CostProps.S> {
+    
+    private isFree = false;
 
+    private lane0: number[] = []; // plus
+    private lane1: number[] = []; // minus
+    private lane2: number[] = []; // minus gt0
+
+    public get result() {
+        const result = { ...this.detail }
+        this.lane1.forEach(item => result.offset += item);
+        this.lane2.forEach(item => {
+            if (result.origin + result.offset + item < 1) return;
+            result.offset += item;
+        });
+        if (this.isFree) result.offset = -result.origin;
+        return result;
+    }
+
+    public add(value: number, isLimit?: boolean) {
+        const lane = isLimit ? this.lane2 : this.lane1;
+        lane.push(value);
+    }
+
+    public free() { this.isFree = true; }
+}
+
+@StateUtil.use(CostDecor)
 export class CostModel extends Model<
     CostProps.E, 
     CostProps.S, 
@@ -67,6 +96,7 @@ export class CostModel extends Model<
                 route: {
                     game: GameModel.prototype,
                     player: PlayerModel.prototype,
+                    card: CardModel.prototype,
                 },
             }
         });

@@ -1,4 +1,4 @@
-import { Method, Model, Props } from "set-piece";
+import { Method, Model, Props, State } from "set-piece";
 import { SpellCardModel, SpellCardProps } from "./spell";
 import { CardProps } from ".";
 import { DisposeModel } from "../rules/dispose";
@@ -27,8 +27,28 @@ export abstract class SecretCardModel<
     C & SecretCardProps.C,
     R & SecretCardProps.R
 > {
+
+    // public span() {
+    //     return function(
+    //         prototype: SecretCardModel,
+    //         key: string,
+    //         descriptor: TypedPropertyDescriptor<Method>
+    //     ): TypedPropertyDescriptor<Method> {
+    //         const handler = descriptor.value;
+    //         if (!handler) return descriptor;
+    //         const instance = {
+    //             [key](this: SecretCardModel, ...args: any[]) {
+    //                 if (!this.status) return;
+    //                 const result = handler.call(this, ...args);
+    //             }
+    //         }
+    //         descriptor.value = instance[key];
+    //         return descriptor;
+    //     }
+    // }
+
     constructor(loader: Method<SecretCardModel['props'] & {
-        state: S & Omit<CardProps.S, 'isActive'>;
+        state: S & State<Omit<CardProps.S, 'isActive'> & SpellCardProps.S>;
         child: C & Pick<CardProps.C, 'cost'>;
         refer: R;
     }, []>) {

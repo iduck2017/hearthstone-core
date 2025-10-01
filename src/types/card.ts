@@ -21,3 +21,9 @@ export enum RaceType {
     DRAGON,
     MECH
 }
+
+export enum SchoolType {
+    FIRE,
+    FROST,
+    ARCANE,
+}

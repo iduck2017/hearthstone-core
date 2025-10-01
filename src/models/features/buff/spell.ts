@@ -39,7 +39,7 @@ export class SpellBuffModel extends FeatureModel<
     }
 
     @StateUtil.on(self => self.route.player?.proxy.child.hero.child.spellDamage.decor)
-    onCheck(that: SpellDamageModel, decor: SpellDamageDecor) {
+    onCompute(that: SpellDamageModel, decor: SpellDamageDecor) {
         if (!this.route.board) return;
         if (!this.state.isActive) return;
         decor.add(this.state.offset);

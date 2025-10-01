@@ -1,11 +1,14 @@
-import { Event, Method, Model, Props } from "set-piece";
+import { Event, Method, Model, Props, State } from "set-piece";
 import { CardModel, CardProps } from ".";
 import { EffectModel } from "../features/effect";
 import { SpellPerformModel } from "../rules/perform/spell";
 import { SpellHooksEvent } from "../hooks/spell";
+import { SchoolType } from "../../types/card";
 
 export namespace SpellCardProps {
-    export type S = {};
+    export type S = {
+        readonly schools: SchoolType[];
+    };
     export type E = {};
     export type C = {
         readonly effects: EffectModel[],
@@ -26,7 +29,7 @@ export class SpellCardModel<
     R & SpellCardProps.R
 > {
     constructor(loader: Method<SpellCardModel['props'] & {
-        state: S & Omit<CardProps.S, 'isActive'>;
+        state: S & State<Omit<CardProps.S, 'isActive'> & SpellCardProps.S>;
         child: C & Pick<CardProps.C, 'cost'>
         refer: R;
     }, []>) {

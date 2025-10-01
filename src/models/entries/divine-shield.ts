@@ -48,16 +48,14 @@ export class DivineSheildModel extends RoleFeatureModel<
         return true;
     }
 
-    public async use() {
+    public async use(event: DamageEvent) {
         if (!this.state.isActive) return false;
         if (this.draft.state.count <= 1) this.draft.state.isActive = false;
         this.draft.state.count =- 1;
+        this.event.onUse(event);
         return true;
     }
 
-    public onUse(event: DamageEvent) {
-        this.event.onUse(event);
-    }
 
     public deactive() {
         super.deactive();

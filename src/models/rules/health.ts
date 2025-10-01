@@ -78,7 +78,6 @@ export class HealthModel extends Model<
         });
     }
 
-
     public toHurt(event: DamageEvent) {
         const result = this.event.toHurt(event);
         return result;
@@ -96,13 +95,22 @@ export class HealthModel extends Model<
         const dispose = minion?.child.dispose ?? hero?.child.dispose;
         if (!dispose) return event;
 
-        const result = event.detail.result;
+        let result = event.detail.result;
         if (result <= 0) {
             event.set(0)
             return event;
         }
+
+        // armor
+        if (hero) {
+            const armor = hero.child.armor;
+            const offset = armor.use(result);
+            result = result - offset;
+            event.set(result);
+        }
+
         if (divineSheild.state.isActive) {
-            divineSheild.use();
+            divineSheild.use(event);
             event.set(0)
             return event;
         }

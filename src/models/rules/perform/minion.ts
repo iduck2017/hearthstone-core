@@ -35,7 +35,6 @@ export class MinionPerformModel extends PerformModel<
     }
 
     public async run(from: number, to: number, event: MinionHooksEvent) {
-        
         const signal = new Event({})
         this.event.toRun(signal);
         if (signal.isAbort) return;

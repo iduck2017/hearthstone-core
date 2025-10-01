@@ -101,10 +101,12 @@ export abstract class CardModel<
 
     public async play() {
         if (!this.status) return;
+
         const perform = this.child.perform;
         const params = await perform.toRun();
         if (!params) return;
         await this.doPlay(...params);
+
         await this.event.onPlay(new Event({}));
     }
 
@@ -114,7 +116,7 @@ export abstract class CardModel<
         // mana
         const mana = player.child.mana;
         const cost = this.child.cost;
-        mana.use(cost.state.current);
+        mana.use(cost.state.current, this);
         // use
         const hand = player.child.hand;
         const from = hand.refer.order.indexOf(this);
@@ -122,6 +124,7 @@ export abstract class CardModel<
         const perform = this.child.perform;
         // run
         await perform.run(from, ...params);
+        // try to dispose if not perform
         this.dispose();
     }
 

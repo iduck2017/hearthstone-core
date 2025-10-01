@@ -9,7 +9,7 @@ export namespace WeaponActionProps {
         origin: number;
         offset: number;
         memory: number;
-        used: number;
+        consume: number;
     };
     export type C = {};
     export type R = {};
@@ -34,7 +34,7 @@ export class WeaponActionModel extends Model<
         return {
             ...state,
             maxium,
-            current: Math.min(baseline - state.used, maxium),
+            current: Math.min(baseline - state.consume, maxium),
         }
     }
 
@@ -48,7 +48,7 @@ export class WeaponActionModel extends Model<
                 uuid: props.uuid,
                 state: { 
                     offset: 0,
-                    used: 0,
+                    consume: 0,
                     memory,
                     ...props.state,
                 },
@@ -66,7 +66,7 @@ export class WeaponActionModel extends Model<
     @DisposeModel.span()
     @TranxUtil.span()
     public use() {
-        this.draft.state.used += 1;
+        this.draft.state.consume += 1;
         const weapon = this.route.weapon;
         if (!weapon) return;
         const dispose = weapon.child.dispose;

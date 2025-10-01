@@ -1,8 +1,6 @@
 // enums
 export { DamageType } from "./types/damage";
-export { ClassType } from "./types/card";
-export { RarityType } from "./types/card";
-export { RaceType } from "./types/card";
+export { RaceType, SchoolType, RarityType, ClassType } from "./types/card";
 
 // event
 export { SelectEvent } from "./utils/select";
@@ -36,7 +34,7 @@ export { RoleActionProps, RoleActionModel } from "./models/rules/action/role";
 export { SleepProps, SleepModel } from './models/rules/sleep';
 export { ManaProps, ManaModel } from './models/rules/mana';
 export { TurnProps, TurnModel } from "./models/rules/turn";
-export { CostProps, CostModel } from "./models/rules/cost";
+export { CostProps, CostType, CostDecor, CostModel } from "./models/rules/cost";
 export { ArmorProps, ArmorModel } from "./models/rules/armor";
 export { DamageProps, DamageModel } from "./models/actions/damage";
 export { RestoreProps, RestoreModel } from "./models/actions/restore";
