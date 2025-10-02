@@ -18,7 +18,7 @@ export namespace WeaponHooksProps {
 }
 
 
-export type WeaponHooksEvent = {
+export type WeaponHooksOptions = {
     battlecry: Map<WeaponBattlecryModel, Model[]>
 }
 

@@ -1,5 +1,5 @@
 import { Props, Event, Method, State } from "set-piece";
-import { MinionHooksEvent, MinionHooksModel } from "../hooks/minion";
+import { MinionHooksOptions, MinionHooksModel } from "../hooks/minion";
 import { CardModel, CardProps } from ".";
 import { RaceType } from "../../types/card";
 import { RoleModel } from "../role";

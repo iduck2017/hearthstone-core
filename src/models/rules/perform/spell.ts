@@ -1,16 +1,12 @@
 import { Event, Loader } from "set-piece";
 import { PerformModel } from ".";
 import { EffectModel } from "../../features/effect";
-import { SpellHooksEvent } from "../../hooks/spell";
+import { SpellCastEvent, SpellHooksOptions } from "../../hooks/spell";
 import { SpellCardModel } from "../../cards/spell";
-
-export class SpellPerformEvent extends Event<{ params: SpellHooksEvent }> {
-    public set(params: SpellHooksEvent) { this._detail.params = params; }
-}
 
 export namespace SpellPerformProps {
     export type E = {
-        toRun: SpellPerformEvent;
+        toRun: SpellCastEvent;
     };
     export type S = {};
     export type C = {};
@@ -19,7 +15,7 @@ export namespace SpellPerformProps {
 }
 
 export class SpellPerformModel extends PerformModel<
-    [SpellHooksEvent],
+    [SpellHooksOptions],
     SpellPerformProps.E,
     SpellPerformProps.S,
     SpellPerformProps.C,
@@ -39,7 +35,7 @@ export class SpellPerformModel extends PerformModel<
         });
     }
     
-    public async toRun(): Promise<[SpellHooksEvent] | undefined> {
+    public async toRun(): Promise<[SpellHooksOptions] | undefined> {
         const spell = this.route.spell;
         if (!spell) return;
         // spell
@@ -48,21 +44,21 @@ export class SpellPerformModel extends PerformModel<
         return [{ effect }];
     }
     
-    public async run(from: number, event: SpellHooksEvent) {
+    public async run(from: number, options: SpellHooksOptions) {
         const spell = this.route.spell;
         if (!spell) return;
         
-        const signal = new SpellPerformEvent({ params: event })
-        this.event.toRun(signal);
-        if (signal.isAbort) return;
-        event = signal.detail.params;
+        const event = new SpellCastEvent({ options: options })
+        this.event.toRun(event);
+        if (event.isAbort) return;
+        options = event.detail.options;
         
         const player = this.route.player;
         if (!player) return;
         // spell
         const effects = spell.child.effects;
         for (const item of effects) {
-            const params = event.effect.get(item);
+            const params = options.effect.get(item);
             if (!params) continue;
             await item.run(...params);
         }

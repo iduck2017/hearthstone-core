@@ -16,7 +16,7 @@ export namespace MinionHooksProps {
     export type R = {};
 }
 
-export type MinionHooksEvent = {
+export type MinionHooksOptions = {
     battlecry: Map<RoleBattlecryModel, Model[]>
 }
 

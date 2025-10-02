@@ -71,14 +71,14 @@ export abstract class SkillModel<
         const cost = this.child.cost;
         if (!cost.status) return;
         
-        const signal = new Event({});
-        this.event.toRun(signal);
-        if (signal.isAbort) return;
+        const event = new Event({});
+        this.event.toRun(event);
+        if (event.isAbort) return;
 
-        const event = this.toRun();
-        if (!event) return;
+        const options = this.toRun();
+        if (!options) return;
         const params: Model[] = [];
-        for (const item of event) {
+        for (const item of options) {
             const result = await SelectUtil.get(item);
             if (result === undefined) return;
             params.push(result);

@@ -152,9 +152,9 @@ export class RoleActionModel extends Model<
         const roleB = await this.select();
         if (!roleB) return;
 
-        const signal = new Event({})
-        this.event.toRun(signal)
-        if (signal.isAbort) return;
+        const event = new Event({})
+        this.event.toRun(event)
+        if (event.isAbort) return;
 
         // mana
         if (!this.use()) return;

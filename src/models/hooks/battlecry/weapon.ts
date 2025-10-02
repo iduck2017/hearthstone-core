@@ -73,9 +73,9 @@ export abstract class WeaponBattlecryModel<
     public async run(from: number, ...params: T) {
         if (!this.state.isActive) return;
         
-        const signal = new Event({})
-        this.event.toRun(signal);
-        if (signal.isAbort) return;
+        const event = new Event({})
+        this.event.toRun(event);
+        if (event.isAbort) return;
 
         await this.doRun(from, ...params);
         this.event.onRun(new Event({}));

@@ -2,7 +2,7 @@ import { Event, Loader } from "set-piece";
 import { PerformModel } from ".";
 import { SelectEvent, SelectUtil } from "../../../utils/select";
 import { RoleBattlecryModel } from "../../hooks/battlecry/role";
-import { MinionHooksEvent } from "../../hooks/minion";
+import { MinionHooksOptions } from "../../hooks/minion";
 import { MinionCardModel } from "../../cards/minion";
 
 export namespace MinionPerformProps {
@@ -14,7 +14,7 @@ export namespace MinionPerformProps {
 }
 
 export class MinionPerformModel extends PerformModel<
-    [number, MinionHooksEvent],
+    [number, MinionHooksOptions],
     MinionPerformProps.E,
     MinionPerformProps.S,
     MinionPerformProps.C,
@@ -34,10 +34,10 @@ export class MinionPerformModel extends PerformModel<
         });
     }
 
-    public async run(from: number, to: number, event: MinionHooksEvent) {
-        const signal = new Event({})
-        this.event.toRun(signal);
-        if (signal.isAbort) return;
+    public async run(from: number, to: number, options: MinionHooksOptions) {
+        const event = new Event({})
+        this.event.toRun(event);
+        if (event.isAbort) return;
 
         const player = this.route.player;
         if (!player) return;
@@ -47,7 +47,7 @@ export class MinionPerformModel extends PerformModel<
         const hooks = minion.child.hooks;
         const battlecry = hooks.child.battlecry;
         for (const item of battlecry) {
-            const params = event.battlecry.get(item);
+            const params = options.battlecry.get(item);
             if (!params) continue;
             await item.run(from, to, ...params);
         }
@@ -59,7 +59,7 @@ export class MinionPerformModel extends PerformModel<
         this.event.onRun(new Event({}));
     }
 
-    public async toRun(): Promise<[number, MinionHooksEvent] | undefined> {
+    public async toRun(): Promise<[number, MinionHooksOptions] | undefined> {
         const minion = this.route.minion;
         if (!minion) return;
         const to = await this.select();

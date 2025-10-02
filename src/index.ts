@@ -86,7 +86,7 @@ export { WeaponBattlecryProps, WeaponBattlecryModel } from "./models/hooks/battl
 export { DeathrattleProps, DeathrattleModel } from "./models/hooks/deathrattle";
 export { EndTurnHookProps, EndTurnHookModel } from "./models/hooks/end-turn";
 export { StartTurnHookProps, StartTurnHookModel } from "./models/hooks/start-turn";
-export { SpellHooksEvent } from './models/hooks/spell';
+export { SpellHooksOptions, SpellCastEvent } from './models/hooks/spell';
 
 // heroes
 export { HeroProps, HeroModel } from "./models/heroes";
@@ -97,5 +97,3 @@ export { WarriorModel } from "./models/heroes/warrior";
 export { SkillProps, SkillModel } from './models/skills';
 export { FireBlastModel } from './models/skills/fireblast';
 export { ArmorUpModel } from './models/skills/armor-up';
-
-export { SpellPerformEvent } from './models/rules/perform/spell';

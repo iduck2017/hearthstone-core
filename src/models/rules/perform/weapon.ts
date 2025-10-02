@@ -2,8 +2,8 @@ import { Event, Loader } from "set-piece";
 import { PerformModel } from ".";
 import { SelectEvent, SelectUtil } from "../../../utils/select";
 import { RoleBattlecryModel } from "../../hooks/battlecry/role";
-import { MinionHooksEvent } from "../../hooks/minion";
-import { WeaponHooksEvent } from "../../hooks/weapon";
+import { MinionHooksOptions } from "../../hooks/minion";
+import { WeaponHooksOptions } from "../../hooks/weapon";
 import { WeaponBattlecryModel } from "../../hooks/battlecry/weapon";
 import { WeaponCardModel } from "../../cards/weapon";
 
@@ -16,7 +16,7 @@ export namespace WeaponPerformProps {
 }
 
 export class WeaponPerformModel extends PerformModel<
-    [WeaponHooksEvent],
+    [WeaponHooksOptions],
     WeaponPerformProps.E,
     WeaponPerformProps.S,
     WeaponPerformProps.C,
@@ -36,10 +36,10 @@ export class WeaponPerformModel extends PerformModel<
         });
     }
 
-    public async run(from: number, event: WeaponHooksEvent) {
-        const signal = new Event({})
-        this.event.toRun(signal);
-        if (signal.isAbort) return;
+    public async run(from: number, options: WeaponHooksOptions) {
+        const event = new Event({})
+        this.event.toRun(event);
+        if (event.isAbort) return;
 
         const player = this.route.player;
         if (!player) return;
@@ -49,7 +49,7 @@ export class WeaponPerformModel extends PerformModel<
         const hooks = weapon.child.hooks;
         const battlecry = hooks.child.battlecry;
         for (const item of battlecry) {
-            const params = event.battlecry.get(item);
+            const params = options.battlecry.get(item);
             if (!params) continue;
             await item.run(from, ...params);
         }
@@ -61,7 +61,7 @@ export class WeaponPerformModel extends PerformModel<
         this.event.onRun(new Event({}));
     }
 
-    public async toRun(): Promise<[WeaponHooksEvent] | undefined> {
+    public async toRun(): Promise<[WeaponHooksOptions] | undefined> {
         const weapon = this.route.weapon;
         if (!weapon) return;
         // battlecry

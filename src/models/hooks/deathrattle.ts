@@ -48,9 +48,9 @@ export abstract class DeathrattleModel<
     public run() {
         if (!this.state.isActive) return;
         
-        const signal = new Event({})
+        const event = new Event({})
         this.event.toRun(new Event({}));
-        if (signal.isAbort) return;
+        if (event.isAbort) return;
 
         this.doRun();
         this.event.onRun(new Event({}));

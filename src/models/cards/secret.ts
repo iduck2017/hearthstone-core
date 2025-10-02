@@ -5,7 +5,7 @@ import { DisposeModel } from "../rules/dispose";
 import { SecretDisposeModel } from "../rules/dispose/secret";
 import { PlayerModel } from "../player";
 import { SecretDeployModel } from "../rules/deploy/secret";
-import { SpellHooksEvent } from "../hooks/spell";
+import { SpellHooksOptions } from "../hooks/spell";
 
 export namespace SecretCardProps {
     export type S = {};
