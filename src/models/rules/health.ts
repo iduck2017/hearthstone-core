@@ -12,7 +12,6 @@ export namespace HealthProps {
     };
     export type S = {
         origin: number;
-        offset: number;
         memory: number;
         damage: number;
     };
@@ -29,7 +28,7 @@ export namespace HealthProps {
 }
 
 export class HealthDecor extends Decor<HealthProps.S> {
-    public add(value: number) { this.detail.offset += value }
+    public add(value: number) { this.detail.origin += value }
 }
 
 export class HealthModel extends Model<
@@ -41,12 +40,10 @@ export class HealthModel extends Model<
 > {
     public get state() {
         const state = super.state;
-        const maxium = state.origin + state.offset;
-        const baseline = Math.max(state.memory, maxium);
+        const baseline = Math.max(state.memory, state.origin);
         return {
             ...state,
-            maxium,
-            current: Math.min(baseline - state.damage, maxium),
+            current: Math.min(baseline - state.damage, state.origin),
         }
     }
 
@@ -55,11 +52,10 @@ export class HealthModel extends Model<
     }, []>) {
         super(() => {
             const props = loader?.();
-            const memory = props.state.origin + (props.state.offset ?? 0);
+            const memory = props.state.origin;
             return {
                 uuid: props.uuid,
                 state: { 
-                    offset: 0,
                     damage: 0,
                     memory,
                     ...props.state,
@@ -160,9 +156,9 @@ export class HealthModel extends Model<
     @DebugUtil.log()
     @TranxUtil.span()
     private onChange(that: HealthModel, event: Event) {
-        const { memory, maxium, damage } = that.state;
-        const offset = memory - maxium;
-        if (offset !== 0) this.draft.state.memory = maxium;
+        const { memory, origin, damage } = that.state;
+        const offset = memory - origin;
+        if (offset !== 0) this.draft.state.memory = origin;
         if (offset > 0) this.draft.state.damage -= Math.min(damage, offset);
     }
 }

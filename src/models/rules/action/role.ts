@@ -3,8 +3,8 @@ import { BoardModel, SelectEvent, SelectUtil, MinionCardModel, RoleModel, Player
 
 export namespace RoleActionProps {
     export type S = {
-        comsume: number;
         origin: number;
+        comsume: number;
         isLock: boolean;
     };
     export type E = {
