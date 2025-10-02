@@ -7,6 +7,8 @@ export namespace TurnProps {
         count: number;
     };
     export type E = {
+        doEnd: Event;
+        doStart: Event;
         onEnd: Event;
         onStart: Event;
     };
@@ -61,6 +63,7 @@ export class TurnModel extends Model<
             item.child.action.reset();
             item.child.sleep.deactive();
         });
+        this.event.doStart(new Event({}));
         this.event.onStart(new Event({}));
     }
     
@@ -75,6 +78,7 @@ export class TurnModel extends Model<
             if (item.child.action.state.current <= 0) return;
             entries.child.frozen.deactive();
         });
+        this.event.doEnd(new Event({}));
         this.event.onEnd(new Event({}));
     }
 }

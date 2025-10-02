@@ -13,7 +13,6 @@ export namespace GameProps {
     };
 }
 
-
 @StoreUtil.is('game')
 export class GameModel extends Model<
     GameProps.E, 

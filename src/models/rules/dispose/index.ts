@@ -11,7 +11,7 @@ export namespace DisposeProps {
     }
     export type C = {}
     export type R = {
-        detail?: Model;
+        reason?: Model;
         source?: CardModel | HeroModel;
     }
     export type P = {
@@ -110,9 +110,9 @@ export abstract class DisposeModel<
 
     @DisposeModel.span()
     @TranxUtil.span()
-    public active(isLock?: boolean, source?: CardModel | HeroModel, detail?: Model) {
+    public active(isLock?: boolean, source?: CardModel | HeroModel, reason?: Model) {
         if (this.status) return;
-        this.draft.refer.detail = detail;
+        this.draft.refer.reason = reason;
         this.draft.refer.source = source;
         this.draft.state.isLock = isLock ?? false;
         DisposeModel.add(this);

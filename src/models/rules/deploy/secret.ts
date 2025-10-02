@@ -1,8 +1,6 @@
 import { Event, Loader, TranxUtil } from "set-piece";
 import { BoardModel } from "../../containers/board";
 import { DeployModel } from "./index"
-import { WeaponCardModel } from "../../cards/weapon";
-import { PlayerModel } from "../../player";
 import { SecretCardModel } from "../../cards/secret";
 
 export namespace SecretDeployProps {

@@ -23,13 +23,12 @@ export class SecretFeatureModel<
     R & SecretFeatureProps.R,
     P & SecretFeatureProps.P
 > {
-
     public static span() {
         return function(
             prototype: SecretFeatureModel,
             key: string,
-            descriptor: TypedPropertyDescriptor<Method<boolean>>
-        ): TypedPropertyDescriptor<Method<boolean>> {
+            descriptor: TypedPropertyDescriptor<Method>
+        ): TypedPropertyDescriptor<Method> {
             const handler = descriptor.value;
             if (!handler) return descriptor;
             const instance = {

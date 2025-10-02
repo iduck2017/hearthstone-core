@@ -5,7 +5,7 @@ import { DamageType } from "../../../types/damage";
 export namespace RoleAttackProps {
     export type E = {
         toRun: Event<{ target: RoleModel }>;
-        toRecv: Event<{ target: RoleModel }>;
+        toRecv: Event<{ source: RoleModel }>;
         onRun: Event<{ target: RoleModel }>;
     }
     export type S = {
@@ -45,7 +45,18 @@ export class RoleAttackModel extends Model<
         }
     }
 
-    public get status() { return this.state.current > 0; }
+    public get status() { 
+        // is alive
+        const minion = this.route.minion;
+        const hero = this.route.hero;
+        const entity = minion ?? hero;
+        if (!entity) return false;
+        const dispose = entity.child.dispose;
+        if (dispose.status) return false;
+        // has attack
+        if (this.state.current <= 0) return false;
+        return true;
+    }
 
     constructor(loader: Method<RoleAttackModel['props'] & {
         state: Pick<RoleAttackProps.S, 'origin'>
@@ -79,14 +90,15 @@ export class RoleAttackModel extends Model<
         if (!this.status) return;
 
         const attackB = roleB.child.attack;
-        let signal = new Event({ target: roleB })
-        attackB.event.toRecv(signal);
-        if (signal.isAbort) return;
+        const eventA = new Event({ source: roleA })
+        attackB.event.toRecv(eventA);
+        if (eventA.isAbort) return;
         
-        signal = new Event({ target: roleB })
-        this.event.toRun(signal);
-        if (signal.isAbort) return;
-        
+        const eventB = new Event({ target: roleB })
+        this.event.toRun(eventB);
+        if (eventB.isAbort) return;
+
+        if (!this.status) return;
         const healthB = roleB.child.health;
         if (healthB.state.current <= 0) return;
 
