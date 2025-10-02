@@ -15,7 +15,7 @@ describe('game', () => {
                             minions: [
                                 new WispModel(() => ({
                                     child: {
-                                        cost: new CostModel(() => ({ state: { origin: 0 } })),
+                                        cost: new CostModel(() => ({ state: { current: 0 } })),
                                         role: new RoleModel(() => ({
                                             state: { races: [] },
                                             child: {
@@ -27,7 +27,7 @@ describe('game', () => {
                                 })),
                                 new WispModel(() => ({
                                     child: {
-                                        cost: new CostModel(() => ({ state: { origin: 0 } })),
+                                        cost: new CostModel(() => ({ state: { current: 0 } })),
                                         role: new RoleModel(() => ({
                                             state: { races: [] },
                                             child: {
@@ -45,7 +45,7 @@ describe('game', () => {
                             minions: [
                                 new WispModel(() => ({
                                     child: {
-                                        cost: new CostModel(() => ({ state: { origin: 0 } })),
+                                        cost: new CostModel(() => ({ state: { current: 0 } })),
                                         role: new RoleModel(() => ({
                                             state: { races: [] },
                                             child: {

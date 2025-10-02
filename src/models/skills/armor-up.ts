@@ -14,7 +14,7 @@ export class ArmorUpModel extends SkillModel<[]> {
                     ...props.state,
                 },
                 child: {
-                    cost: new CostModel(() => ({ state: { origin: 2 }})),
+                    cost: new CostModel(() => ({ state: { current: 2 }})),
                     ...props.child,
                 },
                 refer: { ...props.refer },

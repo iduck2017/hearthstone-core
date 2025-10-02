@@ -11,8 +11,7 @@ export enum CostType {
 export namespace CostProps {
     export type S = {
         type: CostType;
-        origin: number;
-        offset: number;
+        current: number;
     }
     export type E = {}
     export type C = {}
@@ -28,18 +27,20 @@ export class CostDecor extends Decor<CostProps.S> {
     
     private isFree = false;
 
-    private lane0: number[] = []; // plus
     private lane1: number[] = []; // minus
     private lane2: number[] = []; // minus gt0
 
     public get result() {
         const result = { ...this.detail }
-        this.lane1.forEach(item => result.offset += item);
-        this.lane2.forEach(item => {
-            if (result.origin + result.offset + item < 1) return;
-            result.offset += item;
+        this.lane1.forEach(item => {
+            if (result.current + item < 0) result.current = 0;
+            else result.current += item;
         });
-        if (this.isFree) result.offset = -result.origin;
+        this.lane2.forEach(item => {
+            if (result.current + item < 1) return;
+            else result.current += item;
+        });
+        if (this.isFree) result.current = 0;
         return result;
     }
 
@@ -59,15 +60,6 @@ export class CostModel extends Model<
     CostProps.R,
     CostProps.P
 > {
-    public get state() {
-        const state = super.state;
-        const current = state.origin + state.offset;
-        return {
-            ...state,
-            current,
-        }
-    }
-
     public get status() {
         const player = this.route.player;
         if (!player) return false;
@@ -80,14 +72,13 @@ export class CostModel extends Model<
     }
 
     constructor(loader: Method<CostModel['props'] & {
-        state: Pick<CostProps.S, 'origin'>;
+        state: Pick<CostProps.S, 'current'>;
     }, []>) {
         super(() => {
             const props = loader?.();
             return {
                 uuid: props.uuid,
                 state: { 
-                    offset: 0,
                     type: CostType.MANA,
                     ...props.state 
                 },
