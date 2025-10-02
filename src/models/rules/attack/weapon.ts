@@ -6,8 +6,7 @@ import { RoleActionDecor } from "../action/role";
 export namespace WeaponAttackProps {
     export type E = {}
     export type S = {
-        origin: number;
-        offset: number;
+        current: number;
     }
     export type C = {}
     export type R = {}
@@ -27,14 +26,6 @@ export class WeaponAttackModel extends Model<
     WeaponAttackProps.R,
     WeaponAttackProps.P
 > {
-    public get state() {
-        const state = super.state;
-        return {
-            ...state,
-            current: state.origin + state.offset,
-        }
-    }
-    
     public get status() {
         const player = this.route.player;
         if (!player) return false
@@ -47,7 +38,7 @@ export class WeaponAttackModel extends Model<
     }
 
     constructor(loader: Method<WeaponAttackModel['props'] & {
-        state: Pick<WeaponAttackProps.S, 'origin'>
+        state: Pick<WeaponAttackProps.S, 'current'>
     }, []>) {
         super(() => {
             const props = loader?.() ?? {};
@@ -82,7 +73,7 @@ export class WeaponAttackModel extends Model<
     private onCompute(that: RoleAttackModel, decor: RoleAttackDecor) {
         if (!this.status) return;
         if (!this.route.board) return;
-        decor.add(this.state.origin);
+        decor.add(this.state.current);
     }
 }
 
