@@ -1,4 +1,4 @@
-import { RoleAttackModel, BoardModel, CostModel, DeckModel, GameModel, HandModel, HealthModel, MageModel, PlayerModel, RoleModel, SelectUtil, TimeUtil } from "hearthstone-core";
+import { RoleAttackModel, BoardModel, CostModel, DeckModel, GameModel, HandModel, RoleHealthModel, MageModel, PlayerModel, RoleModel, SelectUtil, TimeUtil } from "hearthstone-core";
 import { WispModel } from "./wisp";
 import { DebugUtil } from "set-piece";
 import { boot } from "./boot";
@@ -19,7 +19,7 @@ describe('game', () => {
                                         role: new RoleModel(() => ({
                                             state: { races: [] },
                                             child: {
-                                                health: new HealthModel(() => ({ state: { origin: 1 } })),
+                                                health: new RoleHealthModel(() => ({ state: { origin: 1 } })),
                                                 attack: new RoleAttackModel(() => ({ state: { current: 1 } })),
                                             }
                                         })),
@@ -31,7 +31,7 @@ describe('game', () => {
                                         role: new RoleModel(() => ({
                                             state: { races: [] },
                                             child: {
-                                                health: new HealthModel(() => ({ state: { origin: 1 } })),
+                                                health: new RoleHealthModel(() => ({ state: { origin: 1 } })),
                                                 attack: new RoleAttackModel(() => ({ state: { current: 1 } })),
                                             }
                                         })),
@@ -49,7 +49,7 @@ describe('game', () => {
                                         role: new RoleModel(() => ({
                                             state: { races: [] },
                                             child: {
-                                                health: new HealthModel(() => ({ state: { origin: 1 } })),
+                                                health: new RoleHealthModel(() => ({ state: { origin: 1 } })),
                                                 attack: new RoleAttackModel(() => ({ state: { current: 1 } })),
                                             }
                                         })),

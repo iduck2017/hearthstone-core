@@ -55,8 +55,7 @@ export class WindfuryModel extends RoleFeatureModel<
     @StateUtil.on(self => self.route.role?.proxy.child.action.decor)
     protected onCompute(that: RoleActionModel, decor: RoleActionDecor) {
         if (!this.state.isActive) return;
-        const offset = this.state.isAdvance ? 3 : 1;
-        decor.add(offset);
+        decor.add(this.state.isAdvance ? 3 : 1);
     }
 
     @TranxUtil.span()

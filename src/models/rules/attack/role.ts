@@ -55,10 +55,7 @@ export class RoleAttackModel extends Model<
             const props = loader?.();
             return {
                 uuid: props.uuid,
-                state: {
-                    offset: 0,
-                    ...props.state,
-                },
+                state: { ...props.state },
                 child: { ...props.child },
                 refer: { ...props.refer },
                 route: {

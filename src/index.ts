@@ -29,7 +29,7 @@ export { WeaponDeployModel } from "./models/rules/deploy/weapon";
 export { SecretDeployModel } from "./models/rules/deploy/secret";
 
 export { RoleAttackProps, RoleAttackModel } from "./models/rules/attack/role";
-export { HealthProps, HealthModel } from "./models/rules/health";
+export { RoleHealthProps, RoleHealthModel } from "./models/rules/health";
 export { RoleActionProps, RoleActionModel } from "./models/rules/action/role";
 export { SleepProps, SleepModel } from './models/rules/sleep';
 export { ManaProps, ManaModel } from './models/rules/mana';

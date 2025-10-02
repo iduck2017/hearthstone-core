@@ -1,5 +1,5 @@
 import { Loader } from "set-piece";
-import { RoleAttackModel, CostModel, HealthModel, MinionCardModel, RoleModel } from "hearthstone-core";
+import { RoleAttackModel, CostModel, RoleHealthModel, MinionCardModel, RoleModel } from "hearthstone-core";
 import { ClassType, RaceType, RarityType } from "hearthstone-core";
 
 export class WispModel extends MinionCardModel {
@@ -22,7 +22,7 @@ export class WispModel extends MinionCardModel {
                     cost: props.child?.cost ?? new CostModel(() => ({ state: { current: 0 } })),
                     role: props.child?.role ?? new RoleModel(() => ({
                         child: {
-                            health: new HealthModel(() => ({ state: { origin: 1 } })),
+                            health: new RoleHealthModel(() => ({ state: { origin: 1 } })),
                             attack: new RoleAttackModel(() => ({ state: { current: 1 } })),
                         }
                     })),

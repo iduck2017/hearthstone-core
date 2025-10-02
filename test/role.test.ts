@@ -55,7 +55,7 @@ describe('role', () => {
         expect(roleC.child.action.state.current).toBe(1);
         expect(roleC.child.health.state.current).toBe(1);
         expect(roleC.child.health.state.damage).toBe(0);
-        expect(roleC.child.health.state.origin).toBe(1);
+        expect(roleC.child.health.state.maxium).toBe(1);
         expect(roleC.child.attack.state.current).toBe(1);
         expect(cardC.child.dispose.status).toBe(false);
     })
@@ -74,14 +74,14 @@ describe('role', () => {
 
         expect(roleB.child.health.state.current).toBe(29);
         expect(roleB.child.health.state.damage).toBe(1);
-        expect(roleB.child.health.state.origin).toBe(30);
+        expect(roleB.child.health.state.maxium).toBe(30);
 
         expect(roleC.child.health.state.current).toBe(1);
         expect(cardC.child.dispose.status).toBe(false);
         expect(roleC.child.action.state.current).toBe(0);
     })
 
-    test('wisp-attack-2', async () => {
+    test('wisp-attack', async () => {
         turn.next();
 
         const promise = roleD.child.action.run();
@@ -97,12 +97,12 @@ describe('role', () => {
         
         expect(roleC.child.health.state.current).toBe(0);
         expect(roleC.child.health.state.damage).toBe(1);
-        expect(roleC.child.health.state.origin).toBe(1);
+        expect(roleC.child.health.state.maxium).toBe(1);
         expect(cardC.child.dispose.status).toBe(true);
 
         expect(roleD.child.health.state.current).toBe(0);
         expect(roleD.child.health.state.damage).toBe(1);
-        expect(roleD.child.health.state.origin).toBe(1);
+        expect(roleD.child.health.state.maxium).toBe(1);
         expect(cardD.child.dispose.status).toBe(true);
         expect(roleD.child.action.state.current).toBe(0);
 

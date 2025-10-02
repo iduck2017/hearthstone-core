@@ -8,7 +8,7 @@ import { GraveyardModel } from "./containers/graveyard";
 import { MinionCardModel, RoleBuffModel } from "..";
 import { RoleActionModel } from "./rules/action/role";
 import { RoleAttackModel } from "./rules/attack/role";
-import { HealthModel } from "./rules/health";
+import { RoleHealthModel } from "./rules/health";
 import { SleepModel } from "./rules/sleep";
 import { RoleFeatureModel } from "./features/role";
 import { RoleEntriesModel } from "./entries/role";
@@ -20,7 +20,7 @@ export namespace RoleProps {
     export type E = {};
     export type C = {
         readonly sleep: SleepModel;
-        readonly health: HealthModel;
+        readonly health: RoleHealthModel;
         readonly attack: RoleAttackModel;
         readonly action: RoleActionModel;
         readonly entries: RoleEntriesModel;

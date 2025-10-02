@@ -1,7 +1,7 @@
 import { Decor, Method, Model, Props, StateUtil, StoreUtil } from "set-piece";
 import { FeatureModel, FeatureProps } from "..";
 import { RoleAttackDecor, RoleAttackModel, RoleAttackProps } from "../../rules/attack/role";
-import { HealthDecor, HealthModel, HealthProps } from "../../rules/health";
+import { RoleHealthDecor, RoleHealthModel, RoleHealthProps } from "../../rules/health";
 import { RoleFeatureModel } from "../role";
 
 export namespace RoleBuffProps {
@@ -52,7 +52,7 @@ export abstract class RoleBuffModel<
     }
 
     @StateUtil.on(self => self.route.role?.proxy.child.health.decor)
-    protected onHealthCompute(that: HealthModel, decor: HealthDecor) {
+    protected onHealthCompute(that: RoleHealthModel, decor: RoleHealthDecor) {
         if (!this.state.isActive) return;
         decor.add(this.state.offset[1]);
     }

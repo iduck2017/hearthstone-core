@@ -3,7 +3,7 @@ import { RoleModel, MinionCardModel, GameModel, PlayerModel, CardModel, HeroMode
 import { DamageEvent } from "../../types/damage";
 import { RestoreEvent } from "../../types/restore";
 
-export namespace HealthProps {
+export namespace RoleHealthProps {
     export type E = {
         toHurt: DamageEvent;
         onHurt: DamageEvent;
@@ -12,6 +12,7 @@ export namespace HealthProps {
     };
     export type S = {
         origin: number;
+        maxium: number;
         memory: number;
         damage: number;
     };
@@ -27,37 +28,39 @@ export namespace HealthProps {
     }
 }
 
-export class HealthDecor extends Decor<HealthProps.S> {
-    public add(value: number) { this.detail.origin += value }
+export class RoleHealthDecor extends Decor<RoleHealthProps.S> {
+    public add(value: number) { this.detail.maxium += value }
 }
 
-export class HealthModel extends Model<
-    HealthProps.E,
-    HealthProps.S,
-    HealthProps.C,
-    HealthProps.R,
-    HealthProps.P
+export class RoleHealthModel extends Model<
+    RoleHealthProps.E,
+    RoleHealthProps.S,
+    RoleHealthProps.C,
+    RoleHealthProps.R,
+    RoleHealthProps.P
 > {
     public get state() {
         const state = super.state;
-        const baseline = Math.max(state.memory, state.origin);
+        const baseline = Math.max(state.memory, state.maxium);
         return {
             ...state,
-            current: Math.min(baseline - state.damage, state.origin),
+            current: Math.min(baseline - state.damage, state.maxium),
         }
     }
 
-    constructor(loader: Method<HealthModel['props'] & {
-        state: Pick<HealthProps.S, 'origin'>
+    constructor(loader: Method<RoleHealthModel['props'] & {
+        state: Pick<RoleHealthProps.S, 'origin'>
     }, []>) {
         super(() => {
             const props = loader?.();
-            const memory = props.state.origin;
+            const maxium = props.state.maxium ?? props.state.origin;
+            const memory = props.state.memory ?? maxium;
             return {
                 uuid: props.uuid,
                 state: { 
                     damage: 0,
                     memory,
+                    maxium,
                     ...props.state,
                 },
                 child: { ...props.child },
@@ -155,10 +158,10 @@ export class HealthModel extends Model<
     @EventUtil.on(self => self.proxy.event.onChange)
     @DebugUtil.log()
     @TranxUtil.span()
-    private onChange(that: HealthModel, event: Event) {
-        const { memory, origin, damage } = that.state;
-        const offset = memory - origin;
-        if (offset !== 0) this.draft.state.memory = origin;
+    private onChange(that: RoleHealthModel, event: Event) {
+        const { memory, maxium, damage } = that.state;
+        const offset = memory - maxium;
+        if (offset !== 0) this.draft.state.memory = maxium;
         if (offset > 0) this.draft.state.damage -= Math.min(damage, offset);
     }
 }
