@@ -11,6 +11,7 @@ export enum CostType {
 export namespace CostProps {
     export type S = {
         type: CostType;
+        origin: number;
         current: number;
     }
     export type E = {}
@@ -72,14 +73,16 @@ export class CostModel extends Model<
     }
 
     constructor(loader: Method<CostModel['props'] & {
-        state: Pick<CostProps.S, 'current'>;
+        state: Pick<CostProps.S, 'origin'>;
     }, []>) {
         super(() => {
             const props = loader?.();
+            const current = props.state.current ?? props.state.origin;
             return {
                 uuid: props.uuid,
                 state: { 
                     type: CostType.MANA,
+                    current,
                     ...props.state 
                 },
                 child: { ...props.child },

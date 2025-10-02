@@ -6,6 +6,7 @@ import { RoleActionDecor } from "../action/role";
 export namespace WeaponAttackProps {
     export type E = {}
     export type S = {
+        origin: number;
         current: number;
     }
     export type C = {}
@@ -38,13 +39,17 @@ export class WeaponAttackModel extends Model<
     }
 
     constructor(loader: Method<WeaponAttackModel['props'] & {
-        state: Pick<WeaponAttackProps.S, 'current'>
+        state: Pick<WeaponAttackProps.S, 'origin'>
     }, []>) {
         super(() => {
             const props = loader?.() ?? {};
+            const current = props.state.current ?? props.state.origin;
             return {
                 uuid: props.uuid,
-                state: { ...props.state },
+                state: { 
+                    current,
+                    ...props.state,
+                },
                 child: { ...props.child },
                 refer: { ...props.refer },
                 route: {

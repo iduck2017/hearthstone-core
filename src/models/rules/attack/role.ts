@@ -9,6 +9,7 @@ export namespace RoleAttackProps {
         onRun: Event<{ target: RoleModel }>;
     }
     export type S = {
+        origin: number;
         current: number;
     }
     export type C = {}
@@ -49,13 +50,16 @@ export class RoleAttackModel extends Model<
     }
 
     constructor(loader: Method<RoleAttackModel['props'] & {
-        state: Pick<RoleAttackProps.S, 'current'>
+        state: Pick<RoleAttackProps.S, 'origin'>
     }, []>) {
         super(() => {
             const props = loader?.();
             return {
                 uuid: props.uuid,
-                state: { ...props.state },
+                state: { 
+                    current: props.state.current ?? props.state.origin,
+                    ...props.state 
+                },
                 child: { ...props.child },
                 refer: { ...props.refer },
                 route: {

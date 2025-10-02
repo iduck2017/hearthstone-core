@@ -19,9 +19,7 @@ export class FireBlastModel extends SkillModel<[RoleModel]> {
                     ...props.state,
                 },
                 child: {
-                    cost: props.child?.cost ?? new CostModel(() => ({ 
-                        state: { current: 2 }
-                    })),
+                    cost: props.child?.cost ?? new CostModel(() => ({ state: { origin: 2 }})),
                     ...props.child,
                 },
                 refer: { ...props.refer },

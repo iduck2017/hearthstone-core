@@ -15,24 +15,24 @@ describe('game', () => {
                             minions: [
                                 new WispModel(() => ({
                                     child: {
-                                        cost: new CostModel(() => ({ state: { current: 0 } })),
+                                        cost: new CostModel(() => ({ state: { origin: 0 } })),
                                         role: new RoleModel(() => ({
                                             state: { races: [] },
                                             child: {
                                                 health: new RoleHealthModel(() => ({ state: { origin: 1 } })),
-                                                attack: new RoleAttackModel(() => ({ state: { current: 1 } })),
+                                                attack: new RoleAttackModel(() => ({ state: { origin: 1 } })),
                                             }
                                         })),
                                     }
                                 })),
                                 new WispModel(() => ({
                                     child: {
-                                        cost: new CostModel(() => ({ state: { current: 0 } })),
+                                        cost: new CostModel(() => ({ state: { origin: 0 } })),
                                         role: new RoleModel(() => ({
                                             state: { races: [] },
                                             child: {
                                                 health: new RoleHealthModel(() => ({ state: { origin: 1 } })),
-                                                attack: new RoleAttackModel(() => ({ state: { current: 1 } })),
+                                                attack: new RoleAttackModel(() => ({ state: { origin: 1 } })),
                                             }
                                         })),
                                     }
@@ -45,12 +45,12 @@ describe('game', () => {
                             minions: [
                                 new WispModel(() => ({
                                     child: {
-                                        cost: new CostModel(() => ({ state: { current: 0 } })),
+                                        cost: new CostModel(() => ({ state: { origin: 0 } })),
                                         role: new RoleModel(() => ({
                                             state: { races: [] },
                                             child: {
                                                 health: new RoleHealthModel(() => ({ state: { origin: 1 } })),
-                                                attack: new RoleAttackModel(() => ({ state: { current: 1 } })),
+                                                attack: new RoleAttackModel(() => ({ state: { origin: 1 } })),
                                             }
                                         })),
                                     }

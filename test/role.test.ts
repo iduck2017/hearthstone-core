@@ -14,9 +14,7 @@ describe('role', () => {
                     hand: new HandModel(),
                     deck: new DeckModel(),
                     board: new BoardModel(() => ({
-                        child: { 
-                            minions: [new WispModel()]
-                        }
+                        child: { minions: [new WispModel()] }
                     })),
                 }
             })),
@@ -26,9 +24,7 @@ describe('role', () => {
                     hand: new HandModel(),
                     deck: new DeckModel(),
                     board: new BoardModel(() => ({
-                        child: { 
-                            minions: [new WispModel()]
-                        }
+                        child: { minions: [new WispModel()] }
                     })),
                 }
             })),
