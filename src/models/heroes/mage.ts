@@ -17,7 +17,7 @@ export class MageModel extends HeroModel {
                     role: props.child?.role ?? new RoleModel(() => ({ 
                         child: {
                             health: new HealthModel(() => ({ state: { origin: 30 }})),
-                            attack: new RoleAttackModel(() => ({ state: { origin: 0 }})),
+                            attack: new RoleAttackModel(() => ({ state: { current: 0 }})),
                         },
                     })),
                     skill: props.child?.skill ?? new FireBlastModel(),

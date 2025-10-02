@@ -9,8 +9,7 @@ export namespace RoleAttackProps {
         onRun: Event<{ target: RoleModel }>;
     }
     export type S = {
-        origin: number;
-        offset: number;
+        current: number;
     }
     export type C = {}
     export type R = {}
@@ -24,7 +23,7 @@ export namespace RoleAttackProps {
 }
 
 export class RoleAttackDecor extends Decor<RoleAttackProps.S> {
-    public add(value: number) { this.detail.offset += value }
+    public add(value: number) { this.detail.current += value }
 }
 
 @StateUtil.use(RoleAttackDecor)
@@ -36,15 +35,6 @@ export class RoleAttackModel extends Model<
     RoleAttackProps.R,
     RoleAttackProps.P
 > {
-    public get state() {
-        const state = super.state;
-        const current: number = state.origin + state.offset;
-        return {
-            ...state,
-            current,
-        }
-    }
-
     public get status() { 
         // is alive
         const minion = this.route.minion;
@@ -59,7 +49,7 @@ export class RoleAttackModel extends Model<
     }
 
     constructor(loader: Method<RoleAttackModel['props'] & {
-        state: Pick<RoleAttackProps.S, 'origin'>
+        state: Pick<RoleAttackProps.S, 'current'>
     }, []>) {
         super(() => {
             const props = loader?.();

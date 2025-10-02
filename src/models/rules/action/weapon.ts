@@ -7,7 +7,6 @@ export namespace WeaponActionProps {
     };
     export type S = {
         origin: number;
-        offset: number;
         memory: number;
         consume: number;
     };
@@ -29,12 +28,10 @@ export class WeaponActionModel extends Model<
 > {
     public get state() {
         const state = super.state;
-        const maxium = state.origin + state.offset;
-        const baseline = Math.max(state.memory, maxium);
+        const baseline = Math.max(state.memory, state.origin);
         return {
             ...state,
-            maxium,
-            current: Math.min(baseline - state.consume, maxium),
+            current: Math.min(baseline - state.consume, state.origin),
         }
     }
 
@@ -43,11 +40,10 @@ export class WeaponActionModel extends Model<
     }, []>) {
         super(() => {
             const props = loader?.();
-            const memory = props.state.origin + (props.state.offset ?? 0);
+            const memory = props.state.origin;
             return {
                 uuid: props.uuid,
                 state: { 
-                    offset: 0,
                     consume: 0,
                     memory,
                     ...props.state,

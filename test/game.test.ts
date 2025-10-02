@@ -20,7 +20,7 @@ describe('game', () => {
                                             state: { races: [] },
                                             child: {
                                                 health: new HealthModel(() => ({ state: { origin: 1 } })),
-                                                attack: new RoleAttackModel(() => ({ state: { origin: 1 } })),
+                                                attack: new RoleAttackModel(() => ({ state: { current: 1 } })),
                                             }
                                         })),
                                     }
@@ -32,7 +32,7 @@ describe('game', () => {
                                             state: { races: [] },
                                             child: {
                                                 health: new HealthModel(() => ({ state: { origin: 1 } })),
-                                                attack: new RoleAttackModel(() => ({ state: { origin: 1 } })),
+                                                attack: new RoleAttackModel(() => ({ state: { current: 1 } })),
                                             }
                                         })),
                                     }
@@ -50,7 +50,7 @@ describe('game', () => {
                                             state: { races: [] },
                                             child: {
                                                 health: new HealthModel(() => ({ state: { origin: 1 } })),
-                                                attack: new RoleAttackModel(() => ({ state: { origin: 1 } })),
+                                                attack: new RoleAttackModel(() => ({ state: { current: 1 } })),
                                             }
                                         })),
                                     }

@@ -19,11 +19,11 @@ export class WispModel extends MinionCardModel {
                     ...props.state,
                 },
                 child: {
-                    cost: props.child?.cost ?? new CostModel(() => ({ state: { origin: 0 } })),
+                    cost: props.child?.cost ?? new CostModel(() => ({ state: { current: 0 } })),
                     role: props.child?.role ?? new RoleModel(() => ({
                         child: {
                             health: new HealthModel(() => ({ state: { origin: 1 } })),
-                            attack: new RoleAttackModel(() => ({ state: { origin: 1 } })),
+                            attack: new RoleAttackModel(() => ({ state: { current: 1 } })),
                         }
                     })),
                     ...props.child
