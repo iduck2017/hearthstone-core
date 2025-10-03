@@ -1,7 +1,7 @@
 import { Event, Loader, Model, TranxUtil } from "set-piece";
-import { DamageEvent } from "../../types/damage";
+import { DamageEvent, DamageType } from "../../types/damage";
 import { DisposeModel } from "../rules/dispose";
-import { CardModel, HeroModel, MinionCardModel, PlayerModel } from "../..";
+import { CardModel, HeroModel, MinionCardModel, PlayerModel, SpellCardModel } from "../..";
 
 export namespace DamageProps {
     export type E = {
@@ -63,12 +63,17 @@ export class DamageModel extends Model<
     }
 
     private toRun(event: DamageEvent) {
-        const source = event.detail.source;
-        const player = source.route.player;
-        if (!player) return;
-        const hero = player.child.hero;
-        const damage = hero.child.spellDamage;
-        event.set(event.detail.result + damage.state.current)
+        const type = event.detail.type;
+        // spell damage bonus
+        if (type === DamageType.SPELL) {
+            const source = event.detail.source;
+            const player = source.route.player;
+            if (!player) return;
+            const hero = player.child.hero;
+            const damage = hero.child.spellDamage;
+            const offset = damage.state.current;
+            event.set(event.detail.result + offset)
+        }
     }
 
     private onRun(event: DamageEvent) {

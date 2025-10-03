@@ -7,7 +7,6 @@ import { MinionCardModel, PlayerModel, GameModel, HandModel, DeckModel, BoardMod
 import { DeployModel } from "../rules/deploy";
 import { PerformModel } from "../rules/perform";
 
-
 export namespace CardProps {
     export type E = {
         onPlay: Event,

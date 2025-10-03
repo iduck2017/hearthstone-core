@@ -1,4 +1,4 @@
-import { DebugUtil, Decor, Event, EventUtil, Memory, Method, Model, Producer, StateUtil, TranxUtil } from "set-piece";
+import { DebugUtil, Decor, Event, EventUtil, Method, Model, StateUtil, TranxUtil } from "set-piece";
 import { RoleModel, MinionCardModel, GameModel, PlayerModel, CardModel, HeroModel } from "../..";
 import { DamageEvent } from "../../types/damage";
 import { RestoreEvent } from "../../types/restore";

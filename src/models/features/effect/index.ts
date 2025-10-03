@@ -1,10 +1,12 @@
 import { Loader, Method, Model, Props } from "set-piece";
-import { SelectEvent, SelectUtil } from "../../utils/select";
-import { FeatureModel, FeatureProps } from ".";
+import { SelectEvent, SelectUtil } from "../../../utils/select";
+import { FeatureModel, FeatureProps } from "..";
 
 export namespace EffectProps {
     export type E = {};
-    export type S = {};
+    export type S = {
+        power: number;
+    };
     export type C = {};
     export type R = {};
     export type P = {};
@@ -55,6 +57,7 @@ export abstract class EffectModel<
             return {
                 uuid: props.uuid,
                 state: {
+                    power: 0,
                     isActive: true,
                     ...props.state 
                 },
