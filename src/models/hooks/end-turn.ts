@@ -1,7 +1,8 @@
-import { Event, Method, Model, Props } from "set-piece";
+import { Event, EventUtil, Method, Model, Props } from "set-piece";
 import { MinionCardModel } from "../cards/minion";
 import { FeatureModel, FeatureProps } from "../features";
 import { CardFeatureModel } from "../features/card";
+import { TurnModel } from "../rules/turn";
 
 export namespace EndTurnHookProps {
     export type E = {
@@ -43,12 +44,22 @@ export abstract class EndTurnHookModel<
             }
         })
     }
-
-    public run() {
+        
+    @EventUtil.on(self => self.route.game?.proxy.child.turn.event.doEnd)
+    protected onEnd(that: TurnModel, event: Event) {
         if (!this.state.isActive) return;
-        this.doRun();
+
+        const game = this.route.game;
+        if (!game) return;
+        const player = this.route.player;
+        if (!player) return;
+        const turn = game.child.turn;
+        const current = turn.refer.current;
+        const isCurrent = current === player;
+
+        this.doRun(isCurrent);
         this.event.onRun(new Event({}));
     }
 
-    protected abstract doRun(): Event;
+    protected abstract doRun(isCurrent: boolean): void;
 }

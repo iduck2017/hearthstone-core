@@ -53,6 +53,7 @@ export abstract class RoleBuffModel<
 
     @StateUtil.on(self => self.route.role?.proxy.child.health.decor)
     protected onHealthCompute(that: RoleHealthModel, decor: RoleHealthDecor) {
+        console.log('buff health', this.state.offset[1]);
         if (!this.state.isActive) return;
         decor.add(this.state.offset[1]);
     }

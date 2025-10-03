@@ -6,7 +6,6 @@ import { FrozenModel } from "./frozen";
 import { StealthModel } from "./stealth";
 import { TauntModel } from "./taunt";
 import { WindfuryModel } from "./windfury";
-import { SpellBuffModel } from "../features/buff/spell";
 import { ElusiveModel } from "./elusive";
 
 export namespace RoleEntriesProps {
@@ -20,7 +19,6 @@ export namespace RoleEntriesProps {
         readonly stealth: StealthModel;
         readonly elusive: ElusiveModel;
         readonly windfury: WindfuryModel;
-        readonly spellDamage: SpellBuffModel;
         readonly divineShield: DivineSheildModel;
     };
     export type R = {};
@@ -55,8 +53,6 @@ export class RoleEntriesModel extends Model<
                         new StealthModel(() => ({ state: { isActive: false }})),
                     windfury: child.windfury ?? 
                         new WindfuryModel(() => ({ state: { isActive: false }})),
-                    spellDamage: child.spellDamage ?? 
-                        new SpellBuffModel(() => ({ state: { isActive: false, offset: 0 }})),
                     divineShield: child.divineShield ?? 
                         new DivineSheildModel(() => ({ state: { isActive: false }})),
                     ...props.child 

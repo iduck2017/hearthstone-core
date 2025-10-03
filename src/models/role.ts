@@ -5,7 +5,7 @@ import { BoardModel } from "./containers/board";
 import { HandModel } from "./containers/hand";
 import { DeckModel } from "./containers/deck";
 import { GraveyardModel } from "./containers/graveyard";
-import { MinionCardModel, RoleBuffModel } from "..";
+import { FeatureModel, MinionCardModel, RoleBuffModel } from "..";
 import { RoleActionModel } from "./rules/action/role";
 import { RoleAttackModel } from "./rules/attack/role";
 import { RoleHealthModel } from "./rules/health";
@@ -24,7 +24,7 @@ export namespace RoleProps {
         readonly attack: RoleAttackModel;
         readonly action: RoleActionModel;
         readonly entries: RoleEntriesModel;
-        readonly feats: RoleFeatureModel[];
+        readonly feats: FeatureModel[];
     };
     export type R = {};
     export type P = {

@@ -1,4 +1,4 @@
-import { DebugUtil, Decor, Event, EventUtil, Memory, Method, Model, Producer, TranxUtil } from "set-piece";
+import { DebugUtil, Decor, Event, EventUtil, Memory, Method, Model, Producer, StateUtil, TranxUtil } from "set-piece";
 import { RoleModel, MinionCardModel, GameModel, PlayerModel, CardModel, HeroModel } from "../..";
 import { DamageEvent } from "../../types/damage";
 import { RestoreEvent } from "../../types/restore";
@@ -32,6 +32,7 @@ export class RoleHealthDecor extends Decor<RoleHealthProps.S> {
     public add(value: number) { this.detail.maxium += value }
 }
 
+@StateUtil.use(RoleHealthDecor)
 export class RoleHealthModel extends Model<
     RoleHealthProps.E,
     RoleHealthProps.S,

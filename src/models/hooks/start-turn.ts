@@ -1,7 +1,8 @@
-import { Event, Method, Model, Props } from "set-piece";
+import { Event, EventUtil, Method, Model, Props } from "set-piece";
 import { EndTurnHookModel } from "./end-turn";
 import { FeatureModel, FeatureProps } from "../features";
 import { CardFeatureModel } from "../features/card";
+import { TurnModel } from "../rules/turn";
 
 export namespace StartTurnHookProps {
     export type E = {
@@ -43,12 +44,23 @@ export abstract class StartTurnHookModel<
             }
         });
     }
+
     
-    public async run() {
+    @EventUtil.on(self => self.route.game?.proxy.child.turn.event.doStart)
+    protected async onStart(that: TurnModel, event: Event) {
         if (!this.state.isActive) return;
-        await this.doRun();
+
+        const game = this.route.game;
+        if (!game) return;
+        const player = this.route.player;
+        if (!player) return;
+        const turn = game.child.turn;
+        const current = turn.refer.current;
+        const isCurrent = current === player;
+
+        await this.doRun(isCurrent);
         this.event.onRun(new Event({}));
     }
 
-    protected abstract doRun(): Promise<void>;
+    protected abstract doRun(isCurrent: boolean): Promise<void>;
 }

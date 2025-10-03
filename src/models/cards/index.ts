@@ -2,7 +2,7 @@ import { DebugUtil, Model, TranxUtil, Props, Event, Method } from "set-piece";
 import { CostModel } from "../rules/cost";
 import { ClassType, RarityType } from "../../types/card";
 import { MinionHooksModel } from "../hooks/minion";
-import { DamageModel, DisposeModel, RestoreModel } from "../..";
+import { DamageModel, DeathrattleModel, DisposeModel, FeatureModel, RestoreModel } from "../..";
 import { MinionCardModel, PlayerModel, GameModel, HandModel, DeckModel, BoardModel, GraveyardModel } from "../..";
 import { CardFeatureModel } from "../features/card";
 import { DeployModel } from "../rules/deploy";
@@ -24,7 +24,7 @@ export namespace CardProps {
     };
     export type C = {
         readonly cost: CostModel;
-        readonly feats: CardFeatureModel[];
+        readonly feats: FeatureModel[];
         readonly damage: DamageModel
         readonly restore: RestoreModel
         readonly deploy?: DeployModel;
@@ -99,6 +99,7 @@ export abstract class CardModel<
             }
         })
     }
+
 
     public async play() {
         if (!this.status) return;

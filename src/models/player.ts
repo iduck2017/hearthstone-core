@@ -86,6 +86,12 @@ export class PlayerModel extends Model<
         this.draft.child.feats.push(feature);
     }
 
+    public del(feature: FeatureModel) {
+        const index = this.child.feats.indexOf(feature);
+        if (index == -1) return;
+        this.draft.child.feats.splice(index, 1);
+    }
+
     public query(isMinion?: boolean): RoleModel[] {
         const minions = this.child.board.child.minions.filter(item => !item.child.dispose.status);
         const roles = minions.map(item => item.child.role);

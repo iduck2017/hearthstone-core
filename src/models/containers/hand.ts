@@ -91,9 +91,8 @@ export class HandModel extends Model<
 
     public del(card: CardModel): boolean {
         const cache = this.draft.child.cache;
-        const index = cache.indexOf(card);
-        if (index === -1) return false;
-        cache.splice(index, 1);
+        let index = cache.indexOf(card);
+        if (index >= 0) cache.splice(index, 1);
         return true;
     }
 }

@@ -6,7 +6,7 @@ export namespace ArmorProps {
         onUse: Event<{ value: number }>;
     }
     export type S = {
-        origin: number;
+        current: number;
     }
     export type C = {}
     export type R = {}
@@ -24,7 +24,7 @@ export class ArmorModel extends Model<
             return {
                 uuid: props.uuid,
                 state: {    
-                    origin: 0,
+                    current: 0,
                     ...props.state,
                 },
                 child: { ...props.child },
@@ -42,14 +42,14 @@ export class ArmorModel extends Model<
 
     protected add(value: number) { 
         if (value <= 0) return 0;
-        this.draft.state.origin += value; 
+        this.draft.state.current += value; 
         return value;
     }
 
     protected del(value: number) { 
         if (value <= 0) return 0;
-        value = Math.min(value, this.draft.state.origin);
-        this.draft.state.origin -= value;
+        value = Math.min(value, this.draft.state.current);
+        this.draft.state.current -= value;
         return value;
     }
 
