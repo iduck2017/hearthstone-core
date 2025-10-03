@@ -2,7 +2,7 @@ import { Event, Loader } from "set-piece";
 import { PerformModel } from ".";
 import { EffectModel } from "../../features/effect";
 import { SpellCastEvent, SpellHooksOptions } from "../../hooks/spell";
-import { SpellCardModel } from "../../cards/spell";
+import { SpellCardModel } from "../../..";
 
 export namespace SpellPerformProps {
     export type E = {

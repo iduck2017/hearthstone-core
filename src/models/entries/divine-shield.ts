@@ -1,7 +1,6 @@
 import { Event, Loader, StoreUtil, TranxUtil } from "set-piece";
 import { DamageEvent } from "../../types/damage";
 import { FeatureModel } from "../features";
-import { RoleFeatureModel } from "../features/role";
 
 export namespace DivineSheildProps {
     export type E = {
@@ -15,7 +14,7 @@ export namespace DivineSheildProps {
 }
 
 @StoreUtil.is('divine-shield')
-export class DivineSheildModel extends RoleFeatureModel<
+export class DivineSheildModel extends FeatureModel<
     DivineSheildProps.E,
     DivineSheildProps.S,
     DivineSheildProps.C,

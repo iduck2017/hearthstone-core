@@ -74,8 +74,6 @@ export { DivineSheildProps, DivineSheildModel } from "./models/entries/divine-sh
 // features
 export { FeatureProps, FeatureModel } from './models/features'
 export { SecretFeatureProps, SecretFeatureModel } from "./models/features/secret";
-export { CardFeatureProps, CardFeatureModel } from "./models/features/card";
-export { RoleFeatureProps, RoleFeatureModel } from "./models/features/role";
 export { RoleBuffProps, RoleBuffModel } from "./models/features/buff/role";
 export { EffectProps, EffectModel } from './models/features/effect'; 
 
@@ -97,3 +95,10 @@ export { WarriorModel } from "./models/heroes/warrior";
 export { SkillProps, SkillModel } from './models/skills';
 export { FireBlastModel } from './models/skills/fireblast';
 export { ArmorUpModel } from './models/skills/armor-up';
+
+export { ROLE_ROUTE, RoleRoute } from "./utils/route";
+export { CARD_ROUTE, CardRoute } from "./utils/route";
+export { SPELL_ROUTE, SpellRoute } from "./utils/route";
+export { MINION_ROUTE, MinionRoute } from "./utils/route";
+export { WEAPON_ROUTE, WeaponRoute } from "./utils/route";
+export { SECRET_ROUTE, SecretRoute } from "./utils/route";

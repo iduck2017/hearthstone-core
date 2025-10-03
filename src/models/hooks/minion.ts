@@ -1,8 +1,8 @@
 import { Loader, Model, StoreUtil } from "set-piece";
-import { RoleBattlecryModel } from "./battlecry/role";
-import { DeathrattleModel } from "./deathrattle";
-import { StartTurnHookModel } from "./start-turn";
-import { EndTurnHookModel } from "./end-turn";
+import { RoleBattlecryModel } from "../..";
+import { DeathrattleModel } from "../..";
+import { StartTurnHookModel } from "../..";
+import { EndTurnHookModel } from "../..";
 
 export namespace MinionHooksProps {
     export type E = {};

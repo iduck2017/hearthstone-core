@@ -1,6 +1,6 @@
 import { Event, Loader, StoreUtil } from "set-piece";
 import { FeatureModel } from "../features";
-import { RoleFeatureModel } from "../features/role";
+import { ROLE_ROUTE, RoleRoute } from "../..";
 
 export namespace StealthProps {
     export type E = {};
@@ -10,11 +10,12 @@ export namespace StealthProps {
 }
 
 @StoreUtil.is('stealth')
-export class StealthModel extends RoleFeatureModel<
+export class StealthModel extends FeatureModel<
     StealthProps.E,
     StealthProps.S,
     StealthProps.C,
-    StealthProps.R
+    StealthProps.R,
+    RoleRoute
 > {
     constructor(loader?: Loader<StealthModel>) {
         super(() => {
@@ -29,6 +30,7 @@ export class StealthModel extends RoleFeatureModel<
                 },
                 child: { ...props.child },
                 refer: { ...props.refer },
+                route: ROLE_ROUTE,
             }
         });
     }

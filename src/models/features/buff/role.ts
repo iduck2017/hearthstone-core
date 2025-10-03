@@ -2,7 +2,7 @@ import { Decor, Method, Model, Props, StateUtil, StoreUtil } from "set-piece";
 import { FeatureModel, FeatureProps } from "..";
 import { RoleAttackDecor, RoleAttackModel, RoleAttackProps } from "../../rules/attack/role";
 import { RoleHealthDecor, RoleHealthModel, RoleHealthProps } from "../../rules/health";
-import { RoleFeatureModel } from "../role";
+import { ROLE_ROUTE, RoleRoute } from "../../..";
 
 export namespace RoleBuffProps {
     export type S = {
@@ -18,11 +18,12 @@ export abstract class RoleBuffModel<
     S extends Partial<RoleBuffProps.S & FeatureProps.S> & Props.S = {},
     C extends Partial<RoleBuffProps.C & FeatureProps.C> & Props.C = {},
     R extends Partial<RoleBuffProps.R & FeatureProps.R> & Props.R = {}
-> extends RoleFeatureModel<
+> extends FeatureModel<
     E & RoleBuffProps.E,
     S & RoleBuffProps.S,
     C & RoleBuffProps.C,
-    R & RoleBuffProps.R
+    R & RoleBuffProps.R,
+    RoleRoute
 > {
     constructor(loader: Method<RoleBuffModel['props'] & {
         uuid: string | undefined;
@@ -40,7 +41,7 @@ export abstract class RoleBuffModel<
                 },
                 child: { ...props.child },
                 refer: { ...props.refer },
-                route: {},
+                route: ROLE_ROUTE,
             }
         });
     }

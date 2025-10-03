@@ -10,7 +10,6 @@ import { RoleActionModel } from "./rules/action/role";
 import { RoleAttackModel } from "./rules/attack/role";
 import { RoleHealthModel } from "./rules/health";
 import { SleepModel } from "./rules/sleep";
-import { RoleFeatureModel } from "./features/role";
 import { RoleEntriesModel } from "./entries/role";
 import { CardModel } from "./cards";
 import { HeroModel } from "./heroes";
@@ -78,7 +77,7 @@ export class RoleModel extends Model<
         })
     }
 
-    public add(feature: RoleFeatureModel) {
+    public add(feature: FeatureModel) {
         this.draft.child.feats.push(feature);
     }
 

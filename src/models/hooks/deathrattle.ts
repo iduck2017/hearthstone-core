@@ -1,6 +1,5 @@
 import { Event, Method, Model, Props } from "set-piece";
 import { FeatureModel, FeatureProps } from "../features";
-import { CardFeatureModel } from "../features/card";
 
 export namespace DeathrattleProps {
     export type E = {
@@ -10,18 +9,21 @@ export namespace DeathrattleProps {
     export type S = {};
     export type C = {};
     export type R = {};
+    export type P = {};
 }
 
 export abstract class DeathrattleModel<
     E extends Partial<DeathrattleProps.E> & Props.E = {},
     S extends Partial<DeathrattleProps.S> & Props.S = {},
     C extends Partial<DeathrattleProps.C> & Props.C = {},
-    R extends Partial<DeathrattleProps.R> & Props.R = {}
-> extends CardFeatureModel<
+    R extends Partial<DeathrattleProps.R> & Props.R = {},
+    P extends Partial<DeathrattleProps.P> & Props.P = {}
+> extends FeatureModel<
     E & DeathrattleProps.E, 
     S & DeathrattleProps.S, 
     C & DeathrattleProps.C, 
-    R & DeathrattleProps.R
+    R & DeathrattleProps.R,
+    P & DeathrattleProps.P
 > {
 
     constructor(loader: Method<DeathrattleModel['props'] & {
@@ -29,6 +31,7 @@ export abstract class DeathrattleModel<
         state: S & Pick<FeatureProps.S, 'desc' | 'name'>;
         child: C;
         refer: R;
+        route: P;
     }, []>) {
         super(() => {
             const props = loader?.();
@@ -40,7 +43,7 @@ export abstract class DeathrattleModel<
                 },
                 child: { ...props.child },
                 refer: { ...props.refer },
-                route: {},
+                route: { ...props.route },
             }
         });
     }

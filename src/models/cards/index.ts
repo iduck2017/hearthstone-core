@@ -4,7 +4,6 @@ import { ClassType, RarityType } from "../../types/card";
 import { MinionHooksModel } from "../hooks/minion";
 import { DamageModel, DeathrattleModel, DisposeModel, FeatureModel, RestoreModel } from "../..";
 import { MinionCardModel, PlayerModel, GameModel, HandModel, DeckModel, BoardModel, GraveyardModel } from "../..";
-import { CardFeatureModel } from "../features/card";
 import { DeployModel } from "../rules/deploy";
 import { PerformModel } from "../rules/perform";
 

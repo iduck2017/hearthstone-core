@@ -1,7 +1,7 @@
 import { Event, Method, Model, Props } from "set-piece";
 import { SelectEvent, SelectUtil } from "../../../utils/select";
 import { FeatureModel, FeatureProps } from "../../features";
-import { CardFeatureModel } from "../../features/card";
+import { ROLE_ROUTE, RoleRoute } from "../../..";
 
 export namespace RoleBattlecryProps {
     export type E = {
@@ -19,11 +19,12 @@ export abstract class RoleBattlecryModel<
     S extends Partial<RoleBattlecryProps.S> & Props.S = {},
     C extends Partial<RoleBattlecryProps.C> & Props.C = {},
     R extends Partial<RoleBattlecryProps.R> & Props.R = {}
-> extends CardFeatureModel<
+> extends FeatureModel<
     E & RoleBattlecryProps.E, 
     S & RoleBattlecryProps.S, 
     C & RoleBattlecryProps.C, 
-    R & RoleBattlecryProps.R
+    R & RoleBattlecryProps.R,
+    RoleRoute
 > {
     public static async toRun(
         items: Readonly<RoleBattlecryModel[]>
@@ -65,7 +66,7 @@ export abstract class RoleBattlecryModel<
                 },
                 child: { ...props.child },
                 refer: { ...props.refer },
-                route: {},
+                route: ROLE_ROUTE,
             }
         });
     }

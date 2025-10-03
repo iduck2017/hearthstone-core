@@ -1,7 +1,6 @@
 import { Decor, Event, Loader, StateUtil, StoreUtil, TranxUtil } from "set-piece";
 import { FeatureModel } from "../features";
 import { SleepModel, SleepProps } from "../rules/sleep";
-import { RoleFeatureModel } from "../features/role";
 
 export namespace RushProps {
     export type E = {};
@@ -11,7 +10,7 @@ export namespace RushProps {
 }
 
 @StoreUtil.is('rush')
-export class RushModel extends RoleFeatureModel<
+export class RushModel extends FeatureModel<
     RushProps.E,
     RushProps.S,
     RushProps.C,

@@ -1,6 +1,6 @@
 import { Event, Loader, StoreUtil } from "set-piece";
 import { FeatureModel } from "../features";
-import { RoleFeatureModel } from "../features/role";
+import { ROLE_ROUTE, RoleRoute } from "../..";
 
 export namespace TauntProps {
     export type E = {};
@@ -10,11 +10,12 @@ export namespace TauntProps {
 }
 
 @StoreUtil.is('taunt')
-export class TauntModel extends RoleFeatureModel<
+export class TauntModel extends FeatureModel<
     TauntProps.E, 
     TauntProps.S, 
     TauntProps.C, 
-    TauntProps.R
+    TauntProps.R,
+    RoleRoute
 > {
     constructor(loader?: Loader<TauntModel>) {
         super(() => {
@@ -29,6 +30,7 @@ export class TauntModel extends RoleFeatureModel<
                 },
                 child: { ...props.child },
                 refer: { ...props.refer },
+                route: ROLE_ROUTE,
             }
         })
     }

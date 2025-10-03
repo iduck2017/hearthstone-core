@@ -1,6 +1,6 @@
 import { Event, Model } from "set-piece";
 import { EffectModel } from "../features/effect";
-import { RoleModel } from "../role";
+import { RoleModel } from "../..";
 
 export type SpellHooksOptions = {
     effect: Map<EffectModel, Model[]>;

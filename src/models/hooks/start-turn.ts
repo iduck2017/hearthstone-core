@@ -1,7 +1,6 @@
 import { Event, EventUtil, Method, Model, Props } from "set-piece";
 import { EndTurnHookModel } from "./end-turn";
 import { FeatureModel, FeatureProps } from "../features";
-import { CardFeatureModel } from "../features/card";
 import { TurnModel } from "../rules/turn";
 
 export namespace StartTurnHookProps {
@@ -11,24 +10,28 @@ export namespace StartTurnHookProps {
     export type S = {};
     export type C = {};
     export type R = {};
+    export type P = {}
 }
 
 export abstract class StartTurnHookModel<
     E extends Partial<StartTurnHookProps.E> & Props.E = {},
     S extends Partial<StartTurnHookProps.S> & Props.S = {},
     C extends Partial<StartTurnHookProps.C> & Props.C = {},
-    R extends Partial<StartTurnHookProps.R> & Props.R = {}
-> extends CardFeatureModel<
+    R extends Partial<StartTurnHookProps.R> & Props.R = {},
+    P extends Partial<StartTurnHookProps.P> & Props.P = {}
+> extends FeatureModel<
     E & StartTurnHookProps.E,
     S & StartTurnHookProps.S,
     C & StartTurnHookProps.C,
-    R & StartTurnHookProps.R
+    R & StartTurnHookProps.R,
+    P & StartTurnHookProps.P
 > {
     constructor(loader: Method<StartTurnHookModel['props'] & {
         uuid: string | undefined;
         state: S & Pick<FeatureProps.S, 'desc' | 'name'>;
         child: C;
         refer: R;
+        route: P;
     }, []>) {
         super(() => {
             const props = loader?.();
@@ -40,7 +43,7 @@ export abstract class StartTurnHookModel<
                 },
                 child: { ...props.child },
                 refer: { ...props.refer },
-                route: {},
+                route: { ...props.route },
             }
         });
     }

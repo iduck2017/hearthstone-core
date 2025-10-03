@@ -1,13 +1,13 @@
 import { Loader, Method, Model, Props } from "set-piece";
 import { SelectEvent, SelectUtil } from "../../utils/select";
 import { FeatureModel, FeatureProps } from ".";
-import { CardFeatureModel } from "./card";
 
 export namespace EffectProps {
     export type E = {};
     export type S = {};
     export type C = {};
     export type R = {};
+    export type P = {};
 }
 
 export abstract class EffectModel<
@@ -16,11 +16,13 @@ export abstract class EffectModel<
     S extends Partial<FeatureProps.S> & Props.S = {},
     C extends Partial<FeatureProps.C> & Props.C = {},
     R extends Partial<FeatureProps.R> & Props.R = {},
-> extends CardFeatureModel<
+    P extends Partial<FeatureProps.P> & Props.P = {}
+> extends FeatureModel<
     E & EffectProps.E, 
     S & EffectProps.S,
     C & EffectProps.C, 
-    R & EffectProps.R
+    R & EffectProps.R,
+    P & EffectProps.P
 > {
     public static async toRun(items: Readonly<EffectModel[]>): Promise<Map<EffectModel, Model[]> | undefined> {
         const result = new Map<EffectModel, Model[]>();
@@ -46,6 +48,7 @@ export abstract class EffectModel<
         state: S & Pick<FeatureProps.S, 'desc' | 'name'>,
         child: C,
         refer: R,
+        route: P,
     }, []>) {
         super(() => {
             const props = loader();
@@ -57,7 +60,7 @@ export abstract class EffectModel<
                 },
                 child: { ...props.child },
                 refer: { ...props.refer },
-                route: {},
+                route: { ...props.route },
             }
         })
     }

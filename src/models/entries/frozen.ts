@@ -1,6 +1,5 @@
 import { Event, Loader, StoreUtil } from "set-piece";
 import { FeatureModel } from "../features";
-import { RoleFeatureModel } from "../features/role";
 
 export namespace FrozenProps {
     export type E = {}
@@ -9,7 +8,7 @@ export namespace FrozenProps {
 }
 
 @StoreUtil.is('frozen')
-export class FrozenModel extends RoleFeatureModel<
+export class FrozenModel extends FeatureModel<
     FrozenProps.E,
     FrozenProps.S,
     FrozenProps.C

@@ -1,7 +1,7 @@
 import { Decor, Event, Loader, StateUtil, StoreUtil, TranxUtil } from "set-piece";
 import { FeatureModel } from "../features";
 import { RoleActionProps, RoleActionModel, RoleActionDecor } from "../rules/action/role";
-import { RoleFeatureModel } from "../features/role";
+import { ROLE_ROUTE, RoleRoute } from "../..";
 
 export namespace WindfuryProps {
     export type E = {};
@@ -14,11 +14,12 @@ export namespace WindfuryProps {
 }
 
 @StoreUtil.is('windfury')
-export class WindfuryModel extends RoleFeatureModel<
+export class WindfuryModel extends FeatureModel<
     WindfuryProps.E,
     WindfuryProps.S,
     WindfuryProps.C,
-    WindfuryProps.R
+    WindfuryProps.R,
+    RoleRoute
 > {
     constructor(loader?: Loader<WindfuryModel>) {
         super(() => {
@@ -34,6 +35,7 @@ export class WindfuryModel extends RoleFeatureModel<
                 },
                 child: { ...props.child },
                 refer: { ...props.refer },
+                route: ROLE_ROUTE,
             }
         });
     }
