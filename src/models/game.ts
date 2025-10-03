@@ -1,10 +1,13 @@
 import { Method, Model, StoreUtil } from "set-piece";
 import { PlayerModel } from "./player";
 import { TurnModel } from "./rules/turn";
-import { RoleModel } from "./role";
 
 export namespace GameProps {
-    export type S = {};
+    export type S = {
+        readonly debug?: {
+            readonly isDrawDisabled: boolean;
+        }
+    };
     export type E = {};
     export type C = {
         readonly turn: TurnModel;

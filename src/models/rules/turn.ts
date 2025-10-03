@@ -63,6 +63,11 @@ export class TurnModel extends Model<
             item.child.action.reset();
             item.child.sleep.deactive();
         });
+        // draw a card
+        const game = this.route.game;
+        if (!game?.state.debug?.isDrawDisabled) {
+            player.child.deck.draw();
+        }
         this.event.doStart(new Event({}));
         this.event.onStart(new Event({}));
     }

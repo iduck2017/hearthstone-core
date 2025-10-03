@@ -7,6 +7,7 @@ import { WispModel } from "./wisp";
 
 describe('role', () => {
     const game = new GameModel(() => ({
+        state: { debug: { isDrawDisabled: true } },
         child: {
             playerA: new PlayerModel(() => ({
                 child: {
