@@ -27,8 +27,6 @@ export class DamageModel extends Model<
 > {
     @DisposeModel.span()
     public static run(tasks: DamageEvent[]) {
-        tasks.forEach(item => item.detail.source.child.damage.toRun(item))
-
         tasks.forEach(item => item.detail.source.child.damage.event.toRun(item));
         tasks.forEach(item => item.detail.target.child.health.toHurt(item));
         
@@ -60,20 +58,6 @@ export class DamageModel extends Model<
                 }
             }
         })
-    }
-
-    private toRun(event: DamageEvent) {
-        const type = event.detail.type;
-        // spell damage bonus
-        if (type === DamageType.SPELL) {
-            const source = event.detail.source;
-            const player = source.route.player;
-            if (!player) return;
-            const hero = player.child.hero;
-            const damage = hero.child.spellDamage;
-            const offset = damage.state.current;
-            event.set(event.detail.result + offset)
-        }
     }
 
     private onRun(event: DamageEvent) {

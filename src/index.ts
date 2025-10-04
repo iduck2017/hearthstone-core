@@ -76,6 +76,7 @@ export { FeatureProps, FeatureModel } from './models/features'
 export { SecretFeatureProps, SecretFeatureModel } from "./models/features/secret";
 export { RoleBuffProps, RoleBuffModel } from "./models/features/buff/role";
 export { EffectProps, EffectModel } from './models/features/effect'; 
+export { SpellEffectProps, SpellEffectModel } from './models/features/effect/spell';
 
 // hooks
 export { MinionHooksProps, MinionHooksModel } from "./models/hooks/minion";

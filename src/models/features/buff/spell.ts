@@ -1,6 +1,6 @@
 import { Decor, Method, StateUtil, StoreUtil } from "set-piece";
 import { FeatureModel } from "..";
-import { SpellDamageDecor, SpellDamageModel, SpellDamageProps } from "../../rules/attack/spell";
+import { SpellEffectDecor, SpellEffectModel } from "../effect/spell";
 
 export namespace SpellBuffProps {
     export type E = {};
@@ -38,11 +38,10 @@ export class SpellBuffModel extends FeatureModel<
         });
     }
 
-    @StateUtil.on(self => self.route.player?.proxy.child.hero.child.spellDamage.decor)
-    onCompute(that: SpellDamageModel, decor: SpellDamageDecor) {
+    @StateUtil.on(self => self.route.player?.proxy.all(SpellEffectModel).decor)
+    onCompute(that: SpellEffectModel, decor: SpellEffectDecor) {
         if (!this.route.board) return;
         if (!this.state.isActive) return;
         decor.add(this.state.offset);
     }
-
 }

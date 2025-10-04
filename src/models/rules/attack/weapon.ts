@@ -1,4 +1,4 @@
-import { Decor, Event, EventUtil, Method, Model, Producer, StateUtil } from "set-piece";
+import { Decor, Event, EventUtil, Method, Model, StateUtil } from "set-piece";
 import { GameModel, PlayerModel, HeroModel, RoleAttackModel, RoleAttackProps, TurnModel, BoardModel, WeaponCardModel, DamageEvent } from "../../..";
 import { RoleAttackDecor } from "./role";
 import { RoleActionDecor } from "../action/role";
@@ -68,7 +68,6 @@ export class WeaponAttackModel extends Model<
     @EventUtil.on(self => self.route.game?.proxy.child.turn.event.onEnd)
     private onNext(that: TurnModel, event: Event) {
         this.reload()
-        bind(this.route.game?.proxy.child.turn.event.onStart, (event: DamageEvent) => event.set(0))
     }
 
     @StateUtil.on(self => self.route.player?.proxy.child.hero.child.role.child.attack.decor)
@@ -77,10 +76,4 @@ export class WeaponAttackModel extends Model<
         if (!this.route.board) return;
         decor.add(this.state.current);
     }
-}
-
-
-
-function bind<E extends Event>(producer: Producer<E> | undefined, handler: (event: E) => void) {
-
 }

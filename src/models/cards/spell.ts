@@ -4,6 +4,7 @@ import { EffectModel } from "../features/effect";
 import { SpellPerformModel } from "../rules/perform/spell";
 import { SpellHooksOptions } from "../hooks/spell";
 import { SchoolType } from "../../types/card";
+import { SpellEffectModel } from "../features/effect/spell";
 
 export namespace SpellCardProps {
     export type S = {
@@ -11,7 +12,7 @@ export namespace SpellCardProps {
     };
     export type E = {};
     export type C = {
-        readonly effects: EffectModel[],
+        readonly effects: SpellEffectModel[],
         readonly perform: SpellPerformModel;
     };
     export type R = {};
