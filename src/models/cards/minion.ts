@@ -15,6 +15,7 @@ export namespace MinionCardProps {
     };
     export type E = {
         readonly onTrans: Event<{ target: MinionCardModel }>;
+        readonly onSilence: Event;
     };
     export type C = {
         readonly hooks: MinionHooksModel;
@@ -66,13 +67,15 @@ export abstract class MinionCardModel<
         else this.draft.child.feats.push(feature);
     }
 
-    public trans(target: MinionCardModel) {
-        this.doTrans(target);
+
+    // transform
+    public transform(target: MinionCardModel) {
+        this.doTransform(target);
         this.event.onTrans(new Event({ target }));
     }
 
     @TranxUtil.span()
-    private doTrans(target: MinionCardModel) {
+    private doTransform(target: MinionCardModel) {
         const board = this.route.board;
         if (board) {
             const index = board.refer.order.indexOf(this);
@@ -80,12 +83,32 @@ export abstract class MinionCardModel<
             board.add(target);
             board.sort(target, index)
         }
-        // const hand = this.route.hand;
-        // if (hand) {
-        //     const index = hand.refer.order.indexOf(this);
-        //     hand.use(this);
-        //     hand.del(this);
-        //     hand.add(target);
-        // }
+    }
+
+
+    // silence
+    public silence() {
+        this.doSilence();
+        this.event.onSilence(new Event({}));
+    }
+
+    @TranxUtil.span()
+    private doSilence() {
+        this.child.feats.forEach(item => item.deactive());
+        this.child.hooks.child.battlecry.forEach(item => item.deactive());
+        this.child.hooks.child.deathrattle.forEach(item => item.deactive());
+        this.child.hooks.child.startTurn.forEach(item => item.deactive());
+        this.child.hooks.child.endTurn.forEach(item => item.deactive());
+        const role = this.child.role;
+        role.child.feats.forEach(item => item.deactive());
+        role.child.buffs.forEach(item => item.deactive());
+        role.child.entries.child.charge.deactive();
+        role.child.entries.child.divineShield.deactive();
+        role.child.entries.child.elusive.deactive();
+        role.child.entries.child.frozen.deactive();
+        role.child.entries.child.rush.deactive();
+        role.child.entries.child.stealth.deactive();
+        role.child.entries.child.taunt.deactive();
+        role.child.entries.child.windfury.deactive();
     }
 }

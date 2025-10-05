@@ -1,9 +1,8 @@
-import { Event, Method, Model, Props, TranxUtil } from "set-piece";
+import { Event, EventUtil, Method, Model, Props, StateUtil, TranxUtil } from "set-piece";
 import { BoardModel, DeckModel, GameModel, GraveyardModel, HandModel, PlayerModel } from "../..";
 
 export namespace FeatureProps {
     export type E = {
-        onSilence: Event;
         onActive: Event;
         onDeactive: Event;
     };
@@ -24,6 +23,8 @@ export namespace FeatureProps {
     };
 }
 
+@EventUtil.if(self => self.state.isActive)
+@StateUtil.if(self => self.state.isActive)
 export abstract class FeatureModel<
     E extends Partial<FeatureProps.E> & Props.E = {},
     S extends Partial<FeatureProps.S> & Props.S = {},
@@ -62,12 +63,6 @@ export abstract class FeatureModel<
                 },
             }
         })
-    }
-
-    public silence(): boolean {
-        this.deactive();
-        this.event.onSilence(new Event({}));
-        return true;
     }
 
     public deactive() {

@@ -18,7 +18,7 @@ export class SpellEffectDecor extends Decor<
     FeatureProps.S
 > {
     public add(value: number) {
-        this.detail.damage.forEach(item => item += value);
+        this.detail.damage = this.detail.damage.map(item => item + value);
     }
 }
 

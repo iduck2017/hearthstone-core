@@ -2,6 +2,7 @@ export enum ClassType {
     WARRIOR = 1,
     MAGE,
     NEUTRAL,
+    PRIEST,
 }
 
 export enum RarityType {
@@ -26,4 +27,6 @@ export enum SchoolType {
     FIRE,
     FROST,
     ARCANE,
+    HOLY,
+    SHADOW,
 }

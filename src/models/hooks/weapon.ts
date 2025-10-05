@@ -48,7 +48,6 @@ export class WeaponHooksModel extends Model<
         });
     }
 
-
     public add(hook: WeaponBattlecryModel): RoleBattlecryModel;
     public add(hook: DeathrattleModel): DeathrattleModel;
     public add(hook: StartTurnHookModel): StartTurnHookModel;

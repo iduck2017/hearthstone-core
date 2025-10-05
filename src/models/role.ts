@@ -24,6 +24,7 @@ export namespace RoleProps {
         readonly action: RoleActionModel;
         readonly entries: RoleEntriesModel;
         readonly feats: FeatureModel[];
+        readonly buffs: RoleBuffModel[];
     };
     export type R = {};
     export type P = {
@@ -59,6 +60,7 @@ export class RoleModel extends Model<
                     action: props.child.action ?? new RoleActionModel(),
                     entries: props.child.entries ?? new RoleEntriesModel(),
                     feats: [],
+                    buffs: [],
                     ...props.child,
                 },
                 refer: { ...props.refer },
@@ -78,7 +80,8 @@ export class RoleModel extends Model<
     }
 
     public add(feature: FeatureModel) {
-        this.draft.child.feats.push(feature);
+        if (feature instanceof RoleBuffModel) this.draft.child.buffs.push(feature);
+        else this.draft.child.feats.push(feature);
     }
 
     @TranxUtil.span()
