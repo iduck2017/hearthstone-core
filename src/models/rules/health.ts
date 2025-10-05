@@ -150,7 +150,7 @@ export class RoleHealthModel extends Model<
         const role = this.route.role;
         if (!role) return;
         if (event.isAbort) return;
-        if (event.detail.result > 0) return this.event.onHeal(event);
+        if (event.detail.result > 0) this.event.onHeal(event);
         if (event.detail.overflow > 0) {
             const hooks = role.child.hooks;
             hooks.child.overheal.forEach(item => item.run());

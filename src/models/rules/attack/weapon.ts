@@ -2,6 +2,7 @@ import { Decor, Event, EventUtil, Method, Model, StateUtil } from "set-piece";
 import { GameModel, PlayerModel, HeroModel, RoleAttackModel, RoleAttackProps, TurnModel, BoardModel, WeaponCardModel, DamageEvent } from "../../..";
 import { RoleAttackDecor } from "./role";
 import { RoleActionDecor } from "../action/role";
+import { OperationType } from "../../../types/math";
 
 export namespace WeaponAttackProps {
     export type E = {}
@@ -77,5 +78,10 @@ export class WeaponAttackModel extends Model<
         if (!this.status) return;
         if (!this.route.board) return;
         decor.add(this.state.current);
+        // decor.add({
+        //     type: OperationType.PLUS,
+        //     value: this.state.current,
+        //     reason: this,
+        // });
     }
 }

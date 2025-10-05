@@ -1,6 +1,7 @@
 import { DebugUtil, Decor, Event, Method, Model, StateUtil, StoreUtil } from "set-piece";
-import { DamageEvent, DamageModel, MinionCardModel, RoleModel, GameModel, PlayerModel, HeroModel, WeaponCardModel } from "../../..";
+import { DamageEvent, DamageModel, MinionCardModel, RoleModel, GameModel, PlayerModel, HeroModel, WeaponCardModel, RoleBuffModel } from "../../..";
 import { DamageType } from "../../../types/damage";
+import { Operation, OperationType } from "../../../types/math";
 
 export namespace RoleAttackProps {
     export type E = {
@@ -23,8 +24,40 @@ export namespace RoleAttackProps {
     }
 }
 
+
 export class RoleAttackDecor extends Decor<RoleAttackProps.S> {
-    public add(value: number) { this.detail.current += value }
+    private operations: Operation[] = [];
+
+    // public get result() {
+    //     const result = { ...this.detail };
+    //     // sort
+    //     const buffs = this.operations
+    //         .filter(item => item.reason instanceof RoleBuffModel)
+    //         .sort((a, b) => a.reason.uuid.localeCompare(b.reason.uuid));
+    //     // buff
+    //     buffs.forEach(item => {
+    //         if (item.type === OperationType.PLUS) result.current += item.value;
+    //         if (item.type === OperationType.MINUS) result.current -= item.value;
+    //         if (item.type === OperationType.SET) result.current = item.value;
+    //     })
+    //     // other
+    //     const other = this.operations.filter(item => !(item instanceof RoleBuffModel));
+    //     other.forEach(item => {
+    //         if (item.type === OperationType.PLUS) result.current += item.value;
+    //         if (item.type === OperationType.MINUS) result.current -= item.value;
+    //         if (item.type === OperationType.SET) result.current = item.value;
+    //     })
+    //     if (result.current > 0) result.current = 0;
+    //     return result;
+    // }
+    
+    // public add(operation: Operation) { 
+    //     this.operations.push(operation);
+    // }
+
+    public add(value: number) {
+        this.detail.current += value;
+    }
 }
 
 @StateUtil.use(RoleAttackDecor)

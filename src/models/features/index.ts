@@ -23,8 +23,8 @@ export namespace FeatureProps {
     };
 }
 
-@EventUtil.if(self => self.state.isActive)
-@StateUtil.if(self => self.state.isActive)
+@EventUtil.if(self => self.draft.state.isActive)
+@StateUtil.if(self => self.draft.state.isActive)
 export abstract class FeatureModel<
     E extends Partial<FeatureProps.E> & Props.E = {},
     S extends Partial<FeatureProps.S> & Props.S = {},

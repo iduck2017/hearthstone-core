@@ -27,17 +27,16 @@ export namespace CostProps {
 export class CostDecor extends Decor<CostProps.S> {
     
     private isFree = false;
-
-    private lane1: number[] = []; // minus
-    private lane2: number[] = []; // minus gt0
+    private laneAuraGt0: number[] = [];
+    private laneAuraGt1: number[] = [];
 
     public get result() {
         const result = { ...this.detail }
-        this.lane1.forEach(item => {
+        this.laneAuraGt0.forEach(item => {
             if (result.current + item < 0) result.current = 0;
             else result.current += item;
         });
-        this.lane2.forEach(item => {
+        this.laneAuraGt1.forEach(item => {
             if (result.current + item < 1) return;
             else result.current += item;
         });
@@ -46,8 +45,8 @@ export class CostDecor extends Decor<CostProps.S> {
     }
 
     public add(value: number, isLimit?: boolean) {
-        const lane = isLimit ? this.lane2 : this.lane1;
-        lane.push(value);
+        if (isLimit) this.laneAuraGt1.push(value);
+        else this.laneAuraGt0.push(value);
     }
 
     public free() { this.isFree = true; }

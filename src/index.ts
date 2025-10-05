@@ -86,6 +86,8 @@ export { DeathrattleProps, DeathrattleModel } from "./models/hooks/deathrattle";
 export { EndTurnHookProps, EndTurnHookModel } from "./models/hooks/end-turn";
 export { StartTurnHookProps, StartTurnHookModel } from "./models/hooks/start-turn";
 export { SpellHooksOptions, SpellCastEvent } from './models/hooks/spell';
+export { OverhealProps, OverhealModel } from "./models/hooks/overheal";
+export { RoleHooksProps, RoleHooksModel } from "./models/hooks/role";
 
 // heroes
 export { HeroProps, HeroModel } from "./models/heroes";
