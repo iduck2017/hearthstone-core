@@ -31,7 +31,7 @@ export class RestoreModel extends Model<
         tasks = tasks.filter(item => !item.isAbort);
         tasks = RestoreModel.doRun(tasks);
 
-        tasks = tasks.filter(item => item.detail.result > 0 && !item.isAbort);
+        tasks = tasks.filter(item => !item.isAbort);
         tasks.forEach(item => item.detail.target.child.health.onHeal(item));
         tasks.forEach(item => item.detail.source.child.restore.onRun(item));
     }

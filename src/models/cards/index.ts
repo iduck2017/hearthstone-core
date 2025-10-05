@@ -1,4 +1,4 @@
-import { DebugUtil, Model, TranxUtil, Props, Event, Method } from "set-piece";
+import { DebugUtil, Model, TranxUtil, Props, Event, Method, StoreUtil } from "set-piece";
 import { CostModel } from "../rules/cost";
 import { ClassType, RarityType } from "../../types/card";
 import { MinionHooksModel } from "../hooks/minion";
@@ -38,7 +38,9 @@ export namespace CardProps {
         game: GameModel;
         graveyard: GraveyardModel;
     };
-    export type R = {};
+    export type R = {
+        creator?: Model;
+    };
 }
 
 export abstract class CardModel<
@@ -53,6 +55,13 @@ export abstract class CardModel<
    R & CardProps.R,
    CardProps.P
 > {
+    public static copy<M extends CardModel>(card: M): M | undefined {
+        const result = StoreUtil.copy(card, {
+            refer: { ...card.props.refer, creator: card },
+        });
+        return result;
+    }
+
     public get status(): boolean {
         const hand = this.route.hand;
         if (!hand) return false;
@@ -97,7 +106,6 @@ export abstract class CardModel<
             }
         })
     }
-
 
     public async play() {
         if (!this.status) return;

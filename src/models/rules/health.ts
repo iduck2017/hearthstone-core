@@ -141,9 +141,8 @@ export class RoleHealthModel extends Model<
             return event;
         }
         const damage = this.draft.state.damage;
-        if (damage < result) result = damage;
-        this.draft.state.damage -= result;
-        event.set(result)
+        this.draft.state.damage -= Math.min(damage, result);
+        event.set(Math.min(damage, result), Math.max(0, result - damage));
         return event;
     }
 
@@ -151,10 +150,13 @@ export class RoleHealthModel extends Model<
         const role = this.route.role;
         if (!role) return;
         if (event.isAbort) return;
-        if (event.detail.result <= 0) return;
-        return this.event.onHeal(event);
+        if (event.detail.result > 0) return this.event.onHeal(event);
+        if (event.detail.overflow > 0) {
+            const hooks = role.child.hooks;
+            hooks.child.overheal.forEach(item => item.run());
+        }
     }
-
+    
 
     @EventUtil.on(self => self.proxy.event.onChange)
     @DebugUtil.log()

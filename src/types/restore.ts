@@ -9,6 +9,7 @@ export class RestoreEvent extends Event<{
     method: Model;
     origin: number;
     result: number;
+    overflow: number;
 }> {
     constructor(props: {
         target: RoleModel;
@@ -19,10 +20,12 @@ export class RestoreEvent extends Event<{
         super({
             ...props,
             result: props.origin,
+            overflow: 0,
         });
     }
 
-    public set(value: number) {
+    public set(value: number, overflow?: number) {
         this._detail.result = value;
+        if (overflow) this._detail.overflow = overflow;
     }
 }

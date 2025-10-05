@@ -65,7 +65,7 @@ export class SecretFeatureModel<
 
     constructor(loader: Method<SecretFeatureModel['props'] & {
         uuid: string | undefined,
-        state: S & FeatureProps.S,
+        state: S & Pick<FeatureProps.S, 'desc' | 'name'>,
         child: C,
         refer: R,
         route: P,
@@ -74,7 +74,10 @@ export class SecretFeatureModel<
             const props = loader();
             return {
                 uuid: props.uuid,
-                state: { ...props.state },
+                state: { 
+                    isActive: true,
+                    ...props.state 
+                },
                 child: { ...props.child },
                 refer: { ...props.refer },
                 route: { 

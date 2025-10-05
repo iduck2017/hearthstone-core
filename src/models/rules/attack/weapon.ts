@@ -70,7 +70,9 @@ export class WeaponAttackModel extends Model<
         this.reload()
     }
 
-    @StateUtil.on(self => self.route.player?.proxy.child.hero.child.role.child.attack.decor)
+    @StateUtil.on(self => {
+        return self.route.player?.proxy.child.hero.child.role.child.attack.decor
+    })
     private onCompute(that: RoleAttackModel, decor: RoleAttackDecor) {
         if (!this.status) return;
         if (!this.route.board) return;

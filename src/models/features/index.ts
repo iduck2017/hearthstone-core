@@ -1,5 +1,5 @@
 import { Event, EventUtil, Method, Model, Props, StateUtil, TranxUtil } from "set-piece";
-import { BoardModel, DeckModel, GameModel, GraveyardModel, HandModel, PlayerModel } from "../..";
+import { BoardModel, DeckModel, GameModel, GraveyardModel, HandModel, PlayerModel, SecretFeatureModel } from "../..";
 
 export namespace FeatureProps {
     export type E = {

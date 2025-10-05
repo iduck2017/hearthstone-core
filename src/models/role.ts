@@ -13,6 +13,7 @@ import { SleepModel } from "./rules/sleep";
 import { RoleEntriesModel } from "./entries/role";
 import { CardModel } from "./cards";
 import { HeroModel } from "./heroes";
+import { RoleHooksModel } from "./hooks/role";
 
 export namespace RoleProps {
     export type S = {};
@@ -23,6 +24,7 @@ export namespace RoleProps {
         readonly attack: RoleAttackModel;
         readonly action: RoleActionModel;
         readonly entries: RoleEntriesModel;
+        readonly hooks: RoleHooksModel;
         readonly feats: FeatureModel[];
         readonly buffs: RoleBuffModel[];
     };
@@ -59,6 +61,7 @@ export class RoleModel extends Model<
                     sleep: props.child.sleep ?? new SleepModel(),
                     action: props.child.action ?? new RoleActionModel(),
                     entries: props.child.entries ?? new RoleEntriesModel(),
+                    hooks: props.child.hooks ?? new RoleHooksModel(),
                     feats: [],
                     buffs: [],
                     ...props.child,

@@ -13,7 +13,9 @@ export namespace DeckProps {
         game: GameModel;
         player: PlayerModel;
     }
-    export type R = {}
+    export type R = {
+        order: CardModel[]
+    }
 }
 
 export class DeckModel extends Model<
@@ -58,9 +60,17 @@ export class DeckModel extends Model<
         let cards: CardModel[] | undefined;
         if (card instanceof MinionCardModel) cards = this.draft.child.minions;
         if (!cards) return false;
-        const index = cards.indexOf(card);
+
+        // remove from cards
+        let index = cards.indexOf(card);
         if (index === -1) return false;
         cards.splice(index, 1);
+
+        // remove from order
+        const order = this.draft.refer.order;
+        index = order.indexOf(card);
+        if (index !== -1) order.splice(index, 1);
+
         return true;
     }
 }

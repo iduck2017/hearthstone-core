@@ -43,7 +43,11 @@ export class HandModel extends Model<
                 },
                 state: { ...props.state },
                 refer: { 
-                    order: props.child?.minions ?? [],
+                    order: [
+                        ...props.child?.minions ?? [],
+                        ...props.child?.weapons ?? [],
+                        ...props.child?.spells ?? [],
+                    ],
                     ...props.refer 
                 },
                 route: {
@@ -55,25 +59,24 @@ export class HandModel extends Model<
     }
    
     public add(card: CardModel, position?: number): boolean {
-        const order = this.draft.refer.order;
-        if (position === -1) position = order.length;
-        if (!position) position = order.length;
-
         let cards: CardModel[] | undefined;
         if (card instanceof SpellCardModel) cards = this.draft.child.spells;
         if (card instanceof MinionCardModel) cards = this.draft.child.minions;
         if (card instanceof WeaponCardModel) cards = this.draft.child.weapons;
         if (!cards) return false;
-        
         cards.push(card);
+
+        const order = this.draft.refer.order;
+        if (position === -1) position = order.length;
+        if (!position) position = order.length;
         order.splice(position, 0, card);
         return true;
     }
 
+
     @TranxUtil.span()
     public use(card: CardModel) {
-        const order = this.draft.refer.order;
-
+        
         let cards: CardModel[] | undefined;
         if (card instanceof SpellCardModel) cards = this.draft.child.spells;
         if (card instanceof MinionCardModel) cards = this.draft.child.minions;
@@ -82,7 +85,9 @@ export class HandModel extends Model<
         
         let index = cards.indexOf(card);
         if (index === -1) return;
-        if (index !== -1) cards.splice(index, 1);
+        cards.splice(index, 1);
+
+        const order = this.draft.refer.order;
         index = order.indexOf(card);
         if (index !== -1) order.splice(index, 1);
 
@@ -90,9 +95,27 @@ export class HandModel extends Model<
     }
 
     public del(card: CardModel): boolean {
+
+        // remove from cache
         const cache = this.draft.child.cache;
         let index = cache.indexOf(card);
-        if (index >= 0) cache.splice(index, 1);
+        if (index !== -1) cache.splice(index, 1);
+
+        // remove from cards
+        let cards: CardModel[] | undefined;
+        if (card instanceof SpellCardModel) cards = this.draft.child.spells;
+        if (card instanceof MinionCardModel) cards = this.draft.child.minions;
+        if (card instanceof WeaponCardModel) cards = this.draft.child.weapons;
+        if (!cards) return false;
+
+        index = cards.indexOf(card);
+        if (index !== -1) cards.splice(index, 1);
+        
+        // remove from order
+        const order = this.draft.refer.order;
+        index = order.indexOf(card);
+        if (index !== -1) order.splice(index, 1);
+
         return true;
     }
 }

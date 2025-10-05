@@ -1,4 +1,4 @@
-import { Props, Event, Method, State, TranxUtil } from "set-piece";
+import { Props, Event, Method, State, TranxUtil, Model } from "set-piece";
 import { MinionHooksOptions, MinionHooksModel } from "../hooks/minion";
 import { CardModel, CardProps } from ".";
 import { RaceType } from "../../types/card";
@@ -77,11 +77,11 @@ export abstract class MinionCardModel<
     @TranxUtil.span()
     private doTransform(target: MinionCardModel) {
         const board = this.route.board;
+        const self: MinionCardModel = this;
         if (board) {
-            const index = board.refer.order.indexOf(this);
-            board.del(this);
-            board.add(target);
-            board.sort(target, index)
+            const index = board.refer.order.indexOf(self);
+            board.del(self);
+            board.add(target, index);
         }
     }
 
