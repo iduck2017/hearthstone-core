@@ -1,7 +1,9 @@
 import { DebugUtil, Decor, Event, EventUtil, Method, Model, StateUtil, TranxUtil } from "set-piece";
-import { RoleModel, MinionCardModel, GameModel, PlayerModel, CardModel, HeroModel } from "../..";
+import { RoleModel, MinionCardModel, GameModel, PlayerModel, CardModel, HeroModel, RoleBuffModel } from "../..";
 import { DamageEvent } from "../../types/damage";
 import { RestoreEvent } from "../../types/restore";
+import { OperationType } from "../../types/math";
+import { Operation } from "../../types/math";
 
 export namespace RoleHealthProps {
     export type E = {
@@ -29,7 +31,32 @@ export namespace RoleHealthProps {
 }
 
 export class RoleHealthDecor extends Decor<RoleHealthProps.S> {
-    public add(value: number) { this.detail.maxium += value }
+    private operations: Operation[] = [];
+
+    public get result() {
+        const result = { ...this.detail };
+        // sort
+        const buffs = this.operations
+            .filter(item => item.reason instanceof RoleBuffModel)
+            .sort((a, b) => a.reason.uuid.localeCompare(b.reason.uuid));
+        // buff
+        buffs.forEach(item => {
+            if (item.type === OperationType.ADD) result.maxium += item.value;
+            if (item.type === OperationType.SET) result.maxium = item.value;
+        })
+        // other
+        const other = this.operations.filter(item => !(item.reason instanceof RoleBuffModel));
+        other.forEach(item => {
+            if (item.type === OperationType.ADD) result.maxium += item.value;
+            if (item.type === OperationType.SET) result.maxium = item.value;
+        })
+        if (result.maxium <= 0) result.maxium = 0;
+        return result;
+    }
+    
+    public add(operation: Operation) { 
+        this.operations.push(operation);
+    }
 }
 
 @StateUtil.use(RoleHealthDecor)

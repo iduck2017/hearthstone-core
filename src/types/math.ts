@@ -9,7 +9,6 @@ export type Operation = {
 }
 
 export enum OperationType {
-    PLUS = 1,
-    MINUS = 2,
+    ADD = 1,
     SET,
 }

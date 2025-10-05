@@ -3,6 +3,7 @@ import { FeatureModel, FeatureProps } from "..";
 import { RoleAttackDecor, RoleAttackModel, RoleAttackProps } from "../../rules/attack/role";
 import { RoleHealthDecor, RoleHealthModel, RoleHealthProps } from "../../rules/health";
 import { ROLE_ROUTE, RoleRoute } from "../../..";
+import { OperationType } from "../../../types/math";
 
 export namespace RoleBuffProps {
     export type S = {
@@ -49,17 +50,20 @@ export abstract class RoleBuffModel<
     @StateUtil.on(self => self.route.role?.proxy.child.attack.decor)
     protected onAttackCompute(that: RoleAttackModel, decor: RoleAttackDecor) {
         if (!this.state.isActive) return;
-        decor.add(this.state.offset[0]);
+        decor.add({
+            type: OperationType.ADD,
+            value: this.state.offset[0],
+            reason: this,
+        });
     }
 
     @StateUtil.on(self => self.route.role?.proxy.child.health.decor)
     protected onHealthCompute(that: RoleHealthModel, decor: RoleHealthDecor) {
         if (!this.state.isActive) return;
-        decor.add(this.state.offset[1]);
-    }
-
-    public override() {
-        this.draft.state.isActive = false;
-        this.reload();
+        decor.add({
+            type: OperationType.ADD,
+            value: this.state.offset[1],
+            reason: this,
+        });
     }
 }

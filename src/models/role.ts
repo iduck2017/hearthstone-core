@@ -89,9 +89,6 @@ export class RoleModel extends Model<
 
     @TranxUtil.span()
     public reset(buff: RoleBuffModel) {
-        this.child.feats.forEach(item => {
-            if (item instanceof RoleBuffModel) item.override()
-        })
         this.add(buff);
     }
 }
