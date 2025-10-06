@@ -1,13 +1,15 @@
 import { DebugUtil, Loader, Model } from "set-piece";
 import { MinionCardModel } from "../cards/minion";
 import { GameModel } from "../game";
-import { CardModel, PlayerModel } from "../..";
+import { CardModel, PlayerModel, SpellCardModel, WeaponCardModel } from "../..";
 
 export namespace DeckProps {
     export type E = {}
     export type S = {}
     export type C = {
-        minions: MinionCardModel[]
+        minions: MinionCardModel[],
+        spells: SpellCardModel[],
+        weapons: WeaponCardModel[]
     }
     export type P = {
         game: GameModel;
@@ -33,11 +35,17 @@ export class DeckModel extends Model<
                 uuid: props.uuid,
                 child: { 
                     minions: [],
+                    spells: [],
+                    weapons: [],
                     ...props.child,
                 },
                 state: { ...props.state },
                 refer: { 
-                    order: props.child?.minions ?? [],
+                    order: [
+                        ...props.child?.minions ?? [],
+                        ...props.child?.spells ?? [],
+                        ...props.child?.weapons ?? [],
+                    ],
                     ...props.refer 
                 },
                 route: {
@@ -50,7 +58,7 @@ export class DeckModel extends Model<
 
     @DebugUtil.log()
     public draw() {
-        const card = this.child.minions[0];
+        const card = this.refer.order[0];
         if (!card) return;
         card.draw();
         return card;
@@ -59,6 +67,8 @@ export class DeckModel extends Model<
     public del(card: CardModel): boolean {
         let cards: CardModel[] | undefined;
         if (card instanceof MinionCardModel) cards = this.draft.child.minions;
+        if (card instanceof SpellCardModel) cards = this.draft.child.spells;
+        if (card instanceof WeaponCardModel) cards = this.draft.child.weapons;
         if (!cards) return false;
 
         // remove from cards

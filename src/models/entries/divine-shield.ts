@@ -2,7 +2,7 @@ import { Event, Loader, StoreUtil, TranxUtil } from "set-piece";
 import { DamageEvent } from "../../types/damage";
 import { FeatureModel } from "../features";
 
-export namespace DivineSheildProps {
+export namespace DivineShieldProps {
     export type E = {
         onUse: DamageEvent
     }
@@ -14,13 +14,13 @@ export namespace DivineSheildProps {
 }
 
 @StoreUtil.is('divine-shield')
-export class DivineSheildModel extends FeatureModel<
-    DivineSheildProps.E,
-    DivineSheildProps.S,
-    DivineSheildProps.C,
-    DivineSheildProps.R
+export class DivineShieldModel extends FeatureModel<
+    DivineShieldProps.E,
+    DivineShieldProps.S,
+    DivineShieldProps.C,
+    DivineShieldProps.R
 > {
-    constructor(loader?: Loader<DivineSheildModel>) {
+    constructor(loader?: Loader<DivineShieldModel>) {
         super(() => {
             const props = loader?.() ?? {};
             return {
@@ -51,6 +51,7 @@ export class DivineSheildModel extends FeatureModel<
         if (!this.state.isActive) return false;
         if (this.draft.state.count <= 1) this.draft.state.isActive = false;
         this.draft.state.count =- 1;
+        event.config({ divineShield: true });
         this.event.onUse(event);
         return true;
     }

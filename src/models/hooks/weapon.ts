@@ -4,6 +4,7 @@ import { DeathrattleModel } from "./deathrattle";
 import { StartTurnHookModel } from "./start-turn";
 import { EndTurnHookModel } from "./end-turn";
 import { WeaponBattlecryModel } from "./battlecry/weapon";
+import { CardHooksModel } from "./card";
 
 export namespace WeaponHooksProps {
     export type E = {};
@@ -23,7 +24,7 @@ export type WeaponHooksOptions = {
 }
 
 @StoreUtil.is('card-hooks')
-export class WeaponHooksModel extends Model<
+export class WeaponHooksModel extends CardHooksModel<
     WeaponHooksProps.E,
     WeaponHooksProps.S,
     WeaponHooksProps.C,

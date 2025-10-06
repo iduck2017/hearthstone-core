@@ -138,9 +138,10 @@ export class RoleHealthModel extends Model<
 
         if (divineSheild.state.isActive) {
             divineSheild.use(event);
-            event.set(0)
+            event.set(0);
             return event;
         }
+
         this.draft.state.damage += result;
         dispose.active(false, event.detail.source, event.detail.method);
         return event;
@@ -179,7 +180,7 @@ export class RoleHealthModel extends Model<
         if (event.isAbort) return;
         if (event.detail.result > 0) this.event.onHeal(event);
         if (event.detail.overflow > 0) {
-            const hooks = role.child.hooks;
+            const hooks = role.child.entries;
             hooks.child.overheal.forEach(item => item.run());
         }
     }

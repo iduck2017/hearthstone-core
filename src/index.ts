@@ -69,7 +69,7 @@ export { StealthProps, StealthModel } from './models/entries/stealth';
 export { ElusiveProps, ElusiveModel } from './models/entries/elusive';
 export { WindfuryProps, WindfuryModel } from "./models/entries/windfury";
 export { SpellBuffProps, SpellBuffModel } from "./models/features/buff/spell";
-export { DivineSheildProps, DivineSheildModel } from "./models/entries/divine-shield";
+export { DivineShieldProps, DivineShieldModel } from "./models/entries/divine-shield";
 
 // features
 export { FeatureProps, FeatureModel } from './models/features'
@@ -87,7 +87,6 @@ export { EndTurnHookProps, EndTurnHookModel } from "./models/hooks/end-turn";
 export { StartTurnHookProps, StartTurnHookModel } from "./models/hooks/start-turn";
 export { SpellHooksOptions, SpellCastEvent } from './models/hooks/spell';
 export { OverhealProps, OverhealModel } from "./models/hooks/overheal";
-export { RoleHooksProps, RoleHooksModel } from "./models/hooks/role";
 
 // heroes
 export { HeroProps, HeroModel } from "./models/heroes";

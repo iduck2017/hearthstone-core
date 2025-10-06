@@ -34,10 +34,12 @@ export abstract class RoleBattlecryModel<
             const selectors = item.toRun();
             // condition not match
             if (!selectors) continue;
+            let isValid = true;
             for (const item of selectors) {
                 // invalid selector
-                if (!item.options.length) return;
+                if (!item.options.length) isValid = false;
             }
+            if (!isValid) continue;
             const params: Model[] = [];
             for (const item of selectors) {
                 const result = await SelectUtil.get(item);

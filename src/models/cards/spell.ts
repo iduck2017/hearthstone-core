@@ -2,7 +2,7 @@ import { Event, Method, Model, Props, State } from "set-piece";
 import { CardModel, CardProps } from ".";
 import { EffectModel } from "../features/effect";
 import { SpellPerformModel } from "../rules/perform/spell";
-import { SpellHooksOptions } from "../hooks/spell";
+import { SpellHooksModel, SpellHooksOptions } from "../hooks/spell";
 import { SchoolType } from "../../types/card";
 import { SpellEffectModel } from "../features/effect/spell";
 
@@ -41,6 +41,7 @@ export class SpellCardModel<
                 state: { ...props.state },
                 child: { 
                     effects: [],
+                    hooks: props.child.hooks ?? new SpellHooksModel(),
                     perform: props.child.perform ?? new SpellPerformModel(),
                     ...props.child,
                 },

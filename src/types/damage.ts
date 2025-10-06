@@ -18,6 +18,10 @@ export class DamageEvent extends Event<{
     target: RoleModel;
     origin: number;
     result: number;
+    options: {
+        poisonous?: boolean;
+        divineShield?: boolean;
+    }
 }> {
     constructor(props: {
         type?: DamageType;
@@ -28,11 +32,20 @@ export class DamageEvent extends Event<{
     }) {
         super({
             ...props,
-            result: props.origin
+            result: props.origin,
+            options: {},
         });
     }
 
-    public set(value: number) {
-        this._detail.result = value;
+    public set(value: number) { this._detail.result = value; }
+
+    public config(options: {
+        poisonous?: boolean;
+        divineShield?: boolean;
+    }) {
+        this._detail.options = {
+            ...this._detail.options,
+            ...options,
+        };
     }
 }

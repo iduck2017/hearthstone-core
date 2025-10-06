@@ -6,6 +6,7 @@ import { DamageModel, DeathrattleModel, DisposeModel, FeatureModel, RestoreModel
 import { MinionCardModel, PlayerModel, GameModel, HandModel, DeckModel, BoardModel, GraveyardModel } from "../..";
 import { DeployModel } from "../rules/deploy";
 import { PerformModel } from "../rules/perform";
+import { CardHooksModel } from "../hooks/card";
 
 export namespace CardProps {
     export type E = {
@@ -23,6 +24,7 @@ export namespace CardProps {
     export type C = {
         readonly cost: CostModel;
         readonly feats: FeatureModel[];
+        readonly hooks: CardHooksModel;
         readonly damage: DamageModel
         readonly restore: RestoreModel
         readonly deploy?: DeployModel;
@@ -75,7 +77,7 @@ export abstract class CardModel<
 
     constructor(loader: Method<CardModel['props'] & {
         state: S & Omit<CardProps.S, 'isActive'>,
-        child: C & Pick<CardProps.C, 'cost' | 'perform' | 'dispose'>,
+        child: C & Pick<CardProps.C, 'cost' | 'perform' | 'dispose' | 'hooks'>,
         refer: R & CardProps.R,
     }, []>) {
         super(() => {
@@ -88,7 +90,6 @@ export abstract class CardModel<
                 },
                 child: { 
                     feats: [],
-                    hooks: props.child.hooks ?? new MinionHooksModel(),
                     damage: props.child.damage ?? new DamageModel(),
                     restore: props.child.restore ?? new RestoreModel(),
                     ...props.child 

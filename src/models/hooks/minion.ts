@@ -3,6 +3,7 @@ import { RoleBattlecryModel } from "../..";
 import { DeathrattleModel } from "../..";
 import { StartTurnHookModel } from "../..";
 import { EndTurnHookModel } from "../..";
+import { CardHooksModel } from "./card";
 
 export namespace MinionHooksProps {
     export type E = {};
@@ -21,7 +22,7 @@ export type MinionHooksOptions = {
 }
 
 @StoreUtil.is('card-hooks')
-export class MinionHooksModel extends Model<
+export class MinionHooksModel extends CardHooksModel<
     MinionHooksProps.E,
     MinionHooksProps.S,
     MinionHooksProps.C,
