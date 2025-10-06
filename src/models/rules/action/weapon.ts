@@ -6,9 +6,10 @@ export namespace WeaponActionProps {
         onUse: Event;
     };
     export type S = {
+        maximum: number;
         origin: number;
-        memory: number;
         consume: number;
+        memory: number;
     };
     export type C = {};
     export type R = {};
@@ -28,10 +29,10 @@ export class WeaponActionModel extends Model<
 > {
     public get state() {
         const state = super.state;
-        const baseline = Math.max(state.memory, state.origin);
+        const baseline = Math.max(state.memory, state.maximum);
         return {
             ...state,
-            current: Math.min(baseline - state.consume, state.origin),
+            current: Math.min(baseline - state.consume, state.maximum),
         }
     }
 
@@ -40,11 +41,13 @@ export class WeaponActionModel extends Model<
     }, []>) {
         super(() => {
             const props = loader?.();
-            const memory = props.state.origin;
+            const maximum = props.state.maximum ?? props.state.origin;
+            const memory = props.state.maximum ?? props.state.origin;
             return {
                 uuid: props.uuid,
                 state: { 
                     consume: 0,
+                    maximum,
                     memory,
                     ...props.state,
                 },

@@ -1,7 +1,7 @@
 import { Model } from "set-piece";
 
 export type Operation = {
-    maxium?: number;
+    maximum?: number;
     minium?: number;
     type: OperationType;
     value: number;

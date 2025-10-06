@@ -14,7 +14,7 @@ export namespace RoleHealthProps {
     };
     export type S = {
         origin: number;
-        maxium: number;
+        maximum: number;
         memory: number;
         damage: number;
     };
@@ -41,16 +41,16 @@ export class RoleHealthDecor extends Decor<RoleHealthProps.S> {
             .sort((a, b) => a.reason.uuid.localeCompare(b.reason.uuid));
         // buff
         buffs.forEach(item => {
-            if (item.type === OperationType.ADD) result.maxium += item.value;
-            if (item.type === OperationType.SET) result.maxium = item.value;
+            if (item.type === OperationType.ADD) result.maximum += item.value;
+            if (item.type === OperationType.SET) result.maximum = item.value;
         })
         // other
         const other = this.operations.filter(item => !(item.reason instanceof RoleBuffModel));
         other.forEach(item => {
-            if (item.type === OperationType.ADD) result.maxium += item.value;
-            if (item.type === OperationType.SET) result.maxium = item.value;
+            if (item.type === OperationType.ADD) result.maximum += item.value;
+            if (item.type === OperationType.SET) result.maximum = item.value;
         })
-        if (result.maxium <= 0) result.maxium = 0;
+        if (result.maximum <= 0) result.maximum = 0;
         return result;
     }
     
@@ -69,10 +69,10 @@ export class RoleHealthModel extends Model<
 > {
     public get state() {
         const state = super.state;
-        const baseline = Math.max(state.memory, state.maxium);
+        const baseline = Math.max(state.memory, state.maximum);
         return {
             ...state,
-            current: Math.min(baseline - state.damage, state.maxium),
+            current: Math.min(baseline - state.damage, state.maximum),
         }
     }
 
@@ -81,14 +81,14 @@ export class RoleHealthModel extends Model<
     }, []>) {
         super(() => {
             const props = loader?.();
-            const maxium = props.state.maxium ?? props.state.origin;
-            const memory = props.state.memory ?? maxium;
+            const maximum = props.state.maximum ?? props.state.origin;
+            const memory = props.state.memory ?? maximum;
             return {
                 uuid: props.uuid,
                 state: { 
                     damage: 0,
                     memory,
-                    maxium,
+                    maximum,
                     ...props.state,
                 },
                 child: { ...props.child },
@@ -189,9 +189,9 @@ export class RoleHealthModel extends Model<
     @DebugUtil.log()
     @TranxUtil.span()
     private onChange(that: RoleHealthModel, event: Event) {
-        const { memory, maxium, damage } = that.state;
-        const offset = memory - maxium;
-        if (offset !== 0) this.draft.state.memory = maxium;
+        const { memory, maximum, damage } = that.state;
+        const offset = memory - maximum;
+        if (offset !== 0) this.draft.state.memory = maximum;
         if (offset > 0) this.draft.state.damage -= Math.min(damage, offset);
     }
 }

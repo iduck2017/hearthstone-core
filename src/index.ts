@@ -30,7 +30,7 @@ export { SecretDeployModel } from "./models/rules/deploy/secret";
 
 export { RoleAttackProps, RoleAttackModel, RoleAttackDecor } from "./models/rules/attack/role";
 export { RoleHealthProps, RoleHealthModel } from "./models/rules/health";
-export { RoleActionProps, RoleActionModel } from "./models/rules/action/role";
+export { RoleActionProps, RoleActionModel, RoleActionDecor } from "./models/rules/action/role";
 export { SleepProps, SleepModel } from './models/rules/sleep';
 export { ManaProps, ManaModel } from './models/rules/mana';
 export { TurnProps, TurnModel } from "./models/rules/turn";

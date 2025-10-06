@@ -23,6 +23,7 @@ export namespace RoleActionProps {
 
 export class RoleActionDecor extends Decor<RoleActionProps.S> {
     public add(value: number) { this.detail.origin += value }
+    public lock() { this.detail.isLock = true }
 }
 
 @StateUtil.use(RoleActionDecor)

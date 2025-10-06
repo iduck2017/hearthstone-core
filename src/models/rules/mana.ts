@@ -8,7 +8,7 @@ export namespace ManaProps {
     export type S = {
         origin: number;
         current: number;
-        maxium: number;
+        maximum: number;
     }
     export type C = {};
     export type R = {};
@@ -29,7 +29,7 @@ export class ManaModel extends Model<
                 state: {
                     origin: 0,
                     current: props.state?.origin ?? 0,
-                    maxium: 10,
+                    maximum: 10,
                     ...props.state,
                 },
                 child: { ...props.child },
@@ -41,7 +41,7 @@ export class ManaModel extends Model<
 
     @TranxUtil.span()
     public reset() {
-        if (this.draft.state.origin < this.draft.state.maxium) {
+        if (this.draft.state.origin < this.draft.state.maximum) {
             this.draft.state.origin += 1;
         }
         this.draft.state.current = this.draft.state.origin;
