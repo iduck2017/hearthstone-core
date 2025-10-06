@@ -51,7 +51,7 @@ export class DivineShieldModel extends FeatureModel<
         if (!this.state.isActive) return false;
         if (this.draft.state.count <= 1) this.draft.state.isActive = false;
         this.draft.state.count =- 1;
-        event.config({ divineShield: true });
+        event.config({ isDivineShield: true });
         this.event.onUse(event);
         return true;
     }

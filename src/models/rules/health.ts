@@ -111,8 +111,10 @@ export class RoleHealthModel extends Model<
     public doHurt(event: DamageEvent): DamageEvent {
         const role = this.route.role;
         if (!role) return event;
+
         const entries = role.child.feats;
         const divineSheild = entries.child.divineShield;
+        const source = event.detail.source;
 
         const minion = this.route.minion;
         const hero = this.route.hero;
@@ -132,11 +134,18 @@ export class RoleHealthModel extends Model<
             result = result - offset;
             event.set(result);
         }
+
+        // divine shield
         if (divineSheild.state.isActive) {
             divineSheild.use(event);
             event.set(0);
             return event;
         }
+
+        // poisonous
+        const poisonous = source.child.feats.child.poisonous;
+        if (poisonous.state.isActive && minion) event.config({ isPoisonous: true });
+
         this.draft.state.damage += result;
         dispose.active(false, event.detail.source, event.detail.method);
         return event;
@@ -146,6 +155,14 @@ export class RoleHealthModel extends Model<
         const role = this.route.role;
         if (!role) return;
         if (event.isAbort) return;
+
+        const minion = this.route.minion;
+        if (event.detail.options.isPoisonous && minion) {
+            const source = event.detail.source;
+            const method = event.detail.method;
+            minion.child.dispose.active(true, source, method);
+        }
+
         return this.event.onHurt(event);
     }
 

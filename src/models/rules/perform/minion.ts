@@ -2,7 +2,7 @@ import { Event, Loader } from "set-piece";
 import { PerformModel } from ".";
 import { SelectEvent, SelectUtil } from "../../../utils/select";
 import { RoleBattlecryModel } from "../../hooks/battlecry/role";
-import { MinionHooksOptions } from "../../hooks/minion";
+import { MinionHooksOptions } from "../../features/minion";
 import { MinionCardModel } from "../../cards/minion";
 
 export namespace MinionPerformProps {

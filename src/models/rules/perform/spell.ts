@@ -1,7 +1,7 @@
 import { Event, Loader } from "set-piece";
 import { PerformModel } from ".";
 import { EffectModel } from "../../features/effect";
-import { SpellCastEvent, SpellHooksOptions } from "../../hooks/spell";
+import { SpellCastEvent, SpellHooksOptions } from "../../features/spell";
 import { SpellCardModel } from "../../..";
 
 export namespace SpellPerformProps {

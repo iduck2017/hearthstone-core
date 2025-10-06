@@ -2,8 +2,8 @@ import { Event, Loader } from "set-piece";
 import { PerformModel } from ".";
 import { SelectEvent, SelectUtil } from "../../../utils/select";
 import { RoleBattlecryModel } from "../../hooks/battlecry/role";
-import { MinionHooksOptions } from "../../hooks/minion";
-import { WeaponHooksOptions } from "../../hooks/weapon";
+import { MinionHooksOptions } from "../../features/minion";
+import { WeaponHooksOptions } from "../../features/weapon";
 import { WeaponBattlecryModel } from "../../hooks/battlecry/weapon";
 import { WeaponCardModel } from "../../cards/weapon";
 

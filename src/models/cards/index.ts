@@ -1,12 +1,12 @@
 import { DebugUtil, Model, TranxUtil, Props, Event, Method, StoreUtil } from "set-piece";
 import { CostModel } from "../rules/cost";
 import { ClassType, RarityType } from "../../types/card";
-import { MinionFeatsModel } from "../hooks/minion";
+import { MinionFeatsModel } from "../features/minion";
 import { DamageModel, DeathrattleModel, DisposeModel, FeatureModel, RestoreModel } from "../..";
 import { MinionCardModel, PlayerModel, GameModel, HandModel, DeckModel, BoardModel, GraveyardModel } from "../..";
 import { DeployModel } from "../rules/deploy";
 import { PerformModel } from "../rules/perform";
-import { CardFeatsModel } from "../hooks/card";
+import { CardFeatsModel } from "../features/card";
 
 export namespace CardProps {
     export type E = {

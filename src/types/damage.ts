@@ -19,8 +19,8 @@ export class DamageEvent extends Event<{
     origin: number;
     result: number;
     options: {
-        poisonous?: boolean;
-        divineShield?: boolean;
+        isPoisonous?: boolean;
+        isDivineShield?: boolean;
     }
 }> {
     constructor(props: {
@@ -40,8 +40,8 @@ export class DamageEvent extends Event<{
     public set(value: number) { this._detail.result = value; }
 
     public config(options: {
-        poisonous?: boolean;
-        divineShield?: boolean;
+        isPoisonous?: boolean;
+        isDivineShield?: boolean;
     }) {
         this._detail.options = {
             ...this._detail.options,

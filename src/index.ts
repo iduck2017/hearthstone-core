@@ -60,7 +60,7 @@ export { DeckProps, DeckModel } from "./models/containers/deck";
 export { GraveyardProps, GraveyardModel } from "./models/containers/graveyard";
 
 // entries
-export { RoleFeatsProps, RoleFeatsModel } from "./models/entries/role";
+export { RoleFeatsProps, RoleFeatsModel } from "./models/features/role";
 export { FrozenProps, FrozenModel } from "./models/entries/frozen";
 export { RushProps, RushModel } from "./models/entries/rush";
 export { ChargeProps, ChargeModel } from "./models/entries/charge";
@@ -70,6 +70,7 @@ export { ElusiveProps, ElusiveModel } from './models/entries/elusive';
 export { WindfuryProps, WindfuryModel } from "./models/entries/windfury";
 export { SpellBuffProps, SpellBuffModel } from "./models/features/buff/spell";
 export { DivineShieldProps, DivineShieldModel } from "./models/entries/divine-shield";
+export { PoisonousProps, PoisonousModel } from "./models/entries/poisonous";
 
 // features
 export { FeatureProps, FeatureModel } from './models/features'
@@ -79,14 +80,14 @@ export { EffectProps, EffectModel } from './models/features/effect';
 export { SpellEffectProps, SpellEffectModel } from './models/features/effect/spell';
 
 // hooks
-export { SpellFeatsProps, SpellFeatsModel } from "./models/hooks/spell";
-export { MinionFeatsProps, MinionFeatsModel } from "./models/hooks/minion";
+export { SpellFeatsProps, SpellFeatsModel } from "./models/features/spell";
+export { MinionFeatsProps, MinionFeatsModel } from "./models/features/minion";
 export { RoleBattlecryProps, RoleBattlecryModel } from "./models/hooks/battlecry/role";
 export { WeaponBattlecryProps, WeaponBattlecryModel } from "./models/hooks/battlecry/weapon";
 export { DeathrattleProps, DeathrattleModel } from "./models/hooks/deathrattle";
 export { EndTurnHookProps, EndTurnHookModel } from "./models/hooks/end-turn";
 export { StartTurnHookProps, StartTurnHookModel } from "./models/hooks/start-turn";
-export { SpellHooksOptions, SpellCastEvent } from './models/hooks/spell';
+export { SpellHooksOptions, SpellCastEvent } from './models/features/spell';
 export { OverhealProps, OverhealModel } from "./models/hooks/overheal";
 
 // heroes

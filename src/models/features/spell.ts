@@ -1,5 +1,5 @@
 import { Event, Loader, Model } from "set-piece";
-import { EffectModel } from "../features/effect";
+import { EffectModel } from "./effect";
 import { FeatureModel, RoleModel } from "../..";
 import { CardFeatsModel } from "./card";
 

@@ -1,15 +1,15 @@
 import { Loader, Model, StoreUtil } from "set-piece";
-import { ChargeModel } from "./charge";
-import { DivineShieldModel } from "./divine-shield";
-import { RushModel } from "./rush";
-import { FrozenModel } from "./frozen";
-import { StealthModel } from "./stealth";
-import { TauntModel } from "./taunt";
-import { WindfuryModel } from "./windfury";
-import { ElusiveModel } from "./elusive";
+import { ChargeModel } from "../entries/charge";
+import { DivineShieldModel } from "../entries/divine-shield";
+import { RushModel } from "../entries/rush";
+import { FrozenModel } from "../entries/frozen";
+import { StealthModel } from "../entries/stealth";
+import { TauntModel } from "../entries/taunt";
+import { WindfuryModel } from "../entries/windfury";
+import { ElusiveModel } from "../entries/elusive";
 import { OverhealModel } from "../hooks/overheal";
-import { RoleBuffModel } from "../features/buff/role";
-import { FeatureModel } from "../features";
+import { RoleBuffModel } from "./buff/role";
+import { FeatureModel } from ".";
 
 export namespace RoleFeatsProps {
     export type E = {};

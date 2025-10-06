@@ -38,7 +38,7 @@ export abstract class CardFeatsModel<
                 uuid: props.uuid,
                 state: { ...props.state },
                 child: {    
-                    poisonous: props.child.poisonous ?? new PoisonousModel(),
+                    poisonous: props.child.poisonous ?? new PoisonousModel(() => ({ state: { isActive: false }})),
                     items: props.child.items ?? [],
                     ...props.child 
                 },

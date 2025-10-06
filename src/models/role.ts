@@ -10,7 +10,7 @@ import { RoleActionModel } from "./rules/action/role";
 import { RoleAttackModel } from "./rules/attack/role";
 import { RoleHealthModel } from "./rules/health";
 import { SleepModel } from "./rules/sleep";
-import { RoleFeatsModel } from "./entries/role";
+import { RoleFeatsModel } from "./features/role";
 import { CardModel } from "./cards";
 import { HeroModel } from "./heroes";
 

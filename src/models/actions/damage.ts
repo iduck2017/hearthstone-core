@@ -40,9 +40,6 @@ export class DamageModel extends Model<
 
     @TranxUtil.span()
     private static doRun(tasks: DamageEvent[]) {
-        tasks.forEach(item => {
-            const source = item.detail.source;
-        })
         tasks.forEach(item => item.detail.target.child.health.doHurt(item));
     }
 

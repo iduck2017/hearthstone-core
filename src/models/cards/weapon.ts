@@ -2,7 +2,7 @@ import { Method, Props } from "set-piece";
 import { CardModel, CardProps } from ".";
 import { WeaponAttackModel } from "../rules/attack/weapon";
 import { WeaponActionModel } from "../rules/action/weapon";
-import { WeaponHooksOptions, WeaponFeatsModel } from "../hooks/weapon";
+import { WeaponHooksOptions, WeaponFeatsModel } from "../features/weapon";
 import { WeaponDisposeModel } from "../rules/dispose/weapon";
 import { WeaponDeployModel } from "../rules/deploy/weapon";
 import { WeaponPerformModel } from "../rules/perform/weapon";

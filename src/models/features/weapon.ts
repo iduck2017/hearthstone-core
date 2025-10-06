@@ -1,11 +1,11 @@
 import { Loader, Model, StoreUtil } from "set-piece";
-import { RoleBattlecryModel } from "./battlecry/role";
-import { DeathrattleModel } from "./deathrattle";
-import { StartTurnHookModel } from "./start-turn";
-import { EndTurnHookModel } from "./end-turn";
-import { WeaponBattlecryModel } from "./battlecry/weapon";
+import { RoleBattlecryModel } from "../hooks/battlecry/role";
+import { DeathrattleModel } from "../hooks/deathrattle";
+import { StartTurnHookModel } from "../hooks/start-turn";
+import { EndTurnHookModel } from "../hooks/end-turn";
+import { WeaponBattlecryModel } from "../hooks/battlecry/weapon";
 import { CardFeatsModel } from "./card";
-import { FeatureModel } from "../features";
+import { FeatureModel } from ".";
 
 export namespace WeaponFeatsProps {
     export type E = {};
