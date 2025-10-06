@@ -5,7 +5,7 @@ import { BoardModel } from "./containers/board";
 import { HandModel } from "./containers/hand";
 import { DeckModel } from "./containers/deck";
 import { GraveyardModel } from "./containers/graveyard";
-import { FeatureModel, MinionCardModel, RoleBuffModel } from "..";
+import { FeatureModel, MinionCardModel, IRoleBuffModel } from "..";
 import { RoleActionModel } from "./rules/action/role";
 import { RoleAttackModel } from "./rules/attack/role";
 import { RoleHealthModel } from "./rules/health";

@@ -1,5 +1,5 @@
 import { DebugUtil, Decor, Event, EventUtil, Method, Model, StateUtil, TranxUtil } from "set-piece";
-import { RoleModel, MinionCardModel, GameModel, PlayerModel, CardModel, HeroModel, RoleBuffModel } from "../..";
+import { RoleModel, MinionCardModel, GameModel, PlayerModel, CardModel, HeroModel, IRoleBuffModel } from "../..";
 import { DamageEvent } from "../../types/damage";
 import { RestoreEvent } from "../../types/restore";
 import { OperationType } from "../../types/decor";
@@ -36,13 +36,13 @@ export class RoleHealthDecor extends Decor<RoleHealthProps.S> {
     public get result() {
         const result = { ...this.detail };
         const buffs = this.operations
-            .filter(item => item.reason instanceof RoleBuffModel)
+            .filter(item => item.reason instanceof IRoleBuffModel)
             .sort((a, b) => a.reason.uuid.localeCompare(b.reason.uuid));
         buffs.forEach(item => {
             if (item.type === OperationType.ADD) result.maximum += item.value;
             if (item.type === OperationType.SET) result.maximum = item.value;
         })
-        const items = this.operations.filter(item => !(item.reason instanceof RoleBuffModel));
+        const items = this.operations.filter(item => !(item.reason instanceof IRoleBuffModel));
         items.forEach(item => {
             if (item.type === OperationType.ADD) result.maximum += item.value;
             if (item.type === OperationType.SET) result.maximum = item.value;

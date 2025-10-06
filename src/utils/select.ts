@@ -1,7 +1,7 @@
 import { Method } from "set-piece";
 
 export class SelectEvent<T = any> {
-    public options: T[];
+    public options: Readonly<T[]>;
     public readonly hint?: string;
 
     constructor(
@@ -10,6 +10,10 @@ export class SelectEvent<T = any> {
     ) {
         this.options = options;
         this.hint = props?.hint;
+    }
+
+    public filter(handler: (item: T) => boolean) {
+        this.options = this.options.filter(handler);
     }
 
     public get random(): T | undefined {

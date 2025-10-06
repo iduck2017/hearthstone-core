@@ -1,6 +1,6 @@
 import { Method, Model, Props } from "set-piece";
 import { PoisonousModel } from "../entries/poisonous";
-import { CARD_ROUTE, CardRoute, FeatureModel, RoleBuffModel } from "../..";
+import { CARD_ROUTE, CardRoute, FeatureModel, IRoleBuffModel } from "../..";
 
 export namespace CardFeatsProps {
     export type E = {};

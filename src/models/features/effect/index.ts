@@ -26,24 +26,6 @@ export abstract class EffectModel<
     R & EffectProps.R,
     P & EffectProps.P
 > {
-    public static async toRun(items: Readonly<EffectModel[]>): Promise<Map<EffectModel, Model[]> | undefined> {
-        const result = new Map<EffectModel, Model[]>();
-        for (const item of items) {
-            const selectors = item.toRun();
-            if (!selectors) continue;
-            for (const item of selectors) {
-                if (!item.options.length) return;
-            }
-            const params: Model[] = [];
-            for (const item of selectors) {
-                const result = await SelectUtil.get(item);
-                if (result === undefined) return;
-                params.push(result);
-            }
-            result.set(item, params);
-        }
-        return result;
-    }
 
     constructor(loader: Method<EffectModel['props'] & {
         uuid: string | undefined,

@@ -2,7 +2,7 @@ import { Event, Loader } from "set-piece";
 import { PerformModel } from ".";
 import { EffectModel } from "../../features/effect";
 import { SpellCastEvent, SpellHooksOptions } from "../../features/spell";
-import { SpellCardModel } from "../../..";
+import { SpellCardModel, SpellEffectModel } from "../../..";
 
 export namespace SpellPerformProps {
     export type E = {
@@ -39,7 +39,7 @@ export class SpellPerformModel extends PerformModel<
         const spell = this.route.spell;
         if (!spell) return;
         // spell
-        const effect = await EffectModel.toRun(spell.child.effects);
+        const effect = await SpellEffectModel.toRun(spell.child.effects);
         if (!effect) return;
         return [{ effect }];
     }

@@ -1,5 +1,5 @@
 import { DebugUtil, Decor, Event, Method, Model, StateUtil, StoreUtil } from "set-piece";
-import { DamageEvent, DamageModel, MinionCardModel, RoleModel, GameModel, PlayerModel, HeroModel, WeaponCardModel, RoleBuffModel } from "../../..";
+import { DamageEvent, DamageModel, MinionCardModel, RoleModel, GameModel, PlayerModel, HeroModel, WeaponCardModel, IRoleBuffModel } from "../../..";
 import { DamageType } from "../../../types/damage";
 import { Operation, OperationType } from "../../../types/decor";
 
@@ -32,13 +32,13 @@ export class RoleAttackDecor extends Decor<RoleAttackProps.S> {
         const result = { ...this.detail };
         // buff
         const buffs = this.operations
-            .filter(item => item.reason instanceof RoleBuffModel)
+            .filter(item => item.reason instanceof IRoleBuffModel)
             .sort((a, b) => a.reason.uuid.localeCompare(b.reason.uuid));
         buffs.forEach(item => {
             if (item.type === OperationType.ADD) result.current += item.value;
             if (item.type === OperationType.SET) result.current = item.value;
         })
-        const items = this.operations.filter(item => !(item.reason instanceof RoleBuffModel));
+        const items = this.operations.filter(item => !(item.reason instanceof IRoleBuffModel));
         items.forEach(item => {
             if (item.type === OperationType.ADD) result.current += item.value;
             if (item.type === OperationType.SET) result.current = item.value;

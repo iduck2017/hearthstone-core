@@ -1,4 +1,4 @@
-import { Decor, Method, Model, Props, StateUtil, StoreUtil } from "set-piece";
+import { Decor, Loader, Method, Model, Props, StateUtil, StoreUtil } from "set-piece";
 import { FeatureModel, FeatureProps } from "..";
 import { RoleAttackDecor, RoleAttackModel, RoleAttackProps } from "../../rules/attack/role";
 import { RoleHealthDecor, RoleHealthModel, RoleHealthProps } from "../../rules/health";
@@ -64,6 +64,27 @@ export abstract class IRoleBuffModel<
             type: OperationType.ADD,
             value: this.state.offset[1],
             reason: this,
+        });
+    }
+}
+
+export class RoleBuffModel extends IRoleBuffModel {
+    constructor(loader?: Loader<RoleBuffModel>) {
+        super(() => {
+            const props = loader?.() ?? {};
+            return {
+                uuid: props.uuid,
+                state: { 
+                    isActive: true,
+                    offset: [0, 0],
+                    name: 'Unknown buff',
+                    desc: '+0/+0',
+                    ...props.state,
+                },
+                child: { ...props.child },
+                refer: { ...props.refer },
+                route: {},
+            }
         });
     }
 }
