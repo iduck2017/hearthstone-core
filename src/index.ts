@@ -82,7 +82,7 @@ export { SpellEffectProps, SpellEffectModel } from './models/features/effect/spe
 // hooks
 export { SpellFeatsProps, SpellFeatsModel } from "./models/features/spell";
 export { MinionFeatsProps, MinionFeatsModel } from "./models/features/minion";
-export { RoleBattlecryProps, RoleBattlecryModel } from "./models/hooks/battlecry/role";
+export { MinionBattlecryProps, MinionBattlecryModel } from "./models/hooks/battlecry/role";
 export { WeaponBattlecryProps, WeaponBattlecryModel } from "./models/hooks/battlecry/weapon";
 export { DeathrattleProps, DeathrattleModel } from "./models/hooks/deathrattle";
 export { EndTurnHookProps, EndTurnHookModel } from "./models/hooks/end-turn";

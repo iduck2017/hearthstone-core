@@ -1,9 +1,9 @@
 import { Event, Method, Model, Props } from "set-piece";
 import { SelectEvent, SelectUtil } from "../../../utils/select";
 import { FeatureModel, FeatureProps } from "../../features";
-import { ROLE_ROUTE, RoleRoute } from "../../..";
+import { CARD_ROUTE, CardRoute, MINION_ROUTE, MinionRoute, ROLE_ROUTE, RoleRoute } from "../../..";
 
-export namespace RoleBattlecryProps {
+export namespace MinionBattlecryProps {
     export type E = {
         toRun: Event;
         onRun: Event;
@@ -13,23 +13,23 @@ export namespace RoleBattlecryProps {
     export type R = {};
 }
 
-export abstract class RoleBattlecryModel<
+export abstract class MinionBattlecryModel<
     T extends Model[] = Model[],
-    E extends Partial<RoleBattlecryProps.E> & Props.E = {},
-    S extends Partial<RoleBattlecryProps.S> & Props.S = {},
-    C extends Partial<RoleBattlecryProps.C> & Props.C = {},
-    R extends Partial<RoleBattlecryProps.R> & Props.R = {}
+    E extends Partial<MinionBattlecryProps.E> & Props.E = {},
+    S extends Partial<MinionBattlecryProps.S> & Props.S = {},
+    C extends Partial<MinionBattlecryProps.C> & Props.C = {},
+    R extends Partial<MinionBattlecryProps.R> & Props.R = {}
 > extends FeatureModel<
-    E & RoleBattlecryProps.E, 
-    S & RoleBattlecryProps.S, 
-    C & RoleBattlecryProps.C, 
-    R & RoleBattlecryProps.R,
-    RoleRoute
+    E & MinionBattlecryProps.E, 
+    S & MinionBattlecryProps.S, 
+    C & MinionBattlecryProps.C, 
+    R & MinionBattlecryProps.R,
+    MinionRoute
 > {
     public static async toRun(
-        items: Readonly<RoleBattlecryModel[]>
-    ): Promise<Map<RoleBattlecryModel, Model[]> | undefined> {
-        const result = new Map<RoleBattlecryModel, Model[]>();
+        items: Readonly<MinionBattlecryModel[]>
+    ): Promise<Map<MinionBattlecryModel, Model[]> | undefined> {
+        const result = new Map<MinionBattlecryModel, Model[]>();
         for (const item of items) {
             const selectors = item.toRun();
             // condition not match
@@ -52,7 +52,7 @@ export abstract class RoleBattlecryModel<
         return result;
     }
 
-    constructor(loader: Method<RoleBattlecryModel['props'] & {
+    constructor(loader: Method<MinionBattlecryModel['props'] & {
         uuid: string | undefined;
         state: S & Pick<FeatureProps.S, 'desc' | 'name'>;
         child: C;
@@ -68,7 +68,7 @@ export abstract class RoleBattlecryModel<
                 },
                 child: { ...props.child },
                 refer: { ...props.refer },
-                route: ROLE_ROUTE,
+                route: MINION_ROUTE,
             }
         });
     }

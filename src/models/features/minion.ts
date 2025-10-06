@@ -1,5 +1,5 @@
 import { Loader, Model, StoreUtil } from "set-piece";
-import { FeatureModel, RoleBattlecryModel } from "../..";
+import { FeatureModel, MinionBattlecryModel } from "../..";
 import { DeathrattleModel } from "../..";
 import { StartTurnHookModel } from "../..";
 import { EndTurnHookModel } from "../..";
@@ -11,14 +11,14 @@ export namespace MinionFeatsProps {
     export type C = {
         readonly endTurn: EndTurnHookModel[];
         readonly startTurn: StartTurnHookModel[];
-        readonly battlecry: RoleBattlecryModel[];
+        readonly battlecry: MinionBattlecryModel[];
         readonly deathrattle: DeathrattleModel[];
     };
     export type R = {};
 }
 
 export type MinionHooksOptions = {
-    battlecry: Map<RoleBattlecryModel, Model[]>
+    battlecry: Map<MinionBattlecryModel, Model[]>
 }
 
 @StoreUtil.is('card-hooks')
@@ -49,7 +49,7 @@ export class MinionFeatsModel extends CardFeatsModel<
 
 
     protected query(feat: FeatureModel): FeatureModel[] | undefined {
-        if (feat instanceof RoleBattlecryModel) return this.draft.child.battlecry;
+        if (feat instanceof MinionBattlecryModel) return this.draft.child.battlecry;
         if (feat instanceof DeathrattleModel) return this.draft.child.deathrattle;
         if (feat instanceof StartTurnHookModel) return this.draft.child.startTurn;
         if (feat instanceof EndTurnHookModel) return this.draft.child.endTurn;

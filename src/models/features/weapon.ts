@@ -1,5 +1,5 @@
 import { Loader, Model, StoreUtil } from "set-piece";
-import { RoleBattlecryModel } from "../hooks/battlecry/role";
+import { MinionBattlecryModel } from "../hooks/battlecry/role";
 import { DeathrattleModel } from "../hooks/deathrattle";
 import { StartTurnHookModel } from "../hooks/start-turn";
 import { EndTurnHookModel } from "../hooks/end-turn";

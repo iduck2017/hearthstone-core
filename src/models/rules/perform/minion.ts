@@ -1,7 +1,7 @@
 import { Event, Loader } from "set-piece";
 import { PerformModel } from ".";
 import { SelectEvent, SelectUtil } from "../../../utils/select";
-import { RoleBattlecryModel } from "../../hooks/battlecry/role";
+import { MinionBattlecryModel } from "../../hooks/battlecry/role";
 import { MinionHooksOptions } from "../../features/minion";
 import { MinionCardModel } from "../../cards/minion";
 
@@ -66,7 +66,7 @@ export class MinionPerformModel extends PerformModel<
         if (to === undefined) return;
         // battlecry
         const feats = minion.child.feats;
-        const battlecry = await RoleBattlecryModel.toRun(feats.child.battlecry);
+        const battlecry = await MinionBattlecryModel.toRun(feats.child.battlecry);
         if (!battlecry) return;
         return [to, { battlecry }];
     }
