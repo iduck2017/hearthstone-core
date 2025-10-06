@@ -75,7 +75,7 @@ export { PoisonousProps, PoisonousModel } from "./models/entries/poisonous";
 // features
 export { FeatureProps, FeatureModel } from './models/features'
 export { SecretFeatureProps, SecretFeatureModel } from "./models/features/secret";
-export { RoleBuffProps, RoleBuffModel } from "./models/features/buff/role";
+export { RoleBuffProps, IRoleBuffModel as RoleBuffModel } from "./models/features/buff/role";
 export { EffectProps, EffectModel } from './models/features/effect'; 
 export { SpellEffectProps, SpellEffectModel } from './models/features/effect/spell';
 

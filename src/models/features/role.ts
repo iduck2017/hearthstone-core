@@ -8,7 +8,7 @@ import { TauntModel } from "../entries/taunt";
 import { WindfuryModel } from "../entries/windfury";
 import { ElusiveModel } from "../entries/elusive";
 import { OverhealModel } from "../hooks/overheal";
-import { RoleBuffModel } from "./buff/role";
+import { IRoleBuffModel } from "./buff/role";
 import { FeatureModel } from ".";
 
 export namespace RoleFeatsProps {
@@ -25,7 +25,7 @@ export namespace RoleFeatsProps {
         readonly divineShield: DivineShieldModel;
         readonly overheal: OverhealModel[];
         // feats
-        readonly buffs: RoleBuffModel[];
+        readonly buffs: IRoleBuffModel[];
         readonly items: FeatureModel[];
     };
     export type R = {};
@@ -66,7 +66,7 @@ export class RoleFeatsModel extends Model<
     }
 
     protected query(feat: FeatureModel): FeatureModel[] | undefined {
-        if (feat instanceof RoleBuffModel) return this.draft.child.buffs;
+        if (feat instanceof IRoleBuffModel) return this.draft.child.buffs;
         return this.draft.child.items;
     }
 

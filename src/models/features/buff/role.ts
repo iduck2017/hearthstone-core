@@ -14,7 +14,7 @@ export namespace RoleBuffProps {
     export type R = {};
 }
 
-export abstract class RoleBuffModel<
+export abstract class IRoleBuffModel<
     E extends Partial<RoleBuffProps.E & FeatureProps.E> & Props.E = {},
     S extends Partial<RoleBuffProps.S & FeatureProps.S> & Props.S = {},
     C extends Partial<RoleBuffProps.C & FeatureProps.C> & Props.C = {},
@@ -26,7 +26,7 @@ export abstract class RoleBuffModel<
     R & RoleBuffProps.R,
     RoleRoute
 > {
-    constructor(loader: Method<RoleBuffModel['props'] & {
+    constructor(loader: Method<IRoleBuffModel['props'] & {
         uuid: string | undefined;
         state: S & RoleBuffProps.S & Omit<FeatureProps.S, 'isActive'>,
         child: C,
