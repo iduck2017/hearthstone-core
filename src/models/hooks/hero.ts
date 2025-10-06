@@ -1,6 +1,7 @@
 import { CardHooksModel } from "./card";
 import { PoisonousModel } from "../entries/poisonous";
 import { Loader } from "set-piece";
+import { FeatureModel } from "../features";
 
 export namespace HeroHooksProps {
     export type E = {};
@@ -33,5 +34,9 @@ export class HeroHooksModel extends CardHooksModel<
                 route: {},
             }
         });
+    }
+
+    protected query(feat: FeatureModel): FeatureModel[] | undefined {
+        return this.draft.child.items;
     }
 }

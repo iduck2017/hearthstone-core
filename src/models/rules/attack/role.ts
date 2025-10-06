@@ -38,9 +38,8 @@ export class RoleAttackDecor extends Decor<RoleAttackProps.S> {
             if (item.type === OperationType.ADD) result.current += item.value;
             if (item.type === OperationType.SET) result.current = item.value;
         })
-        // other
-        const other = this.operations.filter(item => !(item.reason instanceof RoleBuffModel));
-        other.forEach(item => {
+        const items = this.operations.filter(item => !(item.reason instanceof RoleBuffModel));
+        items.forEach(item => {
             if (item.type === OperationType.ADD) result.current += item.value;
             if (item.type === OperationType.SET) result.current = item.value;
         })
@@ -158,7 +157,7 @@ export class RoleAttackModel extends Model<
         }
 
         // stealth
-        const entries = roleA.child.entries;
+        const entries = roleA.child.feats;
         const stealth = entries.child.stealth;
         stealth.deactive();
 

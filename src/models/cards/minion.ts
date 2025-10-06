@@ -62,12 +62,6 @@ export abstract class MinionCardModel<
         });
     }
 
-    public add(feature: FeatureModel) {
-        if (feature instanceof DeathrattleModel) this.child.hooks.add(feature);
-        else this.draft.child.feats.push(feature);
-    }
-
-
     // transform
     public transform(target: MinionCardModel) {
         this.doTransform(target);
@@ -94,21 +88,21 @@ export abstract class MinionCardModel<
 
     @TranxUtil.span()
     private doSilence() {
-        this.child.feats.forEach(item => item.deactive());
+        this.child.hooks.child.items.forEach(item => item.deactive());
         this.child.hooks.child.battlecry.forEach(item => item.deactive());
         this.child.hooks.child.deathrattle.forEach(item => item.deactive());
         this.child.hooks.child.startTurn.forEach(item => item.deactive());
         this.child.hooks.child.endTurn.forEach(item => item.deactive());
         const role = this.child.role;
-        role.child.feats.forEach(item => item.deactive());
-        role.child.buffs.forEach(item => item.deactive());
-        role.child.entries.child.charge.deactive();
-        role.child.entries.child.divineShield.deactive();
-        role.child.entries.child.elusive.deactive();
-        role.child.entries.child.frozen.deactive();
-        role.child.entries.child.rush.deactive();
-        role.child.entries.child.stealth.deactive();
-        role.child.entries.child.taunt.deactive();
-        role.child.entries.child.windfury.deactive();
+        role.child.feats.child.buffs.forEach(item => item.deactive());
+        role.child.feats.child.items.forEach(item => item.deactive());
+        role.child.feats.child.charge.deactive();
+        role.child.feats.child.divineShield.deactive();
+        role.child.feats.child.elusive.deactive();
+        role.child.feats.child.frozen.deactive();
+        role.child.feats.child.rush.deactive();
+        role.child.feats.child.stealth.deactive();
+        role.child.feats.child.taunt.deactive();
+        role.child.feats.child.windfury.deactive();
     }
 }

@@ -1,6 +1,6 @@
 import { Event, Loader, Model } from "set-piece";
 import { EffectModel } from "../features/effect";
-import { RoleModel } from "../..";
+import { FeatureModel, RoleModel } from "../..";
 import { CardHooksModel } from "./card";
 
 export type SpellHooksOptions = {
@@ -43,5 +43,9 @@ export class SpellHooksModel extends CardHooksModel<
                 route: {},
             }
         })
+    }
+    
+    protected query(feat: FeatureModel): FeatureModel[] | undefined {
+        return this.draft.child.items;
     }
 }

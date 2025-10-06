@@ -10,7 +10,7 @@ import { RoleActionModel } from "./rules/action/role";
 import { RoleAttackModel } from "./rules/attack/role";
 import { RoleHealthModel } from "./rules/health";
 import { SleepModel } from "./rules/sleep";
-import { RoleEntriesModel } from "./entries/role";
+import { RoleFeatsModel } from "./entries/role";
 import { CardModel } from "./cards";
 import { HeroModel } from "./heroes";
 
@@ -22,9 +22,7 @@ export namespace RoleProps {
         readonly health: RoleHealthModel;
         readonly attack: RoleAttackModel;
         readonly action: RoleActionModel;
-        readonly entries: RoleEntriesModel;
-        readonly feats: FeatureModel[];
-        readonly buffs: RoleBuffModel[];
+        readonly feats: RoleFeatsModel;
     };
     export type R = {};
     export type P = {
@@ -58,9 +56,7 @@ export class RoleModel extends Model<
                 child: { 
                     sleep: props.child.sleep ?? new SleepModel(),
                     action: props.child.action ?? new RoleActionModel(),
-                    entries: props.child.entries ?? new RoleEntriesModel(),
-                    feats: [],
-                    buffs: [],
+                    feats: props.child.feats ?? new RoleFeatsModel(),
                     ...props.child,
                 },
                 refer: { ...props.refer },
@@ -77,15 +73,5 @@ export class RoleModel extends Model<
                 },
             }
         })
-    }
-
-    public add(feature: FeatureModel) {
-        if (feature instanceof RoleBuffModel) this.draft.child.buffs.push(feature);
-        else this.draft.child.feats.push(feature);
-    }
-
-    @TranxUtil.span()
-    public reset(buff: RoleBuffModel) {
-        this.add(buff);
     }
 }

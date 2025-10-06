@@ -23,7 +23,6 @@ export namespace CardProps {
     };
     export type C = {
         readonly cost: CostModel;
-        readonly feats: FeatureModel[];
         readonly hooks: CardHooksModel;
         readonly damage: DamageModel
         readonly restore: RestoreModel
@@ -89,7 +88,6 @@ export abstract class CardModel<
                     ...props.state
                 },
                 child: { 
-                    feats: [],
                     damage: props.child.damage ?? new DamageModel(),
                     restore: props.child.restore ?? new RestoreModel(),
                     ...props.child 

@@ -1,18 +1,19 @@
-import { Loader, Method, Model, Props } from "set-piece";
+import { Method, Model, Props } from "set-piece";
 import { PoisonousModel } from "../entries/poisonous";
-import { CARD_ROUTE, CardRoute } from "../..";
+import { CARD_ROUTE, CardRoute, FeatureModel, RoleBuffModel } from "../..";
 
 export namespace CardHooksProps {
     export type E = {};
     export type S = {};
     export type C = {
         readonly poisonous: PoisonousModel;
+        readonly items: FeatureModel[];
     };
     export type R = {};
     export type P = CardRoute;
 }
 
-export class CardHooksModel<
+export abstract class CardHooksModel<
     E extends Partial<CardHooksProps.E> & Props.E = {},
     S extends Partial<CardHooksProps.S> & Props.S = {},
     C extends Partial<CardHooksProps.C> & Props.C = {},
@@ -38,6 +39,7 @@ export class CardHooksModel<
                 state: { ...props.state },
                 child: {    
                     poisonous: props.child.poisonous ?? new PoisonousModel(),
+                    items: props.child.items ?? [],
                     ...props.child 
                 },
                 refer: { ...props.refer },
@@ -47,5 +49,21 @@ export class CardHooksModel<
                 },
             }
         })
+    }
+
+    protected abstract query(feat: FeatureModel): FeatureModel[] | undefined;
+
+    public add(feat: FeatureModel) {
+        let feats = this.query(feat);
+        if (!feats) return;
+        feats.push(feat);
+    }
+
+    public del(feat: FeatureModel) {
+        let feats = this.query(feat);
+        if (!feats) return;
+        const index = feats.indexOf(feat);
+        if (index == -1) return;
+        feats.splice(index, 1);
     }
 }

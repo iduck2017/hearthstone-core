@@ -5,6 +5,7 @@ import { StartTurnHookModel } from "./start-turn";
 import { EndTurnHookModel } from "./end-turn";
 import { WeaponBattlecryModel } from "./battlecry/weapon";
 import { CardHooksModel } from "./card";
+import { FeatureModel } from "../features";
 
 export namespace WeaponHooksProps {
     export type E = {};
@@ -49,20 +50,11 @@ export class WeaponHooksModel extends CardHooksModel<
         });
     }
 
-    public add(hook: WeaponBattlecryModel): RoleBattlecryModel;
-    public add(hook: DeathrattleModel): DeathrattleModel;
-    public add(hook: StartTurnHookModel): StartTurnHookModel;
-    public add(hook: EndTurnHookModel): EndTurnHookModel;
-    public add<T extends 
-        WeaponBattlecryModel | 
-        DeathrattleModel | 
-        StartTurnHookModel | 
-        EndTurnHookModel
-    >(hook: T): T {
-        if (hook instanceof WeaponBattlecryModel) this.draft.child.battlecry.push(hook);
-        if (hook instanceof DeathrattleModel) this.draft.child.deathrattle.push(hook);
-        if (hook instanceof StartTurnHookModel) this.draft.child.startTurn.push(hook);
-        if (hook instanceof EndTurnHookModel) this.draft.child.endTurn.push(hook);
-        return hook;
+    protected query(feat: FeatureModel): FeatureModel[] | undefined {
+        if (feat instanceof WeaponBattlecryModel) return this.draft.child.battlecry;
+        if (feat instanceof DeathrattleModel) return this.draft.child.deathrattle;
+        if (feat instanceof StartTurnHookModel) return this.draft.child.startTurn;
+        if (feat instanceof EndTurnHookModel) return this.draft.child.endTurn;
+        return this.draft.child.items;
     }
 }

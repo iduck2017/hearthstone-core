@@ -55,7 +55,7 @@ export class RoleActionModel extends Model<
         const role = this.route.role;
         if (!role) return false;
 
-        const entries = role.child.entries;
+        const entries = role.child.feats;
         const rush = entries.child.rush;
         const sleep = role.child.sleep;
         const attack = role.child.attack;
@@ -107,7 +107,7 @@ export class RoleActionModel extends Model<
 
         const role = this.route.role;
         if (!role) return;
-        const entries = role.child.entries;
+        const entries = role.child.feats;
         const charge = entries.child.charge;
         const sleep = role.child.sleep;
 
@@ -124,7 +124,7 @@ export class RoleActionModel extends Model<
         }
 
         const tauntOptions = options.filter(item => {
-            const entries = item.child.entries;
+            const entries = item.child.feats;
             const taunt = entries.child.taunt;
             const stealth = entries.child.stealth;
             return taunt.state.isActive && !stealth.state.isActive;
@@ -132,7 +132,7 @@ export class RoleActionModel extends Model<
         if (tauntOptions.length) options = tauntOptions;
 
         options = options.filter(item => {
-            const entries = item.child.entries;
+            const entries = item.child.feats;
             const stealth = entries.child.stealth;
             return !stealth.state.isActive;
         })

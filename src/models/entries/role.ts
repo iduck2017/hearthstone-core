@@ -7,10 +7,11 @@ import { StealthModel } from "./stealth";
 import { TauntModel } from "./taunt";
 import { WindfuryModel } from "./windfury";
 import { ElusiveModel } from "./elusive";
-import { PoisonousModel } from "./poisonous";
 import { OverhealModel } from "../hooks/overheal";
+import { RoleBuffModel } from "../features/buff/role";
+import { FeatureModel } from "../features";
 
-export namespace RoleEntriesProps {
+export namespace RoleFeatsProps {
     export type E = {};
     export type S = {};
     export type C = {
@@ -23,18 +24,21 @@ export namespace RoleEntriesProps {
         readonly windfury: WindfuryModel;
         readonly divineShield: DivineShieldModel;
         readonly overheal: OverhealModel[];
+        // feats
+        readonly buffs: RoleBuffModel[];
+        readonly items: FeatureModel[];
     };
     export type R = {};
 }
 
 @StoreUtil.is('role-entries')
-export class RoleEntriesModel extends Model<
-    RoleEntriesProps.E,
-    RoleEntriesProps.S,
-    RoleEntriesProps.C,
-    RoleEntriesProps.R
+export class RoleFeatsModel extends Model<
+    RoleFeatsProps.E,
+    RoleFeatsProps.S,
+    RoleFeatsProps.C,
+    RoleFeatsProps.R
 > {
-    constructor(loader?: Loader<RoleEntriesModel>) {
+    constructor(loader?: Loader<RoleFeatsModel>) {
         super(() => {
             const props = loader?.() ?? {};
             const child = props.child ?? {};
@@ -51,11 +55,32 @@ export class RoleEntriesModel extends Model<
                     windfury: child.windfury ?? new WindfuryModel(() => ({ state: { isActive: false }})),
                     divineShield: child.divineShield ?? new DivineShieldModel(() => ({ state: { isActive: false }})),
                     overheal: child.overheal ?? [],
+                    buffs: child.buffs ?? [],
+                    items: child.items ?? [],
                     ...props.child 
                 },
                 refer: { ...props.refer },
                 route: {},
             }
         });
+    }
+
+    protected query(feat: FeatureModel): FeatureModel[] | undefined {
+        if (feat instanceof RoleBuffModel) return this.draft.child.buffs;
+        return this.draft.child.items;
+    }
+
+    public add(feat: FeatureModel) {
+        let feats = this.query(feat);
+        if (!feats) return;
+        feats.push(feat);
+    }
+
+    public del(feat: FeatureModel) {
+        let feats = this.query(feat);
+        if (!feats) return;
+        const index = feats.indexOf(feat);
+        if (index == -1) return;
+        feats.splice(index, 1);
     }
 }

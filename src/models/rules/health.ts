@@ -44,9 +44,8 @@ export class RoleHealthDecor extends Decor<RoleHealthProps.S> {
             if (item.type === OperationType.ADD) result.maximum += item.value;
             if (item.type === OperationType.SET) result.maximum = item.value;
         })
-        // other
-        const other = this.operations.filter(item => !(item.reason instanceof RoleBuffModel));
-        other.forEach(item => {
+        const items = this.operations.filter(item => !(item.reason instanceof RoleBuffModel));
+        items.forEach(item => {
             if (item.type === OperationType.ADD) result.maximum += item.value;
             if (item.type === OperationType.SET) result.maximum = item.value;
         })
@@ -114,7 +113,7 @@ export class RoleHealthModel extends Model<
     public doHurt(event: DamageEvent): DamageEvent {
         const role = this.route.role;
         if (!role) return event;
-        const entries = role.child.entries;
+        const entries = role.child.feats;
         const divineSheild = entries.child.divineShield;
 
         const minion = this.route.minion;
@@ -180,7 +179,7 @@ export class RoleHealthModel extends Model<
         if (event.isAbort) return;
         if (event.detail.result > 0) this.event.onHeal(event);
         if (event.detail.overflow > 0) {
-            const hooks = role.child.entries;
+            const hooks = role.child.feats;
             hooks.child.overheal.forEach(item => item.run());
         }
     }

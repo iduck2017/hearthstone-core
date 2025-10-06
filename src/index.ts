@@ -60,7 +60,7 @@ export { DeckProps, DeckModel } from "./models/containers/deck";
 export { GraveyardProps, GraveyardModel } from "./models/containers/graveyard";
 
 // entries
-export { RoleEntriesProps, RoleEntriesModel } from "./models/entries/role";
+export { RoleFeatsProps, RoleFeatsModel } from "./models/entries/role";
 export { FrozenProps, FrozenModel } from "./models/entries/frozen";
 export { RushProps, RushModel } from "./models/entries/rush";
 export { ChargeProps, ChargeModel } from "./models/entries/charge";
@@ -79,6 +79,7 @@ export { EffectProps, EffectModel } from './models/features/effect';
 export { SpellEffectProps, SpellEffectModel } from './models/features/effect/spell';
 
 // hooks
+export { SpellHooksProps, SpellHooksModel } from "./models/hooks/spell";
 export { MinionHooksProps, MinionHooksModel } from "./models/hooks/minion";
 export { RoleBattlecryProps, RoleBattlecryModel } from "./models/hooks/battlecry/role";
 export { WeaponBattlecryProps, WeaponBattlecryModel } from "./models/hooks/battlecry/weapon";
