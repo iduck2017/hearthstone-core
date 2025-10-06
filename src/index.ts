@@ -28,7 +28,7 @@ export { MinionDeployModel } from "./models/rules/deploy/minion";
 export { WeaponDeployModel } from "./models/rules/deploy/weapon";
 export { SecretDeployModel } from "./models/rules/deploy/secret";
 
-export { RoleAttackProps, RoleAttackModel } from "./models/rules/attack/role";
+export { RoleAttackProps, RoleAttackModel, RoleAttackDecor } from "./models/rules/attack/role";
 export { RoleHealthProps, RoleHealthModel } from "./models/rules/health";
 export { RoleActionProps, RoleActionModel } from "./models/rules/action/role";
 export { SleepProps, SleepModel } from './models/rules/sleep';
@@ -105,3 +105,5 @@ export { SPELL_ROUTE, SpellRoute } from "./utils/route";
 export { MINION_ROUTE, MinionRoute } from "./utils/route";
 export { WEAPON_ROUTE, WeaponRoute } from "./utils/route";
 export { SECRET_ROUTE, SecretRoute } from "./utils/route";
+
+export { OperationType, Operation } from "./types/decor";

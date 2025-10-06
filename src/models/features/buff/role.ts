@@ -3,7 +3,7 @@ import { FeatureModel, FeatureProps } from "..";
 import { RoleAttackDecor, RoleAttackModel, RoleAttackProps } from "../../rules/attack/role";
 import { RoleHealthDecor, RoleHealthModel, RoleHealthProps } from "../../rules/health";
 import { ROLE_ROUTE, RoleRoute } from "../../..";
-import { OperationType } from "../../../types/math";
+import { OperationType } from "../../../types/decor";
 
 export namespace RoleBuffProps {
     export type S = {

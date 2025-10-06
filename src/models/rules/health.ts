@@ -2,8 +2,8 @@ import { DebugUtil, Decor, Event, EventUtil, Method, Model, StateUtil, TranxUtil
 import { RoleModel, MinionCardModel, GameModel, PlayerModel, CardModel, HeroModel, RoleBuffModel } from "../..";
 import { DamageEvent } from "../../types/damage";
 import { RestoreEvent } from "../../types/restore";
-import { OperationType } from "../../types/math";
-import { Operation } from "../../types/math";
+import { OperationType } from "../../types/decor";
+import { Operation } from "../../types/decor";
 
 export namespace RoleHealthProps {
     export type E = {

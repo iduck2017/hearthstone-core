@@ -2,6 +2,7 @@ import { Event, EventUtil, Method, Model, Props } from "set-piece";
 import { MinionCardModel } from "../cards/minion";
 import { FeatureModel, FeatureProps } from "../features";
 import { TurnModel } from "../rules/turn";
+import { CardModel } from "../cards";
 
 export namespace EndTurnHookProps {
     export type E = {
@@ -10,7 +11,9 @@ export namespace EndTurnHookProps {
     export type S = {};
     export type C = {};
     export type R = {};
-    export type P = {}
+    export type P = {
+        card: CardModel;
+    }
 }
 
 export abstract class EndTurnHookModel<
@@ -43,7 +46,10 @@ export abstract class EndTurnHookModel<
                 },
                 child: { ...props.child },
                 refer: { ...props.refer },
-                route: { ...props.route },
+                route: { 
+                    card: CardModel.prototype,
+                    ...props.route
+                },
             }
         })
     }

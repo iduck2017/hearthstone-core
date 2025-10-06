@@ -1,7 +1,7 @@
 import { DebugUtil, Decor, Event, Method, Model, StateUtil, StoreUtil } from "set-piece";
 import { DamageEvent, DamageModel, MinionCardModel, RoleModel, GameModel, PlayerModel, HeroModel, WeaponCardModel, RoleBuffModel } from "../../..";
 import { DamageType } from "../../../types/damage";
-import { Operation, OperationType } from "../../../types/math";
+import { Operation, OperationType } from "../../../types/decor";
 
 export namespace RoleAttackProps {
     export type E = {

@@ -2,7 +2,7 @@ import { Decor, Event, EventUtil, Method, Model, StateUtil } from "set-piece";
 import { GameModel, PlayerModel, HeroModel, RoleAttackModel, RoleAttackProps, TurnModel, BoardModel, WeaponCardModel, DamageEvent } from "../../..";
 import { RoleAttackDecor } from "./role";
 import { RoleActionDecor } from "../action/role";
-import { OperationType } from "../../../types/math";
+import { OperationType } from "../../../types/decor";
 
 export namespace WeaponAttackProps {
     export type E = {}
