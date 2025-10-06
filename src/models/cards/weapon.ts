@@ -2,7 +2,7 @@ import { Method, Props } from "set-piece";
 import { CardModel, CardProps } from ".";
 import { WeaponAttackModel } from "../rules/attack/weapon";
 import { WeaponActionModel } from "../rules/action/weapon";
-import { WeaponHooksOptions, WeaponHooksModel } from "../hooks/weapon";
+import { WeaponHooksOptions, WeaponFeatsModel } from "../hooks/weapon";
 import { WeaponDisposeModel } from "../rules/dispose/weapon";
 import { WeaponDeployModel } from "../rules/deploy/weapon";
 import { WeaponPerformModel } from "../rules/perform/weapon";
@@ -11,7 +11,7 @@ export namespace WeaponCardProps {
     export type S = {};
     export type E = {};
     export type C = {
-        readonly hooks: WeaponHooksModel;
+        readonly feats: WeaponFeatsModel;
         readonly attack: WeaponAttackModel;
         readonly action: WeaponActionModel;
         readonly deploy: WeaponDeployModel;
@@ -45,7 +45,7 @@ export class WeaponCardModel<
                 child: {
                     deploy: props.child.deploy ?? new WeaponDeployModel(),
                     dispose: props.child.dispose ?? new WeaponDisposeModel(),
-                    hooks: props.child.hooks ?? new WeaponHooksModel(),
+                    feats: props.child.feats ?? new WeaponFeatsModel(),
                     perform: props.child.perform ?? new WeaponPerformModel(),
                     ...props.child,
                 },

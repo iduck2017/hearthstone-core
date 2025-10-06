@@ -1,5 +1,5 @@
 import { Props, Event, Method, State, TranxUtil, Model } from "set-piece";
-import { MinionHooksOptions, MinionHooksModel } from "../hooks/minion";
+import { MinionHooksOptions, MinionFeatsModel } from "../hooks/minion";
 import { CardModel, CardProps } from ".";
 import { RaceType } from "../../types/card";
 import { RoleModel } from "../role";
@@ -18,7 +18,7 @@ export namespace MinionCardProps {
         readonly onSilence: Event;
     };
     export type C = {
-        readonly hooks: MinionHooksModel;
+        readonly feats: MinionFeatsModel;
         readonly role: RoleModel;
         readonly deploy: MinionDeployModel;
         readonly dispose: MinionDisposeModel
@@ -51,7 +51,7 @@ export abstract class MinionCardModel<
                 uuid: props.uuid,
                 state: { ...props.state },
                 child: { 
-                    hooks: props.child.hooks ?? new MinionHooksModel(),
+                    feats: props.child.feats ?? new MinionFeatsModel(),
                     deploy: props.child.deploy ?? new MinionDeployModel(),
                     dispose: props.child.dispose ?? new MinionDisposeModel(),
                     perform: props.child.perform ?? new MinionPerformModel(),
@@ -88,11 +88,11 @@ export abstract class MinionCardModel<
 
     @TranxUtil.span()
     private doSilence() {
-        this.child.hooks.child.items.forEach(item => item.deactive());
-        this.child.hooks.child.battlecry.forEach(item => item.deactive());
-        this.child.hooks.child.deathrattle.forEach(item => item.deactive());
-        this.child.hooks.child.startTurn.forEach(item => item.deactive());
-        this.child.hooks.child.endTurn.forEach(item => item.deactive());
+        this.child.feats.child.items.forEach(item => item.deactive());
+        this.child.feats.child.battlecry.forEach(item => item.deactive());
+        this.child.feats.child.deathrattle.forEach(item => item.deactive());
+        this.child.feats.child.startTurn.forEach(item => item.deactive());
+        this.child.feats.child.endTurn.forEach(item => item.deactive());
         const role = this.child.role;
         role.child.feats.child.buffs.forEach(item => item.deactive());
         role.child.feats.child.items.forEach(item => item.deactive());

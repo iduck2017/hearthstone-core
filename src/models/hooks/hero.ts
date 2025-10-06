@@ -1,9 +1,9 @@
-import { CardHooksModel } from "./card";
+import { CardFeatsModel } from "./card";
 import { PoisonousModel } from "../entries/poisonous";
 import { Loader } from "set-piece";
 import { FeatureModel } from "../features";
 
-export namespace HeroHooksProps {
+export namespace HeroFeatsProps {
     export type E = {};
     export type S = {};
     export type C = {
@@ -13,14 +13,14 @@ export namespace HeroHooksProps {
     export type P = {};
 }
 
-export class HeroHooksModel extends CardHooksModel<
-    HeroHooksProps.E,
-    HeroHooksProps.S,
-    HeroHooksProps.C,
-    HeroHooksProps.R,
-    HeroHooksProps.P
+export class HeroFeatsModel extends CardFeatsModel<
+    HeroFeatsProps.E,
+    HeroFeatsProps.S,
+    HeroFeatsProps.C,
+    HeroFeatsProps.R,
+    HeroFeatsProps.P
 > {
-    constructor(loader?: Loader<HeroHooksModel>) {
+    constructor(loader?: Loader<HeroFeatsModel>) {
         super(() => {
             const props = loader?.() ?? {};
             return {

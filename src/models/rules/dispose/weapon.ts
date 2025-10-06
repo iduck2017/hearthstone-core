@@ -43,8 +43,8 @@ export class WeaponDisposeModel extends DisposeModel<
         const weapon = this.route.weapon;
         if (!weapon) return;
         this.doRemove();
-        const hooks = weapon.child.hooks;
-        const deathrattle = hooks.child.deathrattle;
+        const feats = weapon.child.feats;
+        const deathrattle = feats.child.deathrattle;
         for (const item of deathrattle) item.run();
     }
 

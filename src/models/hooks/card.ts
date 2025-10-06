@@ -2,7 +2,7 @@ import { Method, Model, Props } from "set-piece";
 import { PoisonousModel } from "../entries/poisonous";
 import { CARD_ROUTE, CardRoute, FeatureModel, RoleBuffModel } from "../..";
 
-export namespace CardHooksProps {
+export namespace CardFeatsProps {
     export type E = {};
     export type S = {};
     export type C = {
@@ -13,20 +13,20 @@ export namespace CardHooksProps {
     export type P = CardRoute;
 }
 
-export abstract class CardHooksModel<
-    E extends Partial<CardHooksProps.E> & Props.E = {},
-    S extends Partial<CardHooksProps.S> & Props.S = {},
-    C extends Partial<CardHooksProps.C> & Props.C = {},
-    R extends Partial<CardHooksProps.R> & Props.R = {},
-    P extends Partial<CardHooksProps.P> & Props.P = {}
+export abstract class CardFeatsModel<
+    E extends Partial<CardFeatsProps.E> & Props.E = {},
+    S extends Partial<CardFeatsProps.S> & Props.S = {},
+    C extends Partial<CardFeatsProps.C> & Props.C = {},
+    R extends Partial<CardFeatsProps.R> & Props.R = {},
+    P extends Partial<CardFeatsProps.P> & Props.P = {}
 > extends Model<
-    E & CardHooksProps.E, 
-    S & CardHooksProps.S, 
-    C & CardHooksProps.C, 
-    R & CardHooksProps.R,
-    P & CardHooksProps.P
+    E & CardFeatsProps.E, 
+    S & CardFeatsProps.S, 
+    C & CardFeatsProps.C, 
+    R & CardFeatsProps.R,
+    P & CardFeatsProps.P
 > {
-    constructor(loader: Method<CardHooksModel['props'] & {
+    constructor(loader: Method<CardFeatsModel['props'] & {
         state: S;
         child: C;
         refer: R;

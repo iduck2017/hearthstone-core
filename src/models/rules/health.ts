@@ -35,11 +35,9 @@ export class RoleHealthDecor extends Decor<RoleHealthProps.S> {
 
     public get result() {
         const result = { ...this.detail };
-        // sort
         const buffs = this.operations
             .filter(item => item.reason instanceof RoleBuffModel)
             .sort((a, b) => a.reason.uuid.localeCompare(b.reason.uuid));
-        // buff
         buffs.forEach(item => {
             if (item.type === OperationType.ADD) result.maximum += item.value;
             if (item.type === OperationType.SET) result.maximum = item.value;
@@ -134,13 +132,11 @@ export class RoleHealthModel extends Model<
             result = result - offset;
             event.set(result);
         }
-
         if (divineSheild.state.isActive) {
             divineSheild.use(event);
             event.set(0);
             return event;
         }
-
         this.draft.state.damage += result;
         dispose.active(false, event.detail.source, event.detail.method);
         return event;
@@ -179,8 +175,8 @@ export class RoleHealthModel extends Model<
         if (event.isAbort) return;
         if (event.detail.result > 0) this.event.onHeal(event);
         if (event.detail.overflow > 0) {
-            const hooks = role.child.feats;
-            hooks.child.overheal.forEach(item => item.run());
+            const feats = role.child.feats;
+            feats.child.overheal.forEach(item => item.run());
         }
     }
     

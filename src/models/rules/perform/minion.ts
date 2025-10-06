@@ -44,8 +44,8 @@ export class MinionPerformModel extends PerformModel<
         const minion = this.route.minion;
         if (!minion) return;
         // battlecry
-        const hooks = minion.child.hooks;
-        const battlecry = hooks.child.battlecry;
+        const feats = minion.child.feats;
+        const battlecry = feats.child.battlecry;
         for (const item of battlecry) {
             const params = options.battlecry.get(item);
             if (!params) continue;
@@ -65,8 +65,8 @@ export class MinionPerformModel extends PerformModel<
         const to = await this.select();
         if (to === undefined) return;
         // battlecry
-        const hooks = minion.child.hooks;
-        const battlecry = await RoleBattlecryModel.toRun(hooks.child.battlecry);
+        const feats = minion.child.feats;
+        const battlecry = await RoleBattlecryModel.toRun(feats.child.battlecry);
         if (!battlecry) return;
         return [to, { battlecry }];
     }

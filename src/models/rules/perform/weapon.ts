@@ -46,8 +46,8 @@ export class WeaponPerformModel extends PerformModel<
         const weapon = this.route.weapon;
         if (!weapon) return;
         // battlecry
-        const hooks = weapon.child.hooks;
-        const battlecry = hooks.child.battlecry;
+        const feats = weapon.child.feats;
+        const battlecry = feats.child.battlecry;
         for (const item of battlecry) {
             const params = options.battlecry.get(item);
             if (!params) continue;
@@ -65,8 +65,8 @@ export class WeaponPerformModel extends PerformModel<
         const weapon = this.route.weapon;
         if (!weapon) return;
         // battlecry
-        const hooks = weapon.child.hooks;
-        const battlecry = await WeaponBattlecryModel.toRun(hooks.child.battlecry);
+        const feats = weapon.child.feats;
+        const battlecry = await WeaponBattlecryModel.toRun(feats.child.battlecry);
         if (!battlecry) return;
         return [{ battlecry }];
     }

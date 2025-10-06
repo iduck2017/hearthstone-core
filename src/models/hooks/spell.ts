@@ -1,7 +1,7 @@
 import { Event, Loader, Model } from "set-piece";
 import { EffectModel } from "../features/effect";
 import { FeatureModel, RoleModel } from "../..";
-import { CardHooksModel } from "./card";
+import { CardFeatsModel } from "./card";
 
 export type SpellHooksOptions = {
     effect: Map<EffectModel, Model[]>;
@@ -17,7 +17,7 @@ export class SpellCastEvent extends Event<{ options: SpellHooksOptions }> {
     }
 }
 
-export namespace SpellHooksProps {
+export namespace SpellFeatsProps {
     export type E = {};
     export type S = {};
     export type C = {};
@@ -25,14 +25,14 @@ export namespace SpellHooksProps {
     export type P = {};
 }
 
-export class SpellHooksModel extends CardHooksModel<
-    SpellHooksProps.E,
-    SpellHooksProps.S,
-    SpellHooksProps.C,
-    SpellHooksProps.R,
-    SpellHooksProps.P
+export class SpellFeatsModel extends CardFeatsModel<
+    SpellFeatsProps.E,
+    SpellFeatsProps.S,
+    SpellFeatsProps.C,
+    SpellFeatsProps.R,
+    SpellFeatsProps.P
 > {
-    constructor(loader?: Loader<SpellHooksModel>) {
+    constructor(loader?: Loader<SpellFeatsModel>) {
         super(() => {
             const props = loader?.() ?? {};
             return {

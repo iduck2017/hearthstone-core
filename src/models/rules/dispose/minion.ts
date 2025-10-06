@@ -43,8 +43,8 @@ export class MinionDisposeModel extends DisposeModel<
         const minion = this.route.minion;
         if (!minion) return;
         this.doRemove();
-        const hooks = minion.child.hooks;
-        const deathrattle = hooks.child.deathrattle;
+        const feats = minion.child.feats;
+        const deathrattle = feats.child.deathrattle;
         for (const item of deathrattle) item.run();
     }
 

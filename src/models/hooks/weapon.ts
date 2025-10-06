@@ -4,10 +4,10 @@ import { DeathrattleModel } from "./deathrattle";
 import { StartTurnHookModel } from "./start-turn";
 import { EndTurnHookModel } from "./end-turn";
 import { WeaponBattlecryModel } from "./battlecry/weapon";
-import { CardHooksModel } from "./card";
+import { CardFeatsModel } from "./card";
 import { FeatureModel } from "../features";
 
-export namespace WeaponHooksProps {
+export namespace WeaponFeatsProps {
     export type E = {};
     export type S = {};
     export type C = {
@@ -25,13 +25,13 @@ export type WeaponHooksOptions = {
 }
 
 @StoreUtil.is('card-hooks')
-export class WeaponHooksModel extends CardHooksModel<
-    WeaponHooksProps.E,
-    WeaponHooksProps.S,
-    WeaponHooksProps.C,
-    WeaponHooksProps.R
+export class WeaponFeatsModel extends CardFeatsModel<
+    WeaponFeatsProps.E,
+    WeaponFeatsProps.S,
+    WeaponFeatsProps.C,
+    WeaponFeatsProps.R
 > {
-    constructor(loader?: Loader<WeaponHooksModel>) {
+    constructor(loader?: Loader<WeaponFeatsModel>) {
         super(() => {
             const props = loader?.() ?? {};
             return {

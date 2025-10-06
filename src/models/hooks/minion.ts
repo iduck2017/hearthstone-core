@@ -3,9 +3,9 @@ import { FeatureModel, RoleBattlecryModel } from "../..";
 import { DeathrattleModel } from "../..";
 import { StartTurnHookModel } from "../..";
 import { EndTurnHookModel } from "../..";
-import { CardHooksModel } from "./card";
+import { CardFeatsModel } from "./card";
 
-export namespace MinionHooksProps {
+export namespace MinionFeatsProps {
     export type E = {};
     export type S = {};
     export type C = {
@@ -22,13 +22,13 @@ export type MinionHooksOptions = {
 }
 
 @StoreUtil.is('card-hooks')
-export class MinionHooksModel extends CardHooksModel<
-    MinionHooksProps.E,
-    MinionHooksProps.S,
-    MinionHooksProps.C,
-    MinionHooksProps.R
+export class MinionFeatsModel extends CardFeatsModel<
+    MinionFeatsProps.E,
+    MinionFeatsProps.S,
+    MinionFeatsProps.C,
+    MinionFeatsProps.R
 > {
-    constructor(loader?: Loader<MinionHooksModel>) {
+    constructor(loader?: Loader<MinionFeatsModel>) {
         super(() => {
             const props = loader?.() ?? {};
             return {

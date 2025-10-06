@@ -1,12 +1,12 @@
 import { DebugUtil, Model, TranxUtil, Props, Event, Method, StoreUtil } from "set-piece";
 import { CostModel } from "../rules/cost";
 import { ClassType, RarityType } from "../../types/card";
-import { MinionHooksModel } from "../hooks/minion";
+import { MinionFeatsModel } from "../hooks/minion";
 import { DamageModel, DeathrattleModel, DisposeModel, FeatureModel, RestoreModel } from "../..";
 import { MinionCardModel, PlayerModel, GameModel, HandModel, DeckModel, BoardModel, GraveyardModel } from "../..";
 import { DeployModel } from "../rules/deploy";
 import { PerformModel } from "../rules/perform";
-import { CardHooksModel } from "../hooks/card";
+import { CardFeatsModel } from "../hooks/card";
 
 export namespace CardProps {
     export type E = {
@@ -23,7 +23,7 @@ export namespace CardProps {
     };
     export type C = {
         readonly cost: CostModel;
-        readonly hooks: CardHooksModel;
+        readonly feats: CardFeatsModel;
         readonly damage: DamageModel
         readonly restore: RestoreModel
         readonly deploy?: DeployModel;
@@ -76,7 +76,7 @@ export abstract class CardModel<
 
     constructor(loader: Method<CardModel['props'] & {
         state: S & Omit<CardProps.S, 'isActive'>,
-        child: C & Pick<CardProps.C, 'cost' | 'perform' | 'dispose' | 'hooks'>,
+        child: C & Pick<CardProps.C, 'cost' | 'perform' | 'dispose' | 'feats'>,
         refer: R & CardProps.R,
     }, []>) {
         super(() => {
