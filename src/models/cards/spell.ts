@@ -13,7 +13,6 @@ export namespace SpellCardProps {
     export type E = {};
     export type C = {
         readonly feats: SpellFeatsModel;
-        readonly effects: SpellEffectModel[],
         readonly perform: SpellPerformModel;
     };
     export type R = {};
@@ -41,7 +40,6 @@ export class SpellCardModel<
                 uuid: props.uuid,
                 state: { ...props.state },
                 child: { 
-                    effects: [],
                     feats: props.child.feats ?? new SpellFeatsModel(),
                     perform: props.child.perform ?? new SpellPerformModel(),
                     ...props.child,

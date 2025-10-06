@@ -1,15 +1,15 @@
 import { Event, Loader, Model } from "set-piece";
 import { EffectModel } from "./effect";
-import { FeatureModel, RoleModel } from "../..";
+import { FeatureModel, RoleModel, SpellEffectModel } from "../..";
 import { CardFeatsModel } from "./card";
 
 export type SpellHooksOptions = {
-    effect: Map<EffectModel, Model[]>;
+    effects: Map<EffectModel, Model[]>;
 }
 
 export class SpellCastEvent extends Event<{ options: SpellHooksOptions }> {
     public redirect(role: RoleModel) {
-        this._detail.options.effect.forEach((value, key) => {
+        this._detail.options.effects.forEach((value, key) => {
             value.forEach((item, index) => {
                 if (item instanceof RoleModel) value[index] = role;
             })
@@ -20,7 +20,9 @@ export class SpellCastEvent extends Event<{ options: SpellHooksOptions }> {
 export namespace SpellFeatsProps {
     export type E = {};
     export type S = {};
-    export type C = {};
+    export type C = {
+        readonly effects: SpellEffectModel[];
+    };
     export type R = {};
     export type P = {};
 }
@@ -38,7 +40,10 @@ export class SpellFeatsModel extends CardFeatsModel<
             return {
                 uuid: props.uuid,
                 state: { ...props.state },
-                child: { ...props.child },
+                child: { 
+                    effects: [],
+                    ...props.child,
+                },
                 refer: { ...props.refer },
                 route: {},
             }
