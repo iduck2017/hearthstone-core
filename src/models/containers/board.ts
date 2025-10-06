@@ -53,12 +53,19 @@ export class BoardModel extends Model<
         })
     }
 
+    public query(card: CardModel): CardModel[] | undefined {
+        if (card instanceof MinionCardModel) return this.draft.child.minions;
+        if (card instanceof SecretCardModel) return this.draft.child.secrets;
+    }
+
+
     public add(card: CardModel, position?: number): void {
-        let cards: CardModel[] | undefined;
-        if (card instanceof MinionCardModel) cards = this.draft.child.minions;
-        if (card instanceof SecretCardModel) cards = this.draft.child.secrets;
-        if (card instanceof WeaponCardModel) this.draft.child.weapon = card;
-        if (!cards) return
+        if (card instanceof WeaponCardModel) {
+            this.draft.child.weapon = card;
+            return;
+        }
+        let cards = this.query(card);
+        if (!cards) return;
         cards.push(card);
 
         if (card instanceof MinionCardModel) {
@@ -67,27 +74,22 @@ export class BoardModel extends Model<
             if (position === -1) position = order.length;
             if (position === undefined) position = order.length;
             order.splice(position, 0, that);
-            return;
         }
-        return;
     }
 
 
     public del(card: CardModel) {
-        let cards: CardModel[] | undefined;
-        if (card instanceof MinionCardModel) cards = this.draft.child.minions;
-        if (card instanceof SecretCardModel) cards = this.draft.child.secrets;
-        if (card instanceof WeaponCardModel) this.draft.child.weapon = undefined;
-        if (!cards) return false;
-
-        // remove from cards
+        if (card instanceof WeaponCardModel) {
+            this.draft.child.weapon = undefined;
+            return;
+        }
+        let cards = this.query(card);
+        if (!cards) return;
         let index = cards.indexOf(card);
         if (index !== -1) cards.splice(index, 1);
-
-        // remove from order
+        
         const order = this.draft.refer.order;
         index = order.indexOf(card);
         if (index !== -1) order.splice(index, 1);
-        return card;
     }
 }

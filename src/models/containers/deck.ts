@@ -64,23 +64,22 @@ export class DeckModel extends Model<
         return card;
     }
 
-    public del(card: CardModel): boolean {
-        let cards: CardModel[] | undefined;
-        if (card instanceof MinionCardModel) cards = this.draft.child.minions;
-        if (card instanceof SpellCardModel) cards = this.draft.child.spells;
-        if (card instanceof WeaponCardModel) cards = this.draft.child.weapons;
-        if (!cards) return false;
+    public query(card: CardModel): CardModel[] | undefined {
+        if (card instanceof MinionCardModel) return this.draft.child.minions;
+        if (card instanceof SpellCardModel) return this.draft.child.spells;
+        if (card instanceof WeaponCardModel) return this.draft.child.weapons;
+    }
 
+    public del(card: CardModel) {
         // remove from cards
+        let cards = this.query(card);
+        if (!cards) return;
         let index = cards.indexOf(card);
-        if (index === -1) return false;
-        cards.splice(index, 1);
-
+        if (index !== -1) cards.splice(index, 1);
+        
         // remove from order
         const order = this.draft.refer.order;
         index = order.indexOf(card);
         if (index !== -1) order.splice(index, 1);
-
-        return true;
     }
 }

@@ -57,32 +57,29 @@ export class HandModel extends Model<
             }
         })
     }
+
+    public query(card: CardModel): CardModel[] | undefined {
+        if (card instanceof SpellCardModel) return this.draft.child.spells;
+        if (card instanceof MinionCardModel) return this.draft.child.minions;
+        if (card instanceof WeaponCardModel) return this.draft.child.weapons;
+    }
    
-    public add(card: CardModel, position?: number): boolean {
-        let cards: CardModel[] | undefined;
-        if (card instanceof SpellCardModel) cards = this.draft.child.spells;
-        if (card instanceof MinionCardModel) cards = this.draft.child.minions;
-        if (card instanceof WeaponCardModel) cards = this.draft.child.weapons;
-        if (!cards) return false;
+    public add(card: CardModel, position?: number) {
+        let cards = this.query(card);
+        if (!cards) return;
         cards.push(card);
 
         const order = this.draft.refer.order;
         if (position === -1) position = order.length;
         if (!position) position = order.length;
         order.splice(position, 0, card);
-        return true;
     }
 
 
     @TranxUtil.span()
     public use(card: CardModel) {
-        
-        let cards: CardModel[] | undefined;
-        if (card instanceof SpellCardModel) cards = this.draft.child.spells;
-        if (card instanceof MinionCardModel) cards = this.draft.child.minions;
-        if (card instanceof WeaponCardModel) cards = this.draft.child.weapons;
+        let cards = this.query(card);
         if (!cards) return;
-        
         let index = cards.indexOf(card);
         if (index === -1) return;
         cards.splice(index, 1);
@@ -94,20 +91,15 @@ export class HandModel extends Model<
         this.draft.child.cache.push(card);
     }
 
-    public del(card: CardModel): boolean {
-
+    public del(card: CardModel) {
         // remove from cache
         const cache = this.draft.child.cache;
         let index = cache.indexOf(card);
         if (index !== -1) cache.splice(index, 1);
 
         // remove from cards
-        let cards: CardModel[] | undefined;
-        if (card instanceof SpellCardModel) cards = this.draft.child.spells;
-        if (card instanceof MinionCardModel) cards = this.draft.child.minions;
-        if (card instanceof WeaponCardModel) cards = this.draft.child.weapons;
-        if (!cards) return false;
-
+        let cards = this.query(card);
+        if (!cards) return;
         index = cards.indexOf(card);
         if (index !== -1) cards.splice(index, 1);
         

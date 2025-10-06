@@ -156,7 +156,7 @@ export abstract class CardModel<
         const player = this.route.player;
         if (!player) return false;
         const deck = player.child.deck;
-        if (!deck.del(this)) return false;
+        deck.del(this);
         player.child.hand.add(this);
         return true;
     }

@@ -45,12 +45,15 @@ export class GraveyardModel extends Model<
             }
         });
     }
-    
+
+    public query(card: CardModel): CardModel[] | undefined {
+        if (card instanceof MinionCardModel) return this.draft.child.minions;
+        if (card instanceof WeaponCardModel) return this.draft.child.weapons;
+        if (card instanceof SpellCardModel) return this.draft.child.spells;
+    }
+
     public add(card: CardModel): boolean {
-        let cards: CardModel[] | undefined;
-        if (card instanceof MinionCardModel) cards = this.draft.child.minions;
-        if (card instanceof WeaponCardModel) cards = this.draft.child.weapons;
-        if (card instanceof SpellCardModel) cards = this.draft.child.spells;
+        let cards = this.query(card);
         if (!cards) return false;
         cards.push(card);
         return true;
