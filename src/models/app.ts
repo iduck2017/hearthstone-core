@@ -1,11 +1,16 @@
 import { DebugUtil, Loader, Model, StoreUtil } from "set-piece";
 import { GameModel } from "./game";
+import { ConfigModel } from "./containers/config";
 
 export namespace AppProps {
-    export type S = {};
+    export type S = {
+        version: string;
+        count: number;
+    };
     export type E = {};
     export type C = {
-        game?: GameModel
+        game?: GameModel;
+        configs: ConfigModel[]
     };
 }
 
@@ -20,16 +25,26 @@ export class AppModel extends Model<
             const props = loader?.() ?? {};
             return {
                 uuid: props.uuid,
-                state: { ...props.state },
-                child: { ...props.child },
+                state: { 
+                    version: '0.1.0',
+                    count: 0,
+                    ...props.state
+                },
+                child: { 
+                    configs: props.child?.configs ?? [],
+                    ...props.child 
+                },
                 refer: { ...props.refer },
                 route: {},
             }
         });
     }
 
-    @DebugUtil.log()
-    public set(game?: GameModel) {
-        this.draft.child.game = game;
+    public set(config: ConfigModel): void;
+    public set(game: GameModel): void;
+    public set(value: GameModel | ConfigModel) {
+        if (value instanceof GameModel) this.draft.child.game = value;
+        if (value instanceof ConfigModel) this.draft.child.configs.push(value);
     }
+    
 }

@@ -56,12 +56,6 @@ export abstract class CardModel<
    R & CardProps.R,
    CardProps.P
 > {
-    public static copy<M extends CardModel>(card: M): M | undefined {
-        const result = StoreUtil.copy(card, {
-            refer: { ...card.props.refer, creator: card },
-        });
-        return result;
-    }
 
     public get status(): boolean {
         const hand = this.route.hand;
@@ -160,4 +154,8 @@ export abstract class CardModel<
         player.child.hand.add(this);
         return true;
     }
+
+    perform() {}
+
+    deploy() {}
 }

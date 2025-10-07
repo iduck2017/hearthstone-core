@@ -58,6 +58,7 @@ export { HandProps, HandModel } from "./models/containers/hand";
 export { BoardProps, BoardModel } from "./models/containers/board";
 export { DeckProps, DeckModel } from "./models/containers/deck";
 export { GraveyardProps, GraveyardModel } from "./models/containers/graveyard";
+export { ConfigProps, ConfigModel } from "./models/containers/config";
 
 // entries
 export { RoleFeatsProps, RoleFeatsModel } from "./models/features/role";

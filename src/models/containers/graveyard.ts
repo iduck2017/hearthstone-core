@@ -7,9 +7,9 @@ export namespace GraveyardProps {
     export type E = {}
     export type S = {}
     export type C = {
+        spells: SpellCardModel[]
         minions: MinionCardModel[]
         weapons: WeaponCardModel[]
-        spells: SpellCardModel[]
     }
     export type P = {
         game: GameModel;

@@ -59,5 +59,5 @@ export abstract class DeathrattleModel<
         this.event.onRun(new Event({}));
     }
 
-    protected abstract doRun(): Promise<void>;
+    protected abstract doRun(): void;
 }

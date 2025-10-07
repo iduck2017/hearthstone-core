@@ -7,8 +7,8 @@ export namespace DeckProps {
     export type E = {}
     export type S = {}
     export type C = {
-        minions: MinionCardModel[],
         spells: SpellCardModel[],
+        minions: MinionCardModel[],
         weapons: WeaponCardModel[]
     }
     export type P = {

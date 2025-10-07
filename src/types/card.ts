@@ -3,6 +3,7 @@ export enum ClassType {
     MAGE,
     NEUTRAL,
     PRIEST,
+    WARLOCK,
 }
 
 export enum RarityType {
@@ -20,7 +21,8 @@ export enum RaceType {
     DRAENEI,
     PIRATE,
     DRAGON,
-    MECH
+    MECH,
+    DEMON
 }
 
 export enum SchoolType {

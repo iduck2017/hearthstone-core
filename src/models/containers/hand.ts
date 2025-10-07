@@ -1,4 +1,4 @@
-import { Loader, Model, TranxUtil } from "set-piece";
+import { Loader, Model, StoreUtil, TranxUtil } from "set-piece";
 import { PlayerModel } from "../player";
 import { GameModel } from "../game";
 import { CardModel } from "../cards";
@@ -8,10 +8,10 @@ export namespace HandProps {
     export type E = {}
     export type S = {}
     export type C = {
+        cache: CardModel[],
+        spells: SpellCardModel[],
         minions: MinionCardModel[],
         weapons: WeaponCardModel[],
-        spells: SpellCardModel[],
-        cache: CardModel[],
     }
     export type P = {
         game: GameModel;
@@ -64,6 +64,7 @@ export class HandModel extends Model<
         if (card instanceof WeaponCardModel) return this.draft.child.weapons;
     }
    
+    @TranxUtil.span()
     public add(card: CardModel, position?: number) {
         let cards = this.query(card);
         if (!cards) return;
@@ -73,6 +74,15 @@ export class HandModel extends Model<
         if (position === -1) position = order.length;
         if (!position) position = order.length;
         order.splice(position, 0, card);
+    }
+
+    @TranxUtil.span()
+    public copy(origin: CardModel) {
+        const copy = StoreUtil.copy(origin, {
+            refer: { ...origin.props.refer, creator: origin },
+        });
+        if (!copy) return;
+        this.add(copy);
     }
 
 
@@ -91,6 +101,7 @@ export class HandModel extends Model<
         this.draft.child.cache.push(card);
     }
 
+    @TranxUtil.span()
     public del(card: CardModel) {
         // remove from cache
         const cache = this.draft.child.cache;
@@ -98,8 +109,7 @@ export class HandModel extends Model<
         if (index !== -1) cache.splice(index, 1);
 
         // remove from cards
-        let cards = this.query(card);
-        if (!cards) return;
+        let cards = this.query(card) ?? [];
         index = cards.indexOf(card);
         if (index !== -1) cards.splice(index, 1);
         

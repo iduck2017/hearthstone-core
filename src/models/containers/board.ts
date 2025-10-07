@@ -9,9 +9,9 @@ export namespace BoardProps {
     export type E = {};
     export type S = {};
     export type C = {
+        weapon?: WeaponCardModel;
         readonly minions: MinionCardModel[]
         readonly secrets: SecretCardModel[]
-        weapon?: WeaponCardModel;
     };
     export type P = {
         game: GameModel;
