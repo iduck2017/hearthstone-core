@@ -1,13 +1,16 @@
 import { Loader, Model } from "set-piece";
 import { DisposeModel } from ".";
-import { CardModel, HeroModel } from "../../..";
+import { AppModel, CardModel, HeroModel } from "../../..";
 
 export namespace HeroDisposeProps {
     export type E = {};
     export type S = {};
     export type C = {};
     export type R = {};
-    export type P = { hero: HeroModel; };
+    export type P = { 
+        hero: HeroModel; 
+        app: AppModel;
+    };
 }
 
 export class HeroDisposeModel extends DisposeModel<
@@ -25,12 +28,15 @@ export class HeroDisposeModel extends DisposeModel<
                 state: { ...props.state },
                 child: { ...props.child },
                 refer: { ...props.refer },
-                route: { hero: HeroModel.prototype },
+                route: { 
+                    hero: HeroModel.prototype, 
+                    app: AppModel.prototype 
+                },
             }
         });
     }
 
-    protected check(): boolean {
+    public get status(): boolean {
         const hero = this.route.hero;
         if (!hero) return true;
         const role = hero.child.role;
@@ -39,5 +45,15 @@ export class HeroDisposeModel extends DisposeModel<
         return false;
     }
 
-    protected run() {}
+    protected run() {
+        const app = this.route.app;
+        if (!app) return;
+        const player = this.route.player;
+        if (!player) return;
+        const opponent = player.refer.opponent;
+        const isTie = opponent?.child.hero.child.dispose.status;
+        if (isTie) console.log('tie');
+        else console.log('player loss', player);
+        app.end();
+    }
 }

@@ -1,5 +1,5 @@
 import { DebugUtil, Event, Loader, LogLevel, Method, Model, Props, TranxUtil } from "set-piece";
-import { CardModel, GraveyardModel, HeroModel, MinionCardModel, PlayerModel, SecretCardModel, WeaponCardModel } from '../../..'
+import { CardModel, GameModel, GraveyardModel, HeroModel, MinionCardModel, PlayerModel, SecretCardModel, WeaponCardModel } from '../../..'
 
 export namespace DisposeProps {
     export type E = {
@@ -16,6 +16,7 @@ export namespace DisposeProps {
     }
     export type P = {
         player: PlayerModel;
+        game: GameModel;
     }
 }
 
@@ -102,6 +103,7 @@ export abstract class DisposeModel<
                 refer: { ...props.refer },
                 route: {
                     player: PlayerModel.prototype,
+                    game: GameModel.prototype,
                     ...props.route,
                 },
             }

@@ -47,4 +47,6 @@ export class AppModel extends Model<
         if (value instanceof ConfigModel) this.draft.child.configs.push(value);
     }
 
+    public end() { this.draft.child.game = undefined; }
+
 }
