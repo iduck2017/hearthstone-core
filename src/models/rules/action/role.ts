@@ -1,5 +1,5 @@
 import { DebugUtil, Decor, Event, Loader, Model, StateUtil, TranxUtil } from "set-piece";
-import { BoardModel, SelectEvent, SelectUtil, MinionCardModel, RoleModel, PlayerModel, GameModel } from "../../..";
+import { BoardModel, SelectEvent, SelectUtil, MinionCardModel, RoleModel, PlayerModel, GameModel, CardModel, HeroModel } from "../../..";
 
 export namespace RoleActionProps {
     export type S = {
@@ -15,9 +15,11 @@ export namespace RoleActionProps {
     export type R = {};
     export type P = {
         role: RoleModel;
-        board: BoardModel;
         game: GameModel;
         player: PlayerModel;
+
+        card: CardModel;
+        hero: HeroModel;
     };
 }
 
@@ -46,11 +48,14 @@ export class RoleActionModel extends Model<
         if (this.state.isLock) return false;
         const current = this.state.current;
         if (current <= 0) return false;
-        const player = this.route.player;
-        if (!player) return false;
+
+        const card = this.route.card;
+        if (card && !card.route.board) return false;
+
         const game = this.route.game;
         if (!game) return false;
         const turn = game.child.turn;
+        const player = this.route.player;
         if (turn.refer.current !== player) return false;
         const role = this.route.role;
         if (!role) return false;
@@ -88,9 +93,10 @@ export class RoleActionModel extends Model<
                 refer: { ...props.refer },
                 route: {
                     role: RoleModel.prototype,
-                    board: BoardModel.prototype,
                     game: GameModel.prototype,
                     player: PlayerModel.prototype,
+                    card: CardModel.prototype,
+                    hero: HeroModel.prototype,
                 }
             }
         });

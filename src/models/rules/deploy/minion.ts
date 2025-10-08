@@ -48,7 +48,7 @@ export class MinionDeployModel extends DeployModel<
         if (!minion) return;
         const player = this.route.player;
         const hand = player?.child.hand;
-        if (hand) hand.del(minion);
+        if (hand) hand.use(minion);
         board.add(minion, index);
     }
 }

@@ -46,7 +46,6 @@ export abstract class SpellEffectModel<
                     if (!(item instanceof RoleModel)) return true;
                     const elusive = item.child.feats.child.elusive;
                     // exclude elusive
-                    if (elusive.state.isActive) console.log('elusive', item.route.card?.name);
                     if (elusive.state.isActive) return false;
                     return true;
                 })

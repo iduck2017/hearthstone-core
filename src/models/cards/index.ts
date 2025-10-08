@@ -67,6 +67,8 @@ export abstract class CardModel<
         return true;
     }
 
+    public get name(): string { return String(this.state.name); }
+
     constructor(loader: Method<CardModel['props'] & {
         state: S & Omit<CardProps.S, 'isActive'>,
         child: C & Pick<CardProps.C, 'cost' | 'perform' | 'dispose' | 'feats'>,
@@ -119,7 +121,7 @@ export abstract class CardModel<
         // use
         const hand = player.child.hand;
         const from = hand.refer.order.indexOf(this);
-        hand.use(this);
+        hand.prepare(this);
         const perform = this.child.perform;
         // run
         await perform.run(from, ...params);
@@ -132,7 +134,8 @@ export abstract class CardModel<
         const player = this.route.player;
         if (!player) return;
         const hand = player.child.hand;
-        if (!hand.del(this)) return;
+        // already removed from hand
+        if (!hand.use(this)) return;
         const graveyard = player.child.graveyard;
         graveyard.add(this);
     }

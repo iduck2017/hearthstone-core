@@ -10,6 +10,7 @@ import { RoleModel } from "./role";
 import { MinionCardModel } from "./cards/minion";
 import { FeatureModel } from "./features";
 import { CommandUtil } from "../utils/command";
+import { SelectUtil } from "../utils/select";
 
 export namespace PlayerProps {
     export type S= {};
@@ -44,20 +45,44 @@ export class PlayerModel extends Model<
         }
     }
 
+    public get name() { 
+        const game = this.route.game;
+        const playerA = game?.child.playerA;
+        const playerB = game?.child.playerB;
+        if (playerA === this) return 'Player A';
+        if (playerB === this) return 'Player B';
+        return 'Player';
+    }
+
     public get command(): CommandUtil[] {
         const result: CommandUtil[] = [];
         const game = this.route.game;
         if (!game) return result;
-        // base
-        result.push(new CommandUtil('End Turn', () => game.child.turn.next()));
-        // play
-        const cards = this.child.hand.refer.order;
-        cards.forEach(item => {
-            console.log(item.state.name, item.status)
-            if (!item.status) return;
-            result.push(new CommandUtil(`Play ${item.state.name}`, () => item.play()));
-        });
-        return result;
+        if (SelectUtil.current?.options) {
+            SelectUtil.current.options.forEach(item => {
+                result.push(new CommandUtil(`Select ${String(item)}`, () => SelectUtil.set(item)));
+            });
+            result.push(new CommandUtil('Cancel', () => SelectUtil.set(undefined)));
+            return result;
+        } else {
+            // base
+            result.push(new CommandUtil('End Turn', () => game.child.turn.next()));
+            // play
+            const cards = this.child.hand.refer.order;
+            cards.forEach(item => {
+                if (!item.status) return;
+                result.push(new CommandUtil(`Play ${item.name}`, () => item.play()));
+            });
+            // act
+            const roles = this.query();
+            roles.forEach(item => {
+                const action = item.child.action;
+                if (!action.status) return;
+                result.push(new CommandUtil(`Act ${item.name}`, () => action.run()));
+            });
+            return result;
+        }
+        
     }
     
     public get status(): boolean {

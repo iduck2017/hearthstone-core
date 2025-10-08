@@ -45,6 +45,10 @@ export class RoleModel extends Model<
     RoleProps.R,
     RoleProps.P
 > {
+    public get name(): string {
+        return String(this.route.card?.name ?? this.route.player?.name);
+    }
+
     public constructor(loader: Method<RoleModel['props'] & {
         child: Pick<RoleProps.C, 'health' | 'attack'>;
     }, []>) {

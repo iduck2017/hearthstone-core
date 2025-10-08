@@ -61,12 +61,10 @@ export class CostModel extends Model<
     CostProps.P
 > {
     public get status() {
-        console.log(this.route, this.state.type);
         const player = this.route.player;
         if (!player) return false;
         if (this.state.type === CostType.MANA) {
             const mana = player.child.mana;
-            console.log('mana', mana.state.current, this.state.current)
             if (mana.state.current < this.state.current) return false;
             return true;
         }

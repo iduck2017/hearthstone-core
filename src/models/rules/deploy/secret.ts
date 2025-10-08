@@ -49,7 +49,7 @@ export class SecretDeployModel extends DeployModel<
         if (!secret) return;
         const player = this.route.player;
         const hand = player?.child.hand;
-        if (hand) hand.del(secret);
+        if (hand) hand.use(secret);
         board.add(secret);
     }
 }

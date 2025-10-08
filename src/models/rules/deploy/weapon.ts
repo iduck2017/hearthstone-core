@@ -48,7 +48,7 @@ export class WeaponDeployModel extends DeployModel<
         if (!weapon) return;
         const player = this.route.player;
         const hand = player?.child.hand;
-        if (hand) hand.del(weapon);
+        if (hand) hand.use(weapon);
         const prev = board.child.weapon;
         if (prev) {
             prev.child.dispose.active(true);

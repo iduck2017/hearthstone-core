@@ -76,6 +76,7 @@ export class HandModel extends Model<
         order.splice(position, 0, card);
     }
 
+    
     @TranxUtil.span()
     public copy(origin: CardModel) {
         const copy = StoreUtil.copy(origin, {
@@ -85,9 +86,8 @@ export class HandModel extends Model<
         this.add(copy);
     }
 
-
     @TranxUtil.span()
-    public use(card: CardModel) {
+    public prepare(card: CardModel) {
         let cards = this.query(card);
         if (!cards) return;
         let index = cards.indexOf(card);
@@ -102,22 +102,27 @@ export class HandModel extends Model<
     }
 
     @TranxUtil.span()
-    public del(card: CardModel) {
+    public use(card: CardModel): boolean {
         // remove from cache
         const cache = this.draft.child.cache;
         let index = cache.indexOf(card);
-        if (index !== -1) cache.splice(index, 1);
+        if (index === -1) return false;
+        cache.splice(index, 1);
+        return true;
+    }
 
+    @TranxUtil.span()
+    public del(card: CardModel) {
         // remove from cards
         let cards = this.query(card) ?? [];
-        index = cards.indexOf(card);
-        if (index !== -1) cards.splice(index, 1);
+        let index = cards.indexOf(card);
+        if (index === -1) return;
+        cards.splice(index, 1);
         
         // remove from order
         const order = this.draft.refer.order;
         index = order.indexOf(card);
-        if (index !== -1) order.splice(index, 1);
-
-        return true;
+        if (index === -1) return;
+        order.splice(index, 1);
     }
 }
