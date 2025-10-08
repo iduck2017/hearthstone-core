@@ -7,9 +7,7 @@ export namespace ConfigProps {
     export type E = {};
     export type S = {};
     export type C = {
-        readonly spells: SpellCardModel[],
-        readonly minions: MinionCardModel[],
-        readonly weapons: WeaponCardModel[]
+        readonly cards: CardModel[]
     };
     export type R = {};
     export type P = {}
@@ -28,20 +26,11 @@ export class ConfigModel extends Model<
             return {
                 uuid: props.uuid,
                 child: { 
-                    minions: [],
-                    spells: [],
-                    weapons: [],
+                    cards: props.child?.cards ?? [],
                     ...props.child,
                 },
                 state: { ...props.state },
-                refer: { 
-                    order: [
-                        ...props.child?.minions ?? [],
-                        ...props.child?.spells ?? [],
-                        ...props.child?.weapons ?? [],
-                    ],
-                    ...props.refer 
-                },
+                refer: { ...props.refer },
                 route: {
                     game: GameModel.prototype,
                     player: PlayerModel.prototype,
@@ -51,15 +40,25 @@ export class ConfigModel extends Model<
     }
 
     public use(): DeckModel {
-        const spells = this.child.spells.map(item => StoreUtil.copy(item)).filter(item => item !== undefined);
-        const minions = this.child.minions.map(item => StoreUtil.copy(item)).filter(item => item !== undefined);
-        const weapons = this.child.weapons.map(item => StoreUtil.copy(item)).filter(item => item !== undefined);
+        const order = this.child.cards
+            .map(item => StoreUtil.copy(item))
+            .filter(item => item !== undefined)
+            .sort((a, b) => Math.random() - 0.5);
+        const spells: SpellCardModel[] = [];
+        const minions: MinionCardModel[] = [];
+        const weapons: WeaponCardModel[] = [];
+        for (const card of order) {
+            if (card instanceof SpellCardModel) spells.push(card);
+            if (card instanceof MinionCardModel) minions.push(card);
+            if (card instanceof WeaponCardModel) weapons.push(card);
+        }
         return new DeckModel(() => ({
             child: {
                 spells,
                 minions,
                 weapons,
-            }
+            },
+            order: order
         }))
     }
 }

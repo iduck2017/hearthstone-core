@@ -46,5 +46,5 @@ export class AppModel extends Model<
         if (value instanceof GameModel) this.draft.child.game = value;
         if (value instanceof ConfigModel) this.draft.child.configs.push(value);
     }
-    
+
 }

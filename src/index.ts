@@ -109,3 +109,4 @@ export { WEAPON_ROUTE, WeaponRoute } from "./utils/route";
 export { SECRET_ROUTE, SecretRoute } from "./utils/route";
 
 export { OperationType, Operation } from "./types/decor";
+export { CommandUtil } from "./utils/command";

@@ -56,7 +56,6 @@ export abstract class CardModel<
    R & CardProps.R,
    CardProps.P
 > {
-
     public get status(): boolean {
         const hand = this.route.hand;
         if (!hand) return false;

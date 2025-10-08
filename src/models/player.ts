@@ -9,6 +9,7 @@ import { HeroModel } from "./heroes";
 import { RoleModel } from "./role";
 import { MinionCardModel } from "./cards/minion";
 import { FeatureModel } from "./features";
+import { CommandUtil } from "../utils/command";
 
 export namespace PlayerProps {
     export type S= {};
@@ -41,6 +42,22 @@ export class PlayerModel extends Model<
             ...super.refer, 
             opponent: this.opponent, 
         }
+    }
+
+    public get command(): CommandUtil[] {
+        const result: CommandUtil[] = [];
+        const game = this.route.game;
+        if (!game) return result;
+        // base
+        result.push(new CommandUtil('End Turn', () => game.child.turn.next()));
+        // play
+        const cards = this.child.hand.refer.order;
+        cards.forEach(item => {
+            console.log(item.state.name, item.status)
+            if (!item.status) return;
+            result.push(new CommandUtil(`Play ${item.state.name}`, () => item.play()));
+        });
+        return result;
     }
     
     public get status(): boolean {
@@ -98,6 +115,8 @@ export class PlayerModel extends Model<
         if (isMinion) return roles;
         return [this.child.hero.child.role, ...roles];
     }
+
+
 }
 
 

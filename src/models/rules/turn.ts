@@ -77,7 +77,6 @@ export class TurnModel extends Model<
         const board = player?.child.board;
         if (!board) return;
         const roles = player.query();
-        player.child.mana.reset();
         roles.forEach(item => {
             const entries = item.child.feats;
             if (item.child.action.state.current <= 0) return;
