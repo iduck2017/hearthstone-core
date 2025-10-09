@@ -58,7 +58,7 @@ export class ConfigModel extends Model<
                 minions,
                 weapons,
             },
-            order: order
+            refer: { order }
         }))
     }
 }

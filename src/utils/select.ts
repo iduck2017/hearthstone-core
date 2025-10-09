@@ -6,7 +6,11 @@ export class SelectEvent<T = any> {
 
     constructor(
         options: T[],
-        props?: { hint?: string; }
+        props?: { 
+            hint?: string; 
+            code?: (target: T, index: number) => string;
+            desc?: (target: T, index: number) => string;
+        }
     ) {
         this.options = options;
         this.hint = props?.hint;

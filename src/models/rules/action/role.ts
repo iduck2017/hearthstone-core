@@ -142,7 +142,10 @@ export class RoleActionModel extends Model<
             const stealth = entries.child.stealth;
             return !stealth.state.isActive;
         })
-        const result = await SelectUtil.get(new SelectEvent(options));
+        const result = await SelectUtil.get(new SelectEvent(options, {
+            code: (target) => `attack-${target.uuid}`,
+            desc: (target) => `Attack ${target.name}`,
+        }));
         return result;
     }
 

@@ -12,8 +12,15 @@ import { FeatureModel } from "./features";
 import { CommandUtil } from "../utils/command";
 import { SelectUtil } from "../utils/select";
 
+export enum RoleType {
+    USER = 'user',
+    AGENT = 'agent',
+}
+
 export namespace PlayerProps {
-    export type S= {};
+    export type S = {
+        readonly role: RoleType;
+    };
     export type E = {};
     export type C = {
         readonly hero: HeroModel;
@@ -108,7 +115,10 @@ export class PlayerModel extends Model<
             const props = loader?.();
             return {
                 uuid: props.uuid,
-                state: { ...props.state },
+                state: { 
+                    role: RoleType.USER,
+                    ...props.state 
+                },
                 child: {
                     feats: [],
                     mana: props.child.mana ?? new ManaModel(),

@@ -31,6 +31,7 @@ export class DeckModel extends Model<
     constructor(loader?: Loader<DeckModel>) {
         super(() => {
             const props = loader?.() ?? {};
+            console.log('init deck', props.refer?.order)
             return {
                 uuid: props.uuid,
                 child: { 

@@ -77,7 +77,10 @@ export class MinionPerformModel extends PerformModel<
         const board = player.child.board;
         const size = board.child.minions.length;
         const options = new Array(size + 1).fill(0).map((item, index) => index);
-        const position = await SelectUtil.get(new SelectEvent(options));
+        const position = await SelectUtil.get(new SelectEvent(options, {
+            code: (target) => `deploy-${target}`,
+            desc: (target) => `Deploy to position ${target}`,
+        }));
         return position;
     }
 }
