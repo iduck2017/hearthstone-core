@@ -1,8 +1,8 @@
 import { Decor, Method, StateUtil, TemplUtil } from "set-piece";
-import { FeatureModel } from ".";
+import { FeatureModel } from "./feature";
 import { SpellEffectDecor, SpellEffectModel } from "../..";
 
-export namespace SpellBuffModel {
+export namespace SpellDamageModel {
     export type E = {};
     export type S = {
         offset: number;
@@ -11,14 +11,14 @@ export namespace SpellBuffModel {
     export type R = {};
 }
 
-@TemplUtil.is('spell-buff')
-export class SpellBuffModel extends FeatureModel<
-    SpellBuffModel.E,
-    SpellBuffModel.S,
-    SpellBuffModel.C,
-    SpellBuffModel.R
+@TemplUtil.is('spell-damage')
+export class SpellDamageModel extends FeatureModel<
+    SpellDamageModel.E,
+    SpellDamageModel.S,
+    SpellDamageModel.C,
+    SpellDamageModel.R
 >  {
-    constructor(props?: SpellBuffModel['props']) {
+    constructor(props?: SpellDamageModel['props']) {
         super({
             uuid: props?.uuid,
             state: {

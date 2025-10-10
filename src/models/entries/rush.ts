@@ -1,5 +1,5 @@
 import { Decor, Event, StateUtil, TemplUtil, TranxUtil } from "set-piece";
-import { FeatureModel } from "../features";
+import { FeatureModel } from "../rules/feature";
 import { SleepModel } from "../rules/sleep";
 
 export namespace RushModel {

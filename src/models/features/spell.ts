@@ -1,7 +1,7 @@
 import { Event, Model } from "set-piece";
-import { FeatureModel, RoleModel, SpellEffectDecor, SpellEffectModel } from "..";
-import { CardFeatsModel } from "./card-feats";
-import { AbortEvent } from "../types/event";
+import { FeatureModel, RoleModel, SpellEffectDecor, SpellEffectModel } from "../..";
+import { CardFeatsModel } from "./card";
+import { AbortEvent } from "../../types/event";
 
 export type SpellHooksOptions = {
     effects: Map<SpellEffectModel, Model[]>;

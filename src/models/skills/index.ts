@@ -4,7 +4,7 @@ import { PlayerModel } from "../player";
 import { GameModel } from "../game";
 import { CostModel } from "../rules/cost";
 import { HeroModel } from "../heroes";
-import { DamageModel } from "../damage";
+import { DamageModel } from "../rules/damage";
 import { AbortEvent } from "../../types/event";
 
 export namespace SkillModel {

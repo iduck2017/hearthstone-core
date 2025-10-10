@@ -1,6 +1,6 @@
 import { Event, TemplUtil, TranxUtil } from "set-piece";
 import { DamageEvent } from "../../types/damage";
-import { FeatureModel } from "../features";
+import { FeatureModel } from "../rules/feature";
 
 export namespace DivineShieldModel {
     export type E = {

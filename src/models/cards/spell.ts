@@ -1,9 +1,9 @@
 import { Event, Method, Model, State } from "set-piece";
-import { EffectModel } from "../features/effect";
+import { EffectModel } from "../rules/effect";
 import { SpellPerformModel } from "../rules/perform/spell";
-import { SpellFeatsModel, SpellHooksOptions } from "../spell-feats";
+import { SpellFeatsModel, SpellHooksOptions } from "../features/spell";
 import { SchoolType } from "../../types/card";
-import { SpellEffectModel } from "../features/spell-effect";
+import { SpellEffectModel } from "../rules/spell-effect";
 import { CardModel } from ".";
 
 export namespace SpellCardModel {

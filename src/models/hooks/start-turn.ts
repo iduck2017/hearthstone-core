@@ -1,6 +1,6 @@
 import { Event, EventUtil, Method, Model } from "set-piece";
 import { EndTurnHookModel } from "./end-turn";
-import { FeatureModel } from "../features";
+import { FeatureModel } from "../rules/feature";
 import { TurnModel } from "../rules/turn";
 
 export namespace StartTurnHookModel {

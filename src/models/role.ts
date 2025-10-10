@@ -2,7 +2,7 @@ import { Method, Model, TranxUtil } from "set-piece";
 import { GameModel } from "./game";
 import { PlayerModel } from "./player";
 import { RoleActionModel } from "./rules/role-action";
-import { RoleAttackModel } from "./rules/attack/role";
+import { RoleAttackModel } from "./rules/role-attack";
 import { RoleHealthModel } from "./rules/health";
 import { SleepModel } from "./rules/sleep";
 import { RoleFeatsModel } from "..";

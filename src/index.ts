@@ -28,7 +28,7 @@ export { MinionDeployModel } from "./models/rules/deploy/minion";
 export { WeaponDeployModel } from "./models/rules/deploy/weapon";
 export { SecretDeployModel } from "./models/rules/deploy/secret";
 
-export { RoleAttackModel, RoleAttackDecor } from "./models/rules/attack/role";
+export { RoleAttackModel, RoleAttackDecor } from "./models/rules/role-attack";
 export { RoleHealthModel } from "./models/rules/health";
 export { RoleActionModel, RoleActionDecor } from "./models/rules/role-action";
 export { SleepModel } from './models/rules/sleep';
@@ -36,10 +36,10 @@ export { ManaModel } from './models/rules/mana';
 export { TurnModel } from "./models/rules/turn";
 export { CostType, CostDecor, CostModel } from "./models/rules/cost";
 export {  ArmorModel } from "./models/rules/armor";
-export { DamageModel } from "./models/damage";
-export { RestoreModel } from "./models/restore";
+export { DamageModel } from "./models/rules/damage";
+export { RestoreModel } from "./models/rules/restore";
 
-export { WeaponAttackModel } from "./models/rules/attack/weapon";
+export { WeaponAttackModel } from "./models/rules/weapon-attack";
 export { WeaponActionModel } from "./models/rules/weapon-action";
 
 // card
@@ -61,7 +61,7 @@ export { GraveyardModel } from "./models/graveyard";
 export { CollectionModel } from "./models/collection";
 
 // entries
-export { RoleFeatsModel } from "./models/role-feats";
+export { RoleFeatsModel } from "./models/features/role";
 export { FrozenModel } from "./models/entries/frozen";
 export { RushModel } from "./models/entries/rush";
 export { ChargeModel } from "./models/entries/charge";
@@ -69,26 +69,26 @@ export { TauntModel } from "./models/entries/taunt";
 export { StealthModel } from './models/entries/stealth';
 export { ElusiveModel } from './models/entries/elusive';
 export { WindfuryModel } from "./models/entries/windfury";
-export { SpellBuffModel } from "./models/features/spell-buff";
+export { SpellDamageModel } from "./models/rules/spell-damage";
 export { DivineShieldModel } from "./models/entries/divine-shield";
 export { PoisonousModel } from "./models/entries/poisonous";
 
 // features
-export { FeatureModel } from './models/features'
+export { FeatureModel } from './models/rules/feature'
 export { SecretFeatureModel } from "./models/features/secret";
-export { IRoleBuffModel, RoleBuffModel } from "./models/features/role-buff";
-export { EffectModel } from './models/features/effect'; 
-export { SpellEffectModel, SpellEffectDecor } from './models/features/spell-effect';
+export { IRoleBuffModel, RoleBuffModel } from "./models/rules/role-buff";
+export { EffectModel } from './models/rules/effect'; 
+export { SpellEffectModel, SpellEffectDecor } from './models/rules/spell-effect';
 
 // hooks
-export { SpellFeatsModel } from "./models/spell-feats";
-export { MinionFeatsModel } from "./models/minion-feats";
+export { SpellFeatsModel } from "./models/features/spell";
+export { MinionFeatsModel } from "./models/features/minion";
 export { MinionBattlecryModel } from "./models/hooks/battlecry/role";
 export { WeaponBattlecryModel } from "./models/hooks/battlecry/weapon";
 export { DeathrattleModel } from "./models/hooks/deathrattle";
 export { EndTurnHookModel } from "./models/hooks/end-turn";
 export { StartTurnHookModel } from "./models/hooks/start-turn";
-export { SpellHooksOptions, SpellCastEvent } from './models/spell-feats';
+export { SpellHooksOptions, SpellCastEvent } from './models/features/spell';
 export { OverhealModel } from "./models/hooks/overheal";
 
 // heroes

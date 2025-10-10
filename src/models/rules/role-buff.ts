@@ -1,5 +1,5 @@
-import { RoleAttackDecor, RoleAttackModel } from "../rules/attack/role";
-import { RoleHealthDecor, RoleHealthModel } from "../rules/health";
+import { RoleAttackDecor, RoleAttackModel } from "./role-attack";
+import { RoleHealthDecor, RoleHealthModel } from "./health";
 import { FeatureModel, RoleModel } from "../..";
 import { OperationType } from "../../types/decor";
 import { Model, StateUtil, TemplUtil } from "set-piece";

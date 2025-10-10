@@ -2,7 +2,7 @@ import { SkillModel } from ".";
 import { SelectEvent } from "../../utils/select";
 import { RoleModel } from "../role";
 import { CostModel } from "../rules/cost";
-import { DamageModel } from "../damage";
+import { DamageModel } from "../rules/damage";
 import { DamageEvent, DamageType } from "../../types/damage";
 import { TemplUtil } from "set-piece";
 

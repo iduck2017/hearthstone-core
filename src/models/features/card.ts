@@ -1,6 +1,6 @@
 import { Method, Model } from "set-piece";
-import { PoisonousModel } from "./entries/poisonous";
-import { FeatureModel, IRoleBuffModel } from "..";
+import { PoisonousModel } from "../entries/poisonous";
+import { FeatureModel, IRoleBuffModel } from "../..";
 
 export namespace CardFeatsModel {
     export type E = {};

@@ -3,8 +3,8 @@ import { DeathrattleModel } from "../..";
 import { StartTurnHookModel } from "../..";
 import { EndTurnHookModel } from "../..";
 import { WeaponBattlecryModel } from "../..";
-import { CardFeatsModel } from "../card-feats";
-import { FeatureModel } from ".";
+import { CardFeatsModel } from "./card";
+import { FeatureModel } from "../rules/feature";
 import { Model, TemplUtil } from "set-piece";
 
 export namespace WeaponFeatsModel {

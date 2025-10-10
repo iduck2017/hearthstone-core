@@ -2,7 +2,7 @@ import { Event } from "set-piece";
 import { PerformModel } from ".";
 import { SelectEvent, SelectUtil } from "../../../utils/select";
 import { MinionBattlecryModel } from "../../..";
-import { MinionHooksOptions } from "../../minion-feats";
+import { MinionHooksOptions } from "../../features/minion";
 import { MinionCardModel } from "../../cards/minion";
 import { AbortEvent } from "../../../types/event";
 

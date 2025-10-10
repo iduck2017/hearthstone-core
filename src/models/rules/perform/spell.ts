@@ -1,6 +1,6 @@
 import { PerformModel } from ".";
-import { EffectModel } from "../../features/effect";
-import { SpellCastEvent, SpellHooksOptions } from "../../spell-feats";
+import { EffectModel } from "../effect";
+import { SpellCastEvent, SpellHooksOptions } from "../../features/spell";
 import { SpellCardModel, SpellEffectModel } from "../../..";
 
 export namespace SpellPerformModel {

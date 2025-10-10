@@ -8,7 +8,7 @@ import { ManaModel } from "./rules/mana";
 import { HeroModel } from "./heroes";
 import { RoleModel } from "./role";
 import { MinionCardModel } from "./cards/minion";
-import { FeatureModel } from "./features";
+import { FeatureModel } from "./rules/feature";
 import { CommandUtil } from "../utils/command";
 import { SelectUtil } from "../utils/select";
 import { MageModel } from "./heroes/mage";

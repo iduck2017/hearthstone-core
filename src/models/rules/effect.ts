@@ -1,4 +1,4 @@
-import { FeatureModel } from ".";
+import { FeatureModel } from "./feature";
 import { SelectEvent, SelectUtil } from "../../utils/select";
 import { Model } from "set-piece";
 

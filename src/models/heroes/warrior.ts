@@ -1,6 +1,6 @@
 import { RoleModel } from "../role";
 import { RoleHealthModel } from "../rules/health";
-import { RoleAttackModel } from "../rules/attack/role";
+import { RoleAttackModel } from "../rules/role-attack";
 import { PlayerModel } from "../player";
 import { ArmorUpModel } from "../skills/armor-up";
 import { HeroModel } from ".";

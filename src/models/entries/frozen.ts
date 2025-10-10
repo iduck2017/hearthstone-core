@@ -1,5 +1,5 @@
 import { Event, TemplUtil } from "set-piece";
-import { FeatureModel } from "../features";
+import { FeatureModel } from "../rules/feature";
 
 export namespace FrozenModel {
     export type E = {}

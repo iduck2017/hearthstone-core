@@ -1,6 +1,6 @@
 import { Model, TranxUtil } from "set-piece";
-import { RestoreEvent } from "../types/restore";
-import { CardModel, MinionCardModel, PlayerModel } from "..";
+import { RestoreEvent } from "../../types/restore";
+import { CardModel, MinionCardModel, PlayerModel } from "../..";
 
 export namespace RestoreModel {
     export type E = {

@@ -1,8 +1,8 @@
 import { Decor, Event, EventUtil, Method, Model, StateUtil } from "set-piece";
-import { GameModel, PlayerModel, HeroModel, RoleAttackModel, TurnModel, BoardModel, WeaponCardModel, DamageEvent } from "../../..";
-import { RoleAttackDecor } from "./role";
-import { RoleActionDecor } from "../role-action";
-import { OperationType } from "../../../types/decor";
+import { GameModel, PlayerModel, HeroModel, RoleAttackModel, TurnModel, BoardModel, WeaponCardModel, DamageEvent } from "../..";
+import { RoleAttackDecor } from "./role-attack";
+import { RoleActionDecor } from "./role-action";
+import { OperationType } from "../../types/decor";
 
 export namespace WeaponAttackModel {
     export type E = {}

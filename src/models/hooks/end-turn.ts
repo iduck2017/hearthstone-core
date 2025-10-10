@@ -1,5 +1,5 @@
 import { Event, EventUtil, Method, Model  } from "set-piece";
-import { FeatureModel } from "../features";
+import { FeatureModel } from "../rules/feature";
 import { TurnModel } from "../rules/turn";
 import { CardModel } from "../cards";
 

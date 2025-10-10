@@ -1,6 +1,6 @@
 import { Method, Model } from "set-piece";
 import { CardModel } from ".";
-import { WeaponAttackModel } from "../rules/attack/weapon";
+import { WeaponAttackModel } from "../rules/weapon-attack";
 import { WeaponActionModel } from "../rules/weapon-action";
 import { WeaponHooksOptions, WeaponFeatsModel } from "../features/weapon";
 import { WeaponDisposeModel } from "../rules/dispose/weapon";

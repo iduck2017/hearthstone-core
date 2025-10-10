@@ -1,9 +1,9 @@
 import { Model, TemplUtil } from "set-piece";
-import { FeatureModel, MinionBattlecryModel } from "..";
-import { DeathrattleModel } from "..";
-import { StartTurnHookModel } from "..";
-import { EndTurnHookModel } from "..";
-import { CardFeatsModel } from "./card-feats";
+import { FeatureModel, MinionBattlecryModel } from "../..";
+import { DeathrattleModel } from "../..";
+import { StartTurnHookModel } from "../..";
+import { EndTurnHookModel } from "../..";
+import { CardFeatsModel } from "./card";
 
 export namespace MinionFeatsModel {
     export type E = {};

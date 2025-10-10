@@ -1,5 +1,5 @@
 import { Event, TemplUtil } from "set-piece";
-import { FeatureModel } from "../features";
+import { FeatureModel } from "../rules/feature";
 
 export namespace ChargeModel {
     export type E = {}

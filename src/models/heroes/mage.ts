@@ -1,5 +1,5 @@
 import { RoleModel } from "../role";
-import { RoleAttackModel } from "../rules/attack/role";
+import { RoleAttackModel } from "../rules/role-attack";
 import { RoleHealthModel } from "../rules/health";
 import { FireBlastModel } from "../skills/fireblast";
 import { HeroModel } from ".";

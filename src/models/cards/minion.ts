@@ -1,12 +1,12 @@
 import { Event, Method, State, TranxUtil, Model } from "set-piece";
-import { MinionHooksOptions, MinionFeatsModel } from "../minion-feats";
+import { MinionHooksOptions, MinionFeatsModel } from "../features/minion";
 import { RaceType } from "../../types/card";
 import { RoleModel } from "../role";
 import { MinionDisposeModel } from "../rules/dispose/minion";
 import { MinionDeployModel } from "../rules/deploy/minion";
 import { MinionPerformModel } from "../rules/perform/minion";
 import { DeathrattleModel } from "../hooks/deathrattle";
-import { FeatureModel } from "../features";
+import { FeatureModel } from "../rules/feature";
 import { CardModel } from ".";
 
 export namespace MinionCardModel {
