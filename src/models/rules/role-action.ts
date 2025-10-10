@@ -1,14 +1,15 @@
-import { DebugUtil, Decor, Event, Loader, Model, StateUtil, TranxUtil } from "set-piece";
-import { BoardModel, SelectEvent, SelectUtil, MinionCardModel, RoleModel, PlayerModel, GameModel, CardModel, HeroModel } from "../../..";
+import { DebugUtil, Decor, Event, Model, StateUtil, TranxUtil } from "set-piece";
+import { BoardModel, SelectEvent, SelectUtil, MinionCardModel, RoleModel, PlayerModel, GameModel, CardModel, HeroModel } from "../..";
+import { AbortEvent } from "../../types/event";
 
-export namespace RoleActionProps {
+export namespace RoleActionModel {
     export type S = {
         origin: number;
         comsume: number;
         isLock: boolean;
     };
     export type E = {
-        toRun: Event;
+        toRun: AbortEvent;
         onRun: Event;
     };
     export type C = {};
@@ -23,19 +24,38 @@ export namespace RoleActionProps {
     };
 }
 
-export class RoleActionDecor extends Decor<RoleActionProps.S> {
-    public add(value: number) { this.detail.origin += value }
-    public lock() { this.detail.isLock = true }
+export class RoleActionDecor extends Decor<RoleActionModel.S> {
+    public add(value: number) { 
+        this._detail.origin += value 
+    }
+    
+    public lock() { 
+        this._detail.isLock = true 
+    }
 }
 
-@StateUtil.use(RoleActionDecor)
 export class RoleActionModel extends Model<
-    RoleActionProps.E,
-    RoleActionProps.S,
-    RoleActionProps.C,
-    RoleActionProps.R,
-    RoleActionProps.P
+    RoleActionModel.E,
+    RoleActionModel.S,
+    RoleActionModel.C,
+    RoleActionModel.R
 > {
+    public get route() {
+        const result = super.route;
+        return {
+            ...result,
+            role: result.list.find(item => item instanceof RoleModel),
+            game: result.list.find(item => item instanceof GameModel),
+            player: result.list.find(item => item instanceof PlayerModel),
+            card: result.list.find(item => item instanceof CardModel),
+            hero: result.list.find(item => item instanceof HeroModel),
+        }
+    }
+
+    public get decor(): RoleActionDecor {
+        return new RoleActionDecor(this);
+    }
+
     public get state() {
         const state = super.state;
         return {
@@ -78,33 +98,23 @@ export class RoleActionModel extends Model<
         return true;
     }
 
-    constructor(loader?: Loader<RoleActionModel>) {
-        super(() => {
-            const props = loader?.() ?? {};
-            return {
-                uuid: props.uuid,
-                state: {
-                    origin: 1,
-                    comsume: 0,
-                    isLock: false,
-                    ...props.state,
-                },
-                child: { ...props.child },
-                refer: { ...props.refer },
-                route: {
-                    role: RoleModel.prototype,
-                    game: GameModel.prototype,
-                    player: PlayerModel.prototype,
-                    card: CardModel.prototype,
-                    hero: HeroModel.prototype,
-                }
-            }
+    constructor(props?: RoleActionModel['props']) {
+        super({
+            uuid: props?.uuid,
+            state: {
+                origin: 1,
+                comsume: 0,
+                isLock: false,
+                ...props?.state,
+            },
+            child: { ...props?.child },
+            refer: { ...props?.refer },
         });
     }
 
     @TranxUtil.span()
     public reset() {
-        this.draft.state.comsume = 0;
+        this.origin.state.comsume = 0;
     }
 
     private async select(): Promise<RoleModel | undefined> {
@@ -162,9 +172,9 @@ export class RoleActionModel extends Model<
         const roleB = await this.select();
         if (!roleB) return;
 
-        const event = new Event({})
+        const event = new AbortEvent({})
         this.event.toRun(event)
-        if (event.isAbort) return;
+        if (event.detail.isAbort) return;
 
         // mana
         if (!this.use()) return;
@@ -177,7 +187,7 @@ export class RoleActionModel extends Model<
 
     public use() {
         if (!this.status) return false;
-        this.draft.state.comsume ++;
+        this.origin.state.comsume ++;
         return true;
     }
 }

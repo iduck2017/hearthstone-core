@@ -1,34 +1,37 @@
-import { DebugUtil, Loader, LogLevel, Model, TranxUtil } from "set-piece";
+import { DebugUtil,  Model, TranxUtil } from "set-piece";
 import { DisposeModel } from ".";
 import { MinionCardModel, PlayerModel, WeaponCardModel } from "../../..";
 import { SecretCardModel } from "../../cards/secret";
 
-export namespace SecretDisposeProps {
+export namespace SecretDisposeModel {
     export type E = {};
     export type S = {};
     export type C = {};
     export type R = {};
-    export type P = { secret: SecretCardModel; };
 }
 
 export class SecretDisposeModel extends DisposeModel<
-    SecretDisposeProps.E,
-    SecretDisposeProps.S,
-    SecretDisposeProps.C,
-    SecretDisposeProps.R,
-    SecretDisposeProps.P
+    SecretDisposeModel.E,
+    SecretDisposeModel.S,
+    SecretDisposeModel.C,
+    SecretDisposeModel.R
 > {
+    public get route() {
+        const result = super.route;
+        const secret: SecretCardModel | undefined = result.list.find(item => item instanceof SecretCardModel);
+        return {
+            ...result,
+            secret,
+        }
+    }
 
-    constructor(loader?: Loader<SecretDisposeModel>) {
-        super(() => {
-            const props = loader?.() ?? {};
-            return {
-                uuid: props.uuid,
-                state: { ...props.state },
-                child: { ...props.child },
-                refer: { ...props.refer },
-                route: { secret: SecretCardModel.prototype },
-            }
+    constructor(props?: SecretDisposeModel['props']) {
+        props = props ?? {}
+        super({
+            uuid: props.uuid,
+            state: { ...props.state },
+            child: { ...props.child },
+            refer: { ...props.refer },
         });
     }
 

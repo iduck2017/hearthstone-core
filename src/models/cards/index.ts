@@ -1,14 +1,14 @@
-import { DebugUtil, Model, TranxUtil, Props, Event, Method, StoreUtil } from "set-piece";
+import { DebugUtil, Model, TranxUtil, Event, Method, Route } from "set-piece";
 import { CostModel } from "../rules/cost";
 import { ClassType, RarityType } from "../../types/card";
-import { MinionFeatsModel } from "../features/minion";
+import { MinionFeatsModel } from "../minion-feats";
 import { DamageModel, DeathrattleModel, DisposeModel, FeatureModel, RestoreModel } from "../..";
 import { MinionCardModel, PlayerModel, GameModel, HandModel, DeckModel, BoardModel, GraveyardModel } from "../..";
 import { DeployModel } from "../rules/deploy";
 import { PerformModel } from "../rules/perform";
-import { CardFeatsModel } from "../features/card";
+import { CardFeatsModel } from "../card-feats";
 
-export namespace CardProps {
+export namespace CardModel {
     export type E = {
         onPlay: Event,
         onDraw: Event,
@@ -30,32 +30,44 @@ export namespace CardProps {
         readonly dispose?: DisposeModel;
         readonly perform: PerformModel;
     };
-    export type P = {
-        minion: MinionCardModel;
-        player: PlayerModel;
-        deck: DeckModel;
-        hand: HandModel;
-        board: BoardModel;
-        game: GameModel;
-        graveyard: GraveyardModel;
-    };
     export type R = {
         creator?: Model;
     };
 }
 
 export abstract class CardModel<
-    E extends Partial<CardProps.E> & Props.E = {},
-    S extends Partial<CardProps.S> & Props.S = {},
-    C extends Partial<CardProps.C> & Props.C = {},
-    R extends Partial<CardProps.R> & Props.R = {}
+    E extends Partial<CardModel.E> & Model.E = {},
+    S extends Partial<CardModel.S> & Model.S = {},
+    C extends Partial<CardModel.C> & Model.C = {},
+    R extends Partial<CardModel.R> & Model.R = {}
 > extends Model<
-   E & CardProps.E,
-   S & CardProps.S,
-   C & CardProps.C,
-   R & CardProps.R,
-   CardProps.P
+   E & CardModel.E,
+   S & CardModel.S,
+   C & CardModel.C,
+   R & CardModel.R
 > {
+    public get route(): Route & Partial<{
+        hand: HandModel;
+        player: PlayerModel;
+        deck: DeckModel;
+        board: BoardModel;
+        graveyard: GraveyardModel;
+        minion: MinionCardModel;
+        game: GameModel;
+    }> {
+        const result = super.route;
+        return {
+            ...result,
+            hand: result.list.find(item => item instanceof HandModel),
+            player: result.list.find(item => item instanceof PlayerModel),
+            deck: result.list.find(item => item instanceof DeckModel),
+            board: result.list.find(item => item instanceof BoardModel),
+            graveyard: result.list.find(item => item instanceof GraveyardModel),
+            minion: result.list.find(item => item instanceof MinionCardModel),
+            game: result.list.find(item => item instanceof GameModel),
+        }
+    }
+
     public get status(): boolean {
         const hand = this.route.hand;
         if (!hand) return false;
@@ -69,35 +81,23 @@ export abstract class CardModel<
 
     public get name(): string { return String(this.state.name); }
 
-    constructor(loader: Method<CardModel['props'] & {
-        state: S & Omit<CardProps.S, 'isActive'>,
-        child: C & Pick<CardProps.C, 'cost' | 'perform' | 'dispose' | 'feats'>,
-        refer: R & CardProps.R,
-    }, []>) {
-        super(() => {
-            const props = loader?.() ?? {};
-            return {
-                uuid: props.uuid,
-                state: { 
-                    isActive: false,
-                    ...props.state
-                },
-                child: { 
-                    damage: props.child.damage ?? new DamageModel(),
-                    restore: props.child.restore ?? new RestoreModel(),
-                    ...props.child 
-                },
-                refer: { ...props.refer },
-                route: {
-                    deck: DeckModel.prototype,
-                    hand: HandModel.prototype,
-                    board: BoardModel.prototype,
-                    graveyard: GraveyardModel.prototype,
-                    player: PlayerModel.prototype,
-                    minion: MinionCardModel.prototype,
-                    game: GameModel.prototype,
-                }
-            }
+    constructor(props: CardModel['props'] & {
+        state: S & Omit<CardModel.S, 'isActive'>,
+        child: C & Pick<CardModel.C, 'cost' | 'perform' | 'dispose' | 'feats'>,
+        refer: R & CardModel.R,
+    }) {
+        super({
+            uuid: props.uuid,
+            state: { 
+                isActive: false,
+                ...props.state
+            },
+            child: { 
+                damage: props.child.damage ?? new DamageModel(),
+                restore: props.child.restore ?? new RestoreModel(),
+                ...props.child 
+            },
+            refer: { ...props.refer },
         })
     }
 
@@ -120,7 +120,8 @@ export abstract class CardModel<
         mana.use(cost.state.current, this);
         // use
         const hand = player.child.hand;
-        const from = hand.refer.order.indexOf(this);
+        const from = hand.refer.order?.indexOf(this);
+        if (from === undefined) return;
         hand.prepare(this);
         const perform = this.child.perform;
         // run

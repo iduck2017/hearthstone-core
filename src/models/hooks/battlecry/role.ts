@@ -1,12 +1,12 @@
-import { Event, Method, Model, Props } from "set-piece";
+import { Event, Method, Model } from "set-piece";
 import { SelectEvent, SelectUtil } from "../../../utils/select";
-import { FeatureModel, FeatureProps } from "../../features";
-import { CARD_ROUTE, CardRoute, MINION_ROUTE, MinionRoute, ROLE_ROUTE, RoleRoute } from "../../..";
+import { FeatureModel } from "../../..";
+import { AbortEvent } from "../../../types/event";
 
-export namespace MinionBattlecryProps {
+export namespace MinionBattlecryModel {
     export type E = {
-        toRun: Event;
-        onRun: Event;
+        toRun: AbortEvent;
+        onRun: {};
     };
     export type S = {};
     export type C = {};
@@ -15,16 +15,15 @@ export namespace MinionBattlecryProps {
 
 export abstract class MinionBattlecryModel<
     T extends Model[] = Model[],
-    E extends Partial<MinionBattlecryProps.E> & Props.E = {},
-    S extends Partial<MinionBattlecryProps.S> & Props.S = {},
-    C extends Partial<MinionBattlecryProps.C> & Props.C = {},
-    R extends Partial<MinionBattlecryProps.R> & Props.R = {}
+    E extends Partial<MinionBattlecryModel.E> & Model.E = {},
+    S extends Partial<MinionBattlecryModel.S> & Model.S = {},
+    C extends Partial<MinionBattlecryModel.C> & Model.C = {},
+    R extends Partial<MinionBattlecryModel.R> & Model.R = {}
 > extends FeatureModel<
-    E & MinionBattlecryProps.E, 
-    S & MinionBattlecryProps.S, 
-    C & MinionBattlecryProps.C, 
-    R & MinionBattlecryProps.R,
-    MinionRoute
+    E & MinionBattlecryModel.E, 
+    S & MinionBattlecryModel.S, 
+    C & MinionBattlecryModel.C, 
+    R & MinionBattlecryModel.R
 > {
     public static async toRun(
         items: Readonly<MinionBattlecryModel[]>
@@ -52,33 +51,29 @@ export abstract class MinionBattlecryModel<
         return result;
     }
 
-    constructor(loader: Method<MinionBattlecryModel['props'] & {
+    constructor(props: MinionBattlecryModel['props'] & {
         uuid: string | undefined;
-        state: S & Pick<FeatureProps.S, 'desc' | 'name'>;
+        state: S & Pick<FeatureModel.S, 'desc' | 'name'>;
         child: C;
         refer: R;
-    }, []>) {
-        super(() => {
-            const props = loader?.();
-            return {
-                uuid: props.uuid,
-                state: { 
-                    isActive: true,
-                    ...props.state,
-                },
-                child: { ...props.child },
-                refer: { ...props.refer },
-                route: MINION_ROUTE,
-            }
+    }) {
+        super({
+            uuid: props.uuid,
+            state: { 
+                isActive: true,
+                ...props.state,
+            },
+            child: { ...props.child },
+            refer: { ...props.refer },
         });
     }
 
     public async run(from: number, to: number, ...params: T) {
         if (!this.state.isActive) return;
       
-        const event = new Event({})
+        const event = new AbortEvent({});
         this.event.toRun(event);
-        if (event.isAbort) return;
+        if (event.detail.isAbort) return;
         
         await this.doRun(from, to, ...params);
         this.event.onRun(new Event({}));

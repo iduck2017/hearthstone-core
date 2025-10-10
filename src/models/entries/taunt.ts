@@ -1,43 +1,37 @@
-import { Event, Loader, StoreUtil } from "set-piece";
+import { Event, TemplUtil } from "set-piece";
 import { FeatureModel } from "../features";
-import { ROLE_ROUTE, RoleRoute } from "../..";
 
-export namespace TauntProps {
+export namespace TauntModel {
     export type E = {};
     export type S = {};
     export type C = {};
     export type R = {};
 }
 
-@StoreUtil.is('taunt')
+@TemplUtil.is('taunt')
 export class TauntModel extends FeatureModel<
-    TauntProps.E, 
-    TauntProps.S, 
-    TauntProps.C, 
-    TauntProps.R,
-    RoleRoute
+    TauntModel.E, 
+    TauntModel.S, 
+    TauntModel.C, 
+    TauntModel.R
 > {
-    constructor(loader?: Loader<TauntModel>) {
-        super(() => {
-            const props = loader?.() ?? {};
-            return {
-                uuid: props.uuid,
-                state: {
-                    name: 'Taunt',
-                    desc: 'Enemies must attack this minion.',
-                    isActive: true,
-                    ...props.state,
-                },
-                child: { ...props.child },
-                refer: { ...props.refer },
-                route: ROLE_ROUTE,
-            }
+    constructor(props: TauntModel['props']) {
+        super({
+            uuid: props.uuid,
+            state: {
+                name: 'Taunt',
+                desc: 'Enemies must attack this minion.',
+                isActive: true,
+                ...props.state,
+            },
+            child: { ...props.child },
+            refer: { ...props.refer },
         })
     }
 
     public active(): boolean {
         if (this.state.isActive) return false;
-        this.draft.state.isActive = true;
+        this.origin.state.isActive = true;
         this.event.onActive(new Event({}));
         return true;
     }

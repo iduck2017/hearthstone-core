@@ -1,43 +1,48 @@
-import { Event, Loader } from "set-piece";
+import { Event } from "set-piece";
 import { PerformModel } from ".";
 import { SelectEvent, SelectUtil } from "../../../utils/select";
-import { MinionBattlecryModel } from "../../hooks/battlecry/role";
-import { MinionHooksOptions } from "../../features/minion";
+import { MinionBattlecryModel } from "../../..";
+import { MinionHooksOptions } from "../../minion-feats";
 import { MinionCardModel } from "../../cards/minion";
+import { AbortEvent } from "../../../types/event";
 
-export namespace MinionPerformProps {
+export namespace MinionPerformModel {
     export type E = {};
     export type S = {};
     export type C = {};
     export type R = {};
-    export type P = { minion: MinionCardModel; };
 }
 
 export class MinionPerformModel extends PerformModel<
     [number, MinionHooksOptions],
-    MinionPerformProps.E,
-    MinionPerformProps.S,
-    MinionPerformProps.C,
-    MinionPerformProps.R,
-    MinionPerformProps.P
+    MinionPerformModel.E,
+    MinionPerformModel.S,
+    MinionPerformModel.C,
+    MinionPerformModel.R
 > {
-    constructor(loader?: Loader<MinionPerformModel>) {
-        super(() => {
-            const props = loader?.() ?? {};
-            return {
-                uuid: props.uuid,
-                state: { ...props.state },
-                child: { ...props.child },
-                refer: { ...props.refer },
-                route: { minion: MinionCardModel.prototype },
-            }
+    public get route() {
+        const result = super.route;
+        const minion: MinionCardModel | undefined = result.list.find(item => item instanceof MinionCardModel);
+        return {
+            ...result,
+            minion,
+        }
+    }
+
+    constructor(props?: MinionPerformModel['props']) {
+        props = props ?? {}
+        super({
+            uuid: props.uuid,
+            state: { ...props.state },
+            child: { ...props.child },
+            refer: { ...props.refer },
         });
     }
 
     public async run(from: number, to: number, options: MinionHooksOptions) {
-        const event = new Event({})
+        const event = new AbortEvent({})
         this.event.toRun(event);
-        if (event.isAbort) return;
+        if (event.detail.isAbort) return;
 
         const player = this.route.player;
         if (!player) return;

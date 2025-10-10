@@ -1,56 +1,51 @@
-import { Event, Loader, Method, Model, Props } from "set-piece";
-import { FeatureModel, FeatureProps, ROLE_ROUTE, RoleRoute } from "../..";
+import { Event, Method, Model } from "set-piece";
+import { FeatureModel } from "../..";
+import { AbortEvent } from "../../types/event";
 
-export namespace OverhealProps {
+export namespace OverhealModel {
     export type E = {
-        toRun: Event;
+        toRun: AbortEvent;
         onRun: Event;
     };
     export type S = {};
     export type C = {};
     export type R = {};
-    export type P = RoleRoute;
 }
 
 export abstract class OverhealModel<
-    E extends Partial<OverhealProps.E> & Props.E = {},
-    S extends Partial<OverhealProps.S> & Props.S = {},
-    C extends Partial<OverhealProps.C> & Props.C = {},
-    R extends Partial<OverhealProps.R> & Props.R = {},
+    E extends Partial<OverhealModel.E> & Model.E = {},
+    S extends Partial<OverhealModel.S> & Model.S = {},
+    C extends Partial<OverhealModel.C> & Model.C = {},
+    R extends Partial<OverhealModel.R> & Model.R = {},
 > extends FeatureModel<
-    E & OverhealProps.E,
-    S & OverhealProps.S,
-    C & OverhealProps.C,
-    R & OverhealProps.R,
-    OverhealProps.P
+    E & OverhealModel.E,
+    S & OverhealModel.S,
+    C & OverhealModel.C,
+    R & OverhealModel.R
 > {
-    constructor(loader: Method<OverhealModel['props'] & {
+    constructor(props: OverhealModel['props'] & {
         uuid: string | undefined;
-        state: S & Pick<FeatureProps.S, 'desc' | 'name'>;
+        state: S & Pick<FeatureModel.S, 'desc' | 'name'>;
         child: C;
         refer: R;
-    }, []>) {
-        super(() => {
-            const props = loader?.() ?? {};
-            return {
-                uuid: props.uuid,
-                state: {
-                    isActive: true,
-                    ...props.state,
-                },
-                child: { ...props.child },
-                refer: { ...props.refer },
-                route: ROLE_ROUTE,
-            }
+    }) {
+        super({
+            uuid: props.uuid,
+            state: {
+                isActive: true,
+                ...props.state,
+            },
+            child: { ...props.child },
+            refer: { ...props.refer },
         });
     }
 
     public run() {
         if (!this.state.isActive) return;
         
-        const event = new Event({})
-        this.event.toRun(new Event({}));
-        if (event.isAbort) return;
+        const event = new AbortEvent({})
+        this.event.toRun(event);
+        if (event.detail.isAbort) return;
 
         this.doRun();
         this.event.onRun(new Event({}));

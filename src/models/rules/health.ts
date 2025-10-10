@@ -1,11 +1,11 @@
-import { DebugUtil, Decor, Event, EventUtil, Method, Model, StateUtil, TranxUtil } from "set-piece";
+import { DebugUtil, Decor, Event, EventUtil, Frame, Method, Model, StateUtil, TemplUtil, TranxUtil } from "set-piece";
 import { RoleModel, MinionCardModel, GameModel, PlayerModel, CardModel, HeroModel, IRoleBuffModel } from "../..";
 import { DamageEvent } from "../../types/damage";
 import { RestoreEvent } from "../../types/restore";
 import { OperationType } from "../../types/decor";
 import { Operation } from "../../types/decor";
 
-export namespace RoleHealthProps {
+export namespace RoleHealthModel {
     export type E = {
         toHurt: DamageEvent;
         onHurt: DamageEvent;
@@ -30,11 +30,11 @@ export namespace RoleHealthProps {
     }
 }
 
-export class RoleHealthDecor extends Decor<RoleHealthProps.S> {
+export class RoleHealthDecor extends Decor<RoleHealthModel.S> {
     private operations: Operation[] = [];
 
     public get result() {
-        const result = { ...this.detail };
+        const result = { ...this._detail };
         const buffs = this.operations
             .filter(item => item.reason instanceof IRoleBuffModel)
             .sort((a, b) => a.reason.uuid.localeCompare(b.reason.uuid));
@@ -56,14 +56,25 @@ export class RoleHealthDecor extends Decor<RoleHealthProps.S> {
     }
 }
 
-@StateUtil.use(RoleHealthDecor)
+@TemplUtil.is('role-health')
 export class RoleHealthModel extends Model<
-    RoleHealthProps.E,
-    RoleHealthProps.S,
-    RoleHealthProps.C,
-    RoleHealthProps.R,
-    RoleHealthProps.P
+    RoleHealthModel.E,
+    RoleHealthModel.S,
+    RoleHealthModel.C,
+    RoleHealthModel.R
 > {
+    public get route() {
+        const result = super.route;
+        return {
+            ...result,
+            role: result.list.find(item => item instanceof RoleModel),
+            minion: result.list.find(item => item instanceof MinionCardModel),
+            hero: result.list.find(item => item instanceof HeroModel),
+        }
+    }
+
+    public get decor(): RoleHealthDecor { return new RoleHealthDecor(this); }
+
     public get state() {
         const state = super.state;
         const baseline = Math.max(state.memory, state.maximum);
@@ -73,32 +84,21 @@ export class RoleHealthModel extends Model<
         }
     }
 
-    constructor(loader: Method<RoleHealthModel['props'] & {
-        state: Pick<RoleHealthProps.S, 'origin'>
-    }, []>) {
-        super(() => {
-            const props = loader?.();
-            const maximum = props.state.maximum ?? props.state.origin;
-            const memory = props.state.memory ?? maximum;
-            return {
-                uuid: props.uuid,
-                state: { 
-                    damage: 0,
-                    memory,
-                    maximum,
-                    ...props.state,
-                },
-                child: { ...props.child },
-                refer: { ...props.refer },
-                route: {
-                    card: CardModel.prototype,
-                    minion: MinionCardModel.prototype,
-                    role: RoleModel.prototype,
-                    game: GameModel.prototype,
-                    player: PlayerModel.prototype,
-                    hero: HeroModel.prototype,
-                },
-            }
+    constructor(props?: RoleHealthModel['props']) {
+        const state = props?.state ?? {};
+        const maximum = state.maximum ?? state.origin ?? 0;
+        const memory = state.memory ?? maximum ?? 0;
+        super({
+            uuid: props?.uuid,
+            state: { 
+                origin: 0,
+                damage: 0,
+                memory,
+                maximum,
+                ...props?.state,
+            },
+            child: { ...props?.child },
+            refer: { ...props?.refer },
         });
     }
 
@@ -146,7 +146,7 @@ export class RoleHealthModel extends Model<
         const poisonous = source.child.feats.child.poisonous;
         if (poisonous.state.isActive && minion) event.config({ isPoisonous: true });
 
-        this.draft.state.damage += result;
+        this.origin.state.damage += result;
         dispose.active(false, event.detail.source, event.detail.method);
         return event;
     }
@@ -154,7 +154,7 @@ export class RoleHealthModel extends Model<
     public onHurt(event: DamageEvent) {
         const role = this.route.role;
         if (!role) return;
-        if (event.isAbort) return;
+        if (event.detail.isAbort) return;
 
         const minion = this.route.minion;
         if (event.detail.options.isPoisonous && minion) {
@@ -180,8 +180,8 @@ export class RoleHealthModel extends Model<
             event.set(0)
             return event;
         }
-        const damage = this.draft.state.damage;
-        this.draft.state.damage -= Math.min(damage, result);
+        const damage = this.origin.state.damage;
+        this.origin.state.damage -= Math.min(damage, result);
         event.set(Math.min(damage, result), Math.max(0, result - damage));
         return event;
     }
@@ -189,7 +189,7 @@ export class RoleHealthModel extends Model<
     public onHeal(event: RestoreEvent) {
         const role = this.route.role;
         if (!role) return;
-        if (event.isAbort) return;
+        if (event.detail.isAbort) return;
         if (event.detail.result > 0) this.event.onHeal(event);
         if (event.detail.overflow > 0) {
             const feats = role.child.feats;
@@ -198,13 +198,18 @@ export class RoleHealthModel extends Model<
     }
     
 
-    @EventUtil.on(self => self.proxy.event.onChange)
+    @EventUtil.on(self => self.onChange)
+    public listen() {
+        const self: RoleHealthModel = this;
+        return self.proxy.event?.onChange;
+    }
+
     @DebugUtil.log()
     @TranxUtil.span()
-    private onChange(that: RoleHealthModel, event: Event) {
+    private onChange(that: this, event: { prev: Frame<RoleHealthModel>; }) {
         const { memory, maximum, damage } = that.state;
         const offset = memory - maximum;
-        if (offset !== 0) this.draft.state.memory = maximum;
-        if (offset > 0) this.draft.state.damage -= Math.min(damage, offset);
+        if (offset !== 0) this.origin.state.memory = maximum;
+        if (offset > 0) this.origin.state.damage -= Math.min(damage, offset);
     }
 }

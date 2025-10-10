@@ -1,10 +1,9 @@
-import { Event, Loader } from "set-piece";
 import { PerformModel } from ".";
 import { EffectModel } from "../../features/effect";
-import { SpellCastEvent, SpellHooksOptions } from "../../features/spell";
+import { SpellCastEvent, SpellHooksOptions } from "../../spell-feats";
 import { SpellCardModel, SpellEffectModel } from "../../..";
 
-export namespace SpellPerformProps {
+export namespace SpellPerformModel {
     export type E = {
         toRun: SpellCastEvent;
     };
@@ -16,22 +15,27 @@ export namespace SpellPerformProps {
 
 export class SpellPerformModel extends PerformModel<
     [SpellHooksOptions],
-    SpellPerformProps.E,
-    SpellPerformProps.S,
-    SpellPerformProps.C,
-    SpellPerformProps.R,
-    SpellPerformProps.P
+    SpellPerformModel.E,
+    SpellPerformModel.S,
+    SpellPerformModel.C,
+    SpellPerformModel.R
 > {
-    constructor(loader?: Loader<SpellPerformModel>) {
-        super(() => {
-            const props = loader?.() ?? {};
-            return {
-                uuid: props.uuid,
-                state: { ...props.state },
-                child: { ...props.child },
-                refer: { ...props.refer },
-                route: { spell: SpellCardModel.prototype },
-            }
+    public get route() {
+        const result = super.route;
+        const spell: SpellCardModel | undefined = result.list.find(item => item instanceof SpellCardModel);
+        return {
+            ...result,
+            spell,
+        }
+    }
+
+    constructor(props?: SpellPerformModel['props']) {
+        props = props ?? {}
+        super({
+            uuid: props.uuid,
+            state: { ...props.state },
+            child: { ...props.child },
+            refer: { ...props.refer },
         });
     }
     
@@ -51,7 +55,7 @@ export class SpellPerformModel extends PerformModel<
         
         const event = new SpellCastEvent({ options: options })
         this.event.toRun(event);
-        if (event.isAbort) return;
+        if (event.detail.isAbort) return;
         options = event.detail.options;
         
         const player = this.route.player;

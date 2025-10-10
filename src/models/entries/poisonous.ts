@@ -1,7 +1,7 @@
-import { Event, Loader, StoreUtil } from "set-piece"
+import { Event, TemplUtil } from "set-piece"
 import { FeatureModel } from "../features"
 
-export namespace PoisonousProps {  
+export namespace PoisonousModel {  
     export type E = {
         onActive: Event
     }
@@ -10,34 +10,30 @@ export namespace PoisonousProps {
     export type R = {}
 }
 
-@StoreUtil.is('poisonous')
+@TemplUtil.is('poisonous')
 export class PoisonousModel extends FeatureModel<
-    PoisonousProps.E,
-    PoisonousProps.S,
-    PoisonousProps.C,
-    PoisonousProps.R
+    PoisonousModel.E,
+    PoisonousModel.S,
+    PoisonousModel.C,
+    PoisonousModel.R
 > {
-    constructor(loader?: Loader<PoisonousModel>) {
-        super(() => {
-            const props = loader?.() ?? {};
-            return {
-                uuid: props.uuid,
-                state: { 
-                    isActive: true,
-                    name: 'Poisonous',
-                    desc: 'Destroy any miniondamaged by this.',
-                    ...props.state 
-                },
-                child: { ...props.child },
-                refer: { ...props.refer },
-                route: {},
-            }
+    constructor(props?: PoisonousModel['props']) {
+        super({
+            uuid: props?.uuid,
+            state: { 
+                isActive: true,
+                name: 'Poisonous',
+                desc: 'Destroy any miniondamaged by this.',
+                ...props?.state 
+            },
+            child: { ...props?.child },
+            refer: { ...props?.refer },
         })
     }
 
     public active(): boolean {
         if (this.state.isActive) return false;
-        this.draft.state.isActive = true;
+        this.origin.state.isActive = true;
         this.event.onActive(new Event({}));
         return true;
     }

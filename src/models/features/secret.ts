@@ -1,28 +1,35 @@
-import { Method, Props } from "set-piece";
-import { FeatureModel, FeatureProps } from ".";
+import { Method, Model } from "set-piece";
 import { SecretCardModel } from "../cards/secret";
+import { FeatureModel } from ".";
+import { BoardModel } from "../board";
 
-export namespace SecretFeatureProps {
+export namespace SecretFeatureModel {
     export type E = {};
     export type S = {};
     export type C = {};
     export type R = {};
-    export type P = { secret: SecretCardModel };
 }
 
 export class SecretFeatureModel<
-    E extends Partial<SecretFeatureProps.E> & Props.E = {},
-    S extends Partial<SecretFeatureProps.S> & Props.S = {},
-    C extends Partial<SecretFeatureProps.C> & Props.C = {},
-    R extends Partial<SecretFeatureProps.R> & Props.R = {},
-    P extends Partial<SecretFeatureProps.P> & Props.P = {},
+    E extends Partial<SecretFeatureModel.E> & Model.E = {},
+    S extends Partial<SecretFeatureModel.S> & Model.S = {},
+    C extends Partial<SecretFeatureModel.C> & Model.C = {},
+    R extends Partial<SecretFeatureModel.R> & Model.R = {},
 > extends FeatureModel<
-    E & SecretFeatureProps.E,
-    S & SecretFeatureProps.S,
-    C & SecretFeatureProps.C,
-    R & SecretFeatureProps.R,
-    P & SecretFeatureProps.P
+    E & SecretFeatureModel.E,
+    S & SecretFeatureModel.S,
+    C & SecretFeatureModel.C,
+    R & SecretFeatureModel.R
 > {
+    public get route() {
+        const result = super.route;
+        return {
+            ...result,
+            secret: result.list.find(item => item instanceof SecretCardModel),
+            board: result.list.find(item => item instanceof BoardModel),
+        }
+    }
+
     public static span() {
         return function(
             prototype: SecretFeatureModel,
@@ -63,28 +70,20 @@ export class SecretFeatureModel<
     }
 
 
-    constructor(loader: Method<SecretFeatureModel['props'] & {
+    constructor(props: SecretFeatureModel['props'] & {
         uuid: string | undefined,
-        state: S & Pick<FeatureProps.S, 'desc' | 'name'>,
+        state: S & Pick<FeatureModel.S, 'desc' | 'name'>,
         child: C,
         refer: R,
-        route: P,
-    }, []>) {
-        super(() => {
-            const props = loader();
-            return {
-                uuid: props.uuid,
-                state: { 
-                    isActive: true,
-                    ...props.state 
-                },
-                child: { ...props.child },
-                refer: { ...props.refer },
-                route: { 
-                    secret: SecretCardModel.prototype, 
-                    ...props.route 
-                },
-            }
+    }) {
+        super({
+            uuid: props.uuid,
+            state: { 
+                isActive: true,
+                ...props.state 
+            },
+            child: { ...props.child },
+            refer: { ...props.refer }
         })
     }
 }

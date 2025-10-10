@@ -1,8 +1,8 @@
-import { Loader, Model } from "set-piece";
+import { Model } from "set-piece";
 import { DisposeModel } from ".";
-import { AppModel, CardModel, HeroModel } from "../../..";
+import { AppModel, CardModel, HeroModel, PlayerModel } from "../../..";
 
-export namespace HeroDisposeProps {
+export namespace HeroDisposeModel {
     export type E = {};
     export type S = {};
     export type C = {};
@@ -14,25 +14,28 @@ export namespace HeroDisposeProps {
 }
 
 export class HeroDisposeModel extends DisposeModel<
-    HeroDisposeProps.E,
-    HeroDisposeProps.S,
-    HeroDisposeProps.C,
-    HeroDisposeProps.R,
-    HeroDisposeProps.P
+    HeroDisposeModel.E,
+    HeroDisposeModel.S,
+    HeroDisposeModel.C,
+    HeroDisposeModel.R
 > {
-    constructor(loader?: Loader<HeroDisposeModel>) {
-        super(() => {
-            const props = loader?.() ?? {};
-            return {
-                uuid: props.uuid,
-                state: { ...props.state },
-                child: { ...props.child },
-                refer: { ...props.refer },
-                route: { 
-                    hero: HeroModel.prototype, 
-                    app: AppModel.prototype 
-                },
-            }
+    public get route() {
+        const result = super.route;
+        return {
+            ...result,
+            hero: result.list.find(item => item instanceof HeroModel),
+            player: result.list.find(item => item instanceof PlayerModel),
+            app: result.list.find(item => item instanceof AppModel),
+        }
+    }
+
+    constructor(props?: HeroDisposeModel['props']) {
+        props = props ?? {}
+        super({
+            uuid: props.uuid,
+            state: { ...props.state },
+            child: { ...props.child },
+            refer: { ...props.refer },
         });
     }
 

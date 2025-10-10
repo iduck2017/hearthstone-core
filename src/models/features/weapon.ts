@@ -1,13 +1,13 @@
-import { Loader, Model, StoreUtil } from "set-piece";
-import { MinionBattlecryModel } from "../hooks/battlecry/role";
-import { DeathrattleModel } from "../hooks/deathrattle";
-import { StartTurnHookModel } from "../hooks/start-turn";
-import { EndTurnHookModel } from "../hooks/end-turn";
-import { WeaponBattlecryModel } from "../hooks/battlecry/weapon";
-import { CardFeatsModel } from "./card";
+import { MinionBattlecryModel } from "../..";
+import { DeathrattleModel } from "../..";
+import { StartTurnHookModel } from "../..";
+import { EndTurnHookModel } from "../..";
+import { WeaponBattlecryModel } from "../..";
+import { CardFeatsModel } from "../card-feats";
 import { FeatureModel } from ".";
+import { Model, TemplUtil } from "set-piece";
 
-export namespace WeaponFeatsProps {
+export namespace WeaponFeatsModel {
     export type E = {};
     export type S = {};
     export type C = {
@@ -24,37 +24,33 @@ export type WeaponHooksOptions = {
     battlecry: Map<WeaponBattlecryModel, Model[]>
 }
 
-@StoreUtil.is('card-hooks')
+@TemplUtil.is('card-hooks')
 export class WeaponFeatsModel extends CardFeatsModel<
-    WeaponFeatsProps.E,
-    WeaponFeatsProps.S,
-    WeaponFeatsProps.C,
-    WeaponFeatsProps.R
+    WeaponFeatsModel.E,
+    WeaponFeatsModel.S,
+    WeaponFeatsModel.C,
+    WeaponFeatsModel.R
 > {
-    constructor(loader?: Loader<WeaponFeatsModel>) {
-        super(() => {
-            const props = loader?.() ?? {};
-            return {
-                uuid: props.uuid,
-                state: { ...props.state },
-                child: { 
-                    endTurn: [],
-                    startTurn: [],
-                    battlecry: [],
-                    deathrattle: [],
-                    ...props.child 
-                },
-                refer: { ...props.refer },
-                route: {},
-            }
+    constructor(props?: WeaponFeatsModel['props']) {
+        super({
+            uuid: props?.uuid,
+            state: { ...props?.state },
+            child: { 
+                endTurn: [],
+                startTurn: [],
+                battlecry: [],
+                deathrattle: [],
+                ...props?.child 
+            },
+            refer: { ...props?.refer },
         });
     }
 
     protected query(feat: FeatureModel): FeatureModel[] | undefined {
-        if (feat instanceof WeaponBattlecryModel) return this.draft.child.battlecry;
-        if (feat instanceof DeathrattleModel) return this.draft.child.deathrattle;
-        if (feat instanceof StartTurnHookModel) return this.draft.child.startTurn;
-        if (feat instanceof EndTurnHookModel) return this.draft.child.endTurn;
-        return this.draft.child.items;
+        if (feat instanceof WeaponBattlecryModel) return this.origin.child.battlecry;
+        if (feat instanceof DeathrattleModel) return this.origin.child.deathrattle;
+        if (feat instanceof StartTurnHookModel) return this.origin.child.startTurn;
+        if (feat instanceof EndTurnHookModel) return this.origin.child.endTurn;
+        return this.origin.child.list;
     }
 }

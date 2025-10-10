@@ -1,8 +1,8 @@
-import { DebugUtil, Loader, Model, StoreUtil } from "set-piece";
+import { DebugUtil, Model, TemplUtil } from "set-piece";
 import { GameModel } from "./game";
-import { ConfigModel } from "./containers/config";
+import { CollectionModel } from "./collection";
 
-export namespace AppProps {
+export namespace AppModel {
     export type S = {
         version: string;
         count: number;
@@ -10,43 +10,39 @@ export namespace AppProps {
     export type E = {};
     export type C = {
         game?: GameModel;
-        configs: ConfigModel[]
+        configs: CollectionModel[]
     };
 }
 
-@StoreUtil.is('app')
+@TemplUtil.is('app')
 export class AppModel extends Model<
-    AppProps.E, 
-    AppProps.S, 
-    AppProps.C
+    AppModel.E, 
+    AppModel.S, 
+    AppModel.C
 > {
-    constructor(loader?: Loader<AppModel>) {
-        super(() => {
-            const props = loader?.() ?? {};
-            return {
-                uuid: props.uuid,
-                state: { 
-                    version: '0.1.0',
-                    count: 0,
-                    ...props.state
-                },
-                child: { 
-                    configs: props.child?.configs ?? [],
-                    ...props.child 
-                },
-                refer: { ...props.refer },
-                route: {},
-            }
+    constructor(props?: AppModel['props']) {
+        props = props ?? {};
+        super({
+            uuid: props.uuid,
+            state: { 
+                version: '0.1.0',
+                count: 0,
+                ...props.state
+            },
+            child: { 
+                configs: props.child?.configs ?? [],
+                ...props.child 
+            },
+            refer: { ...props.refer },
         });
     }
 
-    public set(config: ConfigModel): void;
+    public set(config: CollectionModel): void;
     public set(game: GameModel): void;
-    public set(value: GameModel | ConfigModel) {
-        if (value instanceof GameModel) this.draft.child.game = value;
-        if (value instanceof ConfigModel) this.draft.child.configs.push(value);
+    public set(value: GameModel | CollectionModel) {
+        if (value instanceof GameModel) this.origin.child.game = value;
+        if (value instanceof CollectionModel) this.origin.child.configs.push(value);
     }
 
-    public end() { this.draft.child.game = undefined; }
-
+    public end() { this.origin.child.game = undefined; }
 }

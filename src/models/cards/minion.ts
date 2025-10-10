@@ -1,6 +1,5 @@
-import { Props, Event, Method, State, TranxUtil, Model } from "set-piece";
-import { MinionHooksOptions, MinionFeatsModel } from "../features/minion";
-import { CardModel, CardProps } from ".";
+import { Event, Method, State, TranxUtil, Model } from "set-piece";
+import { MinionHooksOptions, MinionFeatsModel } from "../minion-feats";
 import { RaceType } from "../../types/card";
 import { RoleModel } from "../role";
 import { MinionDisposeModel } from "../rules/dispose/minion";
@@ -8,8 +7,9 @@ import { MinionDeployModel } from "../rules/deploy/minion";
 import { MinionPerformModel } from "../rules/perform/minion";
 import { DeathrattleModel } from "../hooks/deathrattle";
 import { FeatureModel } from "../features";
+import { CardModel } from ".";
 
-export namespace MinionCardProps {
+export namespace MinionCardModel {
     export type S = {
         readonly races: RaceType[];
     };
@@ -29,36 +29,33 @@ export namespace MinionCardProps {
 }
 
 export abstract class MinionCardModel<
-    E extends Partial<MinionCardProps.E & CardProps.E> & Props.E = {},
-    S extends Partial<MinionCardProps.S & CardProps.S> & Props.S = {},
-    C extends Partial<MinionCardProps.C & CardProps.C> & Props.C = {},
-    R extends Partial<MinionCardProps.R & CardProps.R> & Props.R = {}
+    E extends Partial<MinionCardModel.E & CardModel.E> & Model.E = {},
+    S extends Partial<MinionCardModel.S & CardModel.S> & Model.S = {},
+    C extends Partial<MinionCardModel.C & CardModel.C> & Model.C = {},
+    R extends Partial<MinionCardModel.R & CardModel.R> & Model.R = {}
 > extends CardModel<
-    E & MinionCardProps.E, 
-    S & MinionCardProps.S, 
-    C & MinionCardProps.C,
-    R & MinionCardProps.R
+    E & MinionCardModel.E, 
+    S & MinionCardModel.S, 
+    C & MinionCardModel.C,
+    R & MinionCardModel.R
 > {
-    constructor(loader: Method<MinionCardModel['props'] & {
+    constructor(props: MinionCardModel['props'] & {
         uuid: string | undefined;
-        state: S & State<Omit<CardProps.S, 'isActive'> & MinionCardProps.S>;
-        child: C & Pick<MinionCardProps.C, 'role'> & Pick<CardProps.C, 'cost'>;
+        state: S & State<Omit<CardModel.S, 'isActive'> & MinionCardModel.S>;
+        child: C & Pick<MinionCardModel.C, 'role'> & Pick<CardModel.C, 'cost'>;
         refer: R;
-    }, []>) {
-        super(() => {
-            const props = loader();
-            return {
-                uuid: props.uuid,
-                state: { ...props.state },
-                child: { 
-                    feats: props.child.feats ?? new MinionFeatsModel(),
-                    deploy: props.child.deploy ?? new MinionDeployModel(),
-                    dispose: props.child.dispose ?? new MinionDisposeModel(),
-                    perform: props.child.perform ?? new MinionPerformModel(),
-                    ...props.child 
-                },
-                refer: { ...props.refer },
-            }
+    }) {
+        super({
+            uuid: props.uuid,
+            state: { ...props.state },
+            child: { 
+                feats: props.child.feats ?? new MinionFeatsModel(),
+                deploy: props.child.deploy ?? new MinionDeployModel(),
+                dispose: props.child.dispose ?? new MinionDisposeModel(),
+                perform: props.child.perform ?? new MinionPerformModel(),
+                ...props.child 
+            },
+            refer: { ...props.refer },
         });
     }
 
@@ -73,7 +70,7 @@ export abstract class MinionCardModel<
         const board = this.route.board;
         const self: MinionCardModel = this;
         if (board) {
-            const index = board.refer.order.indexOf(self);
+            const index = board.refer.queue?.indexOf(self);
             board.del(self);
             board.add(target, index);
         }
@@ -88,7 +85,7 @@ export abstract class MinionCardModel<
 
     @TranxUtil.span()
     private doSilence() {
-        this.child.feats.child.items.forEach(item => item.deactive());
+        this.child.feats.child.list.forEach(item => item.deactive());
         this.child.feats.child.battlecry.forEach(item => item.deactive());
         this.child.feats.child.deathrattle.forEach(item => item.deactive());
         this.child.feats.child.startTurn.forEach(item => item.deactive());

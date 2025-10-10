@@ -1,13 +1,13 @@
-import { Method, Model, Props, State } from "set-piece";
-import { SpellCardModel, SpellCardProps } from "./spell";
-import { CardProps } from ".";
+import { Method, Model, State } from "set-piece";
+import { CardModel } from ".";
 import { DisposeModel } from "../rules/dispose";
 import { SecretDisposeModel } from "../rules/dispose/secret";
 import { PlayerModel } from "../player";
 import { SecretDeployModel } from "../rules/deploy/secret";
-import { SpellHooksOptions } from "../features/spell";
+import { SpellHooksOptions } from "../spell-feats";
+import { SpellCardModel } from "./spell";
 
-export namespace SecretCardProps {
+export namespace SecretCardModel {
     export type S = {};
     export type E = {};
     export type C = {
@@ -18,33 +18,30 @@ export namespace SecretCardProps {
 }
 
 export abstract class SecretCardModel<
-    E extends Partial<SecretCardProps.E & SpellCardProps.E & CardProps.E> & Props.E = {},
-    S extends Partial<SecretCardProps.S & SpellCardProps.S & CardProps.S> & Props.S = {},
-    C extends Partial<SecretCardProps.C & SpellCardProps.C & CardProps.C> & Props.C = {},
-    R extends Partial<SecretCardProps.R & SpellCardProps.R & CardProps.R> & Props.R = {}
+    E extends Partial<SecretCardModel.E & SpellCardModel.E & CardModel.E> & Model.E = {},
+    S extends Partial<SecretCardModel.S & SpellCardModel.S & CardModel.S> & Model.S = {},
+    C extends Partial<SecretCardModel.C & SpellCardModel.C & CardModel.C> & Model.C = {},
+    R extends Partial<SecretCardModel.R & SpellCardModel.R & CardModel.R> & Model.R = {}
 > extends SpellCardModel<
-    E & SecretCardProps.E,
-    S & SecretCardProps.S,
-    C & SecretCardProps.C,
-    R & SecretCardProps.R
+    E & SecretCardModel.E,
+    S & SecretCardModel.S,
+    C & SecretCardModel.C,
+    R & SecretCardModel.R
 > {
-    constructor(loader: Method<SecretCardModel['props'] & {
-        state: S & State<Omit<CardProps.S, 'isActive'> & SpellCardProps.S>;
-        child: C & Pick<CardProps.C, 'cost'>;
+    constructor(props: SecretCardModel['props'] & {
+        state: S & State<Omit<CardModel.S, 'isActive'> & SpellCardModel.S>;
+        child: C & Pick<CardModel.C, 'cost'>;
         refer: R;
-    }, []>) {
-        super(() => {
-            const props = loader();
-            return {
-                uuid: props.uuid,
-                state: { ...props.state },
-                child: { 
-                    dispose: props.child.dispose ?? new SecretDisposeModel(),
-                    deploy: props.child.deploy ?? new SecretDeployModel(),
-                    ...props.child 
-                },
-                refer: { ...props.refer },
-            }
+    }) {
+        super({
+            uuid: props.uuid,
+            state: { ...props.state },
+            child: { 
+                dispose: props.child.dispose ?? new SecretDisposeModel(),
+                deploy: props.child.deploy ?? new SecretDeployModel(),
+                ...props.child 
+            },
+            refer: { ...props.refer },
         });
     }
 }

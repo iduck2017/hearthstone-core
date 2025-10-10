@@ -1,42 +1,44 @@
-import { Decor, Event, Loader, StateUtil, StoreUtil, TranxUtil } from "set-piece";
+import { Decor, Event, StateUtil, TemplUtil, TranxUtil } from "set-piece";
 import { FeatureModel } from "../features";
-import { RoleActionProps, RoleActionModel, RoleActionDecor } from "../rules/action/role";
-import { ROLE_ROUTE, RoleRoute } from "../..";
+import { RoleActionModel, RoleActionDecor } from "../rules/role-action";
+import { RoleModel } from "../..";
 
-export namespace WindfuryProps {
+export namespace WindfuryModel {
     export type E = {};
     export type S = {
         isAdvance: boolean;
     };
     export type C = {};
     export type R = {};
-    export type P = {}
 }
 
-@StoreUtil.is('windfury')
+@TemplUtil.is('windfury')
 export class WindfuryModel extends FeatureModel<
-    WindfuryProps.E,
-    WindfuryProps.S,
-    WindfuryProps.C,
-    WindfuryProps.R,
-    RoleRoute
+    WindfuryModel.E,
+    WindfuryModel.S,
+    WindfuryModel.C,
+    WindfuryModel.R
 > {
-    constructor(loader?: Loader<WindfuryModel>) {
-        super(() => {
-            const props = loader?.() ?? {};
-            return {
-                uuid: props.uuid,
-                state: {
-                    name: 'Windfury',
-                    desc: 'Can attack twice each turn.',
-                    isAdvance: false,
-                    isActive: true,
-                    ...props.state,
-                },
-                child: { ...props.child },
-                refer: { ...props.refer },
-                route: ROLE_ROUTE,
-            }
+    public get route() {
+        const result = super.route;
+        return {
+            ...result,
+            role: result.list.find(item => item instanceof RoleModel)
+        }
+    }
+
+    constructor(props: WindfuryModel['props']) {
+        super({
+            uuid: props.uuid,
+            state: {
+                name: 'Windfury',
+                desc: 'Can attack twice each turn.',
+                isAdvance: false,
+                isActive: true,
+                ...props.state,
+            },
+            child: { ...props.child },
+            refer: { ...props.refer },
         });
     }
 
@@ -50,11 +52,15 @@ export class WindfuryModel extends FeatureModel<
 
     @TranxUtil.span()
     private doActive(isAdvance?: boolean) {
-        this.draft.state.isActive = true;
-        this.draft.state.isAdvance = isAdvance ?? false;
+        this.origin.state.isActive = true;
+        this.origin.state.isAdvance = isAdvance ?? false;
     }
 
-    @StateUtil.on(self => self.route.role?.proxy.child.action.decor)
+    @StateUtil.on(self => self.onCompute)
+    private listen() { 
+        return this.route.role?.proxy.child.action?.decor;
+    }
+
     protected onCompute(that: RoleActionModel, decor: RoleActionDecor) {
         if (!this.state.isActive) return;
         decor.add(this.state.isAdvance ? 3 : 1);
@@ -63,6 +69,6 @@ export class WindfuryModel extends FeatureModel<
     @TranxUtil.span()
     public deactive() {
         super.deactive();
-        this.draft.state.isAdvance = false;
+        this.origin.state.isAdvance = false;
     }
 }

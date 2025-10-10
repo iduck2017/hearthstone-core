@@ -1,7 +1,7 @@
-import { Event, Loader, StoreUtil } from "set-piece";
+import { Event, TemplUtil } from "set-piece";
 import { FeatureModel } from "../features";
 
-export namespace ElusiveProps {
+export namespace ElusiveModel {
     export type E = {}
     export type S = {}
     export type C = {}
@@ -9,34 +9,30 @@ export namespace ElusiveProps {
     export type P = {}
 }
 
-@StoreUtil.is('elusive')
+@TemplUtil.is('elusive')
 export class ElusiveModel extends FeatureModel<
-    ElusiveProps.E,
-    ElusiveProps.S,
-    ElusiveProps.C,
-    ElusiveProps.R
+    ElusiveModel.E,
+    ElusiveModel.S,
+    ElusiveModel.C,
+    ElusiveModel.R
 > {
-    constructor(loader?: Loader<ElusiveModel>) {
-        super(() => {
-            const props = loader?.() ?? {};
-            return {
-                uuid: props.uuid,
-                state: {
-                    name: 'Elusive',
-                    desc: 'Can\'t be targeted by spells or Hero Powers.',
-                    isActive: true,
-                    ...props.state,
-                },
-                child: { ...props.child },
-                refer: { ...props.refer },
-                route: {},
-            }
+    constructor(props?: ElusiveModel['props']) {
+        super({
+            uuid: props?.uuid,
+            state: {
+                name: 'Elusive',
+                desc: 'Can\'t be targeted by spells or Hero Powers.',
+                isActive: true,
+                ...props?.state,
+            },
+            child: { ...props?.child },
+            refer: { ...props?.refer },
         })
     }
 
     public active(): boolean {
         if (this.state.isActive) return false;
-        this.draft.state.isActive = true;
+        this.origin.state.isActive = true;
         this.event.onActive(new Event({}));
         return true;
     }

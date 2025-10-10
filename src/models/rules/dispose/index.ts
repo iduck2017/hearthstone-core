@@ -1,7 +1,7 @@
-import { DebugUtil, Event, Loader, LogLevel, Method, Model, Props, TranxUtil } from "set-piece";
+import { DebugUtil, Event, Method, Model, TranxUtil } from "set-piece";
 import { CardModel, GameModel, GraveyardModel, HeroModel, MinionCardModel, PlayerModel, SecretCardModel, WeaponCardModel } from '../../..'
 
-export namespace DisposeProps {
+export namespace DisposeModel {
     export type E = {
         toRun: Event;
         onRun: Event;
@@ -14,24 +14,18 @@ export namespace DisposeProps {
         reason?: Model;
         source?: CardModel | HeroModel;
     }
-    export type P = {
-        player: PlayerModel;
-        game: GameModel;
-    }
 }
 
 export abstract class DisposeModel<
-    E extends Props.E & Partial<DisposeProps.E> = {},
-    S extends Props.S & Partial<DisposeProps.S> = {},
-    C extends Props.C & Partial<DisposeProps.C> = {},
-    R extends Props.R & Partial<DisposeProps.R> = Props.R,
-    P extends Props.P & Partial<DisposeProps.P> = {}
+    E extends Partial<DisposeModel.E> & Model.E = {},
+    S extends Partial<DisposeModel.S> & Model.S = {},
+    C extends Partial<DisposeModel.C> & Model.C = {},
+    R extends Partial<DisposeModel.R> & Model.R = {}
 > extends Model<
-    E & DisposeProps.E,
-    S & DisposeProps.S,
-    C & DisposeProps.C,
-    R & DisposeProps.R,
-    P & DisposeProps.P
+    E & DisposeModel.E,
+    S & DisposeModel.S,
+    C & DisposeModel.C,
+    R & DisposeModel.R
 > {
     private static _isLock = false;
     public static get isLock() {
@@ -44,9 +38,6 @@ export abstract class DisposeModel<
         DisposeModel.tasks.push(target);
     }
 
-    public get status() {
-        return Boolean(this.state.isLock);
-    }
 
     public static span() {
         return function(
@@ -77,6 +68,7 @@ export abstract class DisposeModel<
             return descriptor;
         }
     }
+    
 
     public static end() {
         const tasks = DisposeModel.tasks.filter(item => item.status);
@@ -84,29 +76,32 @@ export abstract class DisposeModel<
         tasks.forEach(item => item.run());
     }
 
-    constructor(loader: Method<DisposeModel['props'] & {
+    public get route() {
+        const result = super.route;
+        return {
+            ...result,
+            player: result.list.find(item => item instanceof PlayerModel),
+        }
+    }
+    
+    public get status() {
+        return Boolean(this.state.isLock);
+    }
+
+    constructor(props: DisposeModel['props'] & {
         uuid: string | undefined;
         state: S;
         child: C;
         refer: R;
-        route: P;
-    }, []>) {
-        super(() => {
-            const props = loader() ?? {};
-            return {
-                uuid: props.uuid,
-                state: { 
-                    isLock: false,
-                    ...props.state,
-                },
-                child: { ...props.child },
-                refer: { ...props.refer },
-                route: {
-                    player: PlayerModel.prototype,
-                    game: GameModel.prototype,
-                    ...props.route,
-                },
-            }
+    }) {
+        super({
+            uuid: props.uuid,
+            state: { 
+                isLock: false,
+                ...props.state,
+            },
+            child: { ...props.child },
+            refer: { ...props.refer },
         });
     }
 
@@ -114,9 +109,9 @@ export abstract class DisposeModel<
     @TranxUtil.span()
     public active(isLock?: boolean, source?: CardModel | HeroModel, reason?: Model) {
         if (this.status) return;
-        this.draft.refer.reason = reason;
-        this.draft.refer.source = source;
-        this.draft.state.isLock = isLock ?? false;
+        this.origin.refer.reason = reason;
+        this.origin.refer.source = source;
+        this.origin.state.isLock = isLock ?? false;
         DisposeModel.add(this);
     }
 

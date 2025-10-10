@@ -1,12 +1,12 @@
-import { Event, Method, Model, Props } from "set-piece";
+import { Event, Method, Model } from "set-piece";
 import { SelectEvent, SelectUtil } from "../../../utils/select";
-import { FeatureModel, FeatureProps } from "../../features";
-import { WEAPON_ROUTE, WeaponRoute } from "../../..";
+import { FeatureModel } from "../../..";
+import { AbortEvent } from "../../../types/event";
 
-export namespace WeaponBattlecryProps {
+export namespace WeaponBattlecryModel {
     export type E = {
-        toRun: Event;
-        onRun: Event;
+        toRun: AbortEvent;
+        onRun: {};
     };
     export type S = {};
     export type C = {};
@@ -15,16 +15,15 @@ export namespace WeaponBattlecryProps {
 
 export abstract class WeaponBattlecryModel<
     T extends Model[] = Model[],
-    E extends Partial<WeaponBattlecryProps.E> & Props.E = {},
-    S extends Partial<WeaponBattlecryProps.S> & Props.S = {},
-    C extends Partial<WeaponBattlecryProps.C> & Props.C = {},
-    R extends Partial<WeaponBattlecryProps.R> & Props.R = {},
+    E extends Partial<WeaponBattlecryModel.E> & Model.E = {},
+    S extends Partial<WeaponBattlecryModel.S> & Model.S = {},
+    C extends Partial<WeaponBattlecryModel.C> & Model.C = {},
+    R extends Partial<WeaponBattlecryModel.R> & Model.R = {},
 > extends FeatureModel<
-    E & WeaponBattlecryProps.E, 
-    S & WeaponBattlecryProps.S, 
-    C & WeaponBattlecryProps.C, 
-    R & WeaponBattlecryProps.R,
-    WeaponRoute
+    E & WeaponBattlecryModel.E, 
+    S & WeaponBattlecryModel.S, 
+    C & WeaponBattlecryModel.C, 
+    R & WeaponBattlecryModel.R
 > {
     public static async toRun(
         items: Readonly<WeaponBattlecryModel[]>
@@ -50,33 +49,29 @@ export abstract class WeaponBattlecryModel<
         return result;
     }
 
-    constructor(loader: Method<WeaponBattlecryModel['props'] & {
+    constructor(props: WeaponBattlecryModel['props'] & {
         uuid: string | undefined;
-        state: S & Pick<FeatureProps.S, 'desc' | 'name'>;
+        state: S & Pick<FeatureModel.S, 'desc' | 'name'>;
         child: C;
         refer: R;
-    }, []>) {
-        super(() => {
-            const props = loader?.();
-            return {
-                uuid: props.uuid,
-                state: { 
-                    isActive: true,
-                    ...props.state,
-                },
-                child: { ...props.child },
-                refer: { ...props.refer },
-                route: WEAPON_ROUTE,
-            }
+    }) {
+        super({
+            uuid: props.uuid,
+            state: { 
+                isActive: true,
+                ...props.state,
+            },
+            child: { ...props.child },
+            refer: { ...props.refer },
         });
     }
 
     public async run(from: number, ...params: T) {
         if (!this.state.isActive) return;
         
-        const event = new Event({})
+        const event = new AbortEvent({});
         this.event.toRun(event);
-        if (event.isAbort) return;
+        if (event.detail.isAbort) return;
 
         await this.doRun(from, ...params);
         this.event.onRun(new Event({}));

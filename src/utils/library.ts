@@ -1,6 +1,6 @@
-import { StoreUtil } from "set-piece";
 import { MinionCardModel } from "../models/cards/minion";
 import { CardModel } from "../models/cards";
+import { TemplUtil } from "set-piece";
 
 export class LibraryUtil {
     private static readonly _registry: CardModel[] = [];
@@ -12,7 +12,7 @@ export class LibraryUtil {
         return function (type: new () => CardModel) {
             const prototype = new type();
             LibraryUtil._registry.push(prototype);
-            StoreUtil.is(code)(type);
+            TemplUtil.is(code)(type);
         }
     }
 }

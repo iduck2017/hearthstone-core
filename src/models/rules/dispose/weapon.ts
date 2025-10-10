@@ -1,8 +1,8 @@
-import { DebugUtil, Loader, LogLevel, Model, TranxUtil } from "set-piece";
+import { DebugUtil, Model, TranxUtil } from "set-piece";
 import { DisposeModel } from ".";
 import { WeaponCardModel } from "../../..";
 
-export namespace WeaponDisposeProps {
+export namespace WeaponDisposeModel {
     export type E = {};
     export type S = {};
     export type C = {};
@@ -11,12 +11,20 @@ export namespace WeaponDisposeProps {
 }
 
 export class WeaponDisposeModel extends DisposeModel<
-    WeaponDisposeProps.E,
-    WeaponDisposeProps.S,
-    WeaponDisposeProps.C,
-    WeaponDisposeProps.R,
-    WeaponDisposeProps.P
+    WeaponDisposeModel.E,
+    WeaponDisposeModel.S,
+    WeaponDisposeModel.C,
+    WeaponDisposeModel.R
 > {
+    public get route() {
+        const result = super.route;
+        const weapon: WeaponCardModel | undefined = result.list.find(item => item instanceof WeaponCardModel);
+        return {
+            ...result,
+            weapon,
+        }
+    }
+
     public get status(): boolean {
         const weapon = this.route.weapon;
         if (!weapon) return true;
@@ -25,20 +33,16 @@ export class WeaponDisposeModel extends DisposeModel<
         return super.status || false;
     }
 
-    constructor(loader?: Loader<WeaponDisposeModel>) {
-        super(() => {
-            const props = loader?.() ?? {};
-            return {
-                uuid: props.uuid,
-                state: { ...props.state },
-                child: { ...props.child },
-                refer: { ...props.refer },
-                route: { weapon: WeaponCardModel.prototype },
-            }
+    constructor(props?: WeaponDisposeModel['props']) {
+        props = props ?? {}
+        super({
+            uuid: props.uuid,
+            state: { ...props.state },
+            child: { ...props.child },
+            refer: { ...props.refer },
         });
     }
 
-    @DebugUtil.log(LogLevel.WARN)
     protected run() {
         const weapon = this.route.weapon;
         if (!weapon) return;

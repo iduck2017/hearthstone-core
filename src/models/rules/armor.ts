@@ -1,6 +1,6 @@
-import { Event, Loader, Model } from "set-piece";
+import { Event, Model } from "set-piece";
 
-export namespace ArmorProps {
+export namespace ArmorModel {
     export type E = {
         onGet: Event<{ value: number }>;
         onUse: Event<{ value: number }>;
@@ -13,24 +13,20 @@ export namespace ArmorProps {
 }
 
 export class ArmorModel extends Model<
-    ArmorProps.E,
-    ArmorProps.S,
-    ArmorProps.C,
-    ArmorProps.R
+    ArmorModel.E,
+    ArmorModel.S,
+    ArmorModel.C,
+    ArmorModel.R
 > {
-    constructor(loader?: Loader<ArmorModel>) {
-        super(() => {
-            const props = loader?.() ?? {};
-            return {
-                uuid: props.uuid,
-                state: {    
-                    current: 0,
-                    ...props.state,
-                },
-                child: { ...props.child },
-                refer: { ...props.refer },
-                route: {},
-            }
+    constructor(props?: ArmorModel['props']) {
+        super({
+            uuid: props?.uuid,
+            state: {    
+                current: 0,
+                ...props?.state,
+            },
+            child: { ...props?.child },
+            refer: { ...props?.refer },
         });
     }
 
@@ -42,14 +38,14 @@ export class ArmorModel extends Model<
 
     protected add(value: number) { 
         if (value <= 0) return 0;
-        this.draft.state.current += value; 
+        this.origin.state.current += value; 
         return value;
     }
 
     protected del(value: number) { 
         if (value <= 0) return 0;
-        value = Math.min(value, this.draft.state.current);
-        this.draft.state.current -= value;
+        value = Math.min(value, this.origin.state.current);
+        this.origin.state.current -= value;
         return value;
     }
 

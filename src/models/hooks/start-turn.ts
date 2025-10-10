@@ -1,9 +1,9 @@
-import { Event, EventUtil, Method, Model, Props } from "set-piece";
+import { Event, EventUtil, Method, Model } from "set-piece";
 import { EndTurnHookModel } from "./end-turn";
-import { FeatureModel, FeatureProps } from "../features";
+import { FeatureModel } from "../features";
 import { TurnModel } from "../rules/turn";
 
-export namespace StartTurnHookProps {
+export namespace StartTurnHookModel {
     export type E = {
         onRun: Event;
     };
@@ -14,43 +14,39 @@ export namespace StartTurnHookProps {
 }
 
 export abstract class StartTurnHookModel<
-    E extends Partial<StartTurnHookProps.E> & Props.E = {},
-    S extends Partial<StartTurnHookProps.S> & Props.S = {},
-    C extends Partial<StartTurnHookProps.C> & Props.C = {},
-    R extends Partial<StartTurnHookProps.R> & Props.R = {},
-    P extends Partial<StartTurnHookProps.P> & Props.P = {}
+    E extends Partial<StartTurnHookModel.E> & Model.E = {},
+    S extends Partial<StartTurnHookModel.S> & Model.S = {},
+    C extends Partial<StartTurnHookModel.C> & Model.C = {},
+    R extends Partial<StartTurnHookModel.R> & Model.R = {},
 > extends FeatureModel<
-    E & StartTurnHookProps.E,
-    S & StartTurnHookProps.S,
-    C & StartTurnHookProps.C,
-    R & StartTurnHookProps.R,
-    P & StartTurnHookProps.P
+    E & StartTurnHookModel.E,
+    S & StartTurnHookModel.S,
+    C & StartTurnHookModel.C,
+    R & StartTurnHookModel.R
 > {
-    constructor(loader: Method<StartTurnHookModel['props'] & {
+    constructor(props: StartTurnHookModel['props'] & {
         uuid: string | undefined;
-        state: S & Pick<FeatureProps.S, 'desc' | 'name'>;
+        state: S & Pick<FeatureModel.S, 'desc' | 'name'>;
         child: C;
         refer: R;
-        route: P;
-    }, []>) {
-        super(() => {
-            const props = loader?.();
-            return {
-                uuid: props.uuid,
-                state: {
-                    isActive: true,
-                    ...props.state,
-                },
-                child: { ...props.child },
-                refer: { ...props.refer },
-                route: { ...props.route },
-            }
+    }) {
+        super({
+            uuid: props.uuid,
+            state: {
+                isActive: true,
+                ...props.state,
+            },
+            child: { ...props.child },
+            refer: { ...props.refer },
         });
     }
 
-    
-    @EventUtil.on(self => self.route.game?.proxy.child.turn.event.doStart)
-    protected async onStart(that: TurnModel, event: Event) {
+    @EventUtil.on(self => self.handle)
+    private listen() {
+        return this.route.game?.proxy.child.turn.event?.doStart;
+    }
+
+    protected async handle(that: TurnModel, event: Event) {
         if (!this.state.isActive) return;
 
         const game = this.route.game;

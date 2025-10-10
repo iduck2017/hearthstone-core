@@ -1,9 +1,9 @@
 import { Method, Model } from "set-piece";
 import { GameModel } from "./game";
-import { HandModel } from "./containers/hand";
-import { BoardModel } from "./containers/board";
-import { DeckModel } from "./containers/deck";
-import { GraveyardModel } from "./containers/graveyard";
+import { HandModel } from "./hand";
+import { BoardModel } from "./board";
+import { DeckModel } from "./deck";
+import { GraveyardModel } from "./graveyard";
 import { ManaModel } from "./rules/mana";
 import { HeroModel } from "./heroes";
 import { RoleModel } from "./role";
@@ -11,13 +11,14 @@ import { MinionCardModel } from "./cards/minion";
 import { FeatureModel } from "./features";
 import { CommandUtil } from "../utils/command";
 import { SelectUtil } from "../utils/select";
+import { MageModel } from "./heroes/mage";
 
 export enum RoleType {
     USER = 'user',
     AGENT = 'agent',
 }
 
-export namespace PlayerProps {
+export namespace PlayerModel {
     export type S = {
         readonly role: RoleType;
     };
@@ -39,12 +40,19 @@ export namespace PlayerProps {
 }
 
 export class PlayerModel extends Model<
-    PlayerProps.E, 
-    PlayerProps.S, 
-    PlayerProps.C, 
-    PlayerProps.R,
-    PlayerProps.P
+    PlayerModel.E, 
+    PlayerModel.S, 
+    PlayerModel.C, 
+    PlayerModel.R
 > {
+    public get route() {
+        const result = super.route;
+        return {
+            ...result,
+            game: result.list.find(item => item instanceof GameModel),
+        }
+    }
+
     public get refer() {
         return { 
             ...super.refer, 
@@ -76,7 +84,7 @@ export class PlayerModel extends Model<
             result.push(new CommandUtil('End Turn', () => game.child.turn.next()));
             // play
             const cards = this.child.hand.refer.order;
-            cards.forEach(item => {
+            cards?.forEach(item => {
                 if (!item.status) return;
                 result.push(new CommandUtil(`Play ${item.name}`, () => item.play()));
             });
@@ -108,40 +116,37 @@ export class PlayerModel extends Model<
         return playerA === this ? playerB : playerA;
     }
 
-    constructor(loader: Method<PlayerModel['props'] & {
-        child: Pick<PlayerProps.C, 'hero'>;
-    }, []>) {
-        super(() => {
-            const props = loader?.();
-            return {
-                uuid: props.uuid,
-                state: { 
-                    role: RoleType.USER,
-                    ...props.state 
-                },
-                child: {
-                    feats: [],
-                    mana: props.child.mana ?? new ManaModel(),
-                    hand: props.child.hand ?? new HandModel(),
-                    deck: props.child.deck ?? new DeckModel(),
-                    board: props.child.board ?? new BoardModel(),
-                    graveyard: props.child.graveyard ?? new GraveyardModel(),
-                    ...props.child
-                },
-                refer: { ...props.refer },
-                route: { game: GameModel.prototype },
-            }
+    constructor(props?: PlayerModel['props']) {
+        props = props ?? {};
+        const child = props?.child ?? {};
+        super({
+            uuid: props.uuid,
+            state: { 
+                role: RoleType.USER,
+                ...props.state 
+            },
+            child: {
+                feats: [],
+                hero: child.hero ?? new MageModel(),
+                mana: child.mana ?? new ManaModel(),
+                hand: child.hand ?? new HandModel(),
+                deck: child.deck ?? new DeckModel(),
+                board: child.board ?? new BoardModel(),
+                graveyard: child.graveyard ?? new GraveyardModel(),
+                ...child
+            },
+            refer: { ...props.refer },
         });
     }
 
     public add(feature: FeatureModel) {
-        this.draft.child.feats.push(feature);
+        this.origin.child.feats.push(feature);
     }
 
     public del(feature: FeatureModel) {
         const index = this.child.feats.indexOf(feature);
         if (index == -1) return;
-        this.draft.child.feats.splice(index, 1);
+        this.origin.child.feats.splice(index, 1);
     }
 
     public query(isMinion?: boolean): RoleModel[] {

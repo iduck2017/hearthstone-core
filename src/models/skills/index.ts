@@ -1,12 +1,13 @@
-import { Event, Method, Model, Props } from "set-piece";
+import { Event, Method, Model } from "set-piece";
 import { SelectEvent, SelectUtil } from "../../utils/select";
 import { PlayerModel } from "../player";
 import { GameModel } from "../game";
 import { CostModel } from "../rules/cost";
 import { HeroModel } from "../heroes";
-import { DamageModel } from "../actions/damage";
+import { DamageModel } from "../damage";
+import { AbortEvent } from "../../types/event";
 
-export namespace SkillProps {
+export namespace SkillModel {
     export type E = {
         toRun: Event,
         onRun: Event
@@ -19,48 +20,44 @@ export namespace SkillProps {
         cost: CostModel,
     };
     export type R = {};
-    export type P = {
-        hero: HeroModel;
-        game: GameModel;
-        player: PlayerModel;
-    }
 }
 
 export abstract class SkillModel<
     T extends Model[] = Model[],
-    E extends Partial<SkillProps.E> & Props.E = {},
-    S extends Partial<SkillProps.S> & Props.S = {},
-    C extends Partial<SkillProps.C> & Props.C = {},
-    R extends Partial<SkillProps.R> & Props.R = {},
+    E extends Partial<SkillModel.E> & Model.E = {},
+    S extends Partial<SkillModel.S> & Model.S = {},
+    C extends Partial<SkillModel.C> & Model.C = {},
+    R extends Partial<SkillModel.R> & Model.R = {},
 > extends Model<
-    E & SkillProps.E,
-    S & SkillProps.S,
-    C & SkillProps.C,
-    R & SkillProps.R,
-    SkillProps.P
+    E & SkillModel.E,
+    S & SkillModel.S,
+    C & SkillModel.C,
+    R & SkillModel.R
 > {
-    constructor(loader: Method<SkillModel['props'] & {
+    public get route() {
+        const result = super.route;
+        return {
+            ...result,
+            player: result.list.find(item => item instanceof PlayerModel),
+            game: result.list.find(item => item instanceof GameModel),
+            hero: result.list.find(item => item instanceof HeroModel),
+        }
+    }
+
+    constructor(props: SkillModel['props'] & {
         uuid: string | undefined;
-        state: S & SkillProps.S;
-        child: C & Pick<SkillProps.C, 'cost'>;
+        state: S & SkillModel.S;
+        child: C & Pick<SkillModel.C, 'cost'>;
         refer: R;
-    }, []>) {
-        super(() => {
-            const props = loader?.();
-            return {
-                uuid: props.uuid,
-                state: { ...props.state },
-                child: {
-                    damage: props.child?.damage ?? new DamageModel(),
-                    ...props.child
-                },
-                refer: { ...props.refer },
-                route: {
-                    hero: HeroModel.prototype,
-                    game: GameModel.prototype,
-                    player: PlayerModel.prototype,
-                },
-            }
+    }) {
+        super({
+            uuid: props.uuid,
+            state: { ...props.state },
+            child: {
+                damage: props.child?.damage ?? new DamageModel(),
+                ...props.child
+            },
+            refer: { ...props.refer }
         });
     }
 
@@ -69,11 +66,11 @@ export abstract class SkillModel<
         const player = this.route.player;
         if (!player) return;
         const cost = this.child.cost;
-        if (!cost.status) return;
+        if (!cost?.status) return;
         
-        const event = new Event({});
-        this.event.toRun(event);
-        if (event.isAbort) return;
+        const event = new AbortEvent({});
+        this.event.toRun?.(event);
+        if (event.detail.isAbort) return;
 
         const options = this.toRun();
         if (!options) return;

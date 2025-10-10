@@ -1,41 +1,35 @@
-import { Decor, Method, Model, Props, StateUtil } from "set-piece";
-import { SpellCardModel } from "../../cards/spell";
-import { EffectModel, EffectProps } from ".";
-import { FeatureProps } from "..";
-import { RoleModel, SelectUtil, SPELL_ROUTE, SpellRoute } from "../../..";
+import { Decor, Model } from "set-piece";
+import { EffectModel, FeatureModel, RoleModel, SelectUtil } from "../..";
 
-export namespace SpellEffectProps {
+export namespace SpellEffectModel {
     export type E = {};
     export type S = { damage: number[] };
     export type C = {};
     export type R = {};
-    export type P = SpellRoute;
 }
 
-export class SpellEffectDecor extends Decor<
-    SpellEffectProps.S & 
-    EffectProps.S & 
-    FeatureProps.S
+export class SpellEffectDecor<S extends Model.S = {}> extends Decor<
+    S & SpellEffectModel.S & EffectModel.S & FeatureModel.S
 > {
     public add(value: number) {
-        this.detail.damage = this.detail.damage.map(item => item + value);
+        this._detail.damage = this._detail.damage.map(item => item + value);
     }
 }
 
-@StateUtil.use(SpellEffectDecor)
 export abstract class SpellEffectModel<
     T extends Model[] = Model[],
-    E extends Partial<SpellEffectProps.E> & Props.E = {},
-    S extends Partial<SpellEffectProps.S> & Props.S = {},
-    C extends Partial<SpellEffectProps.C> & Props.C = {},
-    R extends Partial<SpellEffectProps.R> & Props.R = {},
+    E extends Partial<SpellEffectModel.E> & Model.E = {},
+    S extends Partial<SpellEffectModel.S> & Model.S = {},
+    C extends Partial<SpellEffectModel.C> & Model.C = {},
+    R extends Partial<SpellEffectModel.R> & Model.R = {},
 > extends EffectModel<T,
-    E & SpellEffectProps.E,
-    S & SpellEffectProps.S,
-    C & SpellEffectProps.C,
-    R & SpellEffectProps.R,
-    SpellEffectProps.P
+    E & SpellEffectModel.E,
+    S & SpellEffectModel.S,
+    C & SpellEffectModel.C,
+    R & SpellEffectModel.R
 > {
+    public get decor(): SpellEffectDecor<S> { return new SpellEffectDecor(this); }
+
     public static async toRun(items: Readonly<SpellEffectModel[]>): Promise<Map<SpellEffectModel, Model[]> | undefined> {
         const result = new Map<SpellEffectModel, Model[]>();
         for (const item of items) {
@@ -62,20 +56,16 @@ export abstract class SpellEffectModel<
         return result;
     }
 
-    constructor(loader: Method<SpellEffectModel['props'] & {
+    constructor(props: SpellEffectModel['props'] & {
         child: C;
-        state: S & SpellEffectProps.S & Pick<FeatureProps.S, 'desc' | 'name'>;
+        state: S & SpellEffectModel.S & Pick<FeatureModel.S, 'desc' | 'name'>;
         refer: R;
-    }, []>) {
-        super(() => {
-            const props = loader();
-            return {
-                uuid: props.uuid,
-                state: { ...props.state },
-                child: { ...props.child },
-                refer: { ...props.refer },
-                route: SPELL_ROUTE,
-            }
+    }) {
+        super({
+            uuid: props.uuid,
+            state: { ...props.state },
+            child: { ...props.child },
+            refer: { ...props.refer },
         })
     }
 }

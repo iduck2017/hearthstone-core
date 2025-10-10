@@ -1,36 +1,32 @@
-import { Event, Loader, TranxUtil } from "set-piece";
-import { BoardModel } from "../../containers/board";
+import { Event, TranxUtil } from "set-piece";
+import { BoardModel } from "../../board";
 import { DeployModel } from "./index"
-import { SecretCardModel } from "../../cards/secret";
+import { SecretCardModel } from "../../..";
 
-export namespace SecretDeployProps {
+export namespace SecretDeployModel {
     export type E = {};
     export type S = {};
     export type C = {};
     export type R = {};
-    export type P = {
-        secret: SecretCardModel;
-    };
 }
 
-export class SecretDeployModel extends DeployModel<
-    SecretDeployProps.E,
-    SecretDeployProps.S,
-    SecretDeployProps.C,
-    SecretDeployProps.R,
-    SecretDeployProps.P
-> {
+export class SecretDeployModel extends DeployModel {
+    public get route() {
+        const result = super.route;
+        const secret: SecretCardModel | undefined = result.list.find(item => item instanceof SecretCardModel);
+        return {
+            ...result,
+            secret,
+        }
+    }
 
-    constructor(loader?: Loader<SecretDeployModel>) {
-        super(() => {
-            const props = loader?.() ?? {};
-            return {
-                uuid: props.uuid,
-                state: { ...props.state },
-                child: { ...props.child },
-                refer: { ...props.refer },
-                route: { secret: SecretCardModel.prototype },
-            }
+    constructor(props?: SecretDeployModel['props']) {
+        props = props ?? {}
+        super({
+            uuid: props.uuid,
+            state: { ...props.state },
+            child: { ...props.child },
+            refer: { ...props.refer },
         });
     }
 

@@ -1,36 +1,33 @@
-import { GameModel, MageModel, PlayerModel, SelectUtil, TimeUtil } from "hearthstone-core";
+import { BoardModel, DeckModel, GameModel, HandModel, MageModel, PlayerModel, SelectUtil, TimeUtil } from "hearthstone-core";
 import { boot } from "./boot";
-import { HandModel } from "hearthstone-core";
-import { DeckModel } from "hearthstone-core";
-import { BoardModel } from "hearthstone-core";
 import { WispModel } from "./wisp";
 
 describe('role', () => {
-    const game = new GameModel(() => ({
+    const game = new GameModel({
         state: { debug: { isDrawDisabled: true } },
         child: {
-            playerA: new PlayerModel(() => ({
+            playerA: new PlayerModel({
                 child: {
                     hero: new MageModel(),
                     hand: new HandModel(),
                     deck: new DeckModel(),
-                    board: new BoardModel(() => ({
+                    board: new BoardModel({
                         child: { minions: [new WispModel()] }
-                    })),
+                    }),
                 }
-            })),
-            playerB: new PlayerModel(() => ({
+            }),
+            playerB: new PlayerModel({
                 child: {
                     hero: new MageModel(),
                     hand: new HandModel(),
                     deck: new DeckModel(),
-                    board: new BoardModel(() => ({
+                    board: new BoardModel({
                         child: { minions: [new WispModel()] }
-                    })),
+                    }),
                 }
-            })),
+            }),
         }
-    }));
+    });
     boot(game)
     const playerA = game.child.playerA;
     const playerB = game.child.playerB;

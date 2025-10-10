@@ -3,26 +3,26 @@ import { WispModel } from "./wisp";
 import { boot } from "./boot";
 
 describe('skill', () => {
-    const game = boot(new GameModel(() => ({
+    const game = boot(new GameModel({
         state: { debug: { isDrawDisabled: true } },
         child: {
-            playerA: new PlayerModel(() => ({
+            playerA: new PlayerModel({
                 child: {
-                    mana: new ManaModel(() => ({ state: { origin: 10 }})),
+                    mana: new ManaModel({ state: { origin: 10 }}),
                     hero: new MageModel(),
                 }
-            })),
-            playerB: new PlayerModel(() => ({
+            }),
+            playerB: new PlayerModel({
                 child: {
-                    mana: new ManaModel(() => ({ state: { origin: 10 }})),
-                    hero: new WarriorModel(),
-                    board: new BoardModel(() => ({
+                    mana: new ManaModel({ state: { origin: 10 }}),
+                    hero: new WarriorModel({}),
+                    board: new BoardModel({
                         child: { minions: [new WispModel()] }
-                    })),
+                    }),
                 }
-            })),
+            }),
         }
-    })));
+    }));
     const playerA = game.child.playerA;
     const playerB = game.child.playerB;
     const boardA = playerA.child.board;

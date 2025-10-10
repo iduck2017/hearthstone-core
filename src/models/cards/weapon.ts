@@ -1,13 +1,13 @@
-import { Method, Props } from "set-piece";
-import { CardModel, CardProps } from ".";
+import { Method, Model } from "set-piece";
+import { CardModel } from ".";
 import { WeaponAttackModel } from "../rules/attack/weapon";
-import { WeaponActionModel } from "../rules/action/weapon";
+import { WeaponActionModel } from "../rules/weapon-action";
 import { WeaponHooksOptions, WeaponFeatsModel } from "../features/weapon";
 import { WeaponDisposeModel } from "../rules/dispose/weapon";
 import { WeaponDeployModel } from "../rules/deploy/weapon";
 import { WeaponPerformModel } from "../rules/perform/weapon";
 
-export namespace WeaponCardProps {
+export namespace WeaponCardModel {
     export type S = {};
     export type E = {};
     export type C = {
@@ -21,36 +21,33 @@ export namespace WeaponCardProps {
     export type R = {};
 }
 
-export class WeaponCardModel<
-    E extends Partial<WeaponCardProps.E & CardProps.E> & Props.E = {},
-    S extends Partial<WeaponCardProps.S & CardProps.S> & Props.S = {},
-    C extends Partial<WeaponCardProps.C & CardProps.C> & Props.C = {},
-    R extends Partial<WeaponCardProps.R & CardProps.R> & Props.R = {}
+export abstract class WeaponCardModel<
+    E extends Partial<WeaponCardModel.E & CardModel.E> & Model.E = {},
+    S extends Partial<WeaponCardModel.S & CardModel.S> & Model.S = {},
+    C extends Partial<WeaponCardModel.C & CardModel.C> & Model.C = {},
+    R extends Partial<WeaponCardModel.R & CardModel.R> & Model.R = {}
 > extends CardModel<
-    E & WeaponCardProps.E,
-    S & WeaponCardProps.S,
-    C & WeaponCardProps.C,
-    R & WeaponCardProps.R
+    E & WeaponCardModel.E,
+    S & WeaponCardModel.S,
+    C & WeaponCardModel.C,
+    R & WeaponCardModel.R
 > {
-    constructor(loader: Method<WeaponCardModel['props'] & {
-        state: S & WeaponCardProps.S & Omit<CardProps.S, 'isActive'>;
-        child: C & Pick<WeaponCardProps.C, 'attack' | 'action'> & Pick<CardProps.C, 'cost'>;
-        refer: R & WeaponCardProps.R;
-    }, []>) {
-        super(() => {
-            const props = loader();
-            return {
-                uuid: props.uuid,
-                state: { ...props.state },
-                child: {
-                    deploy: props.child.deploy ?? new WeaponDeployModel(),
-                    dispose: props.child.dispose ?? new WeaponDisposeModel(),
-                    feats: props.child.feats ?? new WeaponFeatsModel(),
-                    perform: props.child.perform ?? new WeaponPerformModel(),
-                    ...props.child,
-                },
-                refer: { ...props.refer },
-            }
+    constructor(props: WeaponCardModel['props'] & {
+        state: S & WeaponCardModel.S & Omit<CardModel.S, 'isActive'>;
+        child: C & Pick<WeaponCardModel.C, 'attack' | 'action'> & Pick<CardModel.C, 'cost'>;
+        refer: R & WeaponCardModel.R;
+    }) {
+        super({
+            uuid: props.uuid,
+            state: { ...props.state },
+            child: {
+                deploy: props.child.deploy ?? new WeaponDeployModel(),
+                dispose: props.child.dispose ?? new WeaponDisposeModel(),
+                feats: props.child.feats ?? new WeaponFeatsModel(),
+                perform: props.child.perform ?? new WeaponPerformModel(),
+                ...props.child,
+            },
+            refer: { ...props.refer },
         })
     }
 }

@@ -1,4 +1,3 @@
-import { FrameUtil } from "set-piece";
 import { AppModel } from "../models/app";
 
 export class CommandUtil {
@@ -8,9 +7,7 @@ export class CommandUtil {
     constructor(title: string, handler: () => void) {
         this.title = title;
         this.handler = () => {
-            FrameUtil.reset();
             handler();
-            FrameUtil.reset();
         };
     }
 }

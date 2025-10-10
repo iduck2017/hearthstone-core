@@ -1,8 +1,8 @@
-import { Event, Loader, Method, Model } from "set-piece";
+import { DebugUtil, Event, Method, Model } from "set-piece";
 import { PlayerModel } from "../player";
 import { GameModel } from "../game";
 
-export namespace TurnProps {
+export namespace TurnModel {
     export type S = {
         count: number;
     };
@@ -16,31 +16,31 @@ export namespace TurnProps {
     export type R = {
         current?: PlayerModel;
     };
-    export type P = {
-        game: GameModel;
-    }
 }
 
 export class TurnModel extends Model<
-    TurnProps.E, 
-    TurnProps.S, 
-    TurnProps.C, 
-    TurnProps.R,
-    TurnProps.P
+    TurnModel.E, 
+    TurnModel.S, 
+    TurnModel.C, 
+    TurnModel.R
 > {
-    constructor(loader?: Loader<TurnModel>) {
-        super(() => {
-            const props = loader?.() ?? {};
-            return {
-                uuid: props.uuid,
-                state: {
-                    count: 0,
-                    ...props.state,
-                },
-                child: { ...props.child },
-                refer: { ...props.refer },
-                route: { game: GameModel.prototype },
-            }
+    public get route() {
+        const result = super.route;
+        return {
+            ...result,
+            game: result.list.find(item => item instanceof GameModel),
+        }
+    }
+
+    constructor(props?: TurnModel['props']) {
+        super({
+            uuid: props?.uuid,
+            state: {
+                count: 0,
+                ...props?.state,
+            },
+            child: { ...props?.child },
+            refer: { ...props?.refer },
         })
     }
 
@@ -48,8 +48,8 @@ export class TurnModel extends Model<
         this.end();
         const current = this.refer.current;
         const game = this.route.game;
-        this.draft.refer.current = current?.refer.opponent ?? game?.child.playerA;
-        this.draft.state.count ++;
+        this.origin.refer.current = current?.refer.opponent ?? game?.child.playerA;
+        this.origin.state.count ++;
         this.start();
     }
 

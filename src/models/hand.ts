@@ -1,10 +1,10 @@
-import { Loader, Model, StoreUtil, TranxUtil } from "set-piece";
-import { PlayerModel } from "../player";
-import { GameModel } from "../game";
-import { CardModel } from "../cards";
-import { WeaponCardModel, MinionCardModel, SpellCardModel } from "../..";
+import { Model, TemplUtil, TranxUtil } from "set-piece";
+import { PlayerModel } from "./player";
+import { GameModel } from "./game";
+import { CardModel } from "..";
+import { WeaponCardModel, MinionCardModel, SpellCardModel } from "..";
 
-export namespace HandProps {
+export namespace HandModel {
     export type E = {}
     export type S = {}
     export type C = {
@@ -22,46 +22,40 @@ export namespace HandProps {
     }
 }
 
+@TemplUtil.is('hand')
 export class HandModel extends Model<
-    HandProps.E,
-    HandProps.S,
-    HandProps.C,
-    HandProps.R,
-    HandProps.P
+    HandModel.E,
+    HandModel.S,
+    HandModel.C,
+    HandModel.R
 > {
-    constructor(loader?: Loader<HandModel>) {
-        super(() => {
-            const props = loader?.() ?? {};
-            return {
-                uuid: props.uuid,
-                child: { 
-                    spells: [],
-                    minions: [],
-                    weapons: [],
-                    cache: [],
-                    ...props.child,
-                },
-                state: { ...props.state },
-                refer: { 
-                    order: [
-                        ...props.child?.minions ?? [],
-                        ...props.child?.weapons ?? [],
-                        ...props.child?.spells ?? [],
-                    ],
-                    ...props.refer 
-                },
-                route: {
-                    game: GameModel.prototype,
-                    player: PlayerModel.prototype,
-                }
-            }
+    constructor(props?: HandModel['props']) {
+        props = props ?? {};
+        super({
+            uuid: props.uuid,
+            child: { 
+                spells: [],
+                minions: [],
+                weapons: [],
+                cache: [],
+                ...props.child,
+            },
+            state: { ...props.state },
+            refer: { 
+                order: [
+                    ...props.child?.minions ?? [],
+                    ...props.child?.weapons ?? [],
+                    ...props.child?.spells ?? [],
+                ],
+                ...props.refer 
+            },
         })
     }
 
     public query(card: CardModel): CardModel[] | undefined {
-        if (card instanceof SpellCardModel) return this.draft.child.spells;
-        if (card instanceof MinionCardModel) return this.draft.child.minions;
-        if (card instanceof WeaponCardModel) return this.draft.child.weapons;
+        if (card instanceof SpellCardModel) return this.origin.child.spells;
+        if (card instanceof MinionCardModel) return this.origin.child.minions;
+        if (card instanceof WeaponCardModel) return this.origin.child.weapons;
     }
    
     @TranxUtil.span()
@@ -70,7 +64,7 @@ export class HandModel extends Model<
         if (!cards) return;
         cards.push(card);
 
-        const order = this.draft.refer.order;
+        const order = this.origin.refer.order ?? [];
         if (position === -1) position = order.length;
         if (!position) position = order.length;
         order.splice(position, 0, card);
@@ -79,7 +73,7 @@ export class HandModel extends Model<
     
     @TranxUtil.span()
     public copy(origin: CardModel) {
-        const copy = StoreUtil.copy(origin, {
+        const copy = TemplUtil.copy(origin, {
             refer: { ...origin.props.refer, creator: origin },
         });
         if (!copy) return;
@@ -94,17 +88,17 @@ export class HandModel extends Model<
         if (index === -1) return;
         cards.splice(index, 1);
 
-        const order = this.draft.refer.order;
+        const order = this.origin.refer.order ?? [];
         index = order.indexOf(card);
         if (index !== -1) order.splice(index, 1);
 
-        this.draft.child.cache.push(card);
+        this.origin.child.cache.push(card);
     }
 
     @TranxUtil.span()
     public use(card: CardModel): boolean {
         // remove from cache
-        const cache = this.draft.child.cache;
+        const cache = this.origin.child.cache ?? [];
         let index = cache.indexOf(card);
         if (index === -1) return false;
         cache.splice(index, 1);
@@ -120,7 +114,7 @@ export class HandModel extends Model<
         cards.splice(index, 1);
         
         // remove from order
-        const order = this.draft.refer.order;
+        const order = this.origin.refer.order ?? [];
         index = order.indexOf(card);
         if (index === -1) return;
         order.splice(index, 1);

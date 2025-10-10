@@ -1,35 +1,31 @@
-import { Event, Loader, StoreUtil } from "set-piece";
+import { Event, TemplUtil } from "set-piece";
 import { FeatureModel } from "../features";
 
-export namespace ChargeProps {
+export namespace ChargeModel {
     export type E = {}
     export type S = {}
     export type C = {}
     export type R = {}
 }
 
-@StoreUtil.is('charge')
+@TemplUtil.is('charge')
 export class ChargeModel extends FeatureModel<
-    ChargeProps.E,
-    ChargeProps.S,
-    ChargeProps.C,
-    ChargeProps.R
+    ChargeModel.E,
+    ChargeModel.S,
+    ChargeModel.C,
+    ChargeModel.R
 > {
-    constructor(loader?: Loader<ChargeModel>) {
-        super(() => {
-            const props = loader?.() ?? {};
-            return {
-                uuid: props.uuid,
-                state: {
-                    name: 'Charge',
-                    desc: 'Can attack immediately.',
-                    isActive: true,
-                    ...props.state,
-                },
-                child: { ...props.child },
-                refer: { ...props.refer },
-                route: {},
-            }
+    constructor(props?: ChargeModel['props']) {
+        super({
+            uuid: props?.uuid,
+            state: {
+                name: 'Charge',
+                desc: 'Can attack immediately.',
+                isActive: true,
+                ...props?.state,
+            },
+            child: { ...props?.child },
+            refer: { ...props?.refer },
         })
     }
 }

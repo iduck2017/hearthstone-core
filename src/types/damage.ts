@@ -1,7 +1,8 @@
 import { Event, Model } from "set-piece";
 import { RoleModel } from "../models/role";
-import { DamageModel } from "../models/actions/damage";
+import { DamageModel } from "../models/damage";
 import { CardModel, HeroModel } from "..";
+import { AbortEvent } from "./event";
 
 export enum DamageType {
     DEFAULT = 0,
@@ -11,7 +12,7 @@ export enum DamageType {
     SKILL
 }
 
-export class DamageEvent extends Event<{
+export class DamageEvent extends AbortEvent<{
     type?: DamageType,
     source: CardModel | HeroModel;
     method: Model;
@@ -34,7 +35,7 @@ export class DamageEvent extends Event<{
             ...props,
             result: props.origin,
             options: {},
-        });
+        })
     }
 
     public set(value: number) { this._detail.result = value; }

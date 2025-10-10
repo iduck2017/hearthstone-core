@@ -1,57 +1,51 @@
-import { Event, Loader, Method, Model, Props } from "set-piece"
+import { Event, Method, Model, Route } from "set-piece"
 import { CardModel, MinionCardModel, PlayerModel, SpellCardModel, WeaponCardModel } from "../../.."
+import { AbortEvent } from "../../../types/event";
 
-export namespace PerformProps {
+export namespace PerformModel {
     export type E = {
-        toRun: Event;
+        toRun: AbortEvent;
         onRun: Event;
     }
     export type S = {}
     export type C = {}
     export type R = {}
-    export type P = {
-        card: CardModel;
-        player: PlayerModel;
-    }
 }
 
 export abstract class PerformModel<
     T extends any[] = any[],
-    E extends Props.E & Partial<PerformProps.E> = {},
-    S extends Props.S & Partial<PerformProps.S> = {},
-    C extends Props.C & Partial<PerformProps.C> = {},
-    R extends Props.R & Partial<PerformProps.R> = {},
-    P extends Props.P & Partial<PerformProps.P> = {}
+    E extends Partial<PerformModel.E> & Model.E = {},
+    S extends Partial<PerformModel.S> & Model.S = {},
+    C extends Partial<PerformModel.C> & Model.C = {},
+    R extends Partial<PerformModel.R> & Model.R = {},
 > extends Model<
-    E & PerformProps.E,
-    S & PerformProps.S,
-    C & PerformProps.C,
-    R & PerformProps.R,
-    P & PerformProps.P
+    E & PerformModel.E,
+    S & PerformModel.S,
+    C & PerformModel.C,
+    R & PerformModel.R
 > {
-    constructor(loader: Method<PerformModel['props'] & {
+    public get route() {
+        const result = super.route;
+        const card: CardModel | undefined = result.list.find(item => item instanceof CardModel);
+        const player: PlayerModel | undefined = result.list.find(item => item instanceof PlayerModel);
+        return {
+            ...result,
+            card,
+            player,
+        }
+    }
+
+    constructor(props: PerformModel['props'] & {
         uuid: string | undefined;
         state: S;
         child: C;
         refer: R;
-        route: P;
-    }, []>) {
-        super(() => {
-            const props = loader() ?? {}
-            return {
-                uuid: props.uuid,
-                state: { ...props.state },
-                child: { ...props.child },
-                refer: { ...props.refer },
-                route: {
-                    card: CardModel.prototype,
-                    player: PlayerModel.prototype,
-                    minion: MinionCardModel.prototype,
-                    weapon: WeaponCardModel.prototype,
-                    spell: SpellCardModel.prototype,
-                    ...props.route,
-                },
-            }
+    }) {
+        super({
+            uuid: props.uuid,
+            state: { ...props.state },
+            child: { ...props.child },
+            refer: { ...props.refer },
         })
     }
 

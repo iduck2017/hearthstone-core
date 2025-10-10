@@ -1,8 +1,8 @@
-import { Method, Model, StoreUtil } from "set-piece";
+import { Method, Model, TemplUtil } from "set-piece";
 import { PlayerModel } from "./player";
 import { TurnModel } from "./rules/turn";
 
-export namespace GameProps {
+export namespace GameModel {
     export type S = {
         readonly debug?: {
             readonly isDrawDisabled: boolean;
@@ -14,36 +14,31 @@ export namespace GameProps {
         readonly playerA: PlayerModel;
         readonly playerB: PlayerModel;
     };
+    export type R = {};
 }
 
-@StoreUtil.is('game')
+@TemplUtil.is('game')
 export class GameModel extends Model<
-    GameProps.E, 
-    GameProps.S, 
-    GameProps.C
+    GameModel.E, 
+    GameModel.S, 
+    GameModel.C,
+    GameModel.R
 > {
-
-    constructor(loader: Method<GameModel['props'] & {
-        child: Pick<GameProps.C, 'playerA' | 'playerB'>;
-    }, []>) {
-        super(() => {
-            const props = loader?.() ?? {};
-            return {
-                uuid: props.uuid,
-                state: {
-                    turn: 0,
-                    ...props.state,
-                },
-                child: { 
-                    turn: props.child.turn ?? new TurnModel(),
-                    ...props.child
-                },
-                refer: { ...props.refer },
-                route: {},
-            }
+    constructor(props?: GameModel['props']) {
+        props = props ?? {};
+        const child = props?.child ?? {};
+        super({
+            uuid: props.uuid,
+            state: { ...props.state },
+            child: { 
+                playerA: child.playerA ?? new PlayerModel(),
+                playerB: child.playerB ?? new PlayerModel(),
+                turn: child.turn ?? new TurnModel(),
+                ...props.child
+            },
+            refer: { ...props.refer },
         });
     }
-
 
     public query(isMinion?: boolean) {
         const playerA = this.child.playerA;

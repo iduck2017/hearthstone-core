@@ -1,35 +1,37 @@
-import { Event, Loader, TranxUtil } from "set-piece";
-import { BoardModel } from "../../containers/board";
+import { Event, TranxUtil } from "set-piece";
+import { BoardModel } from "../../board";
 import { DeployModel } from "./index"
-import { MinionCardModel } from "../../cards/minion";
+import { MinionCardModel } from "../../..";
 
-export namespace MinionDeployProps {
+export namespace MinionDeployModel {
     export type E = {};
     export type C = {};
     export type S = {};
     export type R = {};
-    export type P = {
-        minion: MinionCardModel;
-    };
 }
 
 export class MinionDeployModel extends DeployModel<
-    MinionDeployProps.E,
-    MinionDeployProps.S,
-    MinionDeployProps.C,
-    MinionDeployProps.R,
-    MinionDeployProps.P
+    MinionDeployModel.E,
+    MinionDeployModel.S,
+    MinionDeployModel.C,
+    MinionDeployModel.R
 > {
-    constructor(loader?: Loader<MinionDeployModel>) {
-        super(() => {
-            const props = loader?.() ?? {};
-            return {
-                uuid: props.uuid,
-                state: { ...props.state },
-                child: { ...props.child },
-                refer: { ...props.refer },
-                route: { minion: MinionCardModel.prototype },
-            }
+    public get route() {
+        const result = super.route;
+        const minion: MinionCardModel | undefined = result.list.find(item => item instanceof MinionCardModel);
+        return {
+            ...result,
+            minion,
+        }
+    }
+
+    constructor(props?: MinionDeployModel['props']) {
+        props = props ?? {}
+        super({
+            uuid: props.uuid,
+            state: { ...props.state },
+            child: { ...props.child },
+            refer: { ...props.refer },
         });
     }
 

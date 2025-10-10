@@ -1,7 +1,6 @@
-import { Event, Loader, Method, Model, StoreUtil, TranxUtil } from "set-piece";
+import { Event, Method, Model, TemplUtil, TranxUtil } from "set-piece";
 
-
-export namespace ManaProps {
+export namespace ManaModel {
     export type E = {
         onUse: Event<{ value: number; reason?: Model }>;
     };
@@ -14,42 +13,38 @@ export namespace ManaProps {
     export type R = {};
 }
 
-@StoreUtil.is('mana')
+@TemplUtil.is('mana')
 export class ManaModel extends Model<
-    ManaProps.E,
-    ManaProps.S,
-    ManaProps.C,
-    ManaProps.R
+    ManaModel.E,
+    ManaModel.S,
+    ManaModel.C,
+    ManaModel.R
 > {
-    constructor(loader?: Loader<ManaModel>) {
-        super(() => {
-            const props = loader?.() ?? {};
-            return {
-                uuid: props.uuid,
-                state: {
-                    origin: 0,
-                    current: props.state?.origin ?? 0,
-                    maximum: 10,
-                    ...props.state,
-                },
-                child: { ...props.child },
-                refer: { ...props.refer }, 
-                route: {},
-            }
+    constructor(props?: ManaModel['props']) {
+        super({
+            uuid: props?.uuid,
+            state: {
+                origin: 0,
+                current: props?.state?.origin ?? 0,
+                maximum: 10,
+                ...props?.state,
+            },
+            child: { ...props?.child },
+            refer: { ...props?.refer }, 
         })
     }
 
     @TranxUtil.span()
     public reset() {
-        if (this.draft.state.origin < this.draft.state.maximum) {
-            this.draft.state.origin += 1;
+        if (this.origin.state.origin < this.origin.state.maximum) {
+            this.origin.state.origin += 1;
         }
-        this.draft.state.current = this.draft.state.origin;
+        this.origin.state.current = this.origin.state.origin;
     }
 
     public use(value: number, reason?: Model) {
-        if (value > this.draft.state.current) value= this.draft.state.current;
-        this.draft.state.current -= value;
+        if (value > this.origin.state.current) value= this.origin.state.current;
+        this.origin.state.current -= value;
         this.event.onUse(new Event({ value, reason }));
     }
 }

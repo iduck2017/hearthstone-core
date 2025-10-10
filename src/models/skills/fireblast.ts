@@ -1,29 +1,26 @@
-import { Loader, StoreUtil } from "set-piece";
 import { SkillModel } from ".";
 import { SelectEvent } from "../../utils/select";
 import { RoleModel } from "../role";
 import { CostModel } from "../rules/cost";
-import { DamageModel } from "../actions/damage";
+import { DamageModel } from "../damage";
 import { DamageEvent, DamageType } from "../../types/damage";
+import { TemplUtil } from "set-piece";
 
-@StoreUtil.is('fireblast')
+@TemplUtil.is('fireblast')
 export class FireBlastModel extends SkillModel<[RoleModel]> {
-    constructor(loader?: Loader<FireBlastModel>) {
-        super(() => {
-            const props = loader?.() ?? {};
-            return {
-                uuid: props.uuid,
-                state: {
-                    desc: 'Fireblast',
-                    name: 'Deal 1 damage',
-                    ...props.state,
-                },
-                child: {
-                    cost: props.child?.cost ?? new CostModel(() => ({ state: { origin: 2 }})),
-                    ...props.child,
-                },
-                refer: { ...props.refer },
-            }
+    constructor(props?: FireBlastModel['props']) {
+        super({
+            uuid: props?.uuid,
+            state: {
+                desc: 'Fireblast',
+                name: 'Deal 1 damage',
+                ...props?.state,
+            },
+            child: {
+                cost: props?.child?.cost ?? new CostModel({ state: { origin: 2 }}),
+                ...props?.child,
+            },
+            refer: { ...props?.refer },
         });
     }
 

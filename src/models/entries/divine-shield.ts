@@ -1,8 +1,8 @@
-import { Event, Loader, StoreUtil, TranxUtil } from "set-piece";
+import { Event, TemplUtil, TranxUtil } from "set-piece";
 import { DamageEvent } from "../../types/damage";
 import { FeatureModel } from "../features";
 
-export namespace DivineShieldProps {
+export namespace DivineShieldModel {
     export type E = {
         onUse: DamageEvent
     }
@@ -13,44 +13,40 @@ export namespace DivineShieldProps {
     export type R = {}
 }
 
-@StoreUtil.is('divine-shield')
+@TemplUtil.is('divine-shield')
 export class DivineShieldModel extends FeatureModel<
-    DivineShieldProps.E,
-    DivineShieldProps.S,
-    DivineShieldProps.C,
-    DivineShieldProps.R
+    DivineShieldModel.E,
+    DivineShieldModel.S,
+    DivineShieldModel.C,
+    DivineShieldModel.R
 > {
-    constructor(loader?: Loader<DivineShieldModel>) {
-        super(() => {
-            const props = loader?.() ?? {};
-            return {
-                uuid: props.uuid,
-                state: {
-                    name: 'Divine Shield',
-                    desc: 'The first time you take damage, ignore it.',
-                    isActive: true,
-                    count: props.state?.isActive ? 1 : 0,
-                    ...props.state,
-                },
-                child: { ...props.child },
-                refer: { ...props.refer },
-                route: {},
-            }
+    constructor(props?: DivineShieldModel['props']) {
+        super({
+            uuid: props?.uuid,
+            state: {
+                name: 'Divine Shield',
+                desc: 'The first time you take damage, ignore it.',
+                isActive: true,
+                count: props?.state?.isActive ? 1 : 0,
+                ...props?.state,
+            },
+            child: { ...props?.child },
+            refer: { ...props?.refer },
         })
     }
 
     @TranxUtil.span()
     public active(): boolean {
         if (this.state.isActive) return false; 
-        this.draft.state.isActive = true;
-        this.draft.state.count = 1;
+        this.origin.state.isActive = true;
+        this.origin.state.count = 1;
         return true;
     }
 
     public async use(event: DamageEvent) {
         if (!this.state.isActive) return false;
-        if (this.draft.state.count <= 1) this.draft.state.isActive = false;
-        this.draft.state.count =- 1;
+        if (this.origin.state.count <= 1) this.origin.state.isActive = false;
+        this.origin.state.count =- 1;
         event.config({ isDivineShield: true });
         this.event.onUse(event);
         return true;
@@ -59,6 +55,6 @@ export class DivineShieldModel extends FeatureModel<
 
     public deactive() {
         super.deactive();
-        this.draft.state.count = 0;
+        this.origin.state.count = 0;
     }
 }

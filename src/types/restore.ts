@@ -1,9 +1,10 @@
 import { Event, Model } from "set-piece";
 import { RoleModel } from "../models/role";
-import { RestoreModel } from "../models/actions/restore";
+import { RestoreModel } from "../models/restore";
 import { CardModel, HeroModel } from "..";
+import { AbortEvent } from "./event";
 
-export class RestoreEvent extends Event<{
+export class RestoreEvent extends AbortEvent<{
     target: RoleModel;
     source: CardModel | HeroModel;
     method: Model;
@@ -28,4 +29,5 @@ export class RestoreEvent extends Event<{
         this._detail.result = value;
         if (overflow) this._detail.overflow = overflow;
     }
+    
 }

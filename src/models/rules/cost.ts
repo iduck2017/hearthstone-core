@@ -1,4 +1,4 @@
-import { Decor, Method, Model, StateUtil } from "set-piece";
+import { Decor, Method, Model, StateUtil, TemplUtil } from "set-piece";
 import { PlayerModel } from "../player";
 import { GameModel } from "../game";
 import { CardModel } from "../cards";
@@ -8,7 +8,7 @@ export enum CostType {
     HEALTH,
 }
 
-export namespace CostProps {
+export namespace CostModel {
     export type S = {
         type: CostType;
         origin: number;
@@ -24,14 +24,14 @@ export namespace CostProps {
     }
 }
 
-export class CostDecor extends Decor<CostProps.S> {
+export class CostDecor extends Decor<CostModel.S> {
     
     private isFree = false;
     private laneAuraGt0: number[] = [];
     private laneAuraGt1: number[] = [];
 
     public get result() {
-        const result = { ...this.detail }
+        const result = { ...this._detail }
         this.laneAuraGt0.forEach(item => {
             if (result.current + item < 0) result.current = 0;
             else result.current += item;
@@ -52,14 +52,24 @@ export class CostDecor extends Decor<CostProps.S> {
     public free() { this.isFree = true; }
 }
 
-@StateUtil.use(CostDecor)
+@TemplUtil.is('cost')
 export class CostModel extends Model<
-    CostProps.E, 
-    CostProps.S, 
-    CostProps.C, 
-    CostProps.R,
-    CostProps.P
+    CostModel.E, 
+    CostModel.S, 
+    CostModel.C, 
+    CostModel.R
 > {
+    public get decor(): CostDecor { return new CostDecor(this); }
+
+    public get route() {
+        const result = super.route;
+        return {
+            ...result,
+            player: result.list.find(item => item instanceof PlayerModel),
+            card: result.list.find(item => item instanceof CardModel),
+        }
+    }
+
     public get status() {
         const player = this.route.player;
         if (!player) return false;
@@ -71,27 +81,19 @@ export class CostModel extends Model<
         return false;
     }
 
-    constructor(loader: Method<CostModel['props'] & {
-        state: Pick<CostProps.S, 'origin'>;
-    }, []>) {
-        super(() => {
-            const props = loader?.();
-            const current = props.state.current ?? props.state.origin;
-            return {
-                uuid: props.uuid,
-                state: { 
-                    type: CostType.MANA,
-                    current,
-                    ...props.state 
-                },
-                child: { ...props.child },
-                refer: { ...props.refer },
-                route: {
-                    game: GameModel.prototype,
-                    player: PlayerModel.prototype,
-                    card: CardModel.prototype,
-                },
-            }
+    constructor(props?: CostModel['props']) {
+        const state = props?.state ?? {};
+        const current = state.current ?? state.origin ?? 0;
+        super({ 
+            uuid: props?.uuid,
+            state: { 
+                origin: 0,
+                type: CostType.MANA,
+                current,
+                ...props?.state 
+            },
+            child: { ...props?.child },
+            refer: { ...props?.refer },
         });
     }
 

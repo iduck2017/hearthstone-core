@@ -1,45 +1,47 @@
-import { Event, Loader } from "set-piece";
+import { Event } from "set-piece";
 import { PerformModel } from ".";
-import { SelectEvent, SelectUtil } from "../../../utils/select";
-import { MinionBattlecryModel } from "../../hooks/battlecry/role";
-import { MinionHooksOptions } from "../../features/minion";
 import { WeaponHooksOptions } from "../../features/weapon";
-import { WeaponBattlecryModel } from "../../hooks/battlecry/weapon";
-import { WeaponCardModel } from "../../cards/weapon";
+import { WeaponBattlecryModel } from "../../..";
+import { WeaponCardModel } from "../../..";
+import { AbortEvent } from "../../../types/event";
 
-export namespace WeaponPerformProps {
+export namespace WeaponPerformModel {
     export type E = {};
     export type S = {};
     export type C = {};
     export type R = {};
-    export type P = { weapon: WeaponCardModel; }
 }
 
 export class WeaponPerformModel extends PerformModel<
     [WeaponHooksOptions],
-    WeaponPerformProps.E,
-    WeaponPerformProps.S,
-    WeaponPerformProps.C,
-    WeaponPerformProps.R,
-    WeaponPerformProps.P
+    WeaponPerformModel.E,
+    WeaponPerformModel.S,
+    WeaponPerformModel.C,
+    WeaponPerformModel.R
 > {
-    constructor(loader?: Loader<WeaponPerformModel>) {
-        super(() => {
-            const props = loader?.() ?? {};
-            return {
-                uuid: props.uuid,
-                state: { ...props.state },
-                child: { ...props.child },
-                refer: { ...props.refer },
-                route: { weapon: WeaponCardModel.prototype },
-            }
+    public get route() {
+        const result = super.route;
+        const weapon: WeaponCardModel | undefined = result.list.find(item => item instanceof WeaponCardModel);
+        return {
+            ...result,
+            weapon,
+        }
+    }
+
+    constructor(props?: WeaponPerformModel['props']) {
+        props = props ?? {}
+        super({
+            uuid: props.uuid,
+            state: { ...props.state },
+            child: { ...props.child },
+            refer: { ...props.refer },
         });
     }
 
     public async run(from: number, options: WeaponHooksOptions) {
-        const event = new Event({})
+        const event = new AbortEvent({})
         this.event.toRun(event);
-        if (event.isAbort) return;
+        if (event.detail.isAbort) return;
 
         const player = this.route.player;
         if (!player) return;

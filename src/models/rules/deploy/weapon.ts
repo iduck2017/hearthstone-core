@@ -1,35 +1,37 @@
-import { Event, Loader, TranxUtil } from "set-piece";
-import { BoardModel } from "../../containers/board";
+import { Event, TranxUtil } from "set-piece";
+import { BoardModel } from "../../board";
 import { DeployModel } from "./index"
-import { WeaponCardModel } from "../../cards/weapon";
+import { WeaponCardModel } from "../../..";
 
-export namespace WeaponDeployProps {
+export namespace WeaponDeployModel {
     export type E = {};
     export type S = {};
     export type C = {};
     export type R = {};
-    export type P = {
-        weapon: WeaponCardModel
-    }
 }
 
 export class WeaponDeployModel extends DeployModel<
-    WeaponDeployProps.E,
-    WeaponDeployProps.S,
-    WeaponDeployProps.C,
-    WeaponDeployProps.R,
-    WeaponDeployProps.P
+    WeaponDeployModel.E,
+    WeaponDeployModel.S,
+    WeaponDeployModel.C,
+    WeaponDeployModel.R
 > {
-    constructor(loader?: Loader<WeaponDeployModel>) {
-        super(() => {
-            const props = loader?.() ?? {};
-            return {
-                uuid: props.uuid,
-                state: { ...props.state },
-                child: { ...props.child },
-                refer: { ...props.refer },
-                route: { weapon: WeaponCardModel.prototype },
-            }
+    public get route() {
+        const result = super.route;
+        const weapon: WeaponCardModel | undefined = result.list.find(item => item instanceof WeaponCardModel);
+        return {
+            ...result,
+            weapon,
+        }
+    }
+
+    constructor(props?: WeaponDeployModel['props']) {
+        props = props ?? {}
+        super({
+            uuid: props.uuid,
+            state: { ...props.state },
+            child: { ...props.child },
+            refer: { ...props.refer },
         });
     }
 

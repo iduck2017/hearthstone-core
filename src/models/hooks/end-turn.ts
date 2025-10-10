@@ -1,10 +1,9 @@
-import { Event, EventUtil, Method, Model, Props } from "set-piece";
-import { MinionCardModel } from "../cards/minion";
-import { FeatureModel, FeatureProps } from "../features";
+import { Event, EventUtil, Method, Model  } from "set-piece";
+import { FeatureModel } from "../features";
 import { TurnModel } from "../rules/turn";
 import { CardModel } from "../cards";
 
-export namespace EndTurnHookProps {
+export namespace EndTurnHookModel {
     export type E = {
         onRun: Event;
     };
@@ -17,45 +16,40 @@ export namespace EndTurnHookProps {
 }
 
 export abstract class EndTurnHookModel<
-    E extends Partial<EndTurnHookProps.E> & Props.E = {},
-    S extends Partial<EndTurnHookProps.S> & Props.S = {},
-    C extends Partial<EndTurnHookProps.C> & Props.C = {},
-    R extends Partial<EndTurnHookProps.R> & Props.R = {},
-    P extends Partial<EndTurnHookProps.P> & Props.P = {}
+    E extends Partial<EndTurnHookModel.E> & Model.E = {},
+    S extends Partial<EndTurnHookModel.S> & Model.S = {},
+    C extends Partial<EndTurnHookModel.C> & Model.C = {},
+    R extends Partial<EndTurnHookModel.R> & Model.R = {},
 > extends FeatureModel<
-    E & EndTurnHookProps.E,
-    S & EndTurnHookProps.S,
-    C & EndTurnHookProps.C,
-    R & EndTurnHookProps.R,
-    P & EndTurnHookProps.P
+    E & EndTurnHookModel.E,
+    S & EndTurnHookModel.S,
+    C & EndTurnHookModel.C,
+    R & EndTurnHookModel.R
 > {
-    constructor(loader: Method<EndTurnHookModel['props'] & {
+    constructor(props: EndTurnHookModel['props'] & {
         uuid: string | undefined;
-        state: S & Pick<FeatureProps.S, 'desc' | 'name'>;
+        state: S & Pick<FeatureModel.S, 'desc' | 'name'>;
         child: C;
         refer: R;
-        route: P;
-    }, []>) {
-        super(() => {
-            const props = loader?.();
-            return {
-                uuid: props.uuid,
-                state: {
-                    isActive: true,
-                    ...props.state,
-                },
-                child: { ...props.child },
-                refer: { ...props.refer },
-                route: { 
-                    card: CardModel.prototype,
-                    ...props.route
-                },
-            }
+    }) {
+        super({
+            uuid: props.uuid,
+            state: {
+                isActive: true,
+                ...props.state,
+            },
+            child: { ...props.child },
+            refer: { ...props.refer },
         })
     }
-        
-    @EventUtil.on(self => self.route.game?.proxy.child.turn.event.doEnd)
-    protected onEnd(that: TurnModel, event: Event) {
+
+
+    @EventUtil.on(self => self.handle)
+    private listen() {
+        return this.route.game?.proxy.child.turn.event?.doEnd;
+    }
+
+    protected handle(that: TurnModel, event: Event) {
         if (!this.state.isActive) return;
 
         const game = this.route.game;

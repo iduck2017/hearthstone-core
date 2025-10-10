@@ -1,6 +1,6 @@
-import { Event, Loader, Model } from "set-piece";
+import { Event, Model } from "set-piece";
 
-export namespace SleepProps {
+export namespace SleepModel {
     export type E = {
         onActive: Event;
         onDeactive: Event;
@@ -13,34 +13,30 @@ export namespace SleepProps {
 }
 
 export class SleepModel extends Model<
-    SleepProps.E,
-    SleepProps.S,
-    SleepProps.C,
-    SleepProps.R
+    SleepModel.E,
+    SleepModel.S,
+    SleepModel.C,
+    SleepModel.R
 > {
-    constructor(loader?: Loader<SleepModel>) {
-        super(() => {
-            const props = loader?.() ?? {};
-            return {
-                uuid: props.uuid,
-                state: {
-                    isActive: true,
-                    ...props.state
-                },
-                child: { ...props.child },
-                refer: { ...props.refer },
-                route: {},
-            }
+    constructor(props?: SleepModel['props']) {
+        super({
+            uuid: props?.uuid,
+            state: {
+                isActive: true,
+                ...props?.state
+            },
+            child: { ...props?.child },
+            refer: { ...props?.refer },
         })
     }
 
     public active() {
-        this.draft.state.isActive = true;
+        this.origin.state.isActive = true;
         this.event.onActive(new Event({}));
     }
 
     public deactive() {
-        this.draft.state.isActive = false;
+        this.origin.state.isActive = false;
         this.event.onDeactive(new Event({}));
     }
 }

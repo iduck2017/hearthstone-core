@@ -1,10 +1,10 @@
-import { Event, EventUtil, Method, Model, Props, StateUtil, TranxUtil } from "set-piece";
+import { EventUtil, Method, Model, StateUtil, TranxUtil } from "set-piece";
 import { BoardModel, DeckModel, GameModel, GraveyardModel, HandModel, PlayerModel, SecretFeatureModel } from "../..";
 
-export namespace FeatureProps {
+export namespace FeatureModel {
     export type E = {
-        onActive: Event;
-        onDeactive: Event;
+        onActive: {};
+        onDeactive: {};
     };
     export type S = {
         name: string;
@@ -13,61 +13,51 @@ export namespace FeatureProps {
     }
     export type C = {};
     export type R = {};
-    export type P = {
-        game: GameModel;
-        player: PlayerModel;
-        board: BoardModel;
-        hand: HandModel;
-        deck: DeckModel;
-        graveyard: GraveyardModel;
-    };
 }
 
-@EventUtil.if(self => self.draft.state.isActive)
-@StateUtil.if(self => self.draft.state.isActive)
 export abstract class FeatureModel<
-    E extends Partial<FeatureProps.E> & Props.E = {},
-    S extends Partial<FeatureProps.S> & Props.S = {},
-    C extends Partial<FeatureProps.C> & Props.C = {},
-    R extends Partial<FeatureProps.R> & Props.R = {},
-    P extends Partial<FeatureProps.P> & Props.P = {},
+    E extends Partial<FeatureModel.E> & Model.E = {},
+    S extends Partial<FeatureModel.S> & Model.S = {},
+    C extends Partial<FeatureModel.C> & Model.C = {},
+    R extends Partial<FeatureModel.R> & Model.R = {},
 > extends Model<
-    E & FeatureProps.E,
-    S & FeatureProps.S,
-    C & FeatureProps.C,
-    R & FeatureProps.R,
-    P & FeatureProps.P
+    E & FeatureModel.E,
+    S & FeatureModel.S,
+    C & FeatureModel.C,
+    R & FeatureModel.R
 > {
-    constructor(loader: Method<FeatureModel['props'] & {
+    public get route() {
+        const result = super.route;
+        return {
+            ...result,
+            player: result.list.find(item => item instanceof PlayerModel),
+            game: result.list.find(item => item instanceof GameModel),
+        }
+    }
+
+    constructor(props: FeatureModel['props'] & {
         uuid: string | undefined;
-        state: S & FeatureProps.S;
+        state: S & FeatureModel.S;
         child: C,
         refer: R,
-        route: P,
-    }, []>) {
-        super(() => {
-            const props = loader?.();
-            return {
-                uuid: props.uuid,
-                state: { ...props.state },
-                child: { ...props.child },
-                refer: { ...props.refer },
-                route: {
-                    game: GameModel.prototype,
-                    player: PlayerModel.prototype,
-                    board: BoardModel.prototype,
-                    hand: HandModel.prototype,
-                    deck: DeckModel.prototype,
-                    graveyard: GraveyardModel.prototype,
-                    ...props.route,
-                },
-            }
+    }) {
+        super({
+            uuid: props.uuid,
+            state: { ...props.state },
+            child: { ...props.child },
+            refer: { ...props.refer }
         })
     }
 
+    @EventUtil.if()
+    @StateUtil.if()
+    private check() {
+        return this.origin.state.isActive
+    }
+
     public deactive() {
-        this.draft.state.isActive = false;
+        this.origin.state.isActive = false;
         this.reload();
-        this.event.onDeactive(new Event({}));
+        this.event.onDeactive({});
     }
 }

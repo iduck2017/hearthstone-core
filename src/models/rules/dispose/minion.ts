@@ -1,22 +1,29 @@
-import { DebugUtil, Loader, LogLevel, Model, TranxUtil } from "set-piece";
+import { DebugUtil, Model, TranxUtil } from "set-piece";
 import { DisposeModel } from ".";
 import { MinionCardModel, PlayerModel } from "../../..";
 
-export namespace MinionDisposeProps {
+export namespace MinionDisposeModel {
     export type E = {};
     export type S = {};
     export type C = {};
     export type R = {};
-    export type P = { minion: MinionCardModel; };
 }
 
 export class MinionDisposeModel extends DisposeModel<
-    MinionDisposeProps.E,
-    MinionDisposeProps.S,
-    MinionDisposeProps.C,
-    MinionDisposeProps.R,
-    MinionDisposeProps.P
+    MinionDisposeModel.E,
+    MinionDisposeModel.S,
+    MinionDisposeModel.C,
+    MinionDisposeModel.R
 > {
+    public get route() {
+        const result = super.route;
+        const minion: MinionCardModel | undefined = result.list.find(item => item instanceof MinionCardModel);
+        return {
+            ...result,
+            minion,
+        }
+    }
+
     public get status(): boolean {
         const minion = this.route.minion;
         if (!minion) return true;
@@ -26,16 +33,13 @@ export class MinionDisposeModel extends DisposeModel<
         return super.status || false;
     }
 
-    constructor(loader?: Loader<MinionDisposeModel>) {
-        super(() => {
-            const props = loader?.() ?? {};
-            return {
-                uuid: props.uuid,
-                state: { ...props.state },
-                child: { ...props.child },
-                refer: { ...props.refer },
-                route: { minion: MinionCardModel.prototype },
-            }
+    constructor(props?: MinionDisposeModel['props']) {
+        props = props ?? {}
+        super({
+            uuid: props.uuid,
+            state: { ...props.state },
+            child: { ...props.child },
+            refer: { ...props.refer },
         });
     }
 
@@ -52,7 +56,7 @@ export class MinionDisposeModel extends DisposeModel<
     public doRemove() {
         const player = this.route.player;
         if (!player) return;
-        const minion = this.route.minion;
+        const minion: MinionCardModel | undefined = this.route.minion;
         if (!minion) return;
         player.child.board.del(minion);
         player.child.graveyard.add(minion);

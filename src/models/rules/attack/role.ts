@@ -1,12 +1,13 @@
-import { DebugUtil, Decor, Event, Method, Model, StateUtil, StoreUtil } from "set-piece";
+import { DebugUtil, Decor, Event, Method, Model, StateUtil, TemplUtil } from "set-piece";
 import { DamageEvent, DamageModel, MinionCardModel, RoleModel, GameModel, PlayerModel, HeroModel, WeaponCardModel, IRoleBuffModel } from "../../..";
 import { DamageType } from "../../../types/damage";
 import { Operation, OperationType } from "../../../types/decor";
+import { AbortEvent } from "../../../types/event";
 
-export namespace RoleAttackProps {
+export namespace RoleAttackModel {
     export type E = {
-        toRun: Event<{ target: RoleModel }>;
-        toRecv: Event<{ source: RoleModel }>;
+        toRun: AbortEvent<{ target: RoleModel }>;
+        toRecv: AbortEvent<{ source: RoleModel }>;
         onRun: Event<{ target: RoleModel }>;
     }
     export type S = {
@@ -15,21 +16,14 @@ export namespace RoleAttackProps {
     }
     export type C = {}
     export type R = {}
-    export type P = {
-        role: RoleModel;
-        minion: MinionCardModel;
-        hero: HeroModel;
-        game: GameModel;
-        player: PlayerModel;
-    }
 }
 
 
-export class RoleAttackDecor extends Decor<RoleAttackProps.S> {
+export class RoleAttackDecor extends Decor<RoleAttackModel.S> {
     private operations: Operation[] = [];
 
     public get result() {
-        const result = { ...this.detail };
+        const result = { ...this._detail };
         // buff
         const buffs = this.operations
             .filter(item => item.reason instanceof IRoleBuffModel)
@@ -52,15 +46,29 @@ export class RoleAttackDecor extends Decor<RoleAttackProps.S> {
     }
 }
 
-@StateUtil.use(RoleAttackDecor)
-@StoreUtil.is('attack')
+@TemplUtil.is('role-attack')
 export class RoleAttackModel extends Model<
-    RoleAttackProps.E,
-    RoleAttackProps.S,
-    RoleAttackProps.C,
-    RoleAttackProps.R,
-    RoleAttackProps.P
+    RoleAttackModel.E,
+    RoleAttackModel.S,
+    RoleAttackModel.C,
+    RoleAttackModel.R
 > {
+    public get route() {
+        const result = super.route;
+        return {
+            ...result,
+            role: result.list.find(item => item instanceof RoleModel),
+            minion: result.list.find(item => item instanceof MinionCardModel),
+            hero: result.list.find(item => item instanceof HeroModel),
+            game: result.list.find(item => item instanceof GameModel),
+            player: result.list.find(item => item instanceof PlayerModel),
+        }
+    }
+
+    public get decor(): RoleAttackDecor {
+        return new RoleAttackDecor(this);
+    }
+
     public get status() { 
         // is alive
         const minion = this.route.minion;
@@ -74,27 +82,16 @@ export class RoleAttackModel extends Model<
         return true;
     }
 
-    constructor(loader: Method<RoleAttackModel['props'] & {
-        state: Pick<RoleAttackProps.S, 'origin'>
-    }, []>) {
-        super(() => {
-            const props = loader?.();
-            return {
-                uuid: props.uuid,
-                state: { 
-                    current: props.state.current ?? props.state.origin,
-                    ...props.state 
-                },
-                child: { ...props.child },
-                refer: { ...props.refer },
-                route: {
-                    role: RoleModel.prototype,
-                    minion: MinionCardModel.prototype,
-                    hero: HeroModel.prototype,
-                    game: GameModel.prototype,
-                    player: PlayerModel.prototype,
-                }
-            }
+    constructor(props: RoleAttackModel['props']) {
+        super({
+            uuid: props.uuid,
+            state: { 
+                origin: 0,
+                current: props.state?.current ?? props.state?.origin ?? 0,
+                ...props.state 
+            },
+            child: { ...props.child },
+            refer: { ...props.refer },
         });
     }
 
@@ -106,13 +103,13 @@ export class RoleAttackModel extends Model<
         if (!this.status) return;
 
         const attackB = roleB.child.attack;
-        const eventA = new Event({ source: roleA })
+        const eventA = new AbortEvent({ source: roleA })
         attackB.event.toRecv(eventA);
-        if (eventA.isAbort) return;
+        if (eventA.detail.isAbort) return;
         
-        const eventB = new Event({ target: roleB })
+        const eventB = new AbortEvent({ target: roleB })
         this.event.toRun(eventB);
-        if (eventB.isAbort) return;
+        if (eventB.detail.isAbort) return;
 
         if (!this.status) return;
         const healthB = roleB.child.health;

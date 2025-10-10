@@ -13,100 +13,93 @@ export { SelectUtil } from "./utils/select";
 export { LibraryUtil } from "./utils/library";
 
 // rules
-export { DisposeProps, DisposeModel } from './models/rules/dispose'
+export { DisposeModel } from './models/rules/dispose'
 export { MinionDisposeModel } from "./models/rules/dispose/minion";
 export { HeroDisposeModel } from "./models/rules/dispose/hero";
 export { WeaponDisposeModel } from "./models/rules/dispose/weapon";
 
-export { PerformProps, PerformModel } from "./models/rules/perform";
+export { PerformModel } from "./models/rules/perform";
 export { SpellPerformModel } from "./models/rules/perform/spell";
 export { MinionPerformModel } from "./models/rules/perform/minion";
 export { WeaponPerformModel } from "./models/rules/perform/weapon";
 
-export { DeployProps, DeployModel } from "./models/rules/deploy";
+export { DeployModel } from "./models/rules/deploy";
 export { MinionDeployModel } from "./models/rules/deploy/minion";
 export { WeaponDeployModel } from "./models/rules/deploy/weapon";
 export { SecretDeployModel } from "./models/rules/deploy/secret";
 
-export { RoleAttackProps, RoleAttackModel, RoleAttackDecor } from "./models/rules/attack/role";
-export { RoleHealthProps, RoleHealthModel } from "./models/rules/health";
-export { RoleActionProps, RoleActionModel, RoleActionDecor } from "./models/rules/action/role";
-export { SleepProps, SleepModel } from './models/rules/sleep';
-export { ManaProps, ManaModel } from './models/rules/mana';
-export { TurnProps, TurnModel } from "./models/rules/turn";
-export { CostProps, CostType, CostDecor, CostModel } from "./models/rules/cost";
-export { ArmorProps, ArmorModel } from "./models/rules/armor";
-export { DamageProps, DamageModel } from "./models/actions/damage";
-export { RestoreProps, RestoreModel } from "./models/actions/restore";
+export { RoleAttackModel, RoleAttackDecor } from "./models/rules/attack/role";
+export { RoleHealthModel } from "./models/rules/health";
+export { RoleActionModel, RoleActionDecor } from "./models/rules/role-action";
+export { SleepModel } from './models/rules/sleep';
+export { ManaModel } from './models/rules/mana';
+export { TurnModel } from "./models/rules/turn";
+export { CostType, CostDecor, CostModel } from "./models/rules/cost";
+export {  ArmorModel } from "./models/rules/armor";
+export { DamageModel } from "./models/damage";
+export { RestoreModel } from "./models/restore";
 
-export { WeaponAttackProps, WeaponAttackModel } from "./models/rules/attack/weapon";
-export { WeaponActionProps, WeaponActionModel } from "./models/rules/action/weapon";
+export { WeaponAttackModel } from "./models/rules/attack/weapon";
+export { WeaponActionModel } from "./models/rules/weapon-action";
 
 // card
-export { CardProps, CardModel } from "./models/cards";
-export { SecretCardProps, SecretCardModel } from "./models/cards/secret";
-export { SpellCardProps, SpellCardModel } from './models/cards/spell';
-export { MinionCardProps, MinionCardModel } from "./models/cards/minion";
-export { WeaponCardProps, WeaponCardModel } from "./models/cards/weapon";
+export { CardModel } from "./models/cards";
+export { SecretCardModel } from "./models/cards/secret";
+export { SpellCardModel } from './models/cards/spell';
+export { MinionCardModel } from "./models/cards/minion";
+export { WeaponCardModel } from "./models/cards/weapon";
 
 // game
-export { AppProps, AppModel } from "./models/app";
-export { PlayerProps, PlayerModel } from "./models/player";
-export { RoleProps, RoleModel } from "./models/role";
-export { GameProps, GameModel } from "./models/game";
-export { HandProps, HandModel } from "./models/containers/hand";
-export { BoardProps, BoardModel } from "./models/containers/board";
-export { DeckProps, DeckModel } from "./models/containers/deck";
-export { GraveyardProps, GraveyardModel } from "./models/containers/graveyard";
-export { ConfigProps, ConfigModel } from "./models/containers/config";
+export { AppModel } from "./models/app";
+export { PlayerModel } from "./models/player";
+export { RoleModel } from "./models/role";
+export { GameModel } from "./models/game";
+export { HandModel } from "./models/hand";
+export { BoardModel } from "./models/board";
+export { DeckModel } from "./models/deck";
+export { GraveyardModel } from "./models/graveyard";
+export { CollectionModel } from "./models/collection";
 
 // entries
-export { RoleFeatsProps, RoleFeatsModel } from "./models/features/role";
-export { FrozenProps, FrozenModel } from "./models/entries/frozen";
-export { RushProps, RushModel } from "./models/entries/rush";
-export { ChargeProps, ChargeModel } from "./models/entries/charge";
-export { TauntProps, TauntModel } from "./models/entries/taunt";
-export { StealthProps, StealthModel } from './models/entries/stealth';
-export { ElusiveProps, ElusiveModel } from './models/entries/elusive';
-export { WindfuryProps, WindfuryModel } from "./models/entries/windfury";
-export { SpellBuffProps, SpellBuffModel } from "./models/features/buff/spell";
-export { DivineShieldProps, DivineShieldModel } from "./models/entries/divine-shield";
-export { PoisonousProps, PoisonousModel } from "./models/entries/poisonous";
+export { RoleFeatsModel } from "./models/role-feats";
+export { FrozenModel } from "./models/entries/frozen";
+export { RushModel } from "./models/entries/rush";
+export { ChargeModel } from "./models/entries/charge";
+export { TauntModel } from "./models/entries/taunt";
+export { StealthModel } from './models/entries/stealth';
+export { ElusiveModel } from './models/entries/elusive';
+export { WindfuryModel } from "./models/entries/windfury";
+export { SpellBuffModel } from "./models/features/spell-buff";
+export { DivineShieldModel } from "./models/entries/divine-shield";
+export { PoisonousModel } from "./models/entries/poisonous";
 
 // features
-export { FeatureProps, FeatureModel } from './models/features'
-export { SecretFeatureProps, SecretFeatureModel } from "./models/features/secret";
-export { RoleBuffProps, IRoleBuffModel, RoleBuffModel } from "./models/features/buff/role";
-export { EffectProps, EffectModel } from './models/features/effect'; 
-export { SpellEffectProps, SpellEffectModel } from './models/features/effect/spell';
+export { FeatureModel } from './models/features'
+export { SecretFeatureModel } from "./models/features/secret";
+export { IRoleBuffModel, RoleBuffModel } from "./models/features/role-buff";
+export { EffectModel } from './models/features/effect'; 
+export { SpellEffectModel, SpellEffectDecor } from './models/features/spell-effect';
 
 // hooks
-export { SpellFeatsProps, SpellFeatsModel } from "./models/features/spell";
-export { MinionFeatsProps, MinionFeatsModel } from "./models/features/minion";
-export { MinionBattlecryProps, MinionBattlecryModel } from "./models/hooks/battlecry/role";
-export { WeaponBattlecryProps, WeaponBattlecryModel } from "./models/hooks/battlecry/weapon";
-export { DeathrattleProps, DeathrattleModel } from "./models/hooks/deathrattle";
-export { EndTurnHookProps, EndTurnHookModel } from "./models/hooks/end-turn";
-export { StartTurnHookProps, StartTurnHookModel } from "./models/hooks/start-turn";
-export { SpellHooksOptions, SpellCastEvent } from './models/features/spell';
-export { OverhealProps, OverhealModel } from "./models/hooks/overheal";
+export { SpellFeatsModel } from "./models/spell-feats";
+export { MinionFeatsModel } from "./models/minion-feats";
+export { MinionBattlecryModel } from "./models/hooks/battlecry/role";
+export { WeaponBattlecryModel } from "./models/hooks/battlecry/weapon";
+export { DeathrattleModel } from "./models/hooks/deathrattle";
+export { EndTurnHookModel } from "./models/hooks/end-turn";
+export { StartTurnHookModel } from "./models/hooks/start-turn";
+export { SpellHooksOptions, SpellCastEvent } from './models/spell-feats';
+export { OverhealModel } from "./models/hooks/overheal";
 
 // heroes
-export { HeroProps, HeroModel } from "./models/heroes";
+export { HeroModel } from "./models/heroes";
 export { MageModel } from "./models/heroes/mage";
 export { WarriorModel } from "./models/heroes/warrior";
 
 // skills
-export { SkillProps, SkillModel } from './models/skills';
+export { SkillModel } from './models/skills';
 export { FireBlastModel } from './models/skills/fireblast';
 export { ArmorUpModel } from './models/skills/armor-up';
-
-export { ROLE_ROUTE, RoleRoute } from "./utils/route";
-export { CARD_ROUTE, CardRoute } from "./utils/route";
-export { SPELL_ROUTE, SpellRoute } from "./utils/route";
-export { MINION_ROUTE, MinionRoute } from "./utils/route";
-export { WEAPON_ROUTE, WeaponRoute } from "./utils/route";
-export { SECRET_ROUTE, SecretRoute } from "./utils/route";
 
 export { OperationType, Operation } from "./types/decor";
 export { CommandUtil } from "./utils/command";
