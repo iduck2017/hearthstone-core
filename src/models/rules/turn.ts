@@ -4,7 +4,7 @@ import { GameModel } from "../game";
 
 export namespace TurnModel {
     export type S = {
-        count: number;
+        current: number;
     };
     export type E = {
         doEnd: Event;
@@ -36,7 +36,7 @@ export class TurnModel extends Model<
         super({
             uuid: props?.uuid,
             state: {
-                count: 0,
+                current: 0,
                 ...props?.state,
             },
             child: { ...props?.child },
@@ -49,7 +49,7 @@ export class TurnModel extends Model<
         const current = this.refer.current;
         const game = this.route.game;
         this.origin.refer.current = current?.refer.opponent ?? game?.child.playerA;
-        this.origin.state.count ++;
+        this.origin.state.current ++;
         this.start();
     }
 

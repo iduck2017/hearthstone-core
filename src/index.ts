@@ -82,14 +82,14 @@ export { EffectModel } from './models/rules/effect';
 export { SpellEffectModel, SpellEffectDecor } from './models/rules/spell-effect';
 
 // hooks
-export { SpellFeatsModel } from "./models/features/spell";
-export { MinionFeatsModel } from "./models/features/minion";
+export { SpellHooksOptions, SpellFeatsModel } from "./models/features/spell";
+export { MinionHooksOptions, MinionFeatsModel } from "./models/features/minion";
 export { MinionBattlecryModel } from "./models/hooks/minion-battlecry";
 export { WeaponBattlecryModel } from "./models/hooks/weapon-battlecry";
 export { DeathrattleModel } from "./models/hooks/deathrattle";
 export { EndTurnHookModel } from "./models/hooks/end-turn";
 export { StartTurnHookModel } from "./models/hooks/start-turn";
-export { SpellHooksOptions, SpellCastEvent } from './models/features/spell';
+export { SpellCastEvent } from './models/features/spell';
 export { OverhealModel } from "./models/hooks/overheal";
 
 // heroes
