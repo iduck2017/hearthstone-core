@@ -46,6 +46,7 @@ export abstract class EndTurnHookModel<
             uuid: props.uuid,
             state: {
                 isActive: true,
+                isBoard: true,
                 ...props.state,
             },
             child: { ...props.child },

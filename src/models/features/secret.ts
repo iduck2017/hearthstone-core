@@ -80,6 +80,7 @@ export class SecretFeatureModel<
             uuid: props.uuid,
             state: { 
                 isActive: true,
+                isBoard: true,
                 ...props.state 
             },
             child: { ...props.child },

@@ -20,6 +20,7 @@ export class ElusiveModel extends FeatureModel<
         super({
             uuid: props?.uuid,
             state: {
+                isBoard: true,
                 name: 'Elusive',
                 desc: 'Can\'t be targeted by spells or Hero Powers.',
                 isActive: true,

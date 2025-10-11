@@ -20,6 +20,7 @@ export class RushModel extends FeatureModel<
         super({
             uuid: props?.uuid,
             state: {
+                isBoard: true,
                 name: 'Rush',
                 desc: 'Can attack minions immediately.',
                 isActive: true,

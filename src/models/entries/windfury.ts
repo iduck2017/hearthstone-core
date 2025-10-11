@@ -36,6 +36,7 @@ export class WindfuryModel extends FeatureModel<
                 desc: 'Can attack twice each turn.',
                 isAdvance: false,
                 isActive: true,
+                isBoard: true,
                 ...props.state,
             },
             child: { ...props.child },

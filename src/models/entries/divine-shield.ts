@@ -24,6 +24,7 @@ export class DivineShieldModel extends FeatureModel<
         super({
             uuid: props?.uuid,
             state: {
+                isBoard: true,
                 name: 'Divine Shield',
                 desc: 'The first time you take damage, ignore it.',
                 isActive: true,

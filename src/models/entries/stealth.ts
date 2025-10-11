@@ -20,6 +20,7 @@ export class StealthModel extends FeatureModel<
         super({
             uuid: props.uuid,
             state: {
+                isBoard: true,
                 name: 'Stealth',
                 desc: 'Can not be attacked or targeted until it attacks.',
                 isActive: true,

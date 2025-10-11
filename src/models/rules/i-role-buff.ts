@@ -34,13 +34,14 @@ export abstract class IRoleBuffModel<
 
     constructor(props: IRoleBuffModel['props'] & {
         uuid: string | undefined;
-        state: S & IRoleBuffModel.S & Omit<FeatureModel.S, 'isActive'>,
+        state: S & IRoleBuffModel.S & Pick<FeatureModel.S, 'desc' | 'name'>,
         child: C,
         refer: R,
     }) {
         super({
             uuid: props.uuid,
             state: {
+                isBoard: false,
                 isActive: true,
                 ...props.state,
             },

@@ -9,6 +9,7 @@ export namespace FeatureModel {
     export type S = {
         name: string;
         desc: string;
+        isBoard: boolean;
         isActive: boolean;
     }
     export type C = {};
@@ -56,8 +57,12 @@ export abstract class FeatureModel<
     @EventUtil.if()
     @StateUtil.if()
     private check() {
-        return this.origin.state.isActive
+        if (!this.origin.state.isActive) return false;
+        if (this.origin.state.isBoard && !this.route.board) return false;
+        return true;
     }
+
+
 
     public deactive() {
         this.origin.state.isActive = false;

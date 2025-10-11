@@ -19,6 +19,7 @@ export class ChargeModel extends FeatureModel<
         super({
             uuid: props?.uuid,
             state: {
+                isBoard: true,
                 name: 'Charge',
                 desc: 'Can attack immediately.',
                 isActive: true,

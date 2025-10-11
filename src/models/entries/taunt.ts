@@ -23,6 +23,7 @@ export class TauntModel extends FeatureModel<
                 name: 'Taunt',
                 desc: 'Enemies must attack this minion.',
                 isActive: true,
+                isBoard: true,
                 ...props.state,
             },
             child: { ...props.child },

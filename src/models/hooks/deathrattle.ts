@@ -45,6 +45,7 @@ export abstract class DeathrattleModel<
         super({
             uuid: props.uuid,
             state: {
+                isBoard: false,
                 isActive: true,
                 ...props.state,
             },

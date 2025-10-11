@@ -21,6 +21,7 @@ export class PoisonousModel extends FeatureModel<
         super({
             uuid: props?.uuid,
             state: { 
+                isBoard: true,
                 isActive: true,
                 name: 'Poisonous',
                 desc: 'Destroy any miniondamaged by this.',

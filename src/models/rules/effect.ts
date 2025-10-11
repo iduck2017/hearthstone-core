@@ -34,6 +34,7 @@ export abstract class EffectModel<
             uuid: props.uuid,
             state: {
                 power: 0,
+                isBoard: false,
                 isActive: true,
                 ...props.state 
             },

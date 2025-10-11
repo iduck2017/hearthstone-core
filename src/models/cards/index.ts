@@ -82,7 +82,7 @@ export abstract class CardModel<
     public get name(): string { return String(this.state.name); }
 
     constructor(props: CardModel['props'] & {
-        state: S & Omit<CardModel.S, 'isActive'>,
+        state: S & Pick<CardModel.S, 'desc' | 'name' | 'flavorDesc' | 'class' | 'rarity' | 'isCollectible'>,
         child: C & Pick<CardModel.C, 'cost' | 'perform' | 'dispose' | 'feats'>,
         refer: R & CardModel.R,
     }) {

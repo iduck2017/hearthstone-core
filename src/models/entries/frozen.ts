@@ -17,6 +17,7 @@ export class FrozenModel extends FeatureModel<
         super({
             uuid: props?.uuid,
             state: {
+                isBoard: true,
                 name: 'Frozen',
                 desc: 'Frozen charactoers lose their next attack.',
                 isActive: true,
