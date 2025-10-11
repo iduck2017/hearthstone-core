@@ -32,6 +32,10 @@ export abstract class FeatureModel<
             ...result,
             player: result.list.find(item => item instanceof PlayerModel),
             game: result.list.find(item => item instanceof GameModel),
+            board: result.list.find(item => item instanceof BoardModel),
+            deck: result.list.find(item => item instanceof DeckModel),
+            graveyard: result.list.find(item => item instanceof GraveyardModel),
+            hand: result.list.find(item => item instanceof HandModel),
         }
     }
 

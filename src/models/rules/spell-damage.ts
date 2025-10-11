@@ -33,12 +33,11 @@ export class SpellDamageModel extends FeatureModel<
         });
     }
 
-    @StateUtil.on(self => self.onCompute)
-    private listen() {
+    @StateUtil.on(self => self.modifyDamage)
+    private listenDamage() {
         return this.route.player?.proxy.any(SpellEffectModel).decor;
     }
-
-    private onCompute(that: SpellEffectModel, decor: SpellEffectDecor) {
+    private modifyDamage(that: SpellEffectModel, decor: SpellEffectDecor) {
         if (!this.route.player) return;
         if (!this.state.isActive) return;
         decor.add(this.state.offset);

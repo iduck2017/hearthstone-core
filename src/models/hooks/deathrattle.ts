@@ -1,6 +1,7 @@
 import { Event, Method, Model } from "set-piece";
 import { AbortEvent } from "../../types/event";
 import { FeatureModel } from "../rules/feature";
+import { BoardModel, CardModel } from "../..";
 
 export namespace DeathrattleModel {
     export type E = {
@@ -24,6 +25,16 @@ export abstract class DeathrattleModel<
     C & DeathrattleModel.C, 
     R & DeathrattleModel.R
 > {
+
+    public get route() {
+        const result = super.route;
+        const card: CardModel | undefined = result.list.find(item => item instanceof CardModel);
+        return {
+            ...result,
+            card,
+        }
+    }
+
 
     constructor(props: DeathrattleModel['props'] & {
         uuid: string | undefined;

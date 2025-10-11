@@ -27,7 +27,8 @@ export class WindfuryModel extends FeatureModel<
         }
     }
 
-    constructor(props: WindfuryModel['props']) {
+    constructor(props?: WindfuryModel['props']) {
+        props = props ?? {};
         super({
             uuid: props.uuid,
             state: {
@@ -56,12 +57,11 @@ export class WindfuryModel extends FeatureModel<
         this.origin.state.isAdvance = isAdvance ?? false;
     }
 
-    @StateUtil.on(self => self.onCompute)
-    private listen() { 
+    @StateUtil.on(self => self.modifyAction)
+    private listenAction() { 
         return this.route.role?.proxy.child.action?.decor;
     }
-
-    protected onCompute(that: RoleActionModel, decor: RoleActionDecor) {
+    protected modifyAction(that: RoleActionModel, decor: RoleActionDecor) {
         if (!this.state.isActive) return;
         decor.add(this.state.isAdvance ? 3 : 1);
     }

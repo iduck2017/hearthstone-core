@@ -1,5 +1,5 @@
 import { Decor, Model } from "set-piece";
-import { EffectModel, FeatureModel, RoleModel, SelectUtil } from "../..";
+import { CardModel, EffectModel, FeatureModel, RoleModel, SelectUtil, SpellCardModel } from "../..";
 
 export namespace SpellEffectModel {
     export type E = {};
@@ -9,7 +9,7 @@ export namespace SpellEffectModel {
 }
 
 export class SpellEffectDecor<S extends Model.S = {}> extends Decor<
-    S & SpellEffectModel.S & EffectModel.S & FeatureModel.S
+    SpellEffectModel['origin']['state'] & S
 > {
     public add(value: number) {
         this._detail.damage = this._detail.damage.map(item => item + value);
@@ -30,9 +30,22 @@ export abstract class SpellEffectModel<
 > {
     public get decor(): SpellEffectDecor<S> { return new SpellEffectDecor(this); }
 
-    public static async toRun(items: Readonly<SpellEffectModel[]>): Promise<Map<SpellEffectModel, Model[]> | undefined> {
+    public get route() {
+        const result = super.route;
+        const card: CardModel | undefined = result.list.find(item => item instanceof CardModel);
+        const spell: SpellCardModel | undefined = result.list.find(item => item instanceof SpellCardModel);
+        return {
+            ...result,
+            card,
+            spell,
+        }
+    }
+
+    public static async toRun(
+        list: Readonly<SpellEffectModel[]>
+    ): Promise<Map<SpellEffectModel, Model[]> | undefined> {
         const result = new Map<SpellEffectModel, Model[]>();
-        for (const item of items) {
+        for (const item of list) {
             const selectors = item.toRun();
             if (!selectors) continue;
             for (const selector of selectors) {

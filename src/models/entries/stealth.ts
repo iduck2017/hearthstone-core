@@ -15,7 +15,8 @@ export class StealthModel extends FeatureModel<
     StealthModel.C,
     StealthModel.R
 > {
-    constructor(props: StealthModel['props']) {
+    constructor(props?: StealthModel['props']) {
+        props = props ?? {};
         super({
             uuid: props.uuid,
             state: {

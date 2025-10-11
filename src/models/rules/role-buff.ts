@@ -50,12 +50,11 @@ export abstract class IRoleBuffModel<
     }
 
 
-    @StateUtil.on(self => self.handleAttack)
+    @StateUtil.on(self => self.modifyAttack)
     private listenAttack() {
         return this.route.role?.proxy.child.attack?.decor;
     }
-
-    protected handleAttack(that: RoleAttackModel, decor: RoleAttackDecor) {
+    protected modifyAttack(that: RoleAttackModel, decor: RoleAttackDecor) {
         if (!this.state.isActive) return;
         decor.add({
             type: OperationType.ADD,
@@ -65,12 +64,11 @@ export abstract class IRoleBuffModel<
     }
 
 
-    @StateUtil.on(self => self.handleHealth)
+    @StateUtil.on(self => self.modifyHealth)
     private listenHealth() {
         return this.route.role?.proxy.child.health?.decor;
     }
-
-    protected handleHealth(that: RoleHealthModel, decor: RoleHealthDecor) {
+    protected modifyHealth(that: RoleHealthModel, decor: RoleHealthDecor) {
         if (!this.state.isActive) return;
         decor.add({
             type: OperationType.ADD,

@@ -58,27 +58,25 @@ export class WeaponAttackModel extends Model<
     }
 
 
-    @EventUtil.on(self => self.handle)
-    public listenStart() {
+    // @todo use function call
+    @EventUtil.on(self => self.handlTurn)
+    public listenTurnStart() {
         return this.route.game?.proxy.child.turn.event?.onStart;
     }
-
-    @EventUtil.on(self => self.handle)
-    public listenEnd() {
+    @EventUtil.on(self => self.handlTurn)
+    private listenTurnEnd() {
         return this.route.game?.proxy.child.turn.event?.onEnd;
     }
-
-    private handle(that: TurnModel, event: Event) {
+    private handlTurn(that: TurnModel, event: Event) {
         this.reload()
     }
     
 
-    @StateUtil.on(self => self.onCompute)
-    private listenDecor() {
+    @StateUtil.on(self => self.modifyAttack)
+    private listenAttack() {
         return this.route.player?.proxy.child.hero.child.role.child.attack.decor;
     }
-
-    private onCompute(that: RoleAttackModel, decor: RoleAttackDecor) {
+    private modifyAttack(that: RoleAttackModel, decor: RoleAttackDecor) {
         if (!this.status) return;
         if (!this.route.board) return;
         decor.add({

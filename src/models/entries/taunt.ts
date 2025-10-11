@@ -15,7 +15,8 @@ export class TauntModel extends FeatureModel<
     TauntModel.C, 
     TauntModel.R
 > {
-    constructor(props: TauntModel['props']) {
+    constructor(props?: TauntModel['props']) {
+        props = props ?? {}
         super({
             uuid: props.uuid,
             state: {

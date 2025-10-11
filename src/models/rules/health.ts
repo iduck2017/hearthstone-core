@@ -198,15 +198,14 @@ export class RoleHealthModel extends Model<
     }
     
 
-    @EventUtil.on(self => self.onChange)
-    public listen() {
+    @EventUtil.on(self => self.handleChange)
+    private listenChange() {
         const self: RoleHealthModel = this;
         return self.proxy.event?.onChange;
     }
-
     @DebugUtil.log()
     @TranxUtil.span()
-    private onChange(that: this, event: { prev: Frame<RoleHealthModel>; }) {
+    private handleChange(that: this, event: Event<Frame<RoleHealthModel>>) {
         const { memory, maximum, damage } = that.state;
         const offset = memory - maximum;
         if (offset !== 0) this.origin.state.memory = maximum;

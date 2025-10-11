@@ -92,7 +92,7 @@ export abstract class MinionCardModel<
         this.child.feats.child.endTurn.forEach(item => item.deactive());
         const role = this.child.role;
         role.child.feats.child.buffs.forEach(item => item.deactive());
-        role.child.feats.child.items.forEach(item => item.deactive());
+        role.child.feats.child.list.forEach(item => item.deactive());
         role.child.feats.child.charge.deactive();
         role.child.feats.child.divineShield.deactive();
         role.child.feats.child.elusive.deactive();

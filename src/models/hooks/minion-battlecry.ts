@@ -1,7 +1,7 @@
 import { Event, Method, Model } from "set-piece";
-import { SelectEvent, SelectUtil } from "../../../utils/select";
-import { FeatureModel } from "../../..";
-import { AbortEvent } from "../../../types/event";
+import { SelectEvent, SelectUtil } from "../../utils/select";
+import { CardModel, FeatureModel, MinionCardModel } from "../..";
+import { AbortEvent } from "../../types/event";
 
 export namespace MinionBattlecryModel {
     export type E = {
@@ -25,11 +25,22 @@ export abstract class MinionBattlecryModel<
     C & MinionBattlecryModel.C, 
     R & MinionBattlecryModel.R
 > {
+    public get route() {
+        const result = super.route;
+        const card: CardModel | undefined = result.list.find(item => item instanceof CardModel);
+        const minion: MinionCardModel | undefined = result.list.find(item => item instanceof MinionCardModel);
+        return {
+            ...result,
+            card,
+            minion,
+        }
+    }
+
     public static async toRun(
-        items: Readonly<MinionBattlecryModel[]>
+        list: Readonly<MinionBattlecryModel[]>
     ): Promise<Map<MinionBattlecryModel, Model[]> | undefined> {
         const result = new Map<MinionBattlecryModel, Model[]>();
-        for (const item of items) {
+        for (const item of list) {
             const selectors = item.toRun();
             // condition not match
             if (!selectors) continue;

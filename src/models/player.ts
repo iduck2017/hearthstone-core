@@ -83,7 +83,7 @@ export class PlayerModel extends Model<
             // base
             result.push(new CommandUtil('End Turn', () => game.child.turn.next()));
             // play
-            const cards = this.child.hand.refer.order;
+            const cards = this.child.hand.refer.queue;
             cards?.forEach(item => {
                 if (!item.status) return;
                 result.push(new CommandUtil(`Play ${item.name}`, () => item.play()));

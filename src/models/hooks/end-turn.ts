@@ -26,6 +26,16 @@ export abstract class EndTurnHookModel<
     C & EndTurnHookModel.C,
     R & EndTurnHookModel.R
 > {
+
+    public get route() {
+        const result = super.route;
+        const card: CardModel | undefined = result.list.find(item => item instanceof CardModel);
+        return {
+            ...result,
+            card,
+        }
+    }
+    
     constructor(props: EndTurnHookModel['props'] & {
         uuid: string | undefined;
         state: S & Pick<FeatureModel.S, 'desc' | 'name'>;
@@ -44,12 +54,11 @@ export abstract class EndTurnHookModel<
     }
 
 
-    @EventUtil.on(self => self.handle)
-    private listen() {
+    @EventUtil.on(self => self.handleTurn)
+    private listenTurn() {
         return this.route.game?.proxy.child.turn.event?.doEnd;
     }
-
-    protected handle(that: TurnModel, event: Event) {
+    protected handleTurn(that: TurnModel, event: Event) {
         if (!this.state.isActive) return;
 
         const game = this.route.game;

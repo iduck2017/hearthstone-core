@@ -83,8 +83,8 @@ export { SpellEffectModel, SpellEffectDecor } from './models/rules/spell-effect'
 // hooks
 export { SpellFeatsModel } from "./models/features/spell";
 export { MinionFeatsModel } from "./models/features/minion";
-export { MinionBattlecryModel } from "./models/hooks/battlecry/role";
-export { WeaponBattlecryModel } from "./models/hooks/battlecry/weapon";
+export { MinionBattlecryModel } from "./models/hooks/minion-battlecry";
+export { WeaponBattlecryModel } from "./models/hooks/weapon-battlecry";
 export { DeathrattleModel } from "./models/hooks/deathrattle";
 export { EndTurnHookModel } from "./models/hooks/end-turn";
 export { StartTurnHookModel } from "./models/hooks/start-turn";
@@ -103,3 +103,4 @@ export { ArmorUpModel } from './models/skills/armor-up';
 
 export { OperationType, Operation } from "./types/decor";
 export { CommandUtil } from "./utils/command";
+export { AbortEvent } from "./types/event";

@@ -2,6 +2,7 @@ import { Event, EventUtil, Method, Model } from "set-piece";
 import { EndTurnHookModel } from "./end-turn";
 import { FeatureModel } from "../rules/feature";
 import { TurnModel } from "../rules/turn";
+import { CardModel } from "../..";
 
 export namespace StartTurnHookModel {
     export type E = {
@@ -24,6 +25,17 @@ export abstract class StartTurnHookModel<
     C & StartTurnHookModel.C,
     R & StartTurnHookModel.R
 > {
+
+    public get route() {
+        const result = super.route;
+        const card: CardModel | undefined = result.list.find(item => item instanceof CardModel);
+        return {
+            ...result,
+            card,
+        }
+    }
+    
+
     constructor(props: StartTurnHookModel['props'] & {
         uuid: string | undefined;
         state: S & Pick<FeatureModel.S, 'desc' | 'name'>;
@@ -41,12 +53,11 @@ export abstract class StartTurnHookModel<
         });
     }
 
-    @EventUtil.on(self => self.handle)
-    private listen() {
+    @EventUtil.on(self => self.handleTurn)
+    private listenTurn() {
         return this.route.game?.proxy.child.turn.event?.doStart;
     }
-
-    protected async handle(that: TurnModel, event: Event) {
+    protected async handleTurn(that: TurnModel, event: Event) {
         if (!this.state.isActive) return;
 
         const game = this.route.game;

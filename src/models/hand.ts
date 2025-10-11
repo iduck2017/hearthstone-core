@@ -18,7 +18,7 @@ export namespace HandModel {
         player: PlayerModel;
     };
     export type R = {
-        order: CardModel[]
+        queue: CardModel[]
     }
 }
 
@@ -42,7 +42,7 @@ export class HandModel extends Model<
             },
             state: { ...props.state },
             refer: { 
-                order: [
+                queue: [
                     ...props.child?.minions ?? [],
                     ...props.child?.weapons ?? [],
                     ...props.child?.spells ?? [],
@@ -64,7 +64,7 @@ export class HandModel extends Model<
         if (!cards) return;
         cards.push(card);
 
-        const order = this.origin.refer.order ?? [];
+        const order = this.origin.refer.queue ?? [];
         if (position === -1) position = order.length;
         if (!position) position = order.length;
         order.splice(position, 0, card);
@@ -88,7 +88,7 @@ export class HandModel extends Model<
         if (index === -1) return;
         cards.splice(index, 1);
 
-        const order = this.origin.refer.order ?? [];
+        const order = this.origin.refer.queue ?? [];
         index = order.indexOf(card);
         if (index !== -1) order.splice(index, 1);
 
@@ -114,7 +114,7 @@ export class HandModel extends Model<
         cards.splice(index, 1);
         
         // remove from order
-        const order = this.origin.refer.order ?? [];
+        const order = this.origin.refer.queue ?? [];
         index = order.indexOf(card);
         if (index === -1) return;
         order.splice(index, 1);

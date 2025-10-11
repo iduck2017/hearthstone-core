@@ -1,7 +1,7 @@
 import { Event, Method, Model } from "set-piece";
-import { SelectEvent, SelectUtil } from "../../../utils/select";
-import { FeatureModel } from "../../..";
-import { AbortEvent } from "../../../types/event";
+import { SelectEvent, SelectUtil } from "../../utils/select";
+import { FeatureModel } from "../..";
+import { AbortEvent } from "../../types/event";
 
 export namespace WeaponBattlecryModel {
     export type E = {
@@ -26,10 +26,10 @@ export abstract class WeaponBattlecryModel<
     R & WeaponBattlecryModel.R
 > {
     public static async toRun(
-        items: Readonly<WeaponBattlecryModel[]>
+        list: Readonly<WeaponBattlecryModel[]>
     ): Promise<Map<WeaponBattlecryModel, Model[]> | undefined> {
         const result = new Map<WeaponBattlecryModel, Model[]>();
-        for (const item of items) {
+        for (const item of list) {
             const selectors = item.toRun();
             // condition not match
             if (!selectors) continue;

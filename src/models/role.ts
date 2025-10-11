@@ -5,7 +5,7 @@ import { RoleActionModel } from "./rules/role-action";
 import { RoleAttackModel } from "./rules/role-attack";
 import { RoleHealthModel } from "./rules/health";
 import { SleepModel } from "./rules/sleep";
-import { RoleFeatsModel } from "..";
+import { MinionCardModel, RoleFeatsModel } from "..";
 import { CardModel } from "./cards";
 import { HeroModel } from "./heroes";
 
@@ -30,12 +30,15 @@ export class RoleModel extends Model<
 > {
     public get route() {
         const result = super.route;
+        const card: CardModel | undefined = result.list.find(item => item instanceof CardModel);
+        const minion: MinionCardModel | undefined = result.list.find(item => item instanceof MinionCardModel);
         return {
             ...result,
             game: result.list.find(item => item instanceof GameModel),
             player: result.list.find(item => item instanceof PlayerModel),
             hero: result.list.find(item => item instanceof HeroModel),
-            card: result.list.find(item => item instanceof CardModel),
+            card,
+            minion,
         }
     }
 
