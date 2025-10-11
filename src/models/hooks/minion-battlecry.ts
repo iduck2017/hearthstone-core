@@ -37,10 +37,10 @@ export abstract class MinionBattlecryModel<
     }
 
     public static async toRun(
-        list: Readonly<MinionBattlecryModel[]>
+        hooks: Readonly<MinionBattlecryModel[]>
     ): Promise<Map<MinionBattlecryModel, Model[]> | undefined> {
         const result = new Map<MinionBattlecryModel, Model[]>();
-        for (const item of list) {
+        for (const item of hooks) {
             const selectors = item.toRun();
             // condition not match
             if (!selectors) continue;

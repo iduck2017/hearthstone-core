@@ -3,19 +3,7 @@ import { BoardModel } from "../../board";
 import { DeployModel } from "./index"
 import { MinionCardModel } from "../../..";
 
-export namespace MinionDeployModel {
-    export type E = {};
-    export type C = {};
-    export type S = {};
-    export type R = {};
-}
-
-export class MinionDeployModel extends DeployModel<
-    MinionDeployModel.E,
-    MinionDeployModel.S,
-    MinionDeployModel.C,
-    MinionDeployModel.R
-> {
+export class MinionDeployModel extends DeployModel {
     public get route() {
         const result = super.route;
         const minion: MinionCardModel | undefined = result.list.find(item => item instanceof MinionCardModel);

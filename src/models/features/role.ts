@@ -26,7 +26,7 @@ export namespace RoleFeatsModel {
         readonly overheal: OverhealModel[];
         // feats
         readonly buffs: IRoleBuffModel[];
-        readonly list: FeatureModel[];
+        readonly feats: FeatureModel[];
     };
     export type R = {};
 }
@@ -54,7 +54,7 @@ export class RoleFeatsModel extends Model<
                 divineShield: child.divineShield ?? new DivineShieldModel({ state: { isActive: false }}),
                 overheal: child.overheal ?? [],
                 buffs: child.buffs ?? [],
-                list: child.list ?? [],
+                feats: child.feats ?? [],
                 ...props?.child 
             },
             refer: { ...props?.refer },
@@ -63,7 +63,7 @@ export class RoleFeatsModel extends Model<
 
     protected query(feat: FeatureModel): FeatureModel[] | undefined {
         if (feat instanceof IRoleBuffModel) return this.origin.child.buffs;
-        return this.origin.child.list;
+        return this.origin.child.feats;
     }
 
     public add(feat: FeatureModel) {

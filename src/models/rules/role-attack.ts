@@ -120,7 +120,7 @@ export class RoleAttackModel extends Model<
         if (!sourceA || !sourceB) return;
 
         // execute
-        DamageModel.run([
+        DamageModel.deal([
             new DamageEvent({
                 target: roleB,
                 method: this,

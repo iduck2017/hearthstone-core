@@ -103,8 +103,7 @@ export class RoleHealthModel extends Model<
     }
 
     public toHurt(event: DamageEvent) {
-        const result = this.event.toHurt(event);
-        return result;
+        this.event.toHurt(event);
     }
 
     @TranxUtil.span()
@@ -168,8 +167,7 @@ export class RoleHealthModel extends Model<
 
 
     public toHeal(event: RestoreEvent) {
-        const result = this.event.toHeal(event);
-        return result;
+        this.event.toHeal(event);
     }
 
     public doHeal(event: RestoreEvent): RestoreEvent {

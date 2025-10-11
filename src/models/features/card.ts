@@ -7,7 +7,7 @@ export namespace CardFeatsModel {
     export type S = {};
     export type C = {
         readonly poisonous: PoisonousModel;
-        readonly list: FeatureModel[];
+        readonly feats: FeatureModel[];
     };
     export type R = {};
 }
@@ -33,7 +33,7 @@ export abstract class CardFeatsModel<
             state: { ...props.state },
             child: {    
                 poisonous: props.child.poisonous ?? new PoisonousModel({ state: { isActive: false }}),
-                list: props.child.list ?? [],
+                feats: props.child.feats ?? [],
                 ...props.child 
             },
             refer: { ...props.refer },

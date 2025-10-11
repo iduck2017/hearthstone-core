@@ -3,13 +3,6 @@ import { BoardModel } from "../../board";
 import { DeployModel } from "./index"
 import { SecretCardModel } from "../../..";
 
-export namespace SecretDeployModel {
-    export type E = {};
-    export type S = {};
-    export type C = {};
-    export type R = {};
-}
-
 export class SecretDeployModel extends DeployModel {
     public get route() {
         const result = super.route;

@@ -1,4 +1,4 @@
-import { Event, Method, Model, State } from "set-piece";
+import { Event, Method, Model, State, TranxUtil } from "set-piece";
 import { EffectModel } from "../rules/effect";
 import { SpellPerformModel } from "../rules/perform/spell";
 import { SpellFeatsModel, SpellHooksOptions } from "../features/spell";
@@ -18,7 +18,8 @@ export namespace SpellCardModel {
     export type R = {};
 }
 
-export class SpellCardModel<
+@TranxUtil.span(true)
+export abstract class SpellCardModel<
     E extends Partial<SpellCardModel.E & CardModel.E> & Model.E = {},
     S extends Partial<SpellCardModel.S & CardModel.S> & Model.S = {},
     C extends Partial<SpellCardModel.C & CardModel.C> & Model.C = {},

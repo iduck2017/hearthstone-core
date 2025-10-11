@@ -6,19 +6,10 @@ import { MinionHooksOptions } from "../../features/minion";
 import { MinionCardModel } from "../../cards/minion";
 import { AbortEvent } from "../../../types/abort-event";
 
-export namespace MinionPerformModel {
-    export type E = {};
-    export type S = {};
-    export type C = {};
-    export type R = {};
-}
+
 
 export class MinionPerformModel extends PerformModel<
-    [number, MinionHooksOptions],
-    MinionPerformModel.E,
-    MinionPerformModel.S,
-    MinionPerformModel.C,
-    MinionPerformModel.R
+    [number, MinionHooksOptions]
 > {
     public get route() {
         const result = super.route;

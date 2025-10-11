@@ -2,19 +2,8 @@ import { DebugUtil, Model, TranxUtil } from "set-piece";
 import { DisposeModel } from ".";
 import { MinionCardModel, PlayerModel } from "../../..";
 
-export namespace MinionDisposeModel {
-    export type E = {};
-    export type S = {};
-    export type C = {};
-    export type R = {};
-}
 
-export class MinionDisposeModel extends DisposeModel<
-    MinionDisposeModel.E,
-    MinionDisposeModel.S,
-    MinionDisposeModel.C,
-    MinionDisposeModel.R
-> {
+export class MinionDisposeModel extends DisposeModel {
     public get route() {
         const result = super.route;
         const minion: MinionCardModel | undefined = result.list.find(item => item instanceof MinionCardModel);

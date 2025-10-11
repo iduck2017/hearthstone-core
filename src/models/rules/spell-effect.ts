@@ -42,10 +42,10 @@ export abstract class SpellEffectModel<
     }
 
     public static async toRun(
-        list: Readonly<SpellEffectModel[]>
+        hooks: Readonly<SpellEffectModel[]>
     ): Promise<Map<SpellEffectModel, Model[]> | undefined> {
         const result = new Map<SpellEffectModel, Model[]>();
-        for (const item of list) {
+        for (const item of hooks) {
             const selectors = item.toRun();
             if (!selectors) continue;
             for (const selector of selectors) {

@@ -5,19 +5,8 @@ import { WeaponBattlecryModel } from "../../..";
 import { WeaponCardModel } from "../../..";
 import { AbortEvent } from "../../../types/abort-event";
 
-export namespace WeaponPerformModel {
-    export type E = {};
-    export type S = {};
-    export type C = {};
-    export type R = {};
-}
-
 export class WeaponPerformModel extends PerformModel<
-    [WeaponHooksOptions],
-    WeaponPerformModel.E,
-    WeaponPerformModel.S,
-    WeaponPerformModel.C,
-    WeaponPerformModel.R
+    [WeaponHooksOptions]
 > {
     public get route() {
         const result = super.route;

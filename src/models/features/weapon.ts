@@ -51,6 +51,6 @@ export class WeaponFeatsModel extends CardFeatsModel<
         if (feat instanceof DeathrattleModel) return this.origin.child.deathrattle;
         if (feat instanceof StartTurnHookModel) return this.origin.child.startTurn;
         if (feat instanceof EndTurnHookModel) return this.origin.child.endTurn;
-        return this.origin.child.list;
+        return this.origin.child.feats;
     }
 }

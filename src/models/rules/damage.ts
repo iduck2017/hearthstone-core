@@ -5,8 +5,8 @@ import { CardModel, HeroModel, MinionCardModel, PlayerModel, SpellCardModel } fr
 
 export namespace DamageModel {
     export type E = {
-        onRun: DamageEvent,
-        toRun: DamageEvent
+        onDeal: DamageEvent,
+        toDeal: DamageEvent,
     };
     export type S = {};
     export type C = {};
@@ -25,20 +25,20 @@ export class DamageModel extends Model<
     DamageModel.R
 > {
     @DisposeModel.span()
-    public static run(tasks: DamageEvent[]) {
-        tasks.forEach(item => item.detail.source.child.damage.event.toRun(item));
+    public static deal(tasks: DamageEvent[]) {
+        tasks.forEach(item => item.detail.source.child.damage.event.toDeal(item));
         tasks.forEach(item => item.detail.target.child.health.toHurt(item));
         
         tasks = tasks.filter(item => !item.detail.isAbort);
-        DamageModel.doRun(tasks);
+        DamageModel.doDeal(tasks);
 
         tasks = tasks.filter(item => item.detail.result > 0 && !item.detail.isAbort);
         tasks.forEach(item => item.detail.target.child.health.onHurt(item));
-        tasks.forEach(item => item.detail.source.child.damage.onRun(item));
+        tasks.forEach(item => item.detail.source.child.damage.event.onDeal(item));
     }
 
     @TranxUtil.span()
-    private static doRun(tasks: DamageEvent[]) {
+    private static doDeal(tasks: DamageEvent[]) {
         tasks.forEach(item => item.detail.target.child.health.doHurt(item));
     }
 
@@ -51,7 +51,4 @@ export class DamageModel extends Model<
         })
     }
 
-    private onRun(event: DamageEvent) {
-        this.event.onRun(event);
-    }
 }

@@ -14,7 +14,7 @@ export namespace MinionCardModel {
         readonly races: RaceType[];
     };
     export type E = {
-        readonly onTrans: Event<{ target: MinionCardModel }>;
+        readonly onTransform: Event<{ target: MinionCardModel }>;
         readonly onSilence: Event;
     };
     export type C = {
@@ -28,6 +28,7 @@ export namespace MinionCardModel {
     export type R = {};
 }
 
+@TranxUtil.span(true)
 export abstract class MinionCardModel<
     E extends Partial<MinionCardModel.E & CardModel.E> & Model.E = {},
     S extends Partial<MinionCardModel.S & CardModel.S> & Model.S = {},
@@ -62,7 +63,7 @@ export abstract class MinionCardModel<
     // transform
     public transform(target: MinionCardModel) {
         this.doTransform(target);
-        this.event.onTrans(new Event({ target }));
+        this.event.onTransform(new Event({ target }));
     }
 
     @TranxUtil.span()
@@ -85,14 +86,14 @@ export abstract class MinionCardModel<
 
     @TranxUtil.span()
     private doSilence() {
-        this.child.feats.child.list.forEach(item => item.deactive());
+        this.child.feats.child.feats.forEach(item => item.deactive());
         this.child.feats.child.battlecry.forEach(item => item.deactive());
         this.child.feats.child.deathrattle.forEach(item => item.deactive());
         this.child.feats.child.startTurn.forEach(item => item.deactive());
         this.child.feats.child.endTurn.forEach(item => item.deactive());
         const role = this.child.role;
         role.child.feats.child.buffs.forEach(item => item.deactive());
-        role.child.feats.child.list.forEach(item => item.deactive());
+        role.child.feats.child.feats.forEach(item => item.deactive());
         role.child.feats.child.charge.deactive();
         role.child.feats.child.divineShield.deactive();
         role.child.feats.child.elusive.deactive();

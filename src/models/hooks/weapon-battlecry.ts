@@ -26,10 +26,10 @@ export abstract class WeaponBattlecryModel<
     R & WeaponBattlecryModel.R
 > {
     public static async toRun(
-        list: Readonly<WeaponBattlecryModel[]>
+        hooks: Readonly<WeaponBattlecryModel[]>
     ): Promise<Map<WeaponBattlecryModel, Model[]> | undefined> {
         const result = new Map<WeaponBattlecryModel, Model[]>();
-        for (const item of list) {
+        for (const item of hooks) {
             const selectors = item.toRun();
             // condition not match
             if (!selectors) continue;

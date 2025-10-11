@@ -2,7 +2,7 @@ import { DebugUtil, Model, TranxUtil, Event, Method, Route } from "set-piece";
 import { CostModel } from "../rules/cost";
 import { ClassType, RarityType } from "../../types/card-enums";
 import { MinionFeatsModel } from "../features/minion";
-import { DamageModel, DeathrattleModel, DisposeModel, FeatureModel, RestoreModel } from "../..";
+import { DamageModel, DisposeModel, FeatureModel, RestoreModel } from "../..";
 import { MinionCardModel, PlayerModel, GameModel, HandModel, DeckModel, BoardModel, GraveyardModel } from "../..";
 import { DeployModel } from "../rules/deploy";
 import { PerformModel } from "../rules/perform";
@@ -35,6 +35,7 @@ export namespace CardModel {
     };
 }
 
+@TranxUtil.span(true)
 export abstract class CardModel<
     E extends Partial<CardModel.E> & Model.E = {},
     S extends Partial<CardModel.S> & Model.S = {},
@@ -101,6 +102,7 @@ export abstract class CardModel<
         })
     }
 
+    // play
     public async play() {
         if (!this.status) return;
         const perform = this.child.perform;
@@ -127,11 +129,11 @@ export abstract class CardModel<
         // run
         await perform.run(from, ...params);
         // try to dispose if not perform
-        this.dispose();
+        this.clear();
     }
 
     @TranxUtil.span()
-    private dispose() {
+    private clear() {
         const player = this.route.player;
         if (!player) return;
         const hand = player.child.hand;
@@ -142,6 +144,7 @@ export abstract class CardModel<
     }
 
 
+    // draw
     @DebugUtil.log()
     public draw() {
         if (!this.doDraw()) return;
@@ -157,8 +160,4 @@ export abstract class CardModel<
         player.child.hand.add(this);
         return true;
     }
-
-    perform() {}
-
-    deploy() {}
 }

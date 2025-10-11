@@ -10,7 +10,6 @@ export namespace SpellPerformModel {
     export type S = {};
     export type C = {};
     export type R = {};
-    export type P = { spell: SpellCardModel; };
 }
 
 export class SpellPerformModel extends PerformModel<

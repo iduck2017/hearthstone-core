@@ -3,19 +3,7 @@ import { DisposeModel } from ".";
 import { MinionCardModel, PlayerModel, WeaponCardModel } from "../../..";
 import { SecretCardModel } from "../../cards/secret";
 
-export namespace SecretDisposeModel {
-    export type E = {};
-    export type S = {};
-    export type C = {};
-    export type R = {};
-}
-
-export class SecretDisposeModel extends DisposeModel<
-    SecretDisposeModel.E,
-    SecretDisposeModel.S,
-    SecretDisposeModel.C,
-    SecretDisposeModel.R
-> {
+export class SecretDisposeModel extends DisposeModel {
     public get route() {
         const result = super.route;
         const secret: SecretCardModel | undefined = result.list.find(item => item instanceof SecretCardModel);

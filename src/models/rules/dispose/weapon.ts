@@ -2,20 +2,8 @@ import { DebugUtil, Model, TranxUtil } from "set-piece";
 import { DisposeModel } from ".";
 import { WeaponCardModel } from "../../..";
 
-export namespace WeaponDisposeModel {
-    export type E = {};
-    export type S = {};
-    export type C = {};
-    export type R = {};
-    export type P = { weapon: WeaponCardModel; };
-}
 
-export class WeaponDisposeModel extends DisposeModel<
-    WeaponDisposeModel.E,
-    WeaponDisposeModel.S,
-    WeaponDisposeModel.C,
-    WeaponDisposeModel.R
-> {
+export class WeaponDisposeModel extends DisposeModel {
     public get route() {
         const result = super.route;
         const weapon: WeaponCardModel | undefined = result.list.find(item => item instanceof WeaponCardModel);
