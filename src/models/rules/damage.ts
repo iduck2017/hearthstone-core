@@ -1,5 +1,5 @@
 import { Model, TranxUtil } from "set-piece";
-import { DamageEvent, DamageType } from "../../types/damage";
+import { DamageEvent, DamageType } from "../../types/damage-event";
 import { DisposeModel } from "./dispose";
 import { CardModel, HeroModel, MinionCardModel, PlayerModel, SpellCardModel } from "../..";
 

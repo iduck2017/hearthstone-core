@@ -1,14 +1,14 @@
 import { Model } from "set-piece";
 
-export type Operation = {
+export type Operator = {
     maximum?: number;
     minumum?: number;
-    type: OperationType;
-    value: number;
+    type: OperatorType;
+    offset: number;
     reason: Model;
 }
 
-export enum OperationType {
+export enum OperatorType {
     ADD = 1,
     SET,
 }

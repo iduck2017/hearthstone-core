@@ -12,7 +12,7 @@ export class SpellEffectDecor<S extends Model.S = {}> extends Decor<
     SpellEffectModel['origin']['state'] & S
 > {
     public add(value: number) {
-        this._detail.damage = this._detail.damage.map(item => item + value);
+        this._origin.damage = this._origin.damage.map(item => item + value);
     }
 }
 

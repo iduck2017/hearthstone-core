@@ -3,7 +3,7 @@ import { PerformModel } from ".";
 import { WeaponHooksOptions } from "../../features/weapon";
 import { WeaponBattlecryModel } from "../../..";
 import { WeaponCardModel } from "../../..";
-import { AbortEvent } from "../../../types/event";
+import { AbortEvent } from "../../../types/abort-event";
 
 export namespace WeaponPerformModel {
     export type E = {};

@@ -1,11 +1,11 @@
 // enums
-export { DamageType } from "./types/damage";
-export { RaceType, SchoolType, RarityType, ClassType } from "./types/card";
+export { DamageType } from "./types/damage-event";
+export { RaceType, SchoolType, RarityType, ClassType } from "./types/card-enums";
 
 // event
 export { SelectEvent } from "./utils/select";
-export { DamageEvent } from "./types/damage";
-export { RestoreEvent } from "./types/restore";
+export { DamageEvent } from "./types/damage-event";
+export { RestoreEvent } from "./types/restore-event";
 
 // utils
 export { TimeUtil } from "./utils/time";
@@ -76,7 +76,8 @@ export { PoisonousModel } from "./models/entries/poisonous";
 // features
 export { FeatureModel } from './models/rules/feature'
 export { SecretFeatureModel } from "./models/features/secret";
-export { IRoleBuffModel, RoleBuffModel } from "./models/rules/role-buff";
+export { IRoleBuffModel } from "./models/rules/i-role-buff";
+export { RoleBuffModel } from "./models/rules/role-buff";
 export { EffectModel } from './models/rules/effect'; 
 export { SpellEffectModel, SpellEffectDecor } from './models/rules/spell-effect';
 
@@ -101,6 +102,6 @@ export { SkillModel } from './models/skills';
 export { FireBlastModel } from './models/skills/fireblast';
 export { ArmorUpModel } from './models/skills/armor-up';
 
-export { OperationType, Operation } from "./types/decor";
+export { OperatorType, Operator } from "./types/operator";
 export { CommandUtil } from "./utils/command";
-export { AbortEvent } from "./types/event";
+export { AbortEvent } from "./types/abort-event";

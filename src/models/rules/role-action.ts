@@ -1,6 +1,6 @@
 import { DebugUtil, Decor, Event, Model, StateUtil, TranxUtil } from "set-piece";
 import { BoardModel, SelectEvent, SelectUtil, MinionCardModel, RoleModel, PlayerModel, GameModel, CardModel, HeroModel } from "../..";
-import { AbortEvent } from "../../types/event";
+import { AbortEvent } from "../../types/abort-event";
 
 export namespace RoleActionModel {
     export type S = {
@@ -26,11 +26,11 @@ export namespace RoleActionModel {
 
 export class RoleActionDecor extends Decor<RoleActionModel.S> {
     public add(value: number) { 
-        this._detail.origin += value 
+        this._origin.origin += value 
     }
     
     public lock() { 
-        this._detail.isLock = true 
+        this._origin.isLock = true 
     }
 }
 

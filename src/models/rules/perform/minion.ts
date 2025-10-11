@@ -4,7 +4,7 @@ import { SelectEvent, SelectUtil } from "../../../utils/select";
 import { MinionBattlecryModel } from "../../..";
 import { MinionHooksOptions } from "../../features/minion";
 import { MinionCardModel } from "../../cards/minion";
-import { AbortEvent } from "../../../types/event";
+import { AbortEvent } from "../../../types/abort-event";
 
 export namespace MinionPerformModel {
     export type E = {};

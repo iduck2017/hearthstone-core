@@ -2,7 +2,7 @@ import { Event, Method, Model, State } from "set-piece";
 import { EffectModel } from "../rules/effect";
 import { SpellPerformModel } from "../rules/perform/spell";
 import { SpellFeatsModel, SpellHooksOptions } from "../features/spell";
-import { SchoolType } from "../../types/card";
+import { SchoolType } from "../../types/card-enums";
 import { SpellEffectModel } from "../rules/spell-effect";
 import { CardModel } from ".";
 

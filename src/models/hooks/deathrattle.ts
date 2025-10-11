@@ -1,5 +1,5 @@
 import { Event, Method, Model } from "set-piece";
-import { AbortEvent } from "../../types/event";
+import { AbortEvent } from "../../types/abort-event";
 import { FeatureModel } from "../rules/feature";
 import { BoardModel, CardModel } from "../..";
 

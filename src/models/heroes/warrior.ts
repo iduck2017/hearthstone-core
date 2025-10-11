@@ -8,7 +8,8 @@ import { TemplUtil } from "set-piece";
 
 @TemplUtil.is('warrior')
 export class WarriorModel extends HeroModel {
-    constructor(props: WarriorModel['props']) {
+    constructor(props?: WarriorModel['props']) {
+        props = props ?? {};
         super({
             uuid: props.uuid,
             state: { ...props.state },

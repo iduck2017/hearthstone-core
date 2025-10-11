@@ -1,6 +1,6 @@
 import { Event, Method, Model, Route } from "set-piece"
 import { CardModel, MinionCardModel, PlayerModel, SpellCardModel, WeaponCardModel } from "../../.."
-import { AbortEvent } from "../../../types/event";
+import { AbortEvent } from "../../../types/abort-event";
 
 export namespace PerformModel {
     export type E = {

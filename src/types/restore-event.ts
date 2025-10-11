@@ -2,7 +2,7 @@ import { Event, Model } from "set-piece";
 import { RoleModel } from "../models/role";
 import { RestoreModel } from "../models/rules/restore";
 import { CardModel, HeroModel } from "..";
-import { AbortEvent } from "./event";
+import { AbortEvent } from "./abort-event";
 
 export class RestoreEvent extends AbortEvent<{
     target: RoleModel;

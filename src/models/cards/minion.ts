@@ -1,6 +1,6 @@
 import { Event, Method, State, TranxUtil, Model } from "set-piece";
 import { MinionHooksOptions, MinionFeatsModel } from "../features/minion";
-import { RaceType } from "../../types/card";
+import { RaceType } from "../../types/card-enums";
 import { RoleModel } from "../role";
 import { MinionDisposeModel } from "../rules/dispose/minion";
 import { MinionDeployModel } from "../rules/deploy/minion";

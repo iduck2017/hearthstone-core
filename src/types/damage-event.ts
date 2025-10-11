@@ -2,7 +2,7 @@ import { Event, Model } from "set-piece";
 import { RoleModel } from "../models/role";
 import { DamageModel } from "../models/rules/damage";
 import { CardModel, HeroModel } from "..";
-import { AbortEvent } from "./event";
+import { AbortEvent } from "./abort-event";
 
 export enum DamageType {
     DEFAULT = 0,

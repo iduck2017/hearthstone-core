@@ -1,5 +1,5 @@
 import { Event, TemplUtil, TranxUtil } from "set-piece";
-import { DamageEvent } from "../../types/damage";
+import { DamageEvent } from "../../types/damage-event";
 import { FeatureModel } from "../rules/feature";
 
 export namespace DivineShieldModel {

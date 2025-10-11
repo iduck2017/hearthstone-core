@@ -1,6 +1,6 @@
 import { DebugUtil, Model, TranxUtil, Event, Method, Route } from "set-piece";
 import { CostModel } from "../rules/cost";
-import { ClassType, RarityType } from "../../types/card";
+import { ClassType, RarityType } from "../../types/card-enums";
 import { MinionFeatsModel } from "../features/minion";
 import { DamageModel, DeathrattleModel, DisposeModel, FeatureModel, RestoreModel } from "../..";
 import { MinionCardModel, PlayerModel, GameModel, HandModel, DeckModel, BoardModel, GraveyardModel } from "../..";

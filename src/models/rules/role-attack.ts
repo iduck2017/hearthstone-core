@@ -1,8 +1,8 @@
 import { DebugUtil, Decor, Event, Method, Model, StateUtil, TemplUtil } from "set-piece";
 import { DamageEvent, DamageModel, MinionCardModel, RoleModel, GameModel, PlayerModel, HeroModel, WeaponCardModel, IRoleBuffModel } from "../..";
-import { DamageType } from "../../types/damage";
-import { Operation, OperationType } from "../../types/decor";
-import { AbortEvent } from "../../types/event";
+import { DamageType } from "../../types/damage-event";
+import { Operator, OperatorType } from "../../types/operator";
+import { AbortEvent } from "../../types/abort-event";
 
 export namespace RoleAttackModel {
     export type E = {
@@ -20,28 +20,28 @@ export namespace RoleAttackModel {
 
 
 export class RoleAttackDecor extends Decor<RoleAttackModel.S> {
-    private operations: Operation[] = [];
+    private operations: Operator[] = [];
 
     public get result() {
-        const result = { ...this._detail };
+        const result = { ...this._origin };
         // buff
         const buffs = this.operations
             .filter(item => item.reason instanceof IRoleBuffModel)
             .sort((a, b) => a.reason.uuid.localeCompare(b.reason.uuid));
         buffs.forEach(item => {
-            if (item.type === OperationType.ADD) result.current += item.value;
-            if (item.type === OperationType.SET) result.current = item.value;
+            if (item.type === OperatorType.ADD) result.current += item.offset;
+            if (item.type === OperatorType.SET) result.current = item.offset;
         })
         const items = this.operations.filter(item => !(item.reason instanceof IRoleBuffModel));
         items.forEach(item => {
-            if (item.type === OperationType.ADD) result.current += item.value;
-            if (item.type === OperationType.SET) result.current = item.value;
+            if (item.type === OperatorType.ADD) result.current += item.offset;
+            if (item.type === OperatorType.SET) result.current = item.offset;
         })
         if (result.current <= 0) result.current = 0;
         return result;
     }
     
-    public add(operation: Operation) { 
+    public add(operation: Operator) { 
         this.operations.push(operation);
     }
 }

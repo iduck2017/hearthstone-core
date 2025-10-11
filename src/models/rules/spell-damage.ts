@@ -39,6 +39,7 @@ export class SpellDamageModel extends FeatureModel<
     }
     private modifyDamage(that: SpellEffectModel, decor: SpellEffectDecor) {
         if (!this.route.player) return;
+        if (!this.route.board) return;
         if (!this.state.isActive) return;
         decor.add(this.state.offset);
     }

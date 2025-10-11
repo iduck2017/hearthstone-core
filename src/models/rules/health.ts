@@ -1,9 +1,9 @@
 import { DebugUtil, Decor, Event, EventUtil, Frame, Method, Model, StateUtil, TemplUtil, TranxUtil } from "set-piece";
 import { RoleModel, MinionCardModel, GameModel, PlayerModel, CardModel, HeroModel, IRoleBuffModel } from "../..";
-import { DamageEvent } from "../../types/damage";
-import { RestoreEvent } from "../../types/restore";
-import { OperationType } from "../../types/decor";
-import { Operation } from "../../types/decor";
+import { DamageEvent } from "../../types/damage-event";
+import { RestoreEvent } from "../../types/restore-event";
+import { OperatorType } from "../../types/operator";
+import { Operator } from "../../types/operator";
 
 export namespace RoleHealthModel {
     export type E = {
@@ -31,27 +31,27 @@ export namespace RoleHealthModel {
 }
 
 export class RoleHealthDecor extends Decor<RoleHealthModel.S> {
-    private operations: Operation[] = [];
+    private operations: Operator[] = [];
 
     public get result() {
-        const result = { ...this._detail };
+        const result = { ...this._origin };
         const buffs = this.operations
             .filter(item => item.reason instanceof IRoleBuffModel)
             .sort((a, b) => a.reason.uuid.localeCompare(b.reason.uuid));
         buffs.forEach(item => {
-            if (item.type === OperationType.ADD) result.maximum += item.value;
-            if (item.type === OperationType.SET) result.maximum = item.value;
+            if (item.type === OperatorType.ADD) result.maximum += item.offset;
+            if (item.type === OperatorType.SET) result.maximum = item.offset;
         })
         const items = this.operations.filter(item => !(item.reason instanceof IRoleBuffModel));
         items.forEach(item => {
-            if (item.type === OperationType.ADD) result.maximum += item.value;
-            if (item.type === OperationType.SET) result.maximum = item.value;
+            if (item.type === OperatorType.ADD) result.maximum += item.offset;
+            if (item.type === OperatorType.SET) result.maximum = item.offset;
         })
         if (result.maximum <= 0) result.maximum = 0;
         return result;
     }
     
-    public add(operation: Operation) { 
+    public add(operation: Operator) { 
         this.operations.push(operation);
     }
 }

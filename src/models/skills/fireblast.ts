@@ -3,7 +3,7 @@ import { SelectEvent } from "../../utils/select";
 import { RoleModel } from "../role";
 import { CostModel } from "../rules/cost";
 import { DamageModel } from "../rules/damage";
-import { DamageEvent, DamageType } from "../../types/damage";
+import { DamageEvent, DamageType } from "../../types/damage-event";
 import { TemplUtil } from "set-piece";
 
 @TemplUtil.is('fireblast')

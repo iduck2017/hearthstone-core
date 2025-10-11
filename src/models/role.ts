@@ -5,7 +5,7 @@ import { RoleActionModel } from "./rules/role-action";
 import { RoleAttackModel } from "./rules/role-attack";
 import { RoleHealthModel } from "./rules/health";
 import { SleepModel } from "./rules/sleep";
-import { MinionCardModel, RoleFeatsModel } from "..";
+import { DeckModel, GraveyardModel, BoardModel, HandModel, MinionCardModel, RoleFeatsModel } from "..";
 import { CardModel } from "./cards";
 import { HeroModel } from "./heroes";
 
@@ -39,6 +39,10 @@ export class RoleModel extends Model<
             hero: result.list.find(item => item instanceof HeroModel),
             card,
             minion,
+            board: result.list.find(item => item instanceof BoardModel),
+            deck: result.list.find(item => item instanceof DeckModel),
+            graveyard: result.list.find(item => item instanceof GraveyardModel),
+            hand: result.list.find(item => item instanceof HandModel),
         }
     }
 
