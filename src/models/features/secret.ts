@@ -47,7 +47,6 @@ export abstract class SecretFeatureModel<
             const instance = {
                 [key](this: SecretFeatureModel, ...args: any[]) {
                     // precheck
-                    console.log('secret', this.status);
                     if (!this.status) return false;
                     const player = this.route.player;
                     const game = this.route.game;

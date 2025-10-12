@@ -47,7 +47,6 @@ export class FrozenModel extends RoleFeatureModel<
     }
 
     public deactive() {
-        console.log('deactive');
         super.deactive();
     }
 
