@@ -1,9 +1,9 @@
 import { Method, Model } from "set-piece";
 import { GameModel } from "./game";
-import { HandModel } from "./hand";
-import { BoardModel } from "./board";
-import { DeckModel } from "./deck";
-import { GraveyardModel } from "./graveyard";
+import { HandModel } from "./cards/group/hand";
+import { BoardModel } from "./cards/group/board";
+import { DeckModel } from "./cards/group/deck";
+import { GraveyardModel } from "./cards/group/graveyard";
 import { ManaModel } from "./rules/hero/mana";
 import { HeroModel } from "./heroes";
 import { RoleModel } from "./role";

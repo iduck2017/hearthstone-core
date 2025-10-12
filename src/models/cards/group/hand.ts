@@ -1,8 +1,8 @@
 import { Model, TemplUtil, TranxUtil } from "set-piece";
-import { PlayerModel } from "./player";
-import { GameModel } from "./game";
-import { CardModel } from "..";
-import { WeaponCardModel, MinionCardModel, SpellCardModel } from "..";
+import { PlayerModel } from "../../player";
+import { GameModel } from "../../game";
+import { CardModel } from "../../..";
+import { WeaponCardModel, MinionCardModel, SpellCardModel } from "../../..";
 
 export namespace HandModel {
     export type E = {}

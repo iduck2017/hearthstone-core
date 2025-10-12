@@ -4,7 +4,7 @@ import { SpellCastEvent, SpellFeaturesModel, SpellHooksOptions } from "../featur
 import { SchoolType } from "../../types/card-enums";
 import { SpellEffectModel } from "../..";
 import { CardModel } from ".";
-import { BoardModel } from "../board";
+import { BoardModel } from "./group/board";
 
 export namespace SpellCardModel {
     export type S = {

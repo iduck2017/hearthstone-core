@@ -1,7 +1,7 @@
 import { Method, Model } from "set-piece";
 import { SecretCardModel } from "../cards/secret";
 import { FeatureModel } from ".";
-import { BoardModel } from "../board";
+import { BoardModel } from "../cards/group/board";
 import { CardFeatureModel } from "./card";
 
 export namespace SecretFeatureModel {

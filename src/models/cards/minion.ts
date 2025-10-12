@@ -7,7 +7,7 @@ import { CardModel } from ".";
 import { AbortEvent } from "../../types/abort-event";
 import { MinionBattlecryModel } from "../features/hooks/minion-battlecry";
 import { SelectEvent, SelectUtil } from "../../utils/select";
-import { BoardModel } from "../board";
+import { BoardModel } from "./group/board";
 
 export namespace MinionCardModel {
     export type S = {

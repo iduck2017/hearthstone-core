@@ -1,9 +1,9 @@
 import { Model, TranxUtil } from "set-piece";
-import { GameModel, PlayerModel } from "..";
-import { MinionCardModel } from "./cards/minion";
-import { CardModel } from "./cards";
-import { SecretCardModel } from "..";
-import { WeaponCardModel } from "..";
+import { GameModel, PlayerModel } from "../../..";
+import { MinionCardModel } from "../minion";
+import { CardModel } from "..";
+import { SecretCardModel } from "../../..";
+import { WeaponCardModel } from "../../..";
 
 export namespace BoardModel {
     export type E = {};

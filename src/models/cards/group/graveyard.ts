@@ -1,7 +1,7 @@
 import { Model } from "set-piece";
-import { MinionCardModel } from "..";
-import { GameModel } from "./game";
-import { WeaponCardModel, PlayerModel, CardModel, SpellCardModel } from "..";
+import { MinionCardModel } from "../../..";
+import { GameModel } from "../../game";
+import { WeaponCardModel, PlayerModel, CardModel, SpellCardModel } from "../../..";
 
 export namespace GraveyardModel {
     export type E = {}

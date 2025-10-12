@@ -6,7 +6,7 @@ import { WeaponHooksOptions, WeaponFeaturesModel } from "../features/group/weapo
 import { WeaponDisposeModel } from "./dispose/weapon";
 import { AbortEvent } from "../../types/abort-event";
 import { WeaponBattlecryModel } from "../features/hooks/weapon-battlecry";
-import { BoardModel } from "../board";
+import { BoardModel } from "./group/board";
 
 export namespace WeaponCardModel {
     export type S = {};

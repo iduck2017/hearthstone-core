@@ -1,6 +1,6 @@
 import { DebugUtil, Model, TemplUtil } from "set-piece";
 import { GameModel } from "./game";
-import { CollectionModel } from "./collection";
+import { CollectionModel } from "./cards/group/collection";
 
 export namespace AppModel {
     export type S = {

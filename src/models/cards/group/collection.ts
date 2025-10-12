@@ -1,7 +1,7 @@
 import { DebugUtil, Model, TemplUtil } from "set-piece";
-import { MinionCardModel } from "..";
-import { GameModel } from "./game";
-import { CardModel, DeckModel, PlayerModel, SpellCardModel, WeaponCardModel } from "..";
+import { MinionCardModel } from "../../..";
+import { GameModel } from "../../game";
+import { CardModel, DeckModel, PlayerModel, SpellCardModel, WeaponCardModel } from "../../..";
 
 export namespace CollectionModel {
     export type E = {};

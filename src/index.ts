@@ -44,11 +44,11 @@ export { AppModel } from "./models/app";
 export { PlayerModel } from "./models/player";
 export { RoleModel } from "./models/role";
 export { GameModel } from "./models/game";
-export { HandModel } from "./models/hand";
-export { BoardModel } from "./models/board";
-export { DeckModel } from "./models/deck";
-export { GraveyardModel } from "./models/graveyard";
-export { CollectionModel } from "./models/collection";
+export { HandModel } from "./models/cards/group/hand";
+export { BoardModel } from "./models/cards/group/board";
+export { DeckModel } from "./models/cards/group/deck";
+export { GraveyardModel } from "./models/cards/group/graveyard";
+export { CollectionModel } from "./models/cards/group/collection";
 
 // entries
 export { RoleFeaturesModel } from "./models/features/group/role";

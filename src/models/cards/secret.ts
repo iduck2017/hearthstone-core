@@ -2,7 +2,7 @@ import { Event, Method, Model, State, TranxUtil } from "set-piece";
 import { CardModel } from ".";
 import { SecretDisposeModel } from "./dispose/secret";
 import { SpellCardModel } from "./spell";
-import { BoardModel } from "../board";
+import { BoardModel } from "./group/board";
 
 export namespace SecretCardModel {
     export type S = {};
