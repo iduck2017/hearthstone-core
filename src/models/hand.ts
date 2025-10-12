@@ -81,7 +81,7 @@ export class HandModel extends Model<
     }
 
     @TranxUtil.span()
-    public prepare(card: CardModel) {
+    public drag(card: CardModel) {
         let cards = this.query(card);
         if (!cards) return;
         let index = cards.indexOf(card);
@@ -96,7 +96,7 @@ export class HandModel extends Model<
     }
 
     @TranxUtil.span()
-    public use(card: CardModel): boolean {
+    public drop(card: CardModel): boolean {
         // remove from cache
         const cache = this.origin.child.cache ?? [];
         let index = cache.indexOf(card);

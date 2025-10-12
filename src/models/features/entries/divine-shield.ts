@@ -5,7 +5,7 @@ import { RoleFeatureModel } from "../role";
 
 export namespace DivineShieldModel {
     export type E = {
-        onUse: DamageEvent
+        onConsume: DamageEvent
     }
     export type S = {
         count: number
@@ -44,12 +44,12 @@ export class DivineShieldModel extends RoleFeatureModel<
         return true;
     }
 
-    public async use(event: DamageEvent) {
+    public consume(event: DamageEvent) {
         if (!this.state.isActive) return false;
         if (this.origin.state.count <= 1) this.origin.state.isActive = false;
         this.origin.state.count =- 1;
         event.config({ isDivineShield: true });
-        this.event.onUse(event);
+        this.event.onConsume(event);
         return true;
     }
 

@@ -119,12 +119,12 @@ export abstract class CardModel<
         // mana
         const mana = player.child.mana;
         const cost = this.child.cost;
-        mana.use(cost.state.current, this);
+        mana.consume(cost.state.current, this);
         // use
         const hand = player.child.hand;
         const from = hand.refer.queue.indexOf(this);
         if (from === undefined) return;
-        hand.prepare(this);
+        hand.drag(this);
         const perform = this.child.perform;
         // run
         await perform.run(from, ...params);
@@ -138,7 +138,7 @@ export abstract class CardModel<
         if (!player) return;
         const hand = player.child.hand;
         // already removed from hand
-        if (!hand.use(this)) return;
+        if (!hand.drop(this)) return;
         const graveyard = player.child.graveyard;
         graveyard.add(this);
     }

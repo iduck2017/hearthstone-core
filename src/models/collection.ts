@@ -31,7 +31,7 @@ export class CollectionModel extends Model<
         })
     }
 
-    public use(): DeckModel {
+    public apply(): DeckModel {
         const queue = this.child.cards
             .map(item => TemplUtil.copy(item))
             .filter(item => item !== undefined)

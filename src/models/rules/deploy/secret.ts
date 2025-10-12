@@ -38,7 +38,7 @@ export class SecretDeployModel extends DeployModel {
         if (!secret) return;
         const player = this.route.player;
         const hand = player?.child.hand;
-        if (hand) hand.use(secret);
+        if (hand) hand.drop(secret);
         board.add(secret);
     }
 }

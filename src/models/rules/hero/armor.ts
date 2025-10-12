@@ -3,7 +3,7 @@ import { Event, Model } from "set-piece";
 export namespace ArmorModel {
     export type E = {
         onGet: Event<{ value: number }>;
-        onUse: Event<{ value: number }>;
+        onConsume: Event<{ value: number }>;
     }
     export type S = {
         current: number;
@@ -49,9 +49,9 @@ export class ArmorModel extends Model<
         return value;
     }
 
-    public use(value: number) {
+    public consume(value: number) {
         const result = this.del(value);
-        this.event.onUse(new Event({ value: result }));
+        this.event.onConsume(new Event({ value: result }));
         return result;
     }
 }

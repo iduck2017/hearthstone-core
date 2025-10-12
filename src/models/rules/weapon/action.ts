@@ -3,7 +3,7 @@ import { DisposeModel, GameModel, PlayerModel, WeaponCardModel, CardModel } from
 
 export namespace WeaponActionModel {
     export type E = {
-        onUse: Event;
+        onConsume: Event;
     };
     export type S = {
         maximum: number;
@@ -63,7 +63,7 @@ export class WeaponActionModel extends Model<
 
     @DisposeModel.span()
     @TranxUtil.span()
-    public use() {
+    public consume() {
         this.origin.state.consume += 1;
         const weapon = this.route.weapon;
         if (!weapon) return;

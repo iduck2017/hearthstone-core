@@ -177,7 +177,7 @@ export class RoleActionModel extends Model<
         if (event.detail.isAbort) return;
 
         // mana
-        if (!this.use()) return;
+        if (!this.consume()) return;
         // atytack
         const attack = roleA.child.attack;
         await attack.run(roleB);
@@ -185,7 +185,7 @@ export class RoleActionModel extends Model<
         this.event.onRun(new Event({}));
     }
 
-    public use() {
+    public consume() {
         if (!this.status) return false;
         this.origin.state.comsume ++;
         return true;

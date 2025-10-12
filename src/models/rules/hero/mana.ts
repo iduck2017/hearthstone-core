@@ -2,7 +2,7 @@ import { Event, Method, Model, TemplUtil, TranxUtil } from "set-piece";
 
 export namespace ManaModel {
     export type E = {
-        onUse: Event<{ value: number; reason?: Model }>;
+        onConsume: Event<{ value: number; reason?: Model }>;
     };
     export type S = {
         origin: number;
@@ -42,9 +42,9 @@ export class ManaModel extends Model<
         this.origin.state.current = this.origin.state.origin;
     }
 
-    public use(value: number, reason?: Model) {
+    public consume(value: number, reason?: Model) {
         if (value > this.origin.state.current) value= this.origin.state.current;
         this.origin.state.current -= value;
-        this.event.onUse(new Event({ value, reason }));
+        this.event.onConsume(new Event({ value, reason }));
     }
 }

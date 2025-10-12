@@ -150,7 +150,7 @@ export class RoleAttackModel extends Model<
             if (!player) return;
             const board = player.child.board;
             const weapon = board.child.weapon;
-            if (weapon) weapon.child.action.use();
+            if (weapon) weapon.child.action.consume();
         }
 
         // stealth

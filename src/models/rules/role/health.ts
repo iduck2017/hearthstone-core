@@ -136,7 +136,7 @@ export class RoleHealthModel extends Model<
 
         // divine shield
         if (divineSheild.state.isActive) {
-            divineSheild.use(event);
+            divineSheild.consume(event);
             event.set(0);
             return event;
         }
