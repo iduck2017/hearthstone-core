@@ -1,4 +1,4 @@
-import { BoardModel, DeckModel, GameModel, HandModel, MageModel, PlayerModel, SelectUtil, TimeUtil } from "../src";
+import { BoardModel, DeckModel, GameModel, HandModel, MageModel, PlayerModel, SelectUtil, AnimeUtil } from "../src";
 import { boot } from "./boot";
 import { WispModel } from "./wisp";
 
@@ -56,7 +56,7 @@ describe('role', () => {
 
     test('wisp-attack', async () => {
         const promise = roleC.child.action.run();
-        await TimeUtil.sleep();
+        await AnimeUtil.sleep();
         const selector = SelectUtil.current;
         expect(selector).toBeDefined();
         if (!selector) return;
@@ -79,7 +79,7 @@ describe('role', () => {
         turn.next();
 
         const promise = roleD.child.action.run();
-        await TimeUtil.sleep();
+        await AnimeUtil.sleep();
         const selector = SelectUtil.current;
         expect(selector).toBeDefined();
         if (!selector) return;

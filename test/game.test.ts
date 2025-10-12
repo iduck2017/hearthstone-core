@@ -1,4 +1,4 @@
-import { BoardModel, DeckModel, GameModel, HandModel, MageModel, PlayerModel, SelectUtil, TimeUtil } from "../src";
+import { BoardModel, DeckModel, GameModel, HandModel, MageModel, PlayerModel, SelectUtil, AnimeUtil } from "../src";
 import { WispModel } from "./wisp";
 import { DebugUtil } from "set-piece";
 import { boot } from "./boot";
@@ -86,7 +86,7 @@ describe('game', () => {
         expect(card).toBeDefined();
 
         let promise = card?.play();
-        await TimeUtil.sleep()
+        await AnimeUtil.sleep()
         let selector = SelectUtil.current;
         expect(selector).toBeDefined();
         expect(selector?.options).toContain(0);
@@ -106,7 +106,7 @@ describe('game', () => {
 
         card = hand.child.minions[0];
         promise = card?.play();
-        await TimeUtil.sleep();
+        await AnimeUtil.sleep();
         selector = SelectUtil.current;
         expect(selector).toBeDefined();
         expect(selector?.options.length).toBe(3);

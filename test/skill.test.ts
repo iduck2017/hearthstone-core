@@ -1,4 +1,4 @@
-import { BoardModel, GameModel, MageModel, ManaModel, PlayerModel, SelectUtil, TimeUtil, WarriorModel } from "../src";
+import { BoardModel, GameModel, MageModel, ManaModel, PlayerModel, SelectUtil, AnimeUtil, WarriorModel } from "../src";
 import { WispModel } from "./wisp";
 import { boot } from "./boot";
 
@@ -41,7 +41,7 @@ describe('skill', () => {
         expect(playerA.child.mana.state.current).toBe(10);
 
         const promise = charA.child.skill.run();
-        await TimeUtil.sleep();
+        await AnimeUtil.sleep();
         expect(SelectUtil.current?.options).toContain(roleB);
         expect(SelectUtil.current?.options).toContain(roleA);
         SelectUtil.set(roleB);

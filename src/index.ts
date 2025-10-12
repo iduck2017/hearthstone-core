@@ -8,7 +8,7 @@ export { DamageEvent } from "./types/damage-event";
 export { RestoreEvent } from "./types/restore-event";
 
 // utils
-export { TimeUtil } from "./utils/time";
+export { AnimeUtil } from "./utils/anime";
 export { SelectUtil } from "./utils/select";
 export { LibraryUtil } from "./utils/library";
 
@@ -95,5 +95,5 @@ export { FireBlastModel } from './models/skills/fireblast';
 export { ArmorUpModel } from './models/skills/armor-up';
 
 export { OperatorType, Operator } from "./types/operator";
-export { CommandUtil } from "./utils/command";
+export { Option } from "./types/option";
 export { AbortEvent } from "./types/abort-event";

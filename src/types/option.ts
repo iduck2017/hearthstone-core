@@ -1,13 +1,9 @@
-import { AppModel } from "../models/app";
-
-export class CommandUtil {
+export class Option {
     public readonly title: string;
     public readonly handler: () => void;
 
     constructor(title: string, handler: () => void) {
         this.title = title;
-        this.handler = () => {
-            handler();
-        };
+        this.handler = handler;
     }
 }
