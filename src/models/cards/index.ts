@@ -1,5 +1,5 @@
 import { DebugUtil, Model, TranxUtil, Event, Method, Route } from "set-piece";
-import { CostModel } from "../rules/cost";
+import { CostModel } from "../rules/card/cost";
 import { ClassType, RarityType } from "../../types/card-enums";
 import { MinionFeatsModel } from "../features/group/minion";
 import { DamageModel, DisposeModel, FeatureModel, RestoreModel } from "../..";

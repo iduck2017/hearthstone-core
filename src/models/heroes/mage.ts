@@ -1,6 +1,6 @@
 import { RoleModel } from "../role";
-import { RoleAttackModel } from "../rules/role-attack";
-import { RoleHealthModel } from "../rules/health";
+import { RoleAttackModel } from "../rules/role/attack";
+import { RoleHealthModel } from "../rules/role/health";
 import { FireBlastModel } from "../skills/fireblast";
 import { HeroModel } from ".";
 import { TemplUtil } from "set-piece";

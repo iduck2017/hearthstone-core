@@ -1,6 +1,6 @@
 import { TemplUtil } from "set-piece";
 import { SkillModel } from ".";
-import { CostModel } from "../rules/cost";
+import { CostModel } from "../rules/card/cost";
 
 @TemplUtil.is('armor-up')
 export class ArmorUpModel extends SkillModel<[]> {

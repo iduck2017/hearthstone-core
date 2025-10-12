@@ -1,7 +1,7 @@
 import { Method, Model, TranxUtil } from "set-piece";
 import { CardModel } from ".";
-import { WeaponAttackModel } from "../rules/weapon-attack";
-import { WeaponActionModel } from "../rules/weapon-action";
+import { WeaponAttackModel } from "../rules/weapon/attack";
+import { WeaponActionModel } from "../rules/weapon/action";
 import { WeaponHooksOptions, WeaponFeatsModel } from "../features/group/weapon";
 import { WeaponDisposeModel } from "../rules/dispose/weapon";
 import { WeaponDeployModel } from "../rules/deploy/weapon";

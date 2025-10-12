@@ -1,8 +1,8 @@
 import { Decor, Method, Model, StateUtil, TemplUtil } from "set-piece";
-import { PlayerModel } from "../player";
-import { GameModel } from "../game";
-import { CardModel } from "../cards";
-import { Operator, OperatorType } from "../../types/operator";
+import { PlayerModel } from "../../player";
+import { GameModel } from "../../game";
+import { CardModel } from "../../cards";
+import { Operator, OperatorType } from "../../../types/operator";
 
 export enum CostType {
     MANA = 1,

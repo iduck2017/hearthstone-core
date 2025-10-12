@@ -3,7 +3,7 @@ import { EffectModel } from "../features/hooks/effect";
 import { SpellPerformModel } from "../rules/perform/spell";
 import { SpellFeatsModel, SpellHooksOptions } from "../features/group/spell";
 import { SchoolType } from "../../types/card-enums";
-import { SpellEffectModel } from "../rules/spell-effect";
+import { SpellEffectModel } from "../features/hooks/spell-effect";
 import { CardModel } from ".";
 
 export namespace SpellCardModel {

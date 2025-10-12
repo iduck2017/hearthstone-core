@@ -1,5 +1,5 @@
 import { TemplUtil } from "set-piece";
-import { IRoleBuffModel } from "./i-role-buff";
+import { IRoleBuffModel } from "./i-buff";
 
 @TemplUtil.is('role-buff')
 export class RoleBuffModel extends IRoleBuffModel {

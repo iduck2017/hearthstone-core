@@ -28,19 +28,19 @@ export { MinionDeployModel } from "./models/rules/deploy/minion";
 export { WeaponDeployModel } from "./models/rules/deploy/weapon";
 export { SecretDeployModel } from "./models/rules/deploy/secret";
 
-export { RoleAttackModel, RoleAttackDecor } from "./models/rules/role-attack";
-export { RoleHealthModel } from "./models/rules/health";
-export { RoleActionModel, RoleActionDecor } from "./models/rules/role-action";
-export { SleepModel } from './models/rules/sleep';
-export { ManaModel } from './models/rules/mana';
+export { RoleAttackModel, RoleAttackDecor } from "./models/rules/role/attack";
+export { RoleHealthModel } from "./models/rules/role/health";
+export { RoleActionModel, RoleActionDecor } from "./models/rules/role/action";
+export { SleepModel } from './models/rules/role/sleep';
+export { ManaModel } from './models/rules/hero/mana';
 export { TurnModel } from "./models/rules/turn";
-export { CostType, CostDecor, CostModel } from "./models/rules/cost";
-export {  ArmorModel } from "./models/rules/armor";
-export { DamageModel } from "./models/rules/damage";
-export { RestoreModel } from "./models/rules/restore";
+export { CostType, CostDecor, CostModel } from "./models/rules/card/cost";
+export {  ArmorModel } from "./models/rules/hero/armor";
+export { DamageModel } from "./models/rules/card/damage";
+export { RestoreModel } from "./models/rules/card/restore";
 
-export { WeaponAttackModel } from "./models/rules/weapon-attack";
-export { WeaponActionModel } from "./models/rules/weapon-action";
+export { WeaponAttackModel } from "./models/rules/weapon/attack";
+export { WeaponActionModel } from "./models/rules/weapon/action";
 
 // card
 export { CardModel } from "./models/cards";
@@ -69,7 +69,7 @@ export { TauntModel } from "./models/features/entries/taunt";
 export { StealthModel } from './models/features/entries/stealth';
 export { ElusiveModel } from './models/features/entries/elusive';
 export { WindfuryModel } from "./models/features/entries/windfury";
-export { SpellDamageModel } from "./models/rules/spell-damage";
+export { SpellDamageModel } from "./models/rules/card/spell-damage";
 export { DivineShieldModel } from "./models/features/entries/divine-shield";
 export { PoisonousModel } from "./models/features/entries/poisonous";
 
@@ -78,8 +78,8 @@ export { FeatureModel } from './models/features'
 export { CardFeatureModel } from './models/features/card';
 export { RoleFeatureModel } from './models/features/role';
 export { SecretFeatureModel } from "./models/features/secret";
-export { IRoleBuffModel } from "./models/rules/i-role-buff";
-export { RoleBuffModel } from "./models/rules/role-buff";
+export { IRoleBuffModel } from "./models/rules/role/i-buff";
+export { RoleBuffModel } from "./models/rules/role/buff";
 
 
 // hooks
@@ -92,7 +92,7 @@ export { EndTurnHookModel } from "./models/features/hooks/end-turn";
 export { StartTurnHookModel } from "./models/features/hooks/start-turn";
 export { OverhealModel } from "./models/features/hooks/overheal";
 export { EffectModel } from './models/features/hooks/effect'; 
-export { SpellEffectModel, SpellEffectDecor } from './models/rules/spell-effect';
+export { SpellEffectModel, SpellEffectDecor } from './models/features/hooks/spell-effect';
 
 // heroes
 export { HeroModel } from "./models/heroes";

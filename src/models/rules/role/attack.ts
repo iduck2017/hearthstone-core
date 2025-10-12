@@ -1,8 +1,8 @@
 import { DebugUtil, Decor, Event, Method, Model, StateUtil, TemplUtil } from "set-piece";
-import { DamageEvent, DamageModel, MinionCardModel, RoleModel, GameModel, PlayerModel, HeroModel, WeaponCardModel, IRoleBuffModel } from "../..";
-import { DamageType } from "../../types/damage-event";
-import { Operator, OperatorType } from "../../types/operator";
-import { AbortEvent } from "../../types/abort-event";
+import { DamageEvent, DamageModel, MinionCardModel, RoleModel, GameModel, PlayerModel, HeroModel, WeaponCardModel, IRoleBuffModel } from "../../..";
+import { DamageType } from "../../../types/damage-event";
+import { Operator, OperatorType } from "../../../types/operator";
+import { AbortEvent } from "../../../types/abort-event";
 
 export namespace RoleAttackModel {
     export type E = {

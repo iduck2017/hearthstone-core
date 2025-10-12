@@ -1,8 +1,8 @@
 import { SkillModel } from ".";
 import { SelectEvent } from "../../utils/select";
 import { RoleModel } from "../role";
-import { CostModel } from "../rules/cost";
-import { DamageModel } from "../rules/damage";
+import { CostModel } from "../rules/card/cost";
+import { DamageModel } from "../rules/card/damage";
 import { DamageEvent, DamageType } from "../../types/damage-event";
 import { TemplUtil } from "set-piece";
 

@@ -1,6 +1,6 @@
 import { Event, Model } from "set-piece";
 import { RoleModel } from "../models/role";
-import { RestoreModel } from "../models/rules/restore";
+import { RestoreModel } from "../models/rules/card/restore";
 import { CardModel, HeroModel } from "..";
 import { AbortEvent } from "./abort-event";
 

@@ -1,6 +1,6 @@
 import { Event, Model } from "set-piece";
 import { RoleModel } from "../models/role";
-import { DamageModel } from "../models/rules/damage";
+import { DamageModel } from "../models/rules/card/damage";
 import { CardModel, HeroModel } from "..";
 import { AbortEvent } from "./abort-event";
 

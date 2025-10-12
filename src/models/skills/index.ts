@@ -2,9 +2,9 @@ import { Event, Method, Model } from "set-piece";
 import { SelectEvent, SelectUtil } from "../../utils/select";
 import { PlayerModel } from "../player";
 import { GameModel } from "../game";
-import { CostModel } from "../rules/cost";
+import { CostModel } from "../rules/card/cost";
 import { HeroModel } from "../heroes";
-import { DamageModel } from "../rules/damage";
+import { DamageModel } from "../rules/card/damage";
 import { AbortEvent } from "../../types/abort-event";
 
 export namespace SkillModel {

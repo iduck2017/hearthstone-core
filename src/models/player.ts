@@ -4,7 +4,7 @@ import { HandModel } from "./hand";
 import { BoardModel } from "./board";
 import { DeckModel } from "./deck";
 import { GraveyardModel } from "./graveyard";
-import { ManaModel } from "./rules/mana";
+import { ManaModel } from "./rules/hero/mana";
 import { HeroModel } from "./heroes";
 import { RoleModel } from "./role";
 import { FeatureModel } from "./features";

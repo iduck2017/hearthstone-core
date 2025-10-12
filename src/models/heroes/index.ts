@@ -1,7 +1,7 @@
 import { Method, Model } from "set-piece";
 import { SkillModel } from "../skills";
 import { RoleModel } from "../role";
-import { ArmorModel } from "../rules/armor";
+import { ArmorModel } from "../rules/hero/armor";
 import { WeaponCardModel } from "../cards/weapon";
 import { DamageModel, PlayerModel, RestoreModel } from "../..";
 import { HeroDisposeModel } from "../rules/dispose/hero";

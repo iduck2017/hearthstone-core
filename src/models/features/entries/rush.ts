@@ -1,6 +1,6 @@
 import { Decor, Event, StateUtil, TemplUtil, TranxUtil } from "set-piece";
 import { FeatureModel } from "..";
-import { SleepModel } from "../../rules/sleep";
+import { SleepModel } from "../../rules/role/sleep";
 import { RoleFeatureModel } from "../role";
 
 export namespace RushModel {

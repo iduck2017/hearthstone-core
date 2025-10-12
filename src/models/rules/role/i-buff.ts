@@ -1,9 +1,9 @@
-import { RoleAttackDecor, RoleAttackModel } from "./role-attack";
+import { RoleAttackDecor, RoleAttackModel } from "./attack";
 import { RoleHealthDecor, RoleHealthModel } from "./health";
-import { FeatureModel, RoleModel } from "../..";
-import { OperatorType } from "../../types/operator";
+import { FeatureModel, RoleModel } from "../../..";
+import { OperatorType } from "../../../types/operator";
 import { Model, StateUtil, TemplUtil } from "set-piece";
-import { RoleFeatureModel } from "../features/role";
+import { RoleFeatureModel } from "../../features/role";
 
 export namespace IRoleBuffModel {
     export type S = {

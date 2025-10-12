@@ -1,5 +1,5 @@
 import { Decor, Model } from "set-piece";
-import { CardModel, EffectModel, FeatureModel, RoleModel, SelectUtil, SpellCardModel } from "../..";
+import { CardModel, EffectModel, FeatureModel, RoleModel, SelectUtil, SpellCardModel } from "../../..";
 
 export namespace SpellEffectModel {
     export type E = {};

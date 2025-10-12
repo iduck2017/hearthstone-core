@@ -1,6 +1,6 @@
 import { DebugUtil, Decor, Event, Model, StateUtil, TranxUtil } from "set-piece";
-import { BoardModel, SelectEvent, SelectUtil, MinionCardModel, RoleModel, PlayerModel, GameModel, CardModel, HeroModel } from "../..";
-import { AbortEvent } from "../../types/abort-event";
+import { BoardModel, SelectEvent, SelectUtil, MinionCardModel, RoleModel, PlayerModel, GameModel, CardModel, HeroModel } from "../../..";
+import { AbortEvent } from "../../../types/abort-event";
 
 export namespace RoleActionModel {
     export type S = {

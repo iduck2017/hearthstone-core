@@ -1,10 +1,10 @@
 import { Method, Model, TranxUtil } from "set-piece";
 import { GameModel } from "./game";
 import { PlayerModel } from "./player";
-import { RoleActionModel } from "./rules/role-action";
-import { RoleAttackModel } from "./rules/role-attack";
-import { RoleHealthModel } from "./rules/health";
-import { SleepModel } from "./rules/sleep";
+import { RoleActionModel } from "./rules/role/action";
+import { RoleAttackModel } from "./rules/role/attack";
+import { RoleHealthModel } from "./rules/role/health";
+import { SleepModel } from "./rules/role/sleep";
 import { DeckModel, GraveyardModel, BoardModel, HandModel, MinionCardModel, RoleFeatsModel } from "..";
 import { CardModel } from "./cards";
 import { HeroModel } from "./heroes";

@@ -1,8 +1,8 @@
 import { Decor, Method, StateUtil, TemplUtil } from "set-piece";
-import { FeatureModel } from "../features";
-import { SpellEffectDecor, SpellEffectModel } from "../..";
-import { CardFeatsModel } from "../features/group/card";
-import { CardFeatureModel } from "../features/card";
+import { FeatureModel } from "../../features";
+import { SpellEffectDecor, SpellEffectModel } from "../../..";
+import { CardFeatsModel } from "../../features/group/card";
+import { CardFeatureModel } from "../../features/card";
 
 export namespace SpellDamageModel {
     export type E = {};
