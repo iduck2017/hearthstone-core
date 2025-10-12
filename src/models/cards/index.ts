@@ -2,16 +2,18 @@ import { DebugUtil, Model, TranxUtil, Event, Method, Route } from "set-piece";
 import { CostModel } from "../rules/card/cost";
 import { ClassType, RarityType } from "../../types/card-enums";
 import { MinionFeaturesModel } from "../features/group/minion";
-import { DamageModel, DisposeModel, FeatureModel, RestoreModel } from "../..";
+import { AbortEvent, DamageModel, DisposeModel, FeatureModel, RestoreModel } from "../..";
 import { MinionCardModel, PlayerModel, GameModel, HandModel, DeckModel, BoardModel, GraveyardModel } from "../..";
-import { DeployModel } from "../rules/deploy";
-import { PerformModel } from "../rules/perform";
 import { CardFeaturesModel } from "../features/group/card";
 
 export namespace CardModel {
     export type E = {
         onPlay: Event,
         onDraw: Event,
+        toUse: AbortEvent;
+        onUse: Event;
+        toDeploy: AbortEvent;
+        onDeploy: Event;
     };
     export type S = {
         readonly name: string;
@@ -26,9 +28,7 @@ export namespace CardModel {
         readonly feats: CardFeaturesModel;
         readonly damage: DamageModel
         readonly restore: RestoreModel
-        readonly deploy?: DeployModel;
         readonly dispose?: DisposeModel;
-        readonly perform: PerformModel;
     };
     export type R = {
         creator?: Model;
@@ -37,6 +37,7 @@ export namespace CardModel {
 
 @TranxUtil.span(true)
 export abstract class CardModel<
+    T extends any[] = any[],
     E extends Partial<CardModel.E> & Model.E = {},
     S extends Partial<CardModel.S> & Model.S = {},
     C extends Partial<CardModel.C> & Model.C = {},
@@ -53,7 +54,6 @@ export abstract class CardModel<
         deck: DeckModel;
         board: BoardModel;
         graveyard: GraveyardModel;
-        minion: MinionCardModel;
         game: GameModel;
     }> {
         const result = super.route;
@@ -64,7 +64,6 @@ export abstract class CardModel<
             deck: result.list.find(item => item instanceof DeckModel),
             board: result.list.find(item => item instanceof BoardModel),
             graveyard: result.list.find(item => item instanceof GraveyardModel),
-            minion: result.list.find(item => item instanceof MinionCardModel),
             game: result.list.find(item => item instanceof GameModel),
         }
     }
@@ -84,7 +83,7 @@ export abstract class CardModel<
 
     constructor(props: CardModel['props'] & {
         state: S & Pick<CardModel.S, 'desc' | 'name' | 'flavorDesc' | 'class' | 'rarity' | 'isCollectible'>,
-        child: C & Pick<CardModel.C, 'cost' | 'perform' | 'dispose' | 'feats'>,
+        child: C & Pick<CardModel.C, 'cost' | 'dispose' | 'feats'>,
         refer: R & CardModel.R,
     }) {
         super({
@@ -105,15 +104,14 @@ export abstract class CardModel<
     // play
     public async play() {
         if (!this.status) return;
-        const perform = this.child.perform;
-        const params = await perform.toRun();
+        const params = await this.toUse();
         // cancel by user
         if (!params) return;
         await this.doPlay(...params);
         await this.event.onPlay(new Event({}));
     }
 
-    protected async doPlay(...params: any[]) {
+    protected async doPlay(...params: T) {
         const player = this.route.player;
         if (!player) return;
         // mana
@@ -125,9 +123,8 @@ export abstract class CardModel<
         const from = hand.refer.queue.indexOf(this);
         if (from === undefined) return;
         hand.drag(this);
-        const perform = this.child.perform;
         // run
-        await perform.run(from, ...params);
+        await this.use(from, ...params);
         // try to dispose if not perform
         this.clear();
     }
@@ -160,4 +157,12 @@ export abstract class CardModel<
         player.child.hand.add(this);
         return true;
     }
+
+
+    // perform
+    protected abstract toUse(): Promise<T | undefined>;
+
+    public abstract use(from: number, ...params: T): Promise<void>;
+
+    public abstract deploy(board?: BoardModel): void;
 }

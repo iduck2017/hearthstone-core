@@ -1,7 +1,6 @@
 import { MinionCardModel, CostModel, RoleModel, RoleHealthModel, RoleAttackModel } from "../../src";
 import { RarityType, ClassType, RaceType } from "../../src/types/card-enums";
 
-
 export class WispModel extends MinionCardModel {
     constructor(props?: WispModel['props']) {
         props = props ?? {};

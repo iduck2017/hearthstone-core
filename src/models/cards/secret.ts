@@ -1,18 +1,14 @@
-import { Method, Model, State } from "set-piece";
+import { Event, Method, Model, State, TranxUtil } from "set-piece";
 import { CardModel } from ".";
-import { DisposeModel } from "../rules/dispose";
 import { SecretDisposeModel } from "../rules/dispose/secret";
-import { PlayerModel } from "../player";
-import { SecretDeployModel } from "../rules/deploy/secret";
-import { SpellHooksOptions } from "../features/group/spell";
 import { SpellCardModel } from "./spell";
+import { BoardModel } from "../board";
 
 export namespace SecretCardModel {
     export type S = {};
     export type E = {};
     export type C = {
         readonly dispose: SecretDisposeModel;
-        readonly deploy: SecretDeployModel;
     };
     export type R = {};
 }
@@ -38,10 +34,27 @@ export abstract class SecretCardModel<
             state: { ...props.state },
             child: { 
                 dispose: props.child.dispose ?? new SecretDisposeModel(),
-                deploy: props.child.deploy ?? new SecretDeployModel(),
                 ...props.child 
             },
             refer: { ...props.refer },
         });
+    }
+
+    
+    // deploy
+    public deploy(board?: BoardModel) {
+        const player = this.route.player;
+        if (!board) board = player?.child.board;
+        if (!board) return;
+        this.doDeploy(board);
+        this.event.onDeploy(new Event({}));
+    }
+
+    @TranxUtil.span()
+    private doDeploy(board: BoardModel) {
+        const player = this.route.player;
+        const hand = player?.child.hand;
+        if (hand) hand.drop(this);
+        board.add(this);
     }
 }

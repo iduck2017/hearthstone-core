@@ -18,16 +18,6 @@ export { MinionDisposeModel } from "./models/rules/dispose/minion";
 export { HeroDisposeModel } from "./models/rules/dispose/hero";
 export { WeaponDisposeModel } from "./models/rules/dispose/weapon";
 
-export { PerformModel } from "./models/rules/perform";
-export { SpellPerformModel } from "./models/rules/perform/spell";
-export { MinionPerformModel } from "./models/rules/perform/minion";
-export { WeaponPerformModel } from "./models/rules/perform/weapon";
-
-export { DeployModel } from "./models/rules/deploy";
-export { MinionDeployModel } from "./models/rules/deploy/minion";
-export { WeaponDeployModel } from "./models/rules/deploy/weapon";
-export { SecretDeployModel } from "./models/rules/deploy/secret";
-
 export { RoleAttackModel, RoleAttackDecor } from "./models/rules/role/attack";
 export { RoleHealthModel } from "./models/rules/role/health";
 export { RoleActionModel, RoleActionDecor } from "./models/rules/role/action";

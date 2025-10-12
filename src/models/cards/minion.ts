@@ -3,11 +3,11 @@ import { MinionHooksOptions, MinionFeaturesModel } from "../features/group/minio
 import { RaceType } from "../../types/card-enums";
 import { RoleModel } from "../role";
 import { MinionDisposeModel } from "../rules/dispose/minion";
-import { MinionDeployModel } from "../rules/deploy/minion";
-import { MinionPerformModel } from "../rules/perform/minion";
-import { DeathrattleModel } from "../features/hooks/deathrattle";
-import { FeatureModel } from "../features";
 import { CardModel } from ".";
+import { AbortEvent } from "../../types/abort-event";
+import { MinionBattlecryModel } from "../features/hooks/minion-battlecry";
+import { SelectEvent, SelectUtil } from "../../utils/select";
+import { BoardModel } from "../board";
 
 export namespace MinionCardModel {
     export type S = {
@@ -20,9 +20,7 @@ export namespace MinionCardModel {
     export type C = {
         readonly feats: MinionFeaturesModel;
         readonly role: RoleModel;
-        readonly deploy: MinionDeployModel;
         readonly dispose: MinionDisposeModel
-        readonly perform: MinionPerformModel;
     };
     export type P = {};
     export type R = {};
@@ -35,6 +33,7 @@ export abstract class MinionCardModel<
     C extends Partial<MinionCardModel.C & CardModel.C> & Model.C = {},
     R extends Partial<MinionCardModel.R & CardModel.R> & Model.R = {}
 > extends CardModel<
+    [number, MinionHooksOptions],
     E & MinionCardModel.E, 
     S & MinionCardModel.S, 
     C & MinionCardModel.C,
@@ -51,9 +50,7 @@ export abstract class MinionCardModel<
             state: { ...props.state },
             child: { 
                 feats: props.child.feats ?? new MinionFeaturesModel(),
-                deploy: props.child.deploy ?? new MinionDeployModel(),
                 dispose: props.child.dispose ?? new MinionDisposeModel(),
-                perform: props.child.perform ?? new MinionPerformModel(),
                 ...props.child 
             },
             refer: { ...props.refer },
@@ -102,5 +99,78 @@ export abstract class MinionCardModel<
         role.child.feats.child.stealth.deactive();
         role.child.feats.child.taunt.deactive();
         role.child.feats.child.windfury.deactive();
+    }
+
+
+    public async use(from: number, to: number, options: MinionHooksOptions) {
+        const event = new AbortEvent({})
+        this.event.toUse(event);
+        if (event.detail.isAbort) return;
+
+        const player = this.route.player;
+        if (!player) return;
+
+        // battlecry
+        const feats = this.child.feats;
+        const battlecry = feats.child.battlecry;
+        for (const item of battlecry) {
+            const params = options.battlecry.get(item);
+            if (!params) continue;
+            await item.run(from, to, ...params);
+        }
+
+        // end
+        const board = player.child.board;
+        if (!board) return;
+        this.deploy(board, to);
+        this.event.onUse(new Event({}));
+    }
+
+
+    // use
+    protected async toUse(): Promise<[number, MinionHooksOptions] | undefined> {
+        const to = await this.select();
+        if (to === undefined) return;
+
+        // battlecry
+        const feats = this.child.feats;
+        const battlecry = await MinionBattlecryModel.toRun(feats.child.battlecry);
+        if (!battlecry) return;
+
+        return [to, { battlecry }];
+    }
+
+    private async select(): Promise<number | undefined> {
+        const player = this.route.player;
+        if (!player) return;
+
+        const board = player.child.board;
+        const size = board.child.minions.length;
+        const options = new Array(size + 1).fill(0).map((item, index) => index);
+        const position = await SelectUtil.get(new SelectEvent(options, {
+            hint: `Deploy ${this.name}`,
+            code: (target) => `deploy-${target}`,
+            desc: (target) => `Deploy to position ${target}`,
+        }));
+
+        return position;
+    }
+
+
+    // summon
+    public deploy(board?: BoardModel, index?: number) {
+        const player = this.route.player;
+        if (!board) board = player?.child.board;
+        if (!board) return;
+        this.doDeploy(board, index);
+        this.event.onDeploy(new Event({}));
+    }
+
+    @TranxUtil.span()
+    private doDeploy(board: BoardModel, index?: number) {
+        const player = this.route.player;
+        const hand = player?.child.hand;
+        if (hand) hand.drop(this);
+        board.add(this, index);
     }
 }
