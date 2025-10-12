@@ -48,7 +48,7 @@ export abstract class MinionBattlecryModel<
             let isValid = true;
             for (const item of selectors) {
                 // invalid selector
-                if (!item.targets.length) isValid = false;
+                if (!item.options.length) isValid = false;
             }
             if (!isValid) continue;
             const params: Model[] = [];

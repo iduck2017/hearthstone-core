@@ -42,8 +42,8 @@ describe('skill', () => {
 
         const promise = charA.child.skill.run();
         await AnimeUtil.sleep();
-        expect(SelectUtil.current?.targets).toContain(roleB);
-        expect(SelectUtil.current?.targets).toContain(roleA);
+        expect(SelectUtil.current?.options).toContain(roleB);
+        expect(SelectUtil.current?.options).toContain(roleA);
         SelectUtil.set(roleB);
         await promise;
 

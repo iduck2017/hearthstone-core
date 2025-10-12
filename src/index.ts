@@ -41,7 +41,7 @@ export { WeaponCardModel } from "./models/cards/weapon";
 
 // game
 export { AppModel } from "./models/app";
-export { PlayerModel } from "./models/player";
+export { PlayerModel, PlayerType } from "./models/player";
 export { RoleModel } from "./models/role";
 export { GameModel } from "./models/game";
 export { HandModel } from "./models/cards/group/hand";

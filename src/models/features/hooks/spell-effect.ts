@@ -56,7 +56,7 @@ export abstract class SpellEffectModel<
                     if (elusive.state.isActive) return false;
                     return true;
                 })
-                if (!selector.targets.length) return;
+                if (!selector.options.length) return;
             }
             const params: Model[] = [];
             for (const item of selectors) {

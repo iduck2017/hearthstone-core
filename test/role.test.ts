@@ -60,9 +60,9 @@ describe('role', () => {
         const selector = SelectUtil.current;
         expect(selector).toBeDefined();
         if (!selector) return;
-        expect(selector.targets).toContain(roleB);
-        expect(selector?.targets).toContain(roleD);
-        expect(selector?.targets.length).toBe(2);
+        expect(selector.options).toContain(roleB);
+        expect(selector?.options).toContain(roleD);
+        expect(selector?.options.length).toBe(2);
         SelectUtil.set(roleB);
         await promise;
 
@@ -83,9 +83,9 @@ describe('role', () => {
         const selector = SelectUtil.current;
         expect(selector).toBeDefined();
         if (!selector) return;
-        expect(selector.targets).toContain(roleA);
-        expect(selector?.targets).toContain(roleC);
-        expect(selector?.targets.length).toBe(2);
+        expect(selector.options).toContain(roleA);
+        expect(selector?.options).toContain(roleC);
+        expect(selector?.options.length).toBe(2);
         SelectUtil.set(roleC);
         await promise;
         

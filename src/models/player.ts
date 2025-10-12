@@ -12,14 +12,14 @@ import { Option } from "../types/option";
 import { SelectUtil } from "../utils/select";
 import { MageModel } from "./heroes/mage";
 
-export enum RoleType {
+export enum PlayerType {
     USER = 'user',
     AGENT = 'agent',
 }
 
 export namespace PlayerModel {
     export type S = {
-        readonly role: RoleType;
+        readonly role: PlayerType;
     };
     export type E = {};
     export type C = {
@@ -72,8 +72,25 @@ export class PlayerModel extends Model<
         const result: Option[] = [];
         const game = this.route.game;
         if (!game) return result;
-        if (SelectUtil.current?.targets) {
-            result.push(...SelectUtil.current.options);
+        if (SelectUtil.current?.options) {
+            result.push(...SelectUtil.current.options.map(item => {
+                const name = item instanceof Model ? item.name : String(item);
+                const uuid = item instanceof Model ? item.uuid : String(item);
+                // return option
+                return new Option(
+                    {
+                        title: `Select ${name}`,
+                        desc: `${item.desc}: Select ${name}`,
+                        code: `select-${uuid}`,
+                    },
+                    () => SelectUtil.set(item)
+                )
+            }));
+            result.push(new Option({
+                title: 'Cancel',
+                desc: `Cancel ${SelectUtil.current.desc}`,
+                code: 'cancel',
+            }, () => SelectUtil.set(undefined)));
             return result;
         } else {
             // base
@@ -127,7 +144,7 @@ export class PlayerModel extends Model<
         super({
             uuid: props.uuid,
             state: { 
-                role: RoleType.USER,
+                role: PlayerType.USER,
                 ...props.state 
             },
             child: {

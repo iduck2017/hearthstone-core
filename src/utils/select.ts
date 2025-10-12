@@ -4,45 +4,30 @@ import { RoleModel } from "../models/role";
 import { CardModel } from "../models/cards";
 
 export class SelectEvent<T = any> {
-    public targets: Readonly<T[]>;
-    public get options(): Readonly<Option[]> {
-        return this.targets.map(item => {
-            const name = item instanceof Model ? item.name : String(item);
-            const uuid = item instanceof Model ? item.uuid : String(item);
-            // return option
-            return new Option(
-                {
-                    title: `Select ${name}`,
-                    desc: `${this.desc}: Select ${name}`,
-                    code: `select-${uuid}`,
-                },
-                () => SelectUtil.set(item)
-            )
-        });
-    }
+    public options: Readonly<T[]>;
 
     public readonly hint?: string;
     public readonly desc?: string;
 
     constructor(
-        targets: T[],
+        options: T[],
         props?: { 
             hint?: string; 
             desc?: string;
         }
     ) {
-        this.targets = targets;
+        this.options = options;
         this.hint = props?.hint;
         this.desc = props?.desc;
     }
 
     public filter(handler: (item: T) => boolean) {
-        this.targets = this.targets.filter(handler);
+        this.options = this.options.filter(handler);
     }
 
     public get random(): T | undefined {
-        const index = Math.floor(Math.random() * this.targets.length);
-        return this.targets[index];
+        const index = Math.floor(Math.random() * this.options.length);
+        return this.options[index];
     }
 }
 
@@ -60,7 +45,7 @@ export class SelectUtil {
 
     public static async get<T>(option: SelectEvent<T>): Promise<T | undefined> {
         return new Promise<T | undefined>((resolve) => {
-            if (!option.targets) resolve(undefined);
+            if (!option.options) resolve(undefined);
             SelectUtil.queue.push([option, resolve]);
         })
     }
