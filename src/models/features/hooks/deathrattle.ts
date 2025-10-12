@@ -24,16 +24,6 @@ export abstract class DeathrattleModel<
     C & DeathrattleModel.C, 
     R & DeathrattleModel.R
 > {
-    public get route() {
-        const result = super.route;
-        const card: CardModel | undefined = result.list.find(item => item instanceof CardModel);
-        return {
-            ...result,
-            card,
-        }
-    }
-
-
     constructor(props: DeathrattleModel['props'] & {
         uuid: string | undefined;
         state: S & Pick<FeatureModel.S, 'desc' | 'name'>;

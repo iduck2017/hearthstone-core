@@ -20,13 +20,6 @@ export class WindfuryModel extends RoleFeatureModel<
     WindfuryModel.C,
     WindfuryModel.R
 > {
-    public get route() {
-        const result = super.route;
-        return {
-            ...result,
-            role: result.list.find(item => item instanceof RoleModel)
-        }
-    }
 
     constructor(props?: WindfuryModel['props']) {
         props = props ?? {};

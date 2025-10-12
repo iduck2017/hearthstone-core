@@ -65,11 +65,13 @@ export class RoleHealthModel extends Model<
 > {
     public get route() {
         const result = super.route;
+        const hero: HeroModel | undefined = result.list.find(item => item instanceof HeroModel);
+        const minion: MinionCardModel | undefined = result.list.find(item => item instanceof MinionCardModel);
         return {
             ...result,
             role: result.list.find(item => item instanceof RoleModel),
-            minion: result.list.find(item => item instanceof MinionCardModel),
-            hero: result.list.find(item => item instanceof HeroModel),
+            hero,
+            minion,
         }
     }
 
@@ -129,7 +131,7 @@ export class RoleHealthModel extends Model<
         // armor
         if (hero) {
             const armor = hero.child.armor;
-            const offset = armor.use(result);
+            const offset = armor.consume(result);
             result = result - offset;
             event.set(result);
         }

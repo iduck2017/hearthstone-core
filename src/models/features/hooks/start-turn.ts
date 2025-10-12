@@ -27,16 +27,6 @@ export abstract class StartTurnHookModel<
     R & StartTurnHookModel.R
 > {
 
-    public get route() {
-        const result = super.route;
-        const card: CardModel | undefined = result.list.find(item => item instanceof CardModel);
-        return {
-            ...result,
-            card,
-        }
-    }
-    
-
     constructor(props: StartTurnHookModel['props'] & {
         uuid: string | undefined;
         state: S & Pick<FeatureModel.S, 'desc' | 'name'>;

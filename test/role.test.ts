@@ -1,4 +1,4 @@
-import { BoardModel, DeckModel, GameModel, HandModel, MageModel, PlayerModel, SelectUtil, TimeUtil } from "hearthstone-core";
+import { BoardModel, DeckModel, GameModel, HandModel, MageModel, PlayerModel, SelectUtil, TimeUtil } from "../src";
 import { boot } from "./boot";
 import { WispModel } from "./wisp";
 

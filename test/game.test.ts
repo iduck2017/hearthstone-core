@@ -1,4 +1,4 @@
-import { BoardModel, DeckModel, GameModel, HandModel, MageModel, PlayerModel, RoleAttackModel, RoleHealthModel, RoleModel, SelectUtil, TimeUtil } from "hearthstone-core";
+import { BoardModel, DeckModel, GameModel, HandModel, MageModel, PlayerModel, SelectUtil, TimeUtil } from "../src";
 import { WispModel } from "./wisp";
 import { DebugUtil } from "set-piece";
 import { boot } from "./boot";
@@ -56,11 +56,11 @@ describe('game', () => {
     const turn = game.child.turn;
 
     test('next-turn', () => {
-        expect(turn.state.count).toBe(0);
+        expect(turn.state.current).toBe(0);
         boot(game);
-        expect(turn.state.count).toBe(1);
+        expect(turn.state.current).toBe(1);
         game.child.turn.next();
-        expect(turn.state.count).toBe(2);
+        expect(turn.state.current).toBe(2);
     })
 
     test('draw-card', async () => {

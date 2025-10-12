@@ -1,5 +1,6 @@
-import { CostModel, MinionCardModel, RoleAttackModel, RoleHealthModel, RoleModel } from "hearthstone-core";
-import { ClassType, RaceType, RarityType } from "hearthstone-core";
+import { MinionCardModel, CostModel, RoleModel, RoleHealthModel, RoleAttackModel } from "../../src";
+import { RarityType, ClassType, RaceType } from "../../src/types/card-enums";
+
 
 export class WispModel extends MinionCardModel {
     constructor(props?: WispModel['props']) {
