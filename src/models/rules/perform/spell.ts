@@ -1,5 +1,5 @@
 import { PerformModel } from ".";
-import { EffectModel } from "../../hooks/effect";
+import { EffectModel } from "../../features/hooks/effect";
 import { SpellCastEvent, SpellHooksOptions } from "../../features/group/spell";
 import { SpellCardModel, SpellEffectModel } from "../../..";
 

@@ -1,5 +1,5 @@
 import { CardFeatsModel } from "./card";
-import { PoisonousModel } from "../../entries/poisonous";
+import { PoisonousModel } from "../entries/poisonous";
 import { FeatureModel } from "..";
 
 export namespace HeroFeatsModel {

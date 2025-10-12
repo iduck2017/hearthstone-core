@@ -1,32 +1,31 @@
-import { Event, EventUtil, Method, Model } from "set-piece";
-import { EndTurnHookModel } from "./end-turn";
-import { FeatureModel } from "../features";
-import { TurnModel } from "../rules/turn";
-import { CardModel } from "../..";
-import { CardFeatureModel } from "../features/card";
+import { Event, EventUtil, Method, Model  } from "set-piece";
+import { TurnModel } from "../../rules/turn";
+import { CardModel } from "../../cards";
+import { CardFeatureModel, FeatureModel } from "../../..";
 
-export namespace StartTurnHookModel {
+export namespace EndTurnHookModel {
     export type E = {
         onRun: Event;
     };
     export type S = {};
     export type C = {};
     export type R = {};
-    export type P = {}
+    export type P = {
+        card: CardModel;
+    }
 }
 
-export abstract class StartTurnHookModel<
-    E extends Partial<StartTurnHookModel.E> & Model.E = {},
-    S extends Partial<StartTurnHookModel.S> & Model.S = {},
-    C extends Partial<StartTurnHookModel.C> & Model.C = {},
-    R extends Partial<StartTurnHookModel.R> & Model.R = {},
+export abstract class EndTurnHookModel<
+    E extends Partial<EndTurnHookModel.E> & Model.E = {},
+    S extends Partial<EndTurnHookModel.S> & Model.S = {},
+    C extends Partial<EndTurnHookModel.C> & Model.C = {},
+    R extends Partial<EndTurnHookModel.R> & Model.R = {},
 > extends CardFeatureModel<
-    E & StartTurnHookModel.E,
-    S & StartTurnHookModel.S,
-    C & StartTurnHookModel.C,
-    R & StartTurnHookModel.R
+    E & EndTurnHookModel.E,
+    S & EndTurnHookModel.S,
+    C & EndTurnHookModel.C,
+    R & EndTurnHookModel.R
 > {
-
     public get route() {
         const result = super.route;
         const card: CardModel | undefined = result.list.find(item => item instanceof CardModel);
@@ -36,8 +35,7 @@ export abstract class StartTurnHookModel<
         }
     }
     
-
-    constructor(props: StartTurnHookModel['props'] & {
+    constructor(props: EndTurnHookModel['props'] & {
         uuid: string | undefined;
         state: S & Pick<FeatureModel.S, 'desc' | 'name'>;
         child: C;
@@ -51,14 +49,15 @@ export abstract class StartTurnHookModel<
             },
             child: { ...props.child },
             refer: { ...props.refer },
-        });
+        })
     }
+
 
     @EventUtil.on(self => self.handleTurn)
     private listenTurn() {
-        return this.route.game?.proxy.child.turn.event?.doStart;
+        return this.route.game?.proxy.child.turn.event?.doEnd;
     }
-    protected async handleTurn(that: TurnModel, event: Event) {
+    protected handleTurn(that: TurnModel, event: Event) {
         if (!this.state.isActive) return;
 
         const game = this.route.game;
@@ -69,9 +68,9 @@ export abstract class StartTurnHookModel<
         const current = turn.refer.current;
         const isCurrent = current === player;
 
-        await this.doRun(isCurrent);
+        this.doRun(isCurrent);
         this.event.onRun(new Event({}));
     }
 
-    protected abstract doRun(isCurrent: boolean): Promise<void>;
+    protected abstract doRun(isCurrent: boolean): void;
 }

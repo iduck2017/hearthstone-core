@@ -1,6 +1,6 @@
 import { Event, Method, Model } from "set-piece";
-import { AbortEvent } from "../../types/abort-event";
-import { BoardModel, CardFeatureModel, CardModel, FeatureModel } from "../..";
+import { AbortEvent } from "../../../types/abort-event";
+import { BoardModel, CardFeatureModel, CardModel, FeatureModel } from "../../..";
 
 export namespace DeathrattleModel {
     export type E = {

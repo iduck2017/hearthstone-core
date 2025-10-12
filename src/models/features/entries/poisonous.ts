@@ -1,6 +1,6 @@
 import { Event, TemplUtil } from "set-piece"
-import { FeatureModel } from "../features"
-import { RoleFeatureModel } from "../features/role"
+import { FeatureModel } from ".."
+import { RoleFeatureModel } from "../role"
 
 export namespace PoisonousModel {  
     export type E = {

@@ -1,5 +1,5 @@
-import { FeatureModel } from "../features";
-import { SelectEvent, SelectUtil } from "../../utils/select";
+import { FeatureModel } from "..";
+import { SelectEvent, SelectUtil } from "../../../utils/select";
 import { Model } from "set-piece";
 
 export namespace EffectModel {

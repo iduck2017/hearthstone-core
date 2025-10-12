@@ -1,8 +1,8 @@
 import { Event, Method, Model } from "set-piece";
-import { SelectEvent, SelectUtil } from "../../utils/select";
-import { CardModel, FeatureModel, MinionCardModel } from "../..";
-import { AbortEvent } from "../../types/abort-event";
-import { CardFeatureModel } from "../features/card";
+import { SelectEvent, SelectUtil } from "../../../utils/select";
+import { CardModel, FeatureModel, MinionCardModel } from "../../..";
+import { AbortEvent } from "../../../types/abort-event";
+import { CardFeatureModel } from "../card";
 
 export namespace MinionBattlecryModel {
     export type E = {

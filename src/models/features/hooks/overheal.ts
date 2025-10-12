@@ -1,7 +1,7 @@
 import { Event, Method, Model } from "set-piece";
-import { FeatureModel } from "../..";
-import { AbortEvent } from "../../types/abort-event";
-import { CardFeatureModel } from "../features/card";
+import { FeatureModel } from "../../..";
+import { AbortEvent } from "../../../types/abort-event";
+import { CardFeatureModel } from "../card";
 
 export namespace OverhealModel {
     export type E = {

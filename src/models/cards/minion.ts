@@ -5,7 +5,7 @@ import { RoleModel } from "../role";
 import { MinionDisposeModel } from "../rules/dispose/minion";
 import { MinionDeployModel } from "../rules/deploy/minion";
 import { MinionPerformModel } from "../rules/perform/minion";
-import { DeathrattleModel } from "../hooks/deathrattle";
+import { DeathrattleModel } from "../features/hooks/deathrattle";
 import { FeatureModel } from "../features";
 import { CardModel } from ".";
 

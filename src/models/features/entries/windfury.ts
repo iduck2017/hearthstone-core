@@ -1,8 +1,8 @@
 import { Decor, Event, StateUtil, TemplUtil, TranxUtil } from "set-piece";
-import { FeatureModel } from "../features";
-import { RoleActionModel, RoleActionDecor } from "../rules/role-action";
-import { RoleModel } from "../..";
-import { RoleFeatureModel } from "../features/role";
+import { FeatureModel } from "..";
+import { RoleActionModel, RoleActionDecor } from "../../rules/role-action";
+import { RoleModel } from "../../..";
+import { RoleFeatureModel } from "../role";
 
 export namespace WindfuryModel {
     export type E = {};
