@@ -1,6 +1,6 @@
 import { Event, Model } from "set-piece";
 import { FeatureModel, RoleModel, SpellEffectDecor, SpellEffectModel } from "../../..";
-import { CardFeatsModel } from "./card";
+import { CardFeaturesModel } from "./card";
 import { AbortEvent } from "../../../types/abort-event";
 
 export type SpellHooksOptions = {
@@ -17,7 +17,7 @@ export class SpellCastEvent extends AbortEvent<{ options: SpellHooksOptions }> {
     }
 }
 
-export namespace SpellFeatsModel {
+export namespace SpellFeaturesModel {
     export type E = {};
     export type S = {};
     export type C = {
@@ -26,13 +26,13 @@ export namespace SpellFeatsModel {
     export type R = {};
 }
 
-export class SpellFeatsModel extends CardFeatsModel<
-    SpellFeatsModel.E,
-    SpellFeatsModel.S,
-    SpellFeatsModel.C,
-    SpellFeatsModel.R
+export class SpellFeaturesModel extends CardFeaturesModel<
+    SpellFeaturesModel.E,
+    SpellFeaturesModel.S,
+    SpellFeaturesModel.C,
+    SpellFeaturesModel.R
 > {
-    constructor(props?: SpellFeatsModel['props']) {
+    constructor(props?: SpellFeaturesModel['props']) {
         super({
             uuid: props?.uuid,
             state: { ...props?.state },

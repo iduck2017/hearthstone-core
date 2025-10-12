@@ -61,7 +61,7 @@ export { GraveyardModel } from "./models/graveyard";
 export { CollectionModel } from "./models/collection";
 
 // entries
-export { RoleFeatsModel } from "./models/features/group/role";
+export { RoleFeaturesModel } from "./models/features/group/role";
 export { FrozenModel } from "./models/features/entries/frozen";
 export { RushModel } from "./models/features/entries/rush";
 export { ChargeModel } from "./models/features/entries/charge";
@@ -83,8 +83,8 @@ export { RoleBuffModel } from "./models/rules/role/buff";
 
 
 // hooks
-export { SpellHooksOptions, SpellFeatsModel, SpellCastEvent } from "./models/features/group/spell";
-export { MinionHooksOptions, MinionFeatsModel } from "./models/features/group/minion";
+export { SpellHooksOptions, SpellFeaturesModel, SpellCastEvent } from "./models/features/group/spell";
+export { MinionHooksOptions, MinionFeaturesModel } from "./models/features/group/minion";
 export { MinionBattlecryModel } from "./models/features/hooks/minion-battlecry";
 export { WeaponBattlecryModel } from "./models/features/hooks/weapon-battlecry";
 export { DeathrattleModel } from "./models/features/hooks/deathrattle";

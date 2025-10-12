@@ -1,7 +1,7 @@
 import { Event, Method, Model, State, TranxUtil } from "set-piece";
 import { EffectModel } from "../features/hooks/effect";
 import { SpellPerformModel } from "../rules/perform/spell";
-import { SpellFeatsModel, SpellHooksOptions } from "../features/group/spell";
+import { SpellFeaturesModel, SpellHooksOptions } from "../features/group/spell";
 import { SchoolType } from "../../types/card-enums";
 import { SpellEffectModel } from "../features/hooks/spell-effect";
 import { CardModel } from ".";
@@ -12,7 +12,7 @@ export namespace SpellCardModel {
     };
     export type E = {};
     export type C = {
-        readonly feats: SpellFeatsModel;
+        readonly feats: SpellFeaturesModel;
         readonly perform: SpellPerformModel;
     };
     export type R = {};
@@ -39,7 +39,7 @@ export abstract class SpellCardModel<
             uuid: props.uuid,
             state: { ...props.state },
             child: { 
-                feats: props.child.feats ?? new SpellFeatsModel(),
+                feats: props.child.feats ?? new SpellFeaturesModel(),
                 perform: props.child.perform ?? new SpellPerformModel(),
                 ...props.child,
             },

@@ -7,11 +7,11 @@ import { TauntModel } from "../entries/taunt";
 import { WindfuryModel } from "../entries/windfury";
 import { ElusiveModel } from "../entries/elusive";
 import { OverhealModel } from "../hooks/overheal";
-import { IRoleBuffModel } from "../../..";
+import { IRoleBuffModel, RoleFeatureModel } from "../../..";
 import { FeatureModel } from "../../..";
 import { Model, TemplUtil } from "set-piece";
 
-export namespace RoleFeatsModel {
+export namespace RoleFeaturesModel {
     export type E = {};
     export type S = {};
     export type C = {
@@ -26,19 +26,19 @@ export namespace RoleFeatsModel {
         readonly overheal: OverhealModel[];
         // feats
         readonly buffs: IRoleBuffModel[];
-        readonly feats: FeatureModel[];
+        readonly feats: RoleFeatureModel[];
     };
     export type R = {};
 }
 
 @TemplUtil.is('role-entries')
-export class RoleFeatsModel extends Model<
-    RoleFeatsModel.E,
-    RoleFeatsModel.S,
-    RoleFeatsModel.C,
-    RoleFeatsModel.R
+export class RoleFeaturesModel extends Model<
+    RoleFeaturesModel.E,
+    RoleFeaturesModel.S,
+    RoleFeaturesModel.C,
+    RoleFeaturesModel.R
 > {
-    constructor(props?: RoleFeatsModel['props']) {
+    constructor(props?: RoleFeaturesModel['props']) {
         const child = props?.child ?? {};
         super({
             uuid: props?.uuid,

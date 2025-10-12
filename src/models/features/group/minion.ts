@@ -3,9 +3,9 @@ import { FeatureModel, MinionBattlecryModel } from "../../..";
 import { DeathrattleModel } from "../../..";
 import { StartTurnHookModel } from "../../..";
 import { EndTurnHookModel } from "../../..";
-import { CardFeatsModel } from "./card";
+import { CardFeaturesModel } from "./card";
 
-export namespace MinionFeatsModel {
+export namespace MinionFeaturesModel {
     export type E = {};
     export type S = {};
     export type C = {
@@ -22,13 +22,13 @@ export type MinionHooksOptions = {
 }
 
 @TemplUtil.is('card-hooks')
-export class MinionFeatsModel extends CardFeatsModel<
-    MinionFeatsModel.E,
-    MinionFeatsModel.S,
-    MinionFeatsModel.C,
-    MinionFeatsModel.R
+export class MinionFeaturesModel extends CardFeaturesModel<
+    MinionFeaturesModel.E,
+    MinionFeaturesModel.S,
+    MinionFeaturesModel.C,
+    MinionFeaturesModel.R
 > {
-    constructor(props?: MinionFeatsModel['props']) {
+    constructor(props?: MinionFeaturesModel['props']) {
         super({
             uuid: props?.uuid,
             state: { ...props?.state },

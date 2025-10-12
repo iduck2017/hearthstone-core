@@ -5,7 +5,7 @@ import { ArmorModel } from "../rules/hero/armor";
 import { WeaponCardModel } from "../cards/weapon";
 import { DamageModel, PlayerModel, RestoreModel } from "../..";
 import { HeroDisposeModel } from "../rules/dispose/hero";
-import { HeroFeatsModel } from "../features/group/hero";
+import { HeroFeaturesModel } from "../features/group/hero";
 
 export namespace HeroModel {
     export type E = {};
@@ -17,7 +17,7 @@ export namespace HeroModel {
         readonly dispose: HeroDisposeModel
         readonly damage: DamageModel;
         readonly restore: RestoreModel;
-        readonly feats: HeroFeatsModel;
+        readonly feats: HeroFeaturesModel;
     };
     export type R = {};
 }
@@ -42,7 +42,7 @@ export abstract class HeroModel<
             uuid: props.uuid,
             state: { ...props.state },
             child: {
-                feats: props.child.feats ?? new HeroFeatsModel(),
+                feats: props.child.feats ?? new HeroFeaturesModel(),
                 armor: props.child.armor ?? new ArmorModel(),
                 dispose: props.child.dispose ?? new HeroDisposeModel(),
                 damage: props.child.damage ?? new DamageModel(),

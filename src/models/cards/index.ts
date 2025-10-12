@@ -1,12 +1,12 @@
 import { DebugUtil, Model, TranxUtil, Event, Method, Route } from "set-piece";
 import { CostModel } from "../rules/card/cost";
 import { ClassType, RarityType } from "../../types/card-enums";
-import { MinionFeatsModel } from "../features/group/minion";
+import { MinionFeaturesModel } from "../features/group/minion";
 import { DamageModel, DisposeModel, FeatureModel, RestoreModel } from "../..";
 import { MinionCardModel, PlayerModel, GameModel, HandModel, DeckModel, BoardModel, GraveyardModel } from "../..";
 import { DeployModel } from "../rules/deploy";
 import { PerformModel } from "../rules/perform";
-import { CardFeatsModel } from "../features/group/card";
+import { CardFeaturesModel } from "../features/group/card";
 
 export namespace CardModel {
     export type E = {
@@ -23,7 +23,7 @@ export namespace CardModel {
     };
     export type C = {
         readonly cost: CostModel;
-        readonly feats: CardFeatsModel;
+        readonly feats: CardFeaturesModel;
         readonly damage: DamageModel
         readonly restore: RestoreModel
         readonly deploy?: DeployModel;

@@ -2,7 +2,7 @@ import { Method, Model, TranxUtil } from "set-piece";
 import { CardModel } from ".";
 import { WeaponAttackModel } from "../rules/weapon/attack";
 import { WeaponActionModel } from "../rules/weapon/action";
-import { WeaponHooksOptions, WeaponFeatsModel } from "../features/group/weapon";
+import { WeaponHooksOptions, WeaponFeaturesModel } from "../features/group/weapon";
 import { WeaponDisposeModel } from "../rules/dispose/weapon";
 import { WeaponDeployModel } from "../rules/deploy/weapon";
 import { WeaponPerformModel } from "../rules/perform/weapon";
@@ -11,7 +11,7 @@ export namespace WeaponCardModel {
     export type S = {};
     export type E = {};
     export type C = {
-        readonly feats: WeaponFeatsModel;
+        readonly feats: WeaponFeaturesModel;
         readonly attack: WeaponAttackModel;
         readonly action: WeaponActionModel;
         readonly deploy: WeaponDeployModel;
@@ -44,7 +44,7 @@ export abstract class WeaponCardModel<
             child: {
                 deploy: props.child.deploy ?? new WeaponDeployModel(),
                 dispose: props.child.dispose ?? new WeaponDisposeModel(),
-                feats: props.child.feats ?? new WeaponFeatsModel(),
+                feats: props.child.feats ?? new WeaponFeaturesModel(),
                 perform: props.child.perform ?? new WeaponPerformModel(),
                 ...props.child,
             },

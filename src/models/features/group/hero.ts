@@ -1,8 +1,8 @@
-import { CardFeatsModel } from "./card";
+import { CardFeaturesModel } from "./card";
 import { PoisonousModel } from "../entries/poisonous";
 import { FeatureModel } from "..";
 
-export namespace HeroFeatsModel {
+export namespace HeroFeaturesModel {
     export type E = {};
     export type S = {};
     export type C = {
@@ -11,13 +11,13 @@ export namespace HeroFeatsModel {
     export type R = {};
 }
 
-export class HeroFeatsModel extends CardFeatsModel<
-    HeroFeatsModel.E,
-    HeroFeatsModel.S,
-    HeroFeatsModel.C,
-    HeroFeatsModel.R
+export class HeroFeaturesModel extends CardFeaturesModel<
+    HeroFeaturesModel.E,
+    HeroFeaturesModel.S,
+    HeroFeaturesModel.C,
+    HeroFeaturesModel.R
 > {
-    constructor(props?: HeroFeatsModel['props']) {
+    constructor(props?: HeroFeaturesModel['props']) {
         super({
             uuid: props?.uuid,
             state: { ...props?.state },

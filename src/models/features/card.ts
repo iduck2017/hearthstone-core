@@ -1,14 +1,14 @@
 import { Model } from "set-piece";
-import { CardFeatsModel } from "./group/card";
+import { CardFeaturesModel } from "./group/card";
 import { FeatureModel } from ".";
 import { CardModel } from "../cards";
 import { BoardModel, CollectionModel, DeckModel, GraveyardModel, HandModel } from "../..";
 
 export abstract class CardFeatureModel<
-    E extends Partial<CardFeatsModel.E> & Model.E = {},
-    S extends Partial<CardFeatsModel.S> & Model.S = {},
-    C extends Partial<CardFeatsModel.C> & Model.C = {},
-    R extends Partial<CardFeatsModel.R> & Model.R = {},
+    E extends Partial<CardFeaturesModel.E> & Model.E = {},
+    S extends Partial<CardFeaturesModel.S> & Model.S = {},
+    C extends Partial<CardFeaturesModel.C> & Model.C = {},
+    R extends Partial<CardFeaturesModel.R> & Model.R = {},
 > extends FeatureModel<E, S, C, R> {
 
     protected get status(): boolean {

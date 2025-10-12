@@ -1,5 +1,5 @@
 import { Event, Method, State, TranxUtil, Model } from "set-piece";
-import { MinionHooksOptions, MinionFeatsModel } from "../features/group/minion";
+import { MinionHooksOptions, MinionFeaturesModel } from "../features/group/minion";
 import { RaceType } from "../../types/card-enums";
 import { RoleModel } from "../role";
 import { MinionDisposeModel } from "../rules/dispose/minion";
@@ -18,7 +18,7 @@ export namespace MinionCardModel {
         readonly onSilence: Event;
     };
     export type C = {
-        readonly feats: MinionFeatsModel;
+        readonly feats: MinionFeaturesModel;
         readonly role: RoleModel;
         readonly deploy: MinionDeployModel;
         readonly dispose: MinionDisposeModel
@@ -50,7 +50,7 @@ export abstract class MinionCardModel<
             uuid: props.uuid,
             state: { ...props.state },
             child: { 
-                feats: props.child.feats ?? new MinionFeatsModel(),
+                feats: props.child.feats ?? new MinionFeaturesModel(),
                 deploy: props.child.deploy ?? new MinionDeployModel(),
                 dispose: props.child.dispose ?? new MinionDisposeModel(),
                 perform: props.child.perform ?? new MinionPerformModel(),
