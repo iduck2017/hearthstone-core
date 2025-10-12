@@ -1,7 +1,8 @@
 import { Decor, Event, StateUtil, TemplUtil, TranxUtil } from "set-piece";
-import { FeatureModel } from "../rules/feature";
+import { FeatureModel } from "../features";
 import { RoleActionModel, RoleActionDecor } from "../rules/role-action";
 import { RoleModel } from "../..";
+import { RoleFeatureModel } from "../features/role";
 
 export namespace WindfuryModel {
     export type E = {};
@@ -13,7 +14,7 @@ export namespace WindfuryModel {
 }
 
 @TemplUtil.is('windfury')
-export class WindfuryModel extends FeatureModel<
+export class WindfuryModel extends RoleFeatureModel<
     WindfuryModel.E,
     WindfuryModel.S,
     WindfuryModel.C,
@@ -36,7 +37,6 @@ export class WindfuryModel extends FeatureModel<
                 desc: 'Can attack twice each turn.',
                 isAdvance: false,
                 isActive: true,
-                isBoard: true,
                 ...props.state,
             },
             child: { ...props.child },

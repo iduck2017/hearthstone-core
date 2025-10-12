@@ -61,7 +61,7 @@ export { GraveyardModel } from "./models/graveyard";
 export { CollectionModel } from "./models/collection";
 
 // entries
-export { RoleFeatsModel } from "./models/features/role";
+export { RoleFeatsModel } from "./models/features/group/role";
 export { FrozenModel } from "./models/entries/frozen";
 export { RushModel } from "./models/entries/rush";
 export { ChargeModel } from "./models/entries/charge";
@@ -74,23 +74,25 @@ export { DivineShieldModel } from "./models/entries/divine-shield";
 export { PoisonousModel } from "./models/entries/poisonous";
 
 // features
-export { FeatureModel } from './models/rules/feature'
+export { FeatureModel } from './models/features'
+export { CardFeatureModel } from './models/features/card';
+export { RoleFeatureModel } from './models/features/role';
 export { SecretFeatureModel } from "./models/features/secret";
 export { IRoleBuffModel } from "./models/rules/i-role-buff";
 export { RoleBuffModel } from "./models/rules/role-buff";
-export { EffectModel } from './models/rules/effect'; 
-export { SpellEffectModel, SpellEffectDecor } from './models/rules/spell-effect';
+
 
 // hooks
-export { SpellHooksOptions, SpellFeatsModel } from "./models/features/spell";
-export { MinionHooksOptions, MinionFeatsModel } from "./models/features/minion";
+export { SpellHooksOptions, SpellFeatsModel, SpellCastEvent } from "./models/features/group/spell";
+export { MinionHooksOptions, MinionFeatsModel } from "./models/features/group/minion";
 export { MinionBattlecryModel } from "./models/hooks/minion-battlecry";
 export { WeaponBattlecryModel } from "./models/hooks/weapon-battlecry";
 export { DeathrattleModel } from "./models/hooks/deathrattle";
 export { EndTurnHookModel } from "./models/hooks/end-turn";
 export { StartTurnHookModel } from "./models/hooks/start-turn";
-export { SpellCastEvent } from './models/features/spell';
 export { OverhealModel } from "./models/hooks/overheal";
+export { EffectModel } from './models/hooks/effect'; 
+export { SpellEffectModel, SpellEffectDecor } from './models/rules/spell-effect';
 
 // heroes
 export { HeroModel } from "./models/heroes";

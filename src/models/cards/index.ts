@@ -1,12 +1,12 @@
 import { DebugUtil, Model, TranxUtil, Event, Method, Route } from "set-piece";
 import { CostModel } from "../rules/cost";
 import { ClassType, RarityType } from "../../types/card-enums";
-import { MinionFeatsModel } from "../features/minion";
+import { MinionFeatsModel } from "../features/group/minion";
 import { DamageModel, DisposeModel, FeatureModel, RestoreModel } from "../..";
 import { MinionCardModel, PlayerModel, GameModel, HandModel, DeckModel, BoardModel, GraveyardModel } from "../..";
 import { DeployModel } from "../rules/deploy";
 import { PerformModel } from "../rules/perform";
-import { CardFeatsModel } from "../features/card";
+import { CardFeatsModel } from "../features/group/card";
 
 export namespace CardModel {
     export type E = {
@@ -122,7 +122,7 @@ export abstract class CardModel<
         mana.use(cost.state.current, this);
         // use
         const hand = player.child.hand;
-        const from = hand.refer.queue?.indexOf(this);
+        const from = hand.refer.queue.indexOf(this);
         if (from === undefined) return;
         hand.prepare(this);
         const perform = this.child.perform;

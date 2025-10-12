@@ -1,4 +1,4 @@
-import { FeatureModel } from "./feature";
+import { FeatureModel } from "../features";
 import { SelectEvent, SelectUtil } from "../../utils/select";
 import { Model } from "set-piece";
 
@@ -23,6 +23,9 @@ export abstract class EffectModel<
     C & EffectModel.C, 
     R & EffectModel.R
 > {
+    protected get status(): boolean {
+        return true
+    }
 
     constructor(props: EffectModel['props'] & {
         uuid: string | undefined,
@@ -34,7 +37,6 @@ export abstract class EffectModel<
             uuid: props.uuid,
             state: {
                 power: 0,
-                isBoard: false,
                 isActive: true,
                 ...props.state 
             },
@@ -47,6 +49,7 @@ export abstract class EffectModel<
         if (!this.state.isActive) return;
         await this.doRun(...params);
     }
+
 
     protected abstract doRun(...params: T): Promise<void>;
 

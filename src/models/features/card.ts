@@ -1,58 +1,46 @@
-import { Method, Model } from "set-piece";
-import { PoisonousModel } from "../entries/poisonous";
-import { FeatureModel, IRoleBuffModel } from "../..";
+import { Model } from "set-piece";
+import { CardFeatsModel } from "./group/card";
+import { FeatureModel } from ".";
+import { CardModel } from "../cards";
+import { BoardModel, CollectionModel, DeckModel, GraveyardModel, HandModel } from "../..";
 
-export namespace CardFeatsModel {
-    export type E = {};
-    export type S = {};
-    export type C = {
-        readonly poisonous: PoisonousModel;
-        readonly feats: FeatureModel[];
-    };
-    export type R = {};
-}
-
-export abstract class CardFeatsModel<
+export abstract class CardFeatureModel<
     E extends Partial<CardFeatsModel.E> & Model.E = {},
     S extends Partial<CardFeatsModel.S> & Model.S = {},
     C extends Partial<CardFeatsModel.C> & Model.C = {},
     R extends Partial<CardFeatsModel.R> & Model.R = {},
-> extends Model<
-    E & CardFeatsModel.E, 
-    S & CardFeatsModel.S, 
-    C & CardFeatsModel.C, 
-    R & CardFeatsModel.R
-> {
-    constructor(props: CardFeatsModel['props'] & {
-        state: S;
+> extends FeatureModel<E, S, C, R> {
+
+    protected get status(): boolean {
+        if (!this.route.board) return false;
+        return true;
+    }
+
+    public get route() {
+        const result = super.route;
+        const card: CardModel | undefined = result.list.find(item => item instanceof CardModel);
+        return {
+            ...result,
+            card,
+            board: result.list.find(item => item instanceof BoardModel),
+            hand: result.list.find(item => item instanceof HandModel),
+            deck: result.list.find(item => item instanceof DeckModel),
+            graveyard: result.list.find(item => item instanceof GraveyardModel),
+            collection: result.list.find(item => item instanceof CollectionModel),
+        }
+    }
+
+    constructor(props: CardFeatureModel['props'] & {
+        uuid: string | undefined;
+        state: S & FeatureModel.S;
         child: C;
         refer: R;
     }) {
         super({
             uuid: props.uuid,
             state: { ...props.state },
-            child: {    
-                poisonous: props.child.poisonous ?? new PoisonousModel({ state: { isActive: false }}),
-                feats: props.child.feats ?? [],
-                ...props.child 
-            },
+            child: { ...props.child },
             refer: { ...props.refer },
-        })
-    }
-
-    protected abstract query(feat: FeatureModel): FeatureModel[] | undefined;
-
-    public add(feat: FeatureModel) {
-        let feats = this.query(feat);
-        if (!feats) return;
-        feats.push(feat);
-    }
-
-    public del(feat: FeatureModel) {
-        let feats = this.query(feat);
-        if (!feats) return;
-        const index = feats.indexOf(feat);
-        if (index == -1) return;
-        feats.splice(index, 1);
+        });
     }
 }

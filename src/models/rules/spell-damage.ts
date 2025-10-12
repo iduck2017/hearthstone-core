@@ -1,6 +1,8 @@
 import { Decor, Method, StateUtil, TemplUtil } from "set-piece";
-import { FeatureModel } from "./feature";
+import { FeatureModel } from "../features";
 import { SpellEffectDecor, SpellEffectModel } from "../..";
+import { CardFeatsModel } from "../features/group/card";
+import { CardFeatureModel } from "../features/card";
 
 export namespace SpellDamageModel {
     export type E = {};
@@ -12,7 +14,7 @@ export namespace SpellDamageModel {
 }
 
 @TemplUtil.is('spell-damage')
-export class SpellDamageModel extends FeatureModel<
+export class SpellDamageModel extends CardFeatureModel<
     SpellDamageModel.E,
     SpellDamageModel.S,
     SpellDamageModel.C,
@@ -23,7 +25,6 @@ export class SpellDamageModel extends FeatureModel<
             uuid: props?.uuid,
             state: {
                 offset: 0,
-                isBoard: true,
                 name: 'Spell Damage',
                 desc: 'Your spell cards deal extra damage.',
                 isActive: true,

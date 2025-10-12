@@ -1,7 +1,8 @@
 import { Method, Model } from "set-piece";
 import { SecretCardModel } from "../cards/secret";
-import { FeatureModel } from "../rules/feature";
+import { FeatureModel } from ".";
 import { BoardModel } from "../board";
+import { CardFeatureModel } from "./card";
 
 export namespace SecretFeatureModel {
     export type E = {};
@@ -10,12 +11,12 @@ export namespace SecretFeatureModel {
     export type R = {};
 }
 
-export class SecretFeatureModel<
+export abstract class SecretFeatureModel<
     E extends Partial<SecretFeatureModel.E> & Model.E = {},
     S extends Partial<SecretFeatureModel.S> & Model.S = {},
     C extends Partial<SecretFeatureModel.C> & Model.C = {},
     R extends Partial<SecretFeatureModel.R> & Model.R = {},
-> extends FeatureModel<
+> extends CardFeatureModel<
     E & SecretFeatureModel.E,
     S & SecretFeatureModel.S,
     C & SecretFeatureModel.C,
@@ -26,8 +27,13 @@ export class SecretFeatureModel<
         return {
             ...result,
             secret: result.list.find(item => item instanceof SecretCardModel),
-            board: result.list.find(item => item instanceof BoardModel),
         }
+    }
+
+    protected get status(): boolean {
+        const board = this.route.board;
+        if (!board) return false;
+        return true;
     }
 
     public static span() {
@@ -41,7 +47,14 @@ export class SecretFeatureModel<
             const instance = {
                 [key](this: SecretFeatureModel, ...args: any[]) {
                     // precheck
+                    console.log('secret', this.status);
                     if (!this.status) return false;
+                    const player = this.route.player;
+                    const game = this.route.game;
+                    if (!player) return false;
+                    if (!game) return false;
+                    const turn = game.child.turn;
+                    if (turn.refer.current === player) return false;
                     const result = handler.call(this, ...args);
                     if (!result) return false;
                     // dispose
@@ -56,20 +69,6 @@ export class SecretFeatureModel<
         }
     }
 
-    public get status() {
-        const board = this.route.board;
-        if (!board) return false;
-
-        const player = this.route.player;
-        const game = this.route.game;
-        if (!player) return false;
-        if (!game) return false;
-        const turn = game.child.turn;
-        if (turn.refer.current === player) return false;
-        return true;
-    }
-
-
     constructor(props: SecretFeatureModel['props'] & {
         uuid: string | undefined,
         state: S & Pick<FeatureModel.S, 'desc' | 'name'>,
@@ -80,7 +79,6 @@ export class SecretFeatureModel<
             uuid: props.uuid,
             state: { 
                 isActive: true,
-                isBoard: true,
                 ...props.state 
             },
             child: { ...props.child },

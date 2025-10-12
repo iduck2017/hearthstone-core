@@ -1,8 +1,9 @@
 import { Event, EventUtil, Method, Model } from "set-piece";
 import { EndTurnHookModel } from "./end-turn";
-import { FeatureModel } from "../rules/feature";
+import { FeatureModel } from "../features";
 import { TurnModel } from "../rules/turn";
 import { CardModel } from "../..";
+import { CardFeatureModel } from "../features/card";
 
 export namespace StartTurnHookModel {
     export type E = {
@@ -19,7 +20,7 @@ export abstract class StartTurnHookModel<
     S extends Partial<StartTurnHookModel.S> & Model.S = {},
     C extends Partial<StartTurnHookModel.C> & Model.C = {},
     R extends Partial<StartTurnHookModel.R> & Model.R = {},
-> extends FeatureModel<
+> extends CardFeatureModel<
     E & StartTurnHookModel.E,
     S & StartTurnHookModel.S,
     C & StartTurnHookModel.C,
@@ -46,7 +47,6 @@ export abstract class StartTurnHookModel<
             uuid: props.uuid,
             state: {
                 isActive: true,
-                isBoard: true,
                 ...props.state,
             },
             child: { ...props.child },

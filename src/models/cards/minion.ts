@@ -1,12 +1,12 @@
 import { Event, Method, State, TranxUtil, Model } from "set-piece";
-import { MinionHooksOptions, MinionFeatsModel } from "../features/minion";
+import { MinionHooksOptions, MinionFeatsModel } from "../features/group/minion";
 import { RaceType } from "../../types/card-enums";
 import { RoleModel } from "../role";
 import { MinionDisposeModel } from "../rules/dispose/minion";
 import { MinionDeployModel } from "../rules/deploy/minion";
 import { MinionPerformModel } from "../rules/perform/minion";
 import { DeathrattleModel } from "../hooks/deathrattle";
-import { FeatureModel } from "../rules/feature";
+import { FeatureModel } from "../features";
 import { CardModel } from ".";
 
 export namespace MinionCardModel {
@@ -71,7 +71,7 @@ export abstract class MinionCardModel<
         const board = this.route.board;
         const self: MinionCardModel = this;
         if (board) {
-            const index = board.refer.queue?.indexOf(self);
+            const index = board.refer.queue.indexOf(self);
             board.del(self);
             board.add(target, index);
         }

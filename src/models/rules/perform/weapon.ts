@@ -1,6 +1,6 @@
 import { Event } from "set-piece";
 import { PerformModel } from ".";
-import { WeaponHooksOptions } from "../../features/weapon";
+import { WeaponHooksOptions } from "../../features/group/weapon";
 import { WeaponBattlecryModel } from "../../..";
 import { WeaponCardModel } from "../../..";
 import { AbortEvent } from "../../../types/abort-event";

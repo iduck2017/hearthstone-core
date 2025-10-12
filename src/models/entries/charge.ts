@@ -1,5 +1,6 @@
 import { Event, TemplUtil } from "set-piece";
-import { FeatureModel } from "../rules/feature";
+import { FeatureModel } from "../features";
+import { RoleFeatureModel } from "../features/role";
 
 export namespace ChargeModel {
     export type E = {}
@@ -9,7 +10,7 @@ export namespace ChargeModel {
 }
 
 @TemplUtil.is('charge')
-export class ChargeModel extends FeatureModel<
+export class ChargeModel extends RoleFeatureModel<
     ChargeModel.E,
     ChargeModel.S,
     ChargeModel.C,
@@ -19,7 +20,6 @@ export class ChargeModel extends FeatureModel<
         super({
             uuid: props?.uuid,
             state: {
-                isBoard: true,
                 name: 'Charge',
                 desc: 'Can attack immediately.',
                 isActive: true,

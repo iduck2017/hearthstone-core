@@ -3,6 +3,7 @@ import { RoleHealthDecor, RoleHealthModel } from "./health";
 import { FeatureModel, RoleModel } from "../..";
 import { OperatorType } from "../../types/operator";
 import { Model, StateUtil, TemplUtil } from "set-piece";
+import { RoleFeatureModel } from "../features/role";
 
 export namespace IRoleBuffModel {
     export type S = {
@@ -18,12 +19,16 @@ export abstract class IRoleBuffModel<
     S extends Partial<IRoleBuffModel.S & FeatureModel.S> & Model.S = {},
     C extends Partial<IRoleBuffModel.C & FeatureModel.C> & Model.C = {},
     R extends Partial<IRoleBuffModel.R & FeatureModel.R> & Model.R = {}
-> extends FeatureModel<
+> extends RoleFeatureModel<
     E & IRoleBuffModel.E,
     S & IRoleBuffModel.S,
     C & IRoleBuffModel.C,
     R & IRoleBuffModel.R
 > {
+    public get status(): boolean {
+        return true;
+    }
+
     public get route() {
         const result = super.route;
         return {
@@ -41,7 +46,6 @@ export abstract class IRoleBuffModel<
         super({
             uuid: props.uuid,
             state: {
-                isBoard: false,
                 isActive: true,
                 ...props.state,
             },
@@ -77,4 +81,5 @@ export abstract class IRoleBuffModel<
             reason: this,
         });
     }
+
 }

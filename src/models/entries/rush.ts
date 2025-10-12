@@ -1,6 +1,7 @@
 import { Decor, Event, StateUtil, TemplUtil, TranxUtil } from "set-piece";
-import { FeatureModel } from "../rules/feature";
+import { FeatureModel } from "../features";
 import { SleepModel } from "../rules/sleep";
+import { RoleFeatureModel } from "../features/role";
 
 export namespace RushModel {
     export type E = {};
@@ -10,7 +11,7 @@ export namespace RushModel {
 }
 
 @TemplUtil.is('rush')
-export class RushModel extends FeatureModel<
+export class RushModel extends RoleFeatureModel<
     RushModel.E,
     RushModel.S,
     RushModel.C,
@@ -20,7 +21,6 @@ export class RushModel extends FeatureModel<
         super({
             uuid: props?.uuid,
             state: {
-                isBoard: true,
                 name: 'Rush',
                 desc: 'Can attack minions immediately.',
                 isActive: true,

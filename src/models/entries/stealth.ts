@@ -1,5 +1,6 @@
 import { Event, TemplUtil } from "set-piece";
-import { FeatureModel } from "../rules/feature";
+import { FeatureModel } from "../features";
+import { RoleFeatureModel } from "../features/role";
 
 export namespace StealthModel {
     export type E = {};
@@ -9,7 +10,7 @@ export namespace StealthModel {
 }
 
 @TemplUtil.is('stealth')
-export class StealthModel extends FeatureModel<
+export class StealthModel extends RoleFeatureModel<
     StealthModel.E,
     StealthModel.S,
     StealthModel.C,
@@ -20,7 +21,6 @@ export class StealthModel extends FeatureModel<
         super({
             uuid: props.uuid,
             state: {
-                isBoard: true,
                 name: 'Stealth',
                 desc: 'Can not be attacked or targeted until it attacks.',
                 isActive: true,

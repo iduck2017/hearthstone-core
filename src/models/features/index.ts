@@ -9,7 +9,6 @@ export namespace FeatureModel {
     export type S = {
         name: string;
         desc: string;
-        isBoard: boolean;
         isActive: boolean;
     }
     export type C = {};
@@ -33,12 +32,10 @@ export abstract class FeatureModel<
             ...result,
             player: result.list.find(item => item instanceof PlayerModel),
             game: result.list.find(item => item instanceof GameModel),
-            board: result.list.find(item => item instanceof BoardModel),
-            deck: result.list.find(item => item instanceof DeckModel),
-            graveyard: result.list.find(item => item instanceof GraveyardModel),
-            hand: result.list.find(item => item instanceof HandModel),
         }
     }
+
+    protected abstract get status(): boolean;
 
     constructor(props: FeatureModel['props'] & {
         uuid: string | undefined;
@@ -58,11 +55,9 @@ export abstract class FeatureModel<
     @StateUtil.if()
     private check() {
         if (!this.origin.state.isActive) return false;
-        if (this.origin.state.isBoard && !this.route.board) return false;
+        if (!this.status) return false;
         return true;
     }
-
-
 
     public deactive() {
         this.origin.state.isActive = false;

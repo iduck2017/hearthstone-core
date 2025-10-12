@@ -47,7 +47,7 @@ export class DeckModel extends Model<
 
     @DebugUtil.log()
     public draw() {
-        const card = this.refer.queue?.[0];
+        const card = this.refer.queue[0];
         if (!card) return;
         card.draw();
         return card;

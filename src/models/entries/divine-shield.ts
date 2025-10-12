@@ -1,6 +1,7 @@
 import { Event, TemplUtil, TranxUtil } from "set-piece";
 import { DamageEvent } from "../../types/damage-event";
-import { FeatureModel } from "../rules/feature";
+import { FeatureModel } from "../features";
+import { RoleFeatureModel } from "../features/role";
 
 export namespace DivineShieldModel {
     export type E = {
@@ -14,7 +15,7 @@ export namespace DivineShieldModel {
 }
 
 @TemplUtil.is('divine-shield')
-export class DivineShieldModel extends FeatureModel<
+export class DivineShieldModel extends RoleFeatureModel<
     DivineShieldModel.E,
     DivineShieldModel.S,
     DivineShieldModel.C,
@@ -24,7 +25,6 @@ export class DivineShieldModel extends FeatureModel<
         super({
             uuid: props?.uuid,
             state: {
-                isBoard: true,
                 name: 'Divine Shield',
                 desc: 'The first time you take damage, ignore it.',
                 isActive: true,

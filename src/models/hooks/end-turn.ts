@@ -1,7 +1,7 @@
 import { Event, EventUtil, Method, Model  } from "set-piece";
-import { FeatureModel } from "../rules/feature";
 import { TurnModel } from "../rules/turn";
 import { CardModel } from "../cards";
+import { CardFeatureModel, FeatureModel } from "../..";
 
 export namespace EndTurnHookModel {
     export type E = {
@@ -20,13 +20,12 @@ export abstract class EndTurnHookModel<
     S extends Partial<EndTurnHookModel.S> & Model.S = {},
     C extends Partial<EndTurnHookModel.C> & Model.C = {},
     R extends Partial<EndTurnHookModel.R> & Model.R = {},
-> extends FeatureModel<
+> extends CardFeatureModel<
     E & EndTurnHookModel.E,
     S & EndTurnHookModel.S,
     C & EndTurnHookModel.C,
     R & EndTurnHookModel.R
 > {
-
     public get route() {
         const result = super.route;
         const card: CardModel | undefined = result.list.find(item => item instanceof CardModel);
@@ -46,7 +45,6 @@ export abstract class EndTurnHookModel<
             uuid: props.uuid,
             state: {
                 isActive: true,
-                isBoard: true,
                 ...props.state,
             },
             child: { ...props.child },

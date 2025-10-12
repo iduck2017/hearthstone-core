@@ -2,6 +2,7 @@ import { Event, Method, Model } from "set-piece";
 import { SelectEvent, SelectUtil } from "../../utils/select";
 import { CardModel, FeatureModel, MinionCardModel } from "../..";
 import { AbortEvent } from "../../types/abort-event";
+import { CardFeatureModel } from "../features/card";
 
 export namespace MinionBattlecryModel {
     export type E = {
@@ -19,7 +20,7 @@ export abstract class MinionBattlecryModel<
     S extends Partial<MinionBattlecryModel.S> & Model.S = {},
     C extends Partial<MinionBattlecryModel.C> & Model.C = {},
     R extends Partial<MinionBattlecryModel.R> & Model.R = {}
-> extends FeatureModel<
+> extends CardFeatureModel<
     E & MinionBattlecryModel.E, 
     S & MinionBattlecryModel.S, 
     C & MinionBattlecryModel.C, 
@@ -72,7 +73,6 @@ export abstract class MinionBattlecryModel<
             uuid: props.uuid,
             state: { 
                 isActive: true,
-                isBoard: true,
                 ...props.state,
             },
             child: { ...props.child },

@@ -1,34 +1,36 @@
-import { Model, TemplUtil } from "set-piece";
-import { FeatureModel, MinionBattlecryModel } from "../..";
-import { DeathrattleModel } from "../..";
-import { StartTurnHookModel } from "../..";
-import { EndTurnHookModel } from "../..";
+import { DeathrattleModel } from "../../..";
+import { StartTurnHookModel } from "../../..";
+import { EndTurnHookModel } from "../../..";
+import { WeaponBattlecryModel } from "../../..";
 import { CardFeatsModel } from "./card";
+import { FeatureModel } from "..";
+import { Model, TemplUtil } from "set-piece";
 
-export namespace MinionFeatsModel {
+export namespace WeaponFeatsModel {
     export type E = {};
     export type S = {};
     export type C = {
         readonly endTurn: EndTurnHookModel[];
         readonly startTurn: StartTurnHookModel[];
-        readonly battlecry: MinionBattlecryModel[];
+        readonly battlecry: WeaponBattlecryModel[];
         readonly deathrattle: DeathrattleModel[];
     };
     export type R = {};
 }
 
-export type MinionHooksOptions = {
-    battlecry: Map<MinionBattlecryModel, Model[]>
+
+export type WeaponHooksOptions = {
+    battlecry: Map<WeaponBattlecryModel, Model[]>
 }
 
 @TemplUtil.is('card-hooks')
-export class MinionFeatsModel extends CardFeatsModel<
-    MinionFeatsModel.E,
-    MinionFeatsModel.S,
-    MinionFeatsModel.C,
-    MinionFeatsModel.R
+export class WeaponFeatsModel extends CardFeatsModel<
+    WeaponFeatsModel.E,
+    WeaponFeatsModel.S,
+    WeaponFeatsModel.C,
+    WeaponFeatsModel.R
 > {
-    constructor(props?: MinionFeatsModel['props']) {
+    constructor(props?: WeaponFeatsModel['props']) {
         super({
             uuid: props?.uuid,
             state: { ...props?.state },
@@ -43,9 +45,8 @@ export class MinionFeatsModel extends CardFeatsModel<
         });
     }
 
-
     protected query(feat: FeatureModel): FeatureModel[] | undefined {
-        if (feat instanceof MinionBattlecryModel) return this.origin.child.battlecry;
+        if (feat instanceof WeaponBattlecryModel) return this.origin.child.battlecry;
         if (feat instanceof DeathrattleModel) return this.origin.child.deathrattle;
         if (feat instanceof StartTurnHookModel) return this.origin.child.startTurn;
         if (feat instanceof EndTurnHookModel) return this.origin.child.endTurn;

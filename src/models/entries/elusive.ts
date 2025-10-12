@@ -1,5 +1,6 @@
 import { Event, TemplUtil } from "set-piece";
-import { FeatureModel } from "../rules/feature";
+import { FeatureModel } from "../features";
+import { RoleFeatureModel } from "../features/role";
 
 export namespace ElusiveModel {
     export type E = {}
@@ -10,7 +11,7 @@ export namespace ElusiveModel {
 }
 
 @TemplUtil.is('elusive')
-export class ElusiveModel extends FeatureModel<
+export class ElusiveModel extends RoleFeatureModel<
     ElusiveModel.E,
     ElusiveModel.S,
     ElusiveModel.C,
@@ -20,7 +21,6 @@ export class ElusiveModel extends FeatureModel<
         super({
             uuid: props?.uuid,
             state: {
-                isBoard: true,
                 name: 'Elusive',
                 desc: 'Can\'t be targeted by spells or Hero Powers.',
                 isActive: true,

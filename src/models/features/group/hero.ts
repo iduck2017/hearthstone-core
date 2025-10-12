@@ -1,6 +1,6 @@
 import { CardFeatsModel } from "./card";
-import { PoisonousModel } from "../entries/poisonous";
-import { FeatureModel } from "../rules/feature";
+import { PoisonousModel } from "../../entries/poisonous";
+import { FeatureModel } from "..";
 
 export namespace HeroFeatsModel {
     export type E = {};

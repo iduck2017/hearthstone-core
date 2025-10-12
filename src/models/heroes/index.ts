@@ -5,7 +5,7 @@ import { ArmorModel } from "../rules/armor";
 import { WeaponCardModel } from "../cards/weapon";
 import { DamageModel, PlayerModel, RestoreModel } from "../..";
 import { HeroDisposeModel } from "../rules/dispose/hero";
-import { HeroFeatsModel } from "../features/hero";
+import { HeroFeatsModel } from "../features/group/hero";
 
 export namespace HeroModel {
     export type E = {};

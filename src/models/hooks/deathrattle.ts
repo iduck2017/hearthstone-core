@@ -1,7 +1,6 @@
 import { Event, Method, Model } from "set-piece";
 import { AbortEvent } from "../../types/abort-event";
-import { FeatureModel } from "../rules/feature";
-import { BoardModel, CardModel } from "../..";
+import { BoardModel, CardFeatureModel, CardModel, FeatureModel } from "../..";
 
 export namespace DeathrattleModel {
     export type E = {
@@ -19,13 +18,12 @@ export abstract class DeathrattleModel<
     S extends Partial<DeathrattleModel.S> & Model.S = {},
     C extends Partial<DeathrattleModel.C> & Model.C = {},
     R extends Partial<DeathrattleModel.R> & Model.R = {},
-> extends FeatureModel<
+> extends CardFeatureModel<
     E & DeathrattleModel.E, 
     S & DeathrattleModel.S, 
     C & DeathrattleModel.C, 
     R & DeathrattleModel.R
 > {
-
     public get route() {
         const result = super.route;
         const card: CardModel | undefined = result.list.find(item => item instanceof CardModel);
@@ -45,7 +43,6 @@ export abstract class DeathrattleModel<
         super({
             uuid: props.uuid,
             state: {
-                isBoard: false,
                 isActive: true,
                 ...props.state,
             },

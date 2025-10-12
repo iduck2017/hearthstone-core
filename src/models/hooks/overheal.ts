@@ -1,6 +1,7 @@
 import { Event, Method, Model } from "set-piece";
 import { FeatureModel } from "../..";
 import { AbortEvent } from "../../types/abort-event";
+import { CardFeatureModel } from "../features/card";
 
 export namespace OverhealModel {
     export type E = {
@@ -17,7 +18,7 @@ export abstract class OverhealModel<
     S extends Partial<OverhealModel.S> & Model.S = {},
     C extends Partial<OverhealModel.C> & Model.C = {},
     R extends Partial<OverhealModel.R> & Model.R = {},
-> extends FeatureModel<
+> extends CardFeatureModel<
     E & OverhealModel.E,
     S & OverhealModel.S,
     C & OverhealModel.C,
@@ -33,7 +34,6 @@ export abstract class OverhealModel<
             uuid: props.uuid,
             state: {
                 isActive: true,
-                isBoard: true,
                 ...props.state,
             },
             child: { ...props.child },

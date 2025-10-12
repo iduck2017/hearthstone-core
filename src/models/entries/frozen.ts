@@ -1,5 +1,6 @@
 import { Event, TemplUtil } from "set-piece";
-import { FeatureModel } from "../rules/feature";
+import { FeatureModel } from "../features";
+import { RoleFeatureModel } from "../features/role";
 
 export namespace FrozenModel {
     export type E = {}
@@ -8,7 +9,7 @@ export namespace FrozenModel {
 }
 
 @TemplUtil.is('frozen')
-export class FrozenModel extends FeatureModel<
+export class FrozenModel extends RoleFeatureModel<
     FrozenModel.E,
     FrozenModel.S,
     FrozenModel.C
@@ -17,7 +18,6 @@ export class FrozenModel extends FeatureModel<
         super({
             uuid: props?.uuid,
             state: {
-                isBoard: true,
                 name: 'Frozen',
                 desc: 'Frozen charactoers lose their next attack.',
                 isActive: true,

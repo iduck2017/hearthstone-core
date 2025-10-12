@@ -1,5 +1,6 @@
 import { Event, TemplUtil } from "set-piece"
-import { FeatureModel } from "../rules/feature"
+import { FeatureModel } from "../features"
+import { RoleFeatureModel } from "../features/role"
 
 export namespace PoisonousModel {  
     export type E = {
@@ -11,7 +12,7 @@ export namespace PoisonousModel {
 }
 
 @TemplUtil.is('poisonous')
-export class PoisonousModel extends FeatureModel<
+export class PoisonousModel extends RoleFeatureModel<
     PoisonousModel.E,
     PoisonousModel.S,
     PoisonousModel.C,
@@ -21,7 +22,6 @@ export class PoisonousModel extends FeatureModel<
         super({
             uuid: props?.uuid,
             state: { 
-                isBoard: true,
                 isActive: true,
                 name: 'Poisonous',
                 desc: 'Destroy any miniondamaged by this.',

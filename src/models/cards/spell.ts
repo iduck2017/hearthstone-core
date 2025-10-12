@@ -1,7 +1,7 @@
 import { Event, Method, Model, State, TranxUtil } from "set-piece";
-import { EffectModel } from "../rules/effect";
+import { EffectModel } from "../hooks/effect";
 import { SpellPerformModel } from "../rules/perform/spell";
-import { SpellFeatsModel, SpellHooksOptions } from "../features/spell";
+import { SpellFeatsModel, SpellHooksOptions } from "../features/group/spell";
 import { SchoolType } from "../../types/card-enums";
 import { SpellEffectModel } from "../rules/spell-effect";
 import { CardModel } from ".";

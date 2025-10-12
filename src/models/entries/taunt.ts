@@ -1,5 +1,6 @@
 import { Event, TemplUtil } from "set-piece";
-import { FeatureModel } from "../rules/feature";
+import { FeatureModel } from "../features";
+import { RoleFeatureModel } from "../features/role";
 
 export namespace TauntModel {
     export type E = {};
@@ -9,7 +10,7 @@ export namespace TauntModel {
 }
 
 @TemplUtil.is('taunt')
-export class TauntModel extends FeatureModel<
+export class TauntModel extends RoleFeatureModel<
     TauntModel.E, 
     TauntModel.S, 
     TauntModel.C, 
@@ -23,7 +24,6 @@ export class TauntModel extends FeatureModel<
                 name: 'Taunt',
                 desc: 'Enemies must attack this minion.',
                 isActive: true,
-                isBoard: true,
                 ...props.state,
             },
             child: { ...props.child },
