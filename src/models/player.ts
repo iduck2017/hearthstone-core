@@ -72,27 +72,33 @@ export class PlayerModel extends Model<
         const result: Option[] = [];
         const game = this.route.game;
         if (!game) return result;
-        if (SelectUtil.current?.options) {
-            SelectUtil.current.options.forEach(item => {
-                result.push(new Option(`Select ${String(item)}`, () => SelectUtil.set(item)));
-            });
-            result.push(new Option('Cancel', () => SelectUtil.set(undefined)));
+        if (SelectUtil.current?.targets) {
+            result.push(...SelectUtil.current.options);
             return result;
         } else {
             // base
-            result.push(new Option('End Turn', () => game.child.turn.next()));
+            result.push(new Option({
+                title: 'End Turn',
+                code: 'end-turn',
+            }, () => game.child.turn.next()));
             // play
             const cards = this.child.hand.refer.queue;
             cards?.forEach(item => {
                 if (!item.status) return;
-                result.push(new Option(`Play ${item.name}`, () => item.play()));
+                result.push(new Option({
+                    title: `Play ${item.name}`,
+                    code: `play-${item.uuid}`,
+                }, () => item.play()));
             });
             // act
             const roles = this.query();
             roles.forEach(item => {
                 const action = item.child.action;
                 if (!action.status) return;
-                result.push(new Option(`Act ${item.name}`, () => action.run()));
+                result.push(new Option({
+                    title: `Act ${item.name}`,
+                    code: `act-${item.uuid}`,
+                }, () => action.run()));
             });
             return result;
         }

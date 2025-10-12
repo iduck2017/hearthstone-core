@@ -36,7 +36,7 @@ export abstract class WeaponBattlecryModel<
             if (!selectors) continue;
             for (const item of selectors) {
                 // invalid selector
-                if (!item.options.length) return;
+                if (!item.targets.length) return;
             }
             const params: Model[] = [];
             for (const item of selectors) {

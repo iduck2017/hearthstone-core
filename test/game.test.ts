@@ -89,9 +89,9 @@ describe('game', () => {
         await AnimeUtil.sleep()
         let selector = SelectUtil.current;
         expect(selector).toBeDefined();
-        expect(selector?.options).toContain(0);
-        expect(selector?.options).toContain(1);
-        expect(selector?.options.length).toBe(2);
+        expect(selector?.targets).toContain(0);
+        expect(selector?.targets).toContain(1);
+        expect(selector?.targets.length).toBe(2);
         SelectUtil.set(0);
         await promise;
         
@@ -109,7 +109,7 @@ describe('game', () => {
         await AnimeUtil.sleep();
         selector = SelectUtil.current;
         expect(selector).toBeDefined();
-        expect(selector?.options.length).toBe(3);
+        expect(selector?.targets.length).toBe(3);
         SelectUtil.set(1);
         await promise;
         // expect(board.refer.order.length).toBe(3);
