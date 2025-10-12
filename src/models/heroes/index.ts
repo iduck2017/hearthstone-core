@@ -4,7 +4,7 @@ import { RoleModel } from "../role";
 import { ArmorModel } from "../rules/hero/armor";
 import { WeaponCardModel } from "../cards/weapon";
 import { DamageModel, PlayerModel, RestoreModel } from "../..";
-import { HeroDisposeModel } from "../rules/dispose/hero";
+import { HeroDisposeModel } from "../cards/dispose/hero";
 import { HeroFeaturesModel } from "../features/group/hero";
 
 export namespace HeroModel {

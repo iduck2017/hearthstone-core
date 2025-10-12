@@ -13,10 +13,10 @@ export { SelectUtil } from "./utils/select";
 export { LibraryUtil } from "./utils/library";
 
 // rules
-export { DisposeModel } from './models/rules/dispose'
-export { MinionDisposeModel } from "./models/rules/dispose/minion";
-export { HeroDisposeModel } from "./models/rules/dispose/hero";
-export { WeaponDisposeModel } from "./models/rules/dispose/weapon";
+export { DisposeModel } from './models/cards/dispose'
+export { MinionDisposeModel } from "./models/cards/dispose/minion";
+export { HeroDisposeModel } from "./models/cards/dispose/hero";
+export { WeaponDisposeModel } from "./models/cards/dispose/weapon";
 
 export { RoleAttackModel, RoleAttackDecor } from "./models/rules/role/attack";
 export { RoleHealthModel } from "./models/rules/role/health";

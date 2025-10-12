@@ -2,7 +2,7 @@ import { Event, Method, State, TranxUtil, Model } from "set-piece";
 import { MinionHooksOptions, MinionFeaturesModel } from "../features/group/minion";
 import { RaceType } from "../../types/card-enums";
 import { RoleModel } from "../role";
-import { MinionDisposeModel } from "../rules/dispose/minion";
+import { MinionDisposeModel } from "./dispose/minion";
 import { CardModel } from ".";
 import { AbortEvent } from "../../types/abort-event";
 import { MinionBattlecryModel } from "../features/hooks/minion-battlecry";

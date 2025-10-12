@@ -1,7 +1,7 @@
 import { DebugUtil,  Model, TranxUtil } from "set-piece";
 import { DisposeModel } from ".";
 import { MinionCardModel, PlayerModel, WeaponCardModel } from "../../..";
-import { SecretCardModel } from "../../cards/secret";
+import { SecretCardModel } from "../secret";
 
 export class SecretDisposeModel extends DisposeModel {
     public get route() {

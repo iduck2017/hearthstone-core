@@ -3,7 +3,7 @@ import { CardModel } from ".";
 import { WeaponAttackModel } from "../rules/weapon/attack";
 import { WeaponActionModel } from "../rules/weapon/action";
 import { WeaponHooksOptions, WeaponFeaturesModel } from "../features/group/weapon";
-import { WeaponDisposeModel } from "../rules/dispose/weapon";
+import { WeaponDisposeModel } from "./dispose/weapon";
 import { AbortEvent } from "../../types/abort-event";
 import { WeaponBattlecryModel } from "../features/hooks/weapon-battlecry";
 import { BoardModel } from "../board";
