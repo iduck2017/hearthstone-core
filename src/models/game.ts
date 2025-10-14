@@ -17,6 +17,7 @@ export namespace GameModel {
     export type R = {};
 }
 
+
 @TemplUtil.is('game')
 export class GameModel extends Model<
     GameModel.E, 
@@ -49,5 +50,4 @@ export class GameModel extends Model<
         ];
         return minions;
     }
-
 }
