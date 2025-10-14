@@ -1,5 +1,5 @@
-import { DebugUtil, Event, Method, Model, TranxUtil } from "set-piece";
-import { CardModel, GameModel, GraveyardModel, HeroModel, MinionCardModel, PlayerModel, SecretCardModel, WeaponCardModel } from '../../..'
+import { Event, Method, Model, State, TranxUtil } from "set-piece";
+import { BoardModel, CardModel, GraveyardModel, HeroModel, PlayerModel } from '../../..'
 
 export namespace DisposeModel {
     export type E = {
@@ -35,6 +35,7 @@ export abstract class DisposeModel<
     private static tasks: Array<DisposeModel> = [];
 
     protected static add(target: DisposeModel) {
+        if (DisposeModel.tasks.includes(target)) return;
         DisposeModel.tasks.push(target);
     }
 
@@ -76,11 +77,34 @@ export abstract class DisposeModel<
         tasks.forEach(item => item.run());
     }
 
+
     public get route() {
         const result = super.route;
         return {
             ...result,
             player: result.list.find(item => item instanceof PlayerModel),
+            board: result.list.find(item => item instanceof BoardModel),
+            graveyard: result.list.find(item => item instanceof GraveyardModel),
+        }
+    }
+
+    public get chunk(): {
+        desc: string;
+        state: State<S & DisposeModel.S>;
+        refer: {
+            reason?: [string, string];
+            source?: [string, string];
+        };
+    } {
+        const reason = this.origin.refer.reason;
+        const source = this.origin.refer.source;
+        return {
+            desc: 'Describing the Survival Status and Cause of Death of an Entity',
+            state: this.state,
+            refer: {
+                reason: reason ? [reason.uuid, reason.name] : undefined,
+                source: source ? [source.uuid, source.name] : undefined,
+            }
         }
     }
     

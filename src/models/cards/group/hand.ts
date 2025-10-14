@@ -13,10 +13,6 @@ export namespace HandModel {
         minions: MinionCardModel[],
         weapons: WeaponCardModel[],
     }
-    export type P = {
-        game: GameModel;
-        player: PlayerModel;
-    };
     export type R = {
         queue: CardModel[]
     }
@@ -29,6 +25,36 @@ export class HandModel extends Model<
     HandModel.C,
     HandModel.R
 > {
+    public get route() {
+        const result = super.route;
+        return {
+            ...result,
+            player: result.list.find(item => item instanceof PlayerModel),
+            game: result.list.find(item => item instanceof GameModel),
+        }
+    }
+
+    public get chunk() {
+        const player = this.route.player;  
+        if (!player) return;
+        const game = this.route.game;
+        if (!game) return;
+
+        const turn = game.child.turn;
+        const current = turn.refer.current;
+        const isCurrent = current === player;
+
+        return {
+            child: { caches: this.origin.child.cache.map(item => item.chunk) },
+            refer: {
+                queue: isCurrent ? this.refer.queue.map(item => item.chunk) : {
+                    state: { size: this.refer.queue.length ?? 0 },
+                    desc: 'Unknown cards'
+                },
+            },
+        }
+    }
+
     constructor(props?: HandModel['props']) {
         props = props ?? {};
         super({

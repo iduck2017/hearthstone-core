@@ -32,6 +32,17 @@ export class SpellFeaturesModel extends CardFeaturesModel<
     SpellFeaturesModel.C,
     SpellFeaturesModel.R
 > {
+    public get chunk() {
+        const result = super.chunk;
+        return {
+            ...result,
+            child: {
+                ...result.child,
+                effects: this.origin.child.effects.map(item => item.chunk),
+            }
+        }
+    }
+
     constructor(props?: SpellFeaturesModel['props']) {
         super({
             uuid: props?.uuid,

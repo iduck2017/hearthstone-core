@@ -11,6 +11,7 @@ import { FeatureModel } from "./features";
 import { Option } from "../types/option";
 import { SelectUtil } from "../utils/select";
 import { MageModel } from "./heroes/mage";
+import { CollectionModel } from "./cards/group/collection";
 
 export enum PlayerType {
     USER = 'user',
@@ -30,12 +31,10 @@ export namespace PlayerModel {
         readonly deck: DeckModel;
         readonly board: BoardModel;
         readonly graveyard: GraveyardModel;
+        readonly collection: CollectionModel;
         readonly feats: FeatureModel[];
     };
     export type R = {}
-    export type P = {
-        game: GameModel;
-    }
 }
 
 export class PlayerModel extends Model<
@@ -59,6 +58,21 @@ export class PlayerModel extends Model<
         }
     }
 
+    public get chunk() {
+        return {
+            state: this.state,
+            child: {
+                hero: this.origin.child.hero.chunk,
+                mana: this.origin.child.mana.chunk,
+                hand: this.origin.child.hand.chunk,
+                deck: this.origin.child.deck.chunk,
+                board: this.origin.child.board.chunk,
+                graveyard: this.origin.child.graveyard.chunk,
+                feats: this.origin.child.feats.map(item => item.chunk).filter(Boolean),
+            }
+        }
+    }
+
     public get name() { 
         const game = this.route.game;
         const playerA = game?.child.playerA;
@@ -77,45 +91,25 @@ export class PlayerModel extends Model<
                 const name = item instanceof Model ? item.name : String(item);
                 const uuid = item instanceof Model ? item.uuid : String(item);
                 // return option
-                return new Option(
-                    {
-                        title: `Select ${name}`,
-                        desc: `${item.desc}: Select ${name}`,
-                        code: `select-${uuid}`,
-                    },
-                    () => SelectUtil.set(item)
-                )
+                return new Option(`Select ${name}`,  `select-${uuid}`, () => SelectUtil.set(item))
             }));
-            result.push(new Option({
-                title: 'Cancel',
-                desc: `Cancel ${SelectUtil.current.desc}`,
-                code: 'cancel',
-            }, () => SelectUtil.set(undefined)));
+            result.push(new Option('Cancel', 'cancel', () => SelectUtil.set(undefined)));
             return result;
         } else {
             // base
-            result.push(new Option({
-                title: 'End Turn',
-                code: 'end-turn',
-            }, () => game.child.turn.next()));
+            result.push(new Option('End Turn', 'end-turn', () => game.child.turn.next()));
             // play
             const cards = this.child.hand.refer.queue;
             cards?.forEach(item => {
                 if (!item.status) return;
-                result.push(new Option({
-                    title: `Play ${item.name}`,
-                    code: `play-${item.uuid}`,
-                }, () => item.play()));
+                result.push(new Option(`Play ${item.name}`, `play-${item.uuid}`, () => item.play()));
             });
             // act
             const roles = this.query();
             roles.forEach(item => {
                 const action = item.child.action;
                 if (!action.status) return;
-                result.push(new Option({
-                    title: `Act ${item.name}`,
-                    code: `act-${item.uuid}`,
-                }, () => action.run()));
+                result.push(new Option(`Act ${item.name}`, `act-${item.uuid}`, () => action.run()));
             });
             return result;
         }
@@ -154,6 +148,7 @@ export class PlayerModel extends Model<
                 hand: child.hand ?? new HandModel(),
                 deck: child.deck ?? new DeckModel(),
                 board: child.board ?? new BoardModel(),
+                collection: child.collection ?? new CollectionModel(),
                 graveyard: child.graveyard ?? new GraveyardModel(),
                 ...child
             },

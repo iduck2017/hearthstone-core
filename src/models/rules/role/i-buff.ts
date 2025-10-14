@@ -25,6 +25,17 @@ export abstract class IRoleBuffModel<
     C & IRoleBuffModel.C,
     R & IRoleBuffModel.R
 > {
+    public get chunk() {
+        const healthOffset = this.state.offset[1] >= 0 ? `+${this.state.offset[1]}` : this.state.offset[1];
+        const attackOffset = this.state.offset[0] >= 0 ? `+${this.state.offset[0]}` : this.state.offset[0];
+        const result = super.chunk;
+        if (!result) return undefined;
+        return { 
+            ...result,
+            desc: `Give this role ${attackOffset}/${healthOffset}`,
+        }
+    }
+
     public get status(): boolean {
         return true;
     }

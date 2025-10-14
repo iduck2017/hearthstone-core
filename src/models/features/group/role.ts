@@ -38,6 +38,24 @@ export class RoleFeaturesModel extends Model<
     RoleFeaturesModel.C,
     RoleFeaturesModel.R
 > {
+    public get chunk() {
+        return {
+            child: {
+                rush: this.origin.child.rush.chunk,
+                taunt: this.origin.child.taunt.chunk,
+                charge: this.origin.child.charge.chunk,
+                frozen: this.origin.child.frozen.chunk,
+                stealth: this.origin.child.stealth.chunk,
+                elusive: this.origin.child.elusive.chunk,
+                windfury: this.origin.child.windfury.chunk,
+                divineShield: this.origin.child.divineShield.chunk,
+                overheal: this.origin.child.overheal.map(item => item.chunk),
+                buffs: this.origin.child.buffs.map(item => item.chunk),
+                feats: this.origin.child.feats.map(item => item.chunk),
+            }
+        }
+    }
+
     constructor(props?: RoleFeaturesModel['props']) {
         const child = props?.child ?? {};
         super({

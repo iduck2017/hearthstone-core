@@ -20,14 +20,6 @@ export namespace RoleHealthModel {
     };
     export type C = {};
     export type R = {};
-    export type P = {
-        card: CardModel;
-        minion: MinionCardModel;
-        role: RoleModel;
-        game: GameModel;
-        hero: HeroModel;
-        player: PlayerModel;
-    }
 }
 
 export class RoleHealthDecor extends Decor<RoleHealthModel.S> {
@@ -72,6 +64,12 @@ export class RoleHealthModel extends Model<
             role: result.list.find(item => item instanceof RoleModel),
             hero,
             minion,
+        }
+    }
+
+    public get chunk() {
+        return {
+            state: this.state,
         }
     }
 

@@ -7,7 +7,6 @@ export namespace ElusiveModel {
     export type S = {}
     export type C = {}
     export type R = {}
-    export type P = {}
 }
 
 @TemplUtil.is('elusive')

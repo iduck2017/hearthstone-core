@@ -22,7 +22,6 @@ export namespace MinionCardModel {
         readonly role: RoleModel;
         readonly dispose: MinionDisposeModel
     };
-    export type P = {};
     export type R = {};
 }
 
@@ -39,6 +38,18 @@ export abstract class MinionCardModel<
     C & MinionCardModel.C,
     R & MinionCardModel.R
 > {
+    public get chunk() {
+        const result = super.chunk;
+        return {
+            ...result,
+            child: { 
+                ...result.child, 
+                feats: this.origin.child.feats.chunk,
+                role: this.origin.child.role.chunk,
+            },
+        }
+    }
+
     constructor(props: MinionCardModel['props'] & {
         uuid: string | undefined;
         state: S & State<Omit<CardModel.S, 'isActive'> & MinionCardModel.S>;

@@ -22,6 +22,16 @@ export class DeckModel extends Model<
     DeckModel.C,
     DeckModel.R
 > {
+    public get chunk() {
+        return {
+            refer: {
+                queue: {
+                    state: { size: this.refer.queue.length ?? 0 },
+                    desc: 'Unknown cards'
+                }
+            }
+        }
+    }
 
     constructor(props?: DeckModel['props']) {
         props = props ?? {};

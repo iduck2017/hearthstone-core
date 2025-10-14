@@ -33,6 +33,18 @@ export abstract class HeroModel<
     C & HeroModel.C,
     R & HeroModel.R
 > {
+    public get chunk() {
+        return {
+            child: {
+                feats: this.origin.child.feats.chunk,
+                armor: this.origin.child.armor.chunk,
+                dispose: this.origin.child.dispose.chunk,
+                role: this.origin.child.role.chunk,
+                skill: this.origin.child.skill.chunk ,
+            }
+        }
+    }
+
     constructor(props: HeroModel['props'] & {
         state: S & HeroModel.S;
         child: C & Pick<HeroModel.C, 'skill' | 'role'>;

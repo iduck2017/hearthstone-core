@@ -35,6 +35,18 @@ export abstract class WeaponCardModel<
     C & WeaponCardModel.C,
     R & WeaponCardModel.R
 > {
+    public get chunk() {
+        const result = super.chunk;
+        return {
+            ...result,
+            child: {
+                ...result.child,
+                attack: this.origin.child.attack.chunk,
+                action: this.origin.child.action.chunk,
+            },
+        }
+    }
+
     constructor(props: WeaponCardModel['props'] & {
         state: S & WeaponCardModel.S & Omit<CardModel.S, 'isActive'>;
         child: C & Pick<WeaponCardModel.C, 'attack' | 'action'> & Pick<CardModel.C, 'cost'>;

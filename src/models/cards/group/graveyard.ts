@@ -11,10 +11,6 @@ export namespace GraveyardModel {
         minions: MinionCardModel[]
         weapons: WeaponCardModel[]
     }
-    export type P = {
-        game: GameModel;
-        player: PlayerModel;
-    };
     export type R = {}
 }
 
@@ -24,6 +20,16 @@ export class GraveyardModel extends Model<
     GraveyardModel.C,
     GraveyardModel.R
 > {
+    public get chunk() {
+        return {
+            child: {
+                minions: this.origin.child.minions.map(item => item.chunk),
+                weapons: this.origin.child.weapons.map(item => item.chunk),
+                spells: this.origin.child.spells.map(item => item.chunk),
+            }
+        }
+    }
+
     constructor(props?: GraveyardModel['props']) {
         props = props ?? {};
         super({

@@ -1,6 +1,6 @@
 import { Method, Model } from "set-piece";
 import { PoisonousModel } from "../entries/poisonous";
-import { CardFeatureModel, FeatureModel, IRoleBuffModel } from "../../..";
+import { CardFeatureModel, FeatureModel } from "../../..";
 
 export namespace CardFeaturesModel {
     export type E = {};
@@ -23,6 +23,16 @@ export abstract class CardFeaturesModel<
     C & CardFeaturesModel.C, 
     R & CardFeaturesModel.R
 > {
+    public get chunk() {
+        return {
+            uuid: this.uuid,
+            child: {
+                poisonous: this.origin.child.poisonous.chunk,
+                feats: this.origin.child.feats.map(item => item.chunk).filter(Boolean),
+            }
+        }
+    }
+
     constructor(props: CardFeaturesModel['props'] & {
         state: S;
         child: C;
@@ -55,4 +65,5 @@ export abstract class CardFeaturesModel<
         if (index == -1) return;
         feats.splice(index, 1);
     }
+
 }

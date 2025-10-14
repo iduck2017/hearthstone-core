@@ -28,6 +28,20 @@ export class MinionFeaturesModel extends CardFeaturesModel<
     MinionFeaturesModel.C,
     MinionFeaturesModel.R
 > {
+    public get chunk() {
+        const result = super.chunk;
+        return {
+            ...result,
+            child: {
+                endTurn: this.origin.child.endTurn.map(item => item.chunk),
+                startTurn: this.origin.child.startTurn.map(item => item.chunk),
+                battlecry: this.origin.child.battlecry.map(item => item.chunk),
+                deathrattle: this.origin.child.deathrattle.map(item => item.chunk),
+                ...result.child,
+            }
+        }
+    }
+
     constructor(props?: MinionFeaturesModel['props']) {
         super({
             uuid: props?.uuid,
@@ -42,7 +56,6 @@ export class MinionFeaturesModel extends CardFeaturesModel<
             refer: { ...props?.refer },
         });
     }
-
 
     protected query(feat: FeatureModel): FeatureModel[] | undefined {
         if (feat instanceof MinionBattlecryModel) return this.origin.child.battlecry;

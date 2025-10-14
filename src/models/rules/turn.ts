@@ -24,6 +24,12 @@ export class TurnModel extends Model<
     TurnModel.C, 
     TurnModel.R
 > {
+    public get chunk() {
+        return {
+            state: this.state,
+        }
+    }
+
     public get route() {
         const result = super.route;
         return {
@@ -84,4 +90,5 @@ export class TurnModel extends Model<
         this.event.doEnd(new Event({}));
         this.event.onEnd(new Event({}));
     }
+
 }

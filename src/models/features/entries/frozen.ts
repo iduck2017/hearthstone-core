@@ -31,7 +31,6 @@ export class FrozenModel extends RoleFeatureModel<
     public active(): boolean {
         if (this.state.isActive) return false;
         this.origin.state.isActive = true;
-        this.debug();
         this.event.onActive(new Event({}));
         return true;
     }

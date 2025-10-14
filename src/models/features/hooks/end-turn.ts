@@ -10,9 +10,6 @@ export namespace EndTurnHookModel {
     export type S = {};
     export type C = {};
     export type R = {};
-    export type P = {
-        card: CardModel;
-    }
 }
 
 export abstract class EndTurnHookModel<

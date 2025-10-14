@@ -47,7 +47,7 @@ export abstract class SpellEffectModel<
         const result = new Map<SpellEffectModel, Model[]>();
         for (const item of hooks) {
             const selectors = item.toRun();
-            if (!selectors) continue;
+            if (!selectors) return;
             for (const selector of selectors) {
                 selector.filter(item => {
                     if (!(item instanceof RoleModel)) return true;

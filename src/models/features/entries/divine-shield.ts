@@ -37,7 +37,7 @@ export class DivineShieldModel extends RoleFeatureModel<
     }
 
     @TranxUtil.span()
-    public active(): boolean {
+    public gain(): boolean {
         if (this.state.isActive) return false; 
         this.origin.state.isActive = true;
         this.origin.state.count = 1;

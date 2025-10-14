@@ -14,14 +14,6 @@ export namespace RoleActionModel {
     };
     export type C = {};
     export type R = {};
-    export type P = {
-        role: RoleModel;
-        game: GameModel;
-        player: PlayerModel;
-
-        card: CardModel;
-        hero: HeroModel;
-    };
 }
 
 export class RoleActionDecor extends Decor<RoleActionModel.S> {
@@ -40,6 +32,12 @@ export class RoleActionModel extends Model<
     RoleActionModel.C,
     RoleActionModel.R
 > {
+    public get chunk() {
+        return {
+            state: this.state,
+        }
+    }
+
     public get route() {
         const result = super.route;
         return {

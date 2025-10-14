@@ -48,6 +48,19 @@ export abstract class CardModel<
    C & CardModel.C,
    R & CardModel.R
 > {
+    public get chunk() {
+        return {
+            child: {
+                cost: this.origin.child.cost.chunk,
+                feats: this.origin.child.feats.chunk,
+                dispose: this.origin.child.dispose?.chunk,
+            },
+            refer: {
+                creator: [this.origin.refer.creator?.uuid, this.origin.refer.creator?.name],
+            }
+        }
+    }
+
     public get route(): Route & Partial<{
         hand: HandModel;
         player: PlayerModel;

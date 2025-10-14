@@ -65,6 +65,12 @@ export class RoleAttackModel extends Model<
         }
     }
 
+    public get chunk() {
+        return {
+            state: this.state,
+        }
+    }
+
     public get decor(): RoleAttackDecor {
         return new RoleAttackDecor(this);
     }

@@ -18,15 +18,12 @@ export namespace CostModel {
     export type E = {}
     export type C = {}
     export type R = {}
-    export type P = {
-        game: GameModel;
-        card: CardModel;
-        player: PlayerModel;
-    }
 }
 
 
 export class CostDecor extends Decor<CostModel.S> {
+
+
     private operations: Operator[] = [];
     public get result() {
         const result = { ...this._origin };
@@ -133,6 +130,12 @@ export class CostModel extends Model<
             ...result,
             player: result.list.find(item => item instanceof PlayerModel),
             card: result.list.find(item => item instanceof CardModel),
+        }
+    }
+
+    public get chunk() {
+        return {
+            state: this.state,
         }
     }
 

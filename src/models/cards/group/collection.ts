@@ -10,7 +10,6 @@ export namespace CollectionModel {
         readonly cards: CardModel[]
     };
     export type R = {};
-    export type P = {}
 }
 
 export class CollectionModel extends Model<
@@ -19,7 +18,17 @@ export class CollectionModel extends Model<
     CollectionModel.C,
     CollectionModel.R
 > {
-    constructor(props: CollectionModel['props']) {
+    public get chunk() {
+        return {
+            desc: 'Your initial deck config.',
+            child: {
+                cards: this.origin.child.cards.map(item => item.chunk),
+            }
+        }
+    }
+
+    constructor(props?: CollectionModel['props']) {
+        props = props ?? {};
         super({
             uuid: props.uuid,
             child: { 

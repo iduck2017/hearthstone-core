@@ -22,6 +22,12 @@ export class WeaponActionModel extends Model<
     WeaponActionModel.C,
     WeaponActionModel.R
 > {
+    public get chunk() {
+        return {
+            state: this.state,
+        }
+    }
+
     public get route() {
         const result = super.route;
         const weapon: WeaponCardModel | undefined = result.list.find(item => item instanceof WeaponCardModel);

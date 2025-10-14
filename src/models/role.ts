@@ -28,6 +28,19 @@ export class RoleModel extends Model<
     RoleModel.C,
     RoleModel.R
 > {
+    public get chunk() {
+        return {
+            uuid: this.uuid,
+            child: {
+                sleep: this.origin.child.sleep.chunk,
+                health: this.origin.child.health.chunk,
+                attack: this.origin.child.attack.chunk,
+                action: this.origin.child.action.chunk,
+                feats: this.origin.child.feats.chunk,
+            }
+        }
+    }
+
     public get route() {
         const result = super.route;
         const card: CardModel | undefined = result.list.find(item => item instanceof CardModel);

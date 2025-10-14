@@ -12,7 +12,6 @@ export namespace StartTurnHookModel {
     export type S = {};
     export type C = {};
     export type R = {};
-    export type P = {}
 }
 
 export abstract class StartTurnHookModel<

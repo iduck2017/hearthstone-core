@@ -34,6 +34,15 @@ export abstract class SkillModel<
     C & SkillModel.C,
     R & SkillModel.R
 > {
+    public get chunk() {
+        return {
+            state: this.state,
+            child: {
+                cost: this.origin.child.cost.chunk,
+            }
+        }
+    }
+
     public get route() {
         const result = super.route;
         return {

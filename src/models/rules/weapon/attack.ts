@@ -20,6 +20,12 @@ export class WeaponAttackModel extends Model<
     WeaponAttackModel.C,
     WeaponAttackModel.R
 > {
+    public get chunk() {
+        return {
+            state: this.state,
+        }
+    }
+
     public get route() {
         const result = super.route;
         return {

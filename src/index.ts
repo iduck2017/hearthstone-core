@@ -97,3 +97,5 @@ export { ArmorUpModel } from './models/skills/armor-up';
 export { OperatorType, Operator } from "./types/operator";
 export { Option } from "./types/option";
 export { AbortEvent } from "./types/abort-event";
+
+export { TheCoinModel } from "./models/cards/the-coin";

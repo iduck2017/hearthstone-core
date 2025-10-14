@@ -1,6 +1,7 @@
-import { Method, Model, TemplUtil } from "set-piece";
+import { Event, Method, Model, TemplUtil, TranxUtil } from "set-piece";
 import { PlayerModel } from "./player";
 import { TurnModel } from "./rules/turn";
+import { TheCoinModel } from "..";
 
 export namespace GameModel {
     export type S = {
@@ -8,7 +9,9 @@ export namespace GameModel {
             readonly isDrawDisabled: boolean;
         }
     };
-    export type E = {};
+    export type E = {
+        onStart: Event;
+    };
     export type C = {
         readonly turn: TurnModel;
         readonly playerA: PlayerModel;
@@ -25,6 +28,17 @@ export class GameModel extends Model<
     GameModel.C,
     GameModel.R
 > {
+    public get chunk() {
+        return {
+            state: this.state,
+            child: {
+                turn: this.origin.child.turn.chunk,
+                playerA: this.origin.child.playerA.chunk,
+                playerB: this.origin.child.playerB.chunk,
+            }
+        }
+    }
+
     constructor(props?: GameModel['props']) {
         props = props ?? {};
         const child = props?.child ?? {};
@@ -39,6 +53,34 @@ export class GameModel extends Model<
             },
             refer: { ...props.refer },
         });
+    }
+
+
+    public start() {
+        this.doStart();
+        this.event.onStart(new Event({}));
+        this.child.turn.next();
+    }
+ 
+    @TranxUtil.span()
+    private doStart() {
+        const playerA = this.child.playerA;
+        const handA = playerA.child.hand;
+        const deckA = playerA.child.deck;
+        const cardsA = deckA.refer.queue.slice(0, 3);
+        for (const card of cardsA) {
+            deckA.del(card);
+            handA.add(card);
+        }
+        const playerB = this.child.playerB;
+        const handB = playerB.child.hand;
+        const deckB = playerB.child.deck;
+        handB.add(new TheCoinModel());
+        const cardsB = deckB.refer.queue.slice(0, 4);
+        for (const card of cardsB) {
+            deckB.del(card);
+            handB.add(card);
+        }
     }
 
     public query(isMinion?: boolean) {

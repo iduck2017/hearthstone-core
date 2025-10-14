@@ -10,7 +10,6 @@ export namespace DeathrattleModel {
     export type S = {};
     export type C = {};
     export type R = {};
-    export type P = {};
 }
 
 export abstract class DeathrattleModel<
