@@ -69,7 +69,9 @@ export class RoleHealthModel extends Model<
 
     public get chunk() {
         return {
-            state: this.state,
+            current: this.state.current,
+            origin: this.state.origin,
+            maximum: this.state.maximum,
         }
     }
 

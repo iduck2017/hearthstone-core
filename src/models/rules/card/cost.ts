@@ -135,7 +135,9 @@ export class CostModel extends Model<
 
     public get chunk() {
         return {
-            state: this.state,
+            current: this.state.current,
+            origin: this.state.origin,
+            type: this.state.type !== CostType.MANA ? this.state.type : undefined,  
         }
     }
 

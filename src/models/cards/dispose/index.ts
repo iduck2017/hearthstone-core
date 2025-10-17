@@ -87,26 +87,6 @@ export abstract class DisposeModel<
             graveyard: result.list.find(item => item instanceof GraveyardModel),
         }
     }
-
-    public get chunk(): {
-        desc: string;
-        state: State<S & DisposeModel.S>;
-        refer: {
-            reason?: [string, string];
-            source?: [string, string];
-        };
-    } {
-        const reason = this.origin.refer.reason;
-        const source = this.origin.refer.source;
-        return {
-            desc: 'Describing the Survival Status and Cause of Death of an Entity',
-            state: this.state,
-            refer: {
-                reason: reason ? [reason.uuid, reason.name] : undefined,
-                source: source ? [source.uuid, source.name] : undefined,
-            }
-        }
-    }
     
     public get status() {
         return Boolean(this.state.isLock);

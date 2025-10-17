@@ -42,11 +42,7 @@ export abstract class MinionCardModel<
         const result = super.chunk;
         return {
             ...result,
-            child: { 
-                ...result.child, 
-                feats: this.origin.child.feats.chunk,
-                role: this.origin.child.role.chunk,
-            },
+            role: this.child.role.chunk,
         }
     }
 

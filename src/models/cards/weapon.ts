@@ -39,11 +39,8 @@ export abstract class WeaponCardModel<
         const result = super.chunk;
         return {
             ...result,
-            child: {
-                ...result.child,
-                attack: this.origin.child.attack.chunk,
-                action: this.origin.child.action.chunk,
-            },
+            attack: this.child.attack.chunk,
+            durability: this.child.action.chunk,
         }
     }
 

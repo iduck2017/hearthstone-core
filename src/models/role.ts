@@ -31,13 +31,11 @@ export class RoleModel extends Model<
     public get chunk() {
         return {
             uuid: this.uuid,
-            child: {
-                sleep: this.origin.child.sleep.chunk,
-                health: this.origin.child.health.chunk,
-                attack: this.origin.child.attack.chunk,
-                action: this.origin.child.action.chunk,
-                feats: this.origin.child.feats.chunk,
-            }
+            attack: this.child.attack.chunk,
+            health: this.child.health.chunk,
+            action: this.child.action.chunk,
+            sleep: this.child.sleep.state.isActive || undefined,
+            ...this.child.feats.chunk,
         }
     }
 

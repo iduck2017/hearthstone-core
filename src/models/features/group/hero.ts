@@ -21,10 +21,8 @@ export class HeroFeaturesModel extends Model<
 > {
     public get chunk() {
         return {
-            child: {
-                poisonous: this.origin.child.poisonous.chunk,
-                feats: this.origin.child.feats.map(item => item.chunk).filter(Boolean),
-            }
+            poisonous: this.child.poisonous.chunk || undefined,
+            feats: this.child.feats.map(item => item.chunk).filter(Boolean),
         }
     }
 

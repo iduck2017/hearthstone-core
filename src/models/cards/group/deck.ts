@@ -24,12 +24,7 @@ export class DeckModel extends Model<
 > {
     public get chunk() {
         return {
-            refer: {
-                queue: {
-                    state: { size: this.refer.queue.length ?? 0 },
-                    desc: 'Unknown cards'
-                }
-            }
+            size: this.refer.queue.length,
         }
     }
 

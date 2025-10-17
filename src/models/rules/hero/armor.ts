@@ -18,12 +18,6 @@ export class ArmorModel extends Model<
     ArmorModel.C,
     ArmorModel.R
 > {
-    public get chunk() {
-        return {
-            state: this.state,
-        }
-    }
-
     constructor(props?: ArmorModel['props']) {
         super({
             uuid: props?.uuid,

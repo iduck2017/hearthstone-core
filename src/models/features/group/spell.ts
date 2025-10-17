@@ -36,10 +36,7 @@ export class SpellFeaturesModel extends CardFeaturesModel<
         const result = super.chunk;
         return {
             ...result,
-            child: {
-                ...result.child,
-                effects: this.origin.child.effects.map(item => item.chunk),
-            }
+            effects: this.child.effects.map(item => item.chunk).filter(Boolean),
         }
     }
 

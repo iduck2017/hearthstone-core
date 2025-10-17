@@ -32,13 +32,10 @@ export class MinionFeaturesModel extends CardFeaturesModel<
         const result = super.chunk;
         return {
             ...result,
-            child: {
-                endTurn: this.origin.child.endTurn.map(item => item.chunk),
-                startTurn: this.origin.child.startTurn.map(item => item.chunk),
-                battlecry: this.origin.child.battlecry.map(item => item.chunk),
-                deathrattle: this.origin.child.deathrattle.map(item => item.chunk),
-                ...result.child,
-            }
+            endTurn: this.child.endTurn.map(item => item.chunk).filter(Boolean),
+            startTurn: this.child.startTurn.map(item => item.chunk).filter(Boolean),
+            battlecry: this.child.battlecry.map(item => item.chunk).filter(Boolean),
+            deathrattle: this.child.deathrattle.map(item => item.chunk).filter(Boolean),
         }
     }
 

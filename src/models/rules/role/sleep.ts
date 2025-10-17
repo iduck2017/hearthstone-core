@@ -18,11 +18,6 @@ export class SleepModel extends Model<
     SleepModel.C,
     SleepModel.R
 > {
-    public get chunk() {
-        return {
-            state: this.state,
-        }
-    }
 
     constructor(props?: SleepModel['props']) {
         super({

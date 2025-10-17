@@ -60,16 +60,14 @@ export class PlayerModel extends Model<
 
     public get chunk() {
         return {
-            state: this.state,
-            child: {
-                hero: this.origin.child.hero.chunk,
-                mana: this.origin.child.mana.chunk,
-                hand: this.origin.child.hand.chunk,
-                deck: this.origin.child.deck.chunk,
-                board: this.origin.child.board.chunk,
-                graveyard: this.origin.child.graveyard.chunk,
-                feats: this.origin.child.feats.map(item => item.chunk).filter(Boolean),
-            }
+            role: this.child.hero.child.role.chunk,
+            armor: this.child.hero.child.armor.state.current,
+            skill: this.child.hero.child.skill.chunk,
+            mana: this.child.mana.chunk,
+            hand: this.child.hand.chunk,
+            deck: this.child.deck.chunk,
+            board: this.child.board.chunk,
+            feats: this.child.feats.map(item => item.chunk).filter(Boolean),
         }
     }
 

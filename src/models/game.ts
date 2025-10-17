@@ -30,12 +30,9 @@ export class GameModel extends Model<
 > {
     public get chunk() {
         return {
-            state: this.state,
-            child: {
-                turn: this.origin.child.turn.chunk,
-                playerA: this.origin.child.playerA.chunk,
-                playerB: this.origin.child.playerB.chunk,
-            }
+            turn: this.origin.child.turn.state.current,
+            playerA: this.origin.child.playerA.chunk,
+            playerB: this.origin.child.playerB.chunk,
         }
     }
 

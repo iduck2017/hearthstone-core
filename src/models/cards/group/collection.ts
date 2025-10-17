@@ -20,10 +20,7 @@ export class CollectionModel extends Model<
 > {
     public get chunk() {
         return {
-            desc: 'Your initial deck config.',
-            child: {
-                cards: this.origin.child.cards.map(item => item.chunk),
-            }
+            cards: this.child.cards.map(item => item.chunk),
         }
     }
 

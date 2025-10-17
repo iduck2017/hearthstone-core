@@ -34,7 +34,8 @@ export class RoleActionModel extends Model<
 > {
     public get chunk() {
         return {
-            state: this.state,
+            current: this.state.current > 1 ? this.state.current : undefined,
+            isActive: this.status,
         }
     }
 

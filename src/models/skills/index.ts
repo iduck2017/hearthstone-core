@@ -36,10 +36,9 @@ export abstract class SkillModel<
 > {
     public get chunk() {
         return {
-            state: this.state,
-            child: {
-                cost: this.origin.child.cost.chunk,
-            }
+            desc: this.state.desc,
+            name: this.state.name,
+            cost: this.child.cost.chunk,
         }
     }
 

@@ -49,15 +49,25 @@ export abstract class CardModel<
    R & CardModel.R
 > {
     public get chunk() {
-        return {
-            child: {
-                cost: this.origin.child.cost.chunk,
-                feats: this.origin.child.feats.chunk,
-                dispose: this.origin.child.dispose?.chunk,
-            },
-            refer: {
-                creator: [this.origin.refer.creator?.uuid, this.origin.refer.creator?.name],
+        const board = this.route.board;
+        const hand = this.route.hand;
+        if (board || hand) {
+            return {
+                uuid: this.uuid,
+                name: this.state.name,
+                class: this.state.class,
+                rarity: this.state.rarity,
+                cost: this.child.cost.state.current,
+                ...this.child.feats.chunk,
             }
+        } 
+        return {
+            uuid: this.uuid,
+            name: this.state.name,
+            desc: this.state.desc,
+            class: this.state.class,
+            rarity: this.state.rarity,
+            cost: this.child.cost.state.current,
         }
     }
 

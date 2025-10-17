@@ -34,23 +34,16 @@ export class BoardModel extends Model<
     }
 
     public get chunk() {
-        
         const player = this.route.player;
         if (!player) return;
         const game = this.route.game;
         if (!game) return;
-
         const turn = game.child.turn;
         const current = turn.refer.current;
         const isCurrent = current === player;
-
         return {
-            refer: {
-                queue: isCurrent ? this.refer.queue.map(item => item.chunk) : { 
-                    state: { size: this.refer.queue.length ?? 0 },
-                    desc: 'Unknown cards'
-                },
-            }
+            cards: isCurrent ? this.refer.queue.map(item => item.chunk) : undefined,
+            size: this.refer.queue.length,
         }
     }
 

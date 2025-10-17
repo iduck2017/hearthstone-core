@@ -40,19 +40,17 @@ export class RoleFeaturesModel extends Model<
 > {
     public get chunk() {
         return {
-            child: {
-                rush: this.origin.child.rush.chunk,
-                taunt: this.origin.child.taunt.chunk,
-                charge: this.origin.child.charge.chunk,
-                frozen: this.origin.child.frozen.chunk,
-                stealth: this.origin.child.stealth.chunk,
-                elusive: this.origin.child.elusive.chunk,
-                windfury: this.origin.child.windfury.chunk,
-                divineShield: this.origin.child.divineShield.chunk,
-                overheal: this.origin.child.overheal.map(item => item.chunk),
-                buffs: this.origin.child.buffs.map(item => item.chunk),
-                feats: this.origin.child.feats.map(item => item.chunk),
-            }
+            rush: this.child.rush.state.isActive || undefined,
+            taunt: this.child.taunt.state.isActive || undefined,
+            charge: this.child.charge.state.isActive || undefined,
+            frozen: this.child.frozen.state.isActive || undefined,
+            stealth: this.child.stealth.state.isActive || undefined,
+            elusive: this.child.elusive.state.isActive || undefined,
+            windfury: this.child.windfury.state.isActive || undefined,
+            divineShield: this.child.divineShield.state.isActive || undefined,
+            overheal: this.child.overheal.map(item => item.chunk).filter(Boolean),
+            buffs: this.child.buffs.map(item => item.chunk).filter(Boolean),
+            feats: this.child.feats.map(item => item.chunk).filter(Boolean),
         }
     }
 

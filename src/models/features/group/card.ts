@@ -25,11 +25,8 @@ export abstract class CardFeaturesModel<
 > {
     public get chunk() {
         return {
-            uuid: this.uuid,
-            child: {
-                poisonous: this.origin.child.poisonous.chunk,
-                feats: this.origin.child.feats.map(item => item.chunk).filter(Boolean),
-            }
+            poisonous: this.child.poisonous.state.isActive || undefined,
+            feats: this.child.feats.map(item => item.chunk).filter(Boolean),
         }
     }
 
