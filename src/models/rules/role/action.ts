@@ -155,7 +155,6 @@ export class RoleActionModel extends Model<
         return result;
     }
 
-    @DebugUtil.span()
     public async run() {
         if (!this.status) return;
 

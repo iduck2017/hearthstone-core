@@ -39,6 +39,9 @@ export class RoleFeaturesModel extends Model<
     RoleFeaturesModel.R
 > {
     public get chunk() {
+        const overheal = this.child.overheal.map(item => item.chunk).filter(Boolean);
+        const buffs = this.child.buffs.map(item => item.chunk).filter(Boolean);
+        const feats = this.child.feats.map(item => item.chunk).filter(Boolean);
         return {
             rush: this.child.rush.state.isActive || undefined,
             taunt: this.child.taunt.state.isActive || undefined,
@@ -48,9 +51,9 @@ export class RoleFeaturesModel extends Model<
             elusive: this.child.elusive.state.isActive || undefined,
             windfury: this.child.windfury.state.isActive || undefined,
             divineShield: this.child.divineShield.state.isActive || undefined,
-            overheal: this.child.overheal.map(item => item.chunk).filter(Boolean),
-            buffs: this.child.buffs.map(item => item.chunk).filter(Boolean),
-            feats: this.child.feats.map(item => item.chunk).filter(Boolean),
+            overheal: overheal.length > 0 ? overheal : undefined,
+            buffs: buffs.length > 0 ? buffs : undefined,
+            feats: feats.length > 0 ? feats : undefined,
         }
     }
 

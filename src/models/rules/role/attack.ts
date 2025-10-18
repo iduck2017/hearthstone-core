@@ -103,7 +103,6 @@ export class RoleAttackModel extends Model<
     }
 
 
-    @DebugUtil.span()
     public async run(roleB: RoleModel) {
         const roleA = this.route.role;
         if (!roleA) return;

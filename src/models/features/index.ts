@@ -38,7 +38,6 @@ export abstract class FeatureModel<
     public get chunk() {
         if (!this.state.isActive) return undefined;
         return {
-            name: this.state.name,
             desc: this.state.desc,
         }
     }

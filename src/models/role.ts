@@ -29,12 +29,13 @@ export class RoleModel extends Model<
     RoleModel.R
 > {
     public get chunk() {
+        const board = this.route.board
         return {
             uuid: this.uuid,
             attack: this.child.attack.chunk,
             health: this.child.health.chunk,
             action: this.child.action.chunk,
-            sleep: this.child.sleep.state.isActive || undefined,
+            sleep: (this.child.sleep.state.isActive && Boolean(board)) || undefined,
             ...this.child.feats.chunk,
         }
     }

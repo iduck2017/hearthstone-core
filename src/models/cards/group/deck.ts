@@ -50,7 +50,6 @@ export class DeckModel extends Model<
         })
     }
 
-    @DebugUtil.span()
     public draw() {
         const card = this.refer.queue[0];
         if (!card) return;

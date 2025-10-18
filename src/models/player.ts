@@ -58,6 +58,7 @@ export class PlayerModel extends Model<
     }
 
     public get chunk() {
+        const feats = this.child.feats.map(item => item.chunk).filter(Boolean);
         return {
             role: this.child.hero.child.role.chunk,
             armor: this.child.hero.child.armor.state.current,
@@ -66,7 +67,7 @@ export class PlayerModel extends Model<
             hand: this.child.hand.chunk,
             deck: this.child.deck.chunk,
             board: this.child.board.chunk,
-            feats: this.child.feats.map(item => item.chunk).filter(Boolean),
+            feats: feats.length ? feats : undefined,
         }
     }
 

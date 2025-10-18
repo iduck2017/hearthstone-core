@@ -30,12 +30,16 @@ export class MinionFeaturesModel extends CardFeaturesModel<
 > {
     public get chunk() {
         const result = super.chunk;
+        const endTurn = this.child.endTurn.map(item => item.chunk).filter(Boolean);
+        const startTurn = this.child.startTurn.map(item => item.chunk).filter(Boolean);
+        const battlecry = this.child.battlecry.map(item => item.chunk).filter(Boolean);
+        const deathrattle = this.child.deathrattle.map(item => item.chunk).filter(Boolean);
         return {
             ...result,
-            endTurn: this.child.endTurn.map(item => item.chunk).filter(Boolean),
-            startTurn: this.child.startTurn.map(item => item.chunk).filter(Boolean),
-            battlecry: this.child.battlecry.map(item => item.chunk).filter(Boolean),
-            deathrattle: this.child.deathrattle.map(item => item.chunk).filter(Boolean),
+            endTurn: endTurn.length ? endTurn : undefined,
+            startTurn: startTurn.length ? startTurn : undefined,
+            battlecry: battlecry.length ? battlecry : undefined,
+            deathrattle: deathrattle.length ? deathrattle : undefined,
         }
     }
 

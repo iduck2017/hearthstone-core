@@ -18,7 +18,6 @@ export class SleepModel extends Model<
     SleepModel.C,
     SleepModel.R
 > {
-
     constructor(props?: SleepModel['props']) {
         super({
             uuid: props?.uuid,

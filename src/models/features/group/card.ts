@@ -24,9 +24,10 @@ export abstract class CardFeaturesModel<
     R & CardFeaturesModel.R
 > {
     public get chunk() {
+        const feats = this.child.feats.map(item => item.chunk).filter(Boolean);
         return {
             poisonous: this.child.poisonous.state.isActive || undefined,
-            feats: this.child.feats.map(item => item.chunk).filter(Boolean),
+            feats: feats.length ? feats : undefined,
         }
     }
 

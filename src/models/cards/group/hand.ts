@@ -43,7 +43,7 @@ export class HandModel extends Model<
         const current = turn.refer.current;
         const isCurrent = current === player;
         return {
-            caches: isCurrent ? this.refer.queue.map(item => item.chunk) : undefined,
+            cards: isCurrent ? this.refer.queue.map(item => item.chunk) : undefined,
             size: this.refer.queue.length,
         }
     }
