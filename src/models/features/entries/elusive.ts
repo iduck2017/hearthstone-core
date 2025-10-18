@@ -1,4 +1,4 @@
-import { Event, TemplUtil } from "set-piece";
+import { DebugUtil, Event, TemplUtil } from "set-piece";
 import { FeatureModel } from "..";
 import { RoleFeatureModel } from "../role";
 
@@ -32,6 +32,7 @@ export class ElusiveModel extends RoleFeatureModel<
 
     public active(): boolean {
         if (this.state.isActive) return false;
+        DebugUtil.log(`${this.route.role?.name} gain Elusive`);
         this.origin.state.isActive = true;
         this.event.onActive(new Event({}));
         return true;

@@ -20,7 +20,6 @@ export class AppModel extends Model<
     AppModel.S, 
     AppModel.C
 > {
-
     constructor(props?: AppModel['props']) {
         props = props ?? {};
         super({

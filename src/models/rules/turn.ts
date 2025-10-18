@@ -54,10 +54,12 @@ export class TurnModel extends Model<
         this.start();
     }
 
+    @DebugUtil.span()
     private start() {
         const player = this.refer.current;
         const board = player?.child.board;
         if (!board) return;
+        DebugUtil.log(`${player.name} Turn Start`);
         const roles = player.query();
         player.child.mana.reset();
         roles.forEach(item => {
@@ -73,10 +75,12 @@ export class TurnModel extends Model<
         this.event.onStart(new Event({}));
     }
     
+    @DebugUtil.span()
     private end() {
         const player = this.refer.current;
         const board = player?.child.board;
         if (!board) return;
+        DebugUtil.log(`${player.name} Turn End`);
         const roles = player.query();
         roles.forEach(item => {
             const entries = item.child.feats;

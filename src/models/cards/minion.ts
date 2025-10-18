@@ -1,4 +1,4 @@
-import { Event, Method, State, TranxUtil, Model } from "set-piece";
+import { Event, Method, State, TranxUtil, Model, DebugUtil } from "set-piece";
 import { MinionHooksOptions, MinionFeaturesModel } from "../features/group/minion";
 import { RaceType } from "../../types/card-enums";
 import { RoleModel } from "../role";
@@ -40,10 +40,32 @@ export abstract class MinionCardModel<
 > {
     public get chunk() {
         const result = super.chunk;
+        const board = this.route.board;
+        const hand = this.route.hand;
+        const races = this.state.races;
+        if (board || hand) {
+            return {
+                ...result,
+                role: this.child.role.chunk,
+                races: races.length ? races : undefined,
+            }
+        }
         return {
             ...result,
-            role: this.child.role.chunk,
+            attack: this.child.role.child.attack.state.origin,
+            health: this.child.role.child.health.state.origin,
+            races: races.length ? races : undefined,
         }
+    }
+
+    public get status(): boolean {
+        if (!super.status) return false;
+        // board size
+        const player = this.route.player;
+        const board = player?.child.board;
+        if (!board) return false;
+        if (board.refer.queue.length >= 7) return false;
+        return true;
     }
 
     constructor(props: MinionCardModel['props'] & {
@@ -66,11 +88,13 @@ export abstract class MinionCardModel<
 
     // transform
     public transform(target: MinionCardModel) {
+        DebugUtil.log(`${this.name} Transformed to ${target.name}`);
         this.doTransform(target);
         this.event.onTransform(new Event({ target }));
     }
 
     @TranxUtil.span()
+    @DebugUtil.span()
     private doTransform(target: MinionCardModel) {
         const board = this.route.board;
         const self: MinionCardModel = this;
@@ -84,11 +108,13 @@ export abstract class MinionCardModel<
 
     // silence
     public silence() {
+        DebugUtil.log(`${this.name} Silenced`);
         this.doSilence();
         this.event.onSilence(new Event({}));
     }
 
     @TranxUtil.span()
+    @DebugUtil.span()
     private doSilence() {
         this.child.feats.child.feats.forEach(item => item.deactive());
         this.child.feats.child.battlecry.forEach(item => item.deactive());
@@ -141,7 +167,7 @@ export abstract class MinionCardModel<
 
         // battlecry
         const feats = this.child.feats;
-        const battlecry = await MinionBattlecryModel.toRun(feats.child.battlecry);
+        const battlecry = await MinionBattlecryModel.select(feats.child.battlecry);
         if (!battlecry) return;
 
         return [to, { battlecry }];
@@ -172,6 +198,7 @@ export abstract class MinionCardModel<
 
     @TranxUtil.span()
     private doDeploy(board: BoardModel, index?: number) {
+        DebugUtil.log(`${this.name} Summoned`);
         const player = this.route.player;
         const hand = player?.child.hand;
         if (hand) hand.drop(this);

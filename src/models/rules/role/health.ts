@@ -142,11 +142,11 @@ export class RoleHealthModel extends Model<
             event.set(0);
             return event;
         }
-
         // poisonous
         const poisonous = source.child.feats.child.poisonous;
         if (poisonous.state.isActive && minion) event.config({ isPoisonous: true });
 
+        DebugUtil.log(`${role.name} receive ${result} Damage`);
         this.origin.state.damage += result;
         dispose.active(false, event.detail.source, event.detail.method);
         return event;
@@ -181,8 +181,11 @@ export class RoleHealthModel extends Model<
             return event;
         }
         const damage = this.origin.state.damage;
-        this.origin.state.damage -= Math.min(damage, result);
-        event.set(Math.min(damage, result), Math.max(0, result - damage));
+        const restore = Math.min(damage, result);
+        const overflow = Math.max(0, result - damage);
+        if (restore > 0) DebugUtil.log(`${role.name} restore ${restore} Health`);
+        this.origin.state.damage -= restore;
+        event.set(restore, overflow);
         return event;
     }
 

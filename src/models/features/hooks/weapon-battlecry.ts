@@ -1,4 +1,4 @@
-import { Event, Method, Model } from "set-piece";
+import { DebugUtil, Event, Method, Model } from "set-piece";
 import { SelectEvent, SelectUtil } from "../../../utils/select";
 import { FeatureModel } from "../../..";
 import { AbortEvent } from "../../../types/abort-event";
@@ -26,7 +26,7 @@ export abstract class WeaponBattlecryModel<
     C & WeaponBattlecryModel.C, 
     R & WeaponBattlecryModel.R
 > {
-    public static async toRun(
+    public static async select(
         hooks: Readonly<WeaponBattlecryModel[]>
     ): Promise<Map<WeaponBattlecryModel, Model[]> | undefined> {
         const result = new Map<WeaponBattlecryModel, Model[]>();
@@ -75,6 +75,7 @@ export abstract class WeaponBattlecryModel<
         this.event.toRun(event);
         if (event.detail.isAbort) return;
 
+        DebugUtil.log(`${this.state.name} run (${this.state.desc})`);
         await this.doRun(from, ...params);
         this.event.onRun(new Event({}));
     }   

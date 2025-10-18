@@ -1,6 +1,6 @@
 import { FeatureModel } from "..";
 import { SelectEvent } from "../../../utils/select";
-import { Model } from "set-piece";
+import { DebugUtil, Model } from "set-piece";
 
 export namespace EffectModel {
     export type E = {};
@@ -47,6 +47,8 @@ export abstract class EffectModel<
 
     public async run(...params: T) {
         if (!this.state.isActive) return;
+
+        DebugUtil.log(`${this.state.name} run (${this.state.desc})`);
         await this.doRun(...params);
     }
 

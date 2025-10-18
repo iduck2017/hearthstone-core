@@ -1,4 +1,4 @@
-import { Event, TemplUtil, TranxUtil } from "set-piece";
+import { DebugUtil, Event, TemplUtil, TranxUtil } from "set-piece";
 import { DamageEvent } from "../../../types/damage-event";
 import { FeatureModel } from "..";
 import { RoleFeatureModel } from "../role";
@@ -6,6 +6,7 @@ import { RoleFeatureModel } from "../role";
 export namespace DivineShieldModel {
     export type E = {
         onConsume: DamageEvent
+        onRestore: Event
     }
     export type S = {
         count: number
@@ -37,16 +38,24 @@ export class DivineShieldModel extends RoleFeatureModel<
     }
 
     @TranxUtil.span()
-    public gain(): boolean {
+    public restore(): boolean {
         if (this.state.isActive) return false; 
+        const role = this.route.role;
+        if (!role) return false;
+        DebugUtil.log(`${role.name} gain Divine Shield`);
         this.origin.state.isActive = true;
         this.origin.state.count = 1;
+        this.event.onRestore(new Event({}));
         return true;
     }
 
+    @TranxUtil.span()
     public consume(event: DamageEvent) {
         if (!this.state.isActive) return false;
         if (this.origin.state.count <= 1) this.origin.state.isActive = false;
+        const role = this.route.role;
+        if (!role) return false;
+        DebugUtil.log(`${role.name} lost Divine Shield`);
         this.origin.state.count =- 1;
         event.config({ isDivineShield: true });
         this.event.onConsume(event);

@@ -1,4 +1,4 @@
-import { Event, TemplUtil } from "set-piece";
+import { DebugUtil, Event, TemplUtil } from "set-piece";
 import { FeatureModel } from "..";
 import { RoleFeatureModel } from "../role";
 
@@ -33,8 +33,17 @@ export class TauntModel extends RoleFeatureModel<
 
     public active(): boolean {
         if (this.state.isActive) return false;
+        const role = this.route.role;
+        if (!role) return false;
+        DebugUtil.log(`${role.name} gain Taunt`);
         this.origin.state.isActive = true;
         this.event.onActive(new Event({}));
         return true;
+    }
+
+    public deactive() {
+        const role = this.route.role;
+        if (!role) return false;
+        super.deactive();
     }
 }

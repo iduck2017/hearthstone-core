@@ -1,8 +1,10 @@
-import { Event, Model } from "set-piece";
+import { DebugUtil, Event, Model } from "set-piece";
+import { HeroModel } from "../../heroes";
+import { PlayerModel } from "../../player";
 
 export namespace ArmorModel {
     export type E = {
-        onGet: Event<{ value: number }>;
+        onRestore: Event<{ value: number }>;
         onConsume: Event<{ value: number }>;
     }
     export type S = {
@@ -18,6 +20,14 @@ export class ArmorModel extends Model<
     ArmorModel.C,
     ArmorModel.R
 > {
+    public get route() {
+        const result = super.route;
+        return {
+            ...result,
+            player: result.list.find(item => item instanceof PlayerModel),
+        }
+    }
+
     constructor(props?: ArmorModel['props']) {
         super({
             uuid: props?.uuid,
@@ -30,9 +40,11 @@ export class ArmorModel extends Model<
         });
     }
 
-    public get(value: number) {
+    public restore(value: number) {
+        const player = this.route.player;
+        DebugUtil.log(`${player?.name} restore ${value} Armor`);
         const result = this.add(value);
-        this.event.onGet(new Event({ value: result }));
+        this.event.onRestore(new Event({ value: result }));
         return result;
     }
 
@@ -43,8 +55,10 @@ export class ArmorModel extends Model<
     }
 
     protected del(value: number) { 
-        if (value <= 0) return 0;
+        const player = this.route.player;
         value = Math.min(value, this.origin.state.current);
+        if (value <= 0) return 0;
+        DebugUtil.log(`${player?.name} lost ${value} Armor`);
         this.origin.state.current -= value;
         return value;
     }

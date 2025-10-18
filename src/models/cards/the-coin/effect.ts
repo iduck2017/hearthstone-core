@@ -8,8 +8,8 @@ export class TheCoinEffectModel extends SpellEffectModel<[]> {
         super({
             uuid: props.uuid,
             state: {
-                name: "Cone of Cold's effect",
-                desc: "Freeze a minion and the minions next to it, and deal {{state.damage[0]}} damage to them.",
+                name: "The Coin's effect",
+                desc: "Gain 1 Mana Crystal this turn only.",
                 damage: [0],
                 ...props.state
             },
@@ -23,6 +23,6 @@ export class TheCoinEffectModel extends SpellEffectModel<[]> {
     protected async doRun(): Promise<void> {
         const player = this.route.player;
         if (!player) return;
-        player.child.mana.gain(1);
+        player.child.mana.restore(1);
     }
 }   

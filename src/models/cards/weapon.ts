@@ -37,10 +37,19 @@ export abstract class WeaponCardModel<
 > {
     public get chunk() {
         const result = super.chunk;
+        const hand = this.route.hand;
+        const board = this.route.board;
+        if (hand || board) {
+            return {
+                ...result,
+                attack: this.child.attack.chunk,
+                durability: this.child.action.chunk,
+            }
+        }
         return {
             ...result,
-            attack: this.child.attack.chunk,
-            durability: this.child.action.chunk,
+            attack: this.child.attack.state.origin,
+            durability: this.child.action.state.origin,
         }
     }
 
@@ -89,7 +98,7 @@ export abstract class WeaponCardModel<
     protected async toUse(): Promise<[WeaponHooksOptions] | undefined> {
         // battlecry
         const feats = this.child.feats;
-        const battlecry = await WeaponBattlecryModel.toRun(feats.child.battlecry);
+        const battlecry = await WeaponBattlecryModel.select(feats.child.battlecry);
         if (!battlecry) return;
         return [{ battlecry }];
     }

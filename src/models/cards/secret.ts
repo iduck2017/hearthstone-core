@@ -1,4 +1,4 @@
-import { Event, Method, Model, State, TranxUtil } from "set-piece";
+import { DebugUtil, Event, Method, Model, State, TranxUtil } from "set-piece";
 import { CardModel } from ".";
 import { SecretDisposeModel } from "./dispose/secret";
 import { SpellCardModel } from "./spell";
@@ -52,6 +52,7 @@ export abstract class SecretCardModel<
 
     @TranxUtil.span()
     private doDeploy(board: BoardModel) {
+        DebugUtil.log(`${this.name} Deployed`);
         const player = this.route.player;
         const hand = player?.child.hand;
         if (hand) hand.drop(this);

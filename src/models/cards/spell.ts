@@ -32,6 +32,24 @@ export abstract class SpellCardModel<
     C & SpellCardModel.C,
     R & SpellCardModel.R
 > {
+    public get chunk() {
+        const result = super.chunk;
+        const schools = this.state.schools;
+        return {
+            ...result,
+            schools: schools.length ? schools : undefined,
+        }
+    }
+
+    public get status(): boolean {
+        if (!super.status) return false;
+        // need target
+        const effects = this.child.feats.child.effects;
+        const selectors = SpellEffectModel.check(effects);
+        if (!selectors) return false;
+        return true;
+    }
+
     constructor(props: SpellCardModel['props'] & {
         state: S & State<Omit<CardModel.S, 'isActive'> & SpellCardModel.S>;
         child: C & Pick<CardModel.C, 'cost'>
@@ -50,10 +68,10 @@ export abstract class SpellCardModel<
 
     protected async toUse(): Promise<[SpellHooksOptions] | undefined> {
         // spell
-        const feats = this.child.feats;
-        const effects = await SpellEffectModel.toRun(feats.child.effects);
-        if (!effects) return;
-        return [{ effects }];
+        const effects = this.child.feats.child.effects;
+        const result = await SpellEffectModel.select(effects);
+        if (!result) return;
+        return [{ effects: result }];
     }
     
     public async use(from: number, options: SpellHooksOptions) {

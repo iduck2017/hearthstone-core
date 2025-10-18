@@ -1,4 +1,4 @@
-import { Event, Method, Model } from "set-piece";
+import { DebugUtil, Event, Method, Model } from "set-piece";
 import { SelectEvent, SelectUtil } from "../../../utils/select";
 import { CardModel, FeatureModel, MinionCardModel } from "../../..";
 import { AbortEvent } from "../../../types/abort-event";
@@ -37,7 +37,7 @@ export abstract class MinionBattlecryModel<
         }
     }
 
-    public static async toRun(
+    public static async select(
         hooks: Readonly<MinionBattlecryModel[]>
     ): Promise<Map<MinionBattlecryModel, Model[]> | undefined> {
         const result = new Map<MinionBattlecryModel, Model[]>();
@@ -88,6 +88,7 @@ export abstract class MinionBattlecryModel<
         this.event.toRun(event);
         if (event.detail.isAbort) return;
         
+        DebugUtil.log(`${this.state.name} run (${this.state.desc})`);
         await this.doRun(from, to, ...params);
         this.event.onRun(new Event({}));
     }   

@@ -1,4 +1,4 @@
-import { Event, EventUtil, Method, Model  } from "set-piece";
+import { DebugUtil, Event, EventUtil, Method, Model  } from "set-piece";
 import { TurnModel } from "../../rules/turn";
 import { CardModel } from "../../cards";
 import { CardFeatureModel, FeatureModel } from "../../..";
@@ -65,6 +65,7 @@ export abstract class EndTurnHookModel<
         const current = turn.refer.current;
         const isCurrent = current === player;
 
+        DebugUtil.log(`${this.state.name} run (${this.state.desc})`);
         this.doRun(isCurrent);
         this.event.onRun(new Event({}));
     }

@@ -34,6 +34,7 @@ export class WeaponDisposeModel extends DisposeModel {
     protected run() {
         const weapon = this.route.weapon;
         if (!weapon) return;
+        DebugUtil.log(`${weapon.name} Break`);
         this.doRemove();
         const feats = weapon.child.feats;
         const deathrattle = feats.child.deathrattle;

@@ -1,4 +1,4 @@
-import { Event, Method, Model } from "set-piece";
+import { DebugUtil, Event, Method, Model } from "set-piece";
 import { FeatureModel } from "../../..";
 import { AbortEvent } from "../../../types/abort-event";
 import { CardFeatureModel } from "../card";
@@ -48,6 +48,7 @@ export abstract class OverhealModel<
         this.event.toRun(event);
         if (event.detail.isAbort) return;
 
+        DebugUtil.log(`${this.state.name} run (${this.state.desc})`);
         this.doRun();
         this.event.onRun(new Event({}));
     }

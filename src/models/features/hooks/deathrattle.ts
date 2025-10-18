@@ -1,4 +1,4 @@
-import { Event, Method, Model } from "set-piece";
+import { DebugUtil, Event, Method, Model } from "set-piece";
 import { AbortEvent } from "../../../types/abort-event";
 import { BoardModel, CardFeatureModel, CardModel, FeatureModel } from "../../..";
 
@@ -40,6 +40,7 @@ export abstract class DeathrattleModel<
         });
     }
 
+    @DebugUtil.span()
     public run() {
         if (!this.state.isActive) return;
         
@@ -47,6 +48,7 @@ export abstract class DeathrattleModel<
         this.event.toRun(event);
         if (event.detail.isAbort) return;
 
+        DebugUtil.log(`${this.state.name} run (${this.state.desc})`);
         this.doRun();
         this.event.onRun(new Event({}));
     }

@@ -32,9 +32,11 @@ export class MinionDisposeModel extends DisposeModel {
         });
     }
 
+    @DebugUtil.span()
     protected run() {
         const minion = this.route.minion;
         if (!minion) return;
+        DebugUtil.log(`${minion.name} Die`);
         this.doRemove();
         const feats = minion.child.feats;
         const deathrattle = feats.child.deathrattle;

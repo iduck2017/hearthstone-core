@@ -1,4 +1,4 @@
-import { Event, Method, Model, TemplUtil, TranxUtil } from "set-piece";
+import { DebugUtil, Event, Method, Model, TemplUtil, TranxUtil } from "set-piece";
 import { PlayerModel } from "./player";
 import { TurnModel } from "./rules/turn";
 import { TheCoinModel } from "..";
@@ -54,6 +54,7 @@ export class GameModel extends Model<
 
 
     public start() {
+        DebugUtil.log('Game Start');
         this.doStart();
         this.event.onStart(new Event({}));
         this.child.turn.next();

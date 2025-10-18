@@ -62,7 +62,6 @@ export abstract class CardModel<
             }
         } 
         return {
-            uuid: this.uuid,
             name: this.state.name,
             desc: this.state.desc,
             class: this.state.class,
@@ -125,6 +124,7 @@ export abstract class CardModel<
     }
 
     // play
+    @DebugUtil.span()
     public async play() {
         if (!this.status) return;
         const params = await this.toUse();
@@ -147,6 +147,7 @@ export abstract class CardModel<
         if (from === undefined) return;
         hand.drag(this);
         // run
+        DebugUtil.log(`${this.name} Played`);
         await this.use(from, ...params);
         // try to dispose if not perform
         this.clear();
@@ -165,7 +166,6 @@ export abstract class CardModel<
 
 
     // draw
-    @DebugUtil.span()
     public draw() {
         if (!this.doDraw()) return;
         this.event.onDraw(new Event({}));
@@ -175,6 +175,7 @@ export abstract class CardModel<
     protected doDraw(): boolean {
         const player = this.route.player;
         if (!player) return false;
+        DebugUtil.log(`${this.name} Drew`);
         const deck = player.child.deck;
         deck.del(this);
         player.child.hand.add(this);

@@ -1,4 +1,4 @@
-import { Event, Method, Model, State, TranxUtil } from "set-piece";
+import { DebugUtil, Event, Method, Model, State, TranxUtil } from "set-piece";
 import { BoardModel, CardModel, GraveyardModel, HeroModel, PlayerModel } from '../../..'
 
 export namespace DisposeModel {
@@ -113,6 +113,7 @@ export abstract class DisposeModel<
     @TranxUtil.span()
     public active(isLock?: boolean, source?: CardModel | HeroModel, reason?: Model) {
         if (this.status) return;
+        if (isLock) DebugUtil.log(`${source?.name} Destroyed`);
         this.origin.refer.reason = reason;
         this.origin.refer.source = source;
         this.origin.state.isLock = isLock ?? false;

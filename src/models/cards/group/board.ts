@@ -64,7 +64,7 @@ export class BoardModel extends Model<
         })
     }
 
-    public query(card: CardModel): CardModel[] | undefined {
+    private query(card: CardModel): CardModel[] | undefined {
         if (card instanceof MinionCardModel) return this.origin.child.minions;
         if (card instanceof SecretCardModel) return this.origin.child.secrets;
     }

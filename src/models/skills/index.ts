@@ -1,4 +1,4 @@
-import { Event, Method, Model } from "set-piece";
+import { DebugUtil, Event, Method, Model } from "set-piece";
 import { SelectEvent, SelectUtil } from "../../utils/select";
 import { PlayerModel } from "../player";
 import { GameModel } from "../game";
@@ -93,6 +93,8 @@ export abstract class SkillModel<
         const mana = player.child.mana;
         mana.consume(cost.state.current, this);
         const self: SkillModel = this;
+        
+        DebugUtil.log(`Use Skill (${this.state.desc})`);
         await self.doRun(...params);
         this.event.onRun(new Event({}));
     }

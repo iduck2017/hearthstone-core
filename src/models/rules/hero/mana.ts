@@ -1,8 +1,9 @@
-import { Event, Method, Model, TemplUtil, TranxUtil } from "set-piece";
+import { DebugUtil, Event, Method, Model, TemplUtil, TranxUtil } from "set-piece";
+import { PlayerModel } from "../../player";
 
 export namespace ManaModel {
     export type E = {
-        onGain: Event<{ value: number }>;
+        onRestore: Event<{ value: number }>;
         onConsume: Event<{ value: number; reason?: Model }>;
     };
     export type S = {
@@ -21,6 +22,14 @@ export class ManaModel extends Model<
     ManaModel.C,
     ManaModel.R
 > {
+    public get route() {
+        const result = super.route;
+        return {
+            ...result,
+            player: result.list.find(item => item instanceof PlayerModel),
+        }
+    }
+
     public get chunk() {
         return {
             current: this.state.current,
@@ -45,20 +54,29 @@ export class ManaModel extends Model<
 
     @TranxUtil.span()
     public reset() {
+        const player = this.route.player;
+        if (!player) return;
         if (this.origin.state.origin < this.origin.state.maximum) {
             this.origin.state.origin += 1;
         }
+        DebugUtil.log(`${player.name} reset mana to ${this.origin.state.origin}`);
         this.origin.state.current = this.origin.state.origin;
     }
 
     public consume(value: number, reason?: Model) {
         if (value > this.origin.state.current) value= this.origin.state.current;
+        const player = this.route.player;
+        if (!player) return;
+        DebugUtil.log(`${player.name} use ${value} mana`);
         this.origin.state.current -= value;
         this.event.onConsume(new Event({ value, reason }));
     }
 
-    public gain(value: number) {
+    public restore(value: number) {
         this.origin.state.current += value;
-        this.event.onGain(new Event({ value }));
+        const player = this.route.player;
+        if (!player) return;
+        DebugUtil.log(`${player.name} restore ${value} mana`);
+        this.event.onRestore(new Event({ value }));
     }
 }

@@ -24,7 +24,7 @@ export class ArmorUpModel extends SkillModel<[]> {
         const player = this.route.player;
         if (!player) return;
         const armor = player.child.hero.child.armor;
-        armor.get(2);
+        armor.restore(2);
     }
 
     protected toRun(): [] { return [] }

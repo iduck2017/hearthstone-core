@@ -1,5 +1,5 @@
 import { Decor, Model } from "set-piece";
-import { CardModel, EffectModel, FeatureModel, RoleModel, SelectUtil, SpellCardModel } from "../../..";
+import { CardModel, EffectModel, FeatureModel, RoleModel, SelectEvent, SelectUtil, SpellCardModel } from "../../..";
 
 export namespace SpellEffectModel {
     export type E = {};
@@ -30,6 +30,17 @@ export abstract class SpellEffectModel<
 > {
     public get decor(): SpellEffectDecor<S> { return new SpellEffectDecor(this); }
 
+    public get state() {
+        const result = super.state;
+        const damage = result.damage;
+        let desc = result.desc;
+        damage.forEach((item, index) => {
+            const regexp = new RegExp(`{{spellDamage\\[${index}\\]}}`, 'g');
+            desc = desc.replace(regexp, item.toString());
+        })
+        return { ...result, desc }
+    }
+
     public get route() {
         const result = super.route;
         const card: CardModel | undefined = result.list.find(item => item instanceof CardModel);
@@ -41,10 +52,10 @@ export abstract class SpellEffectModel<
         }
     }
 
-    public static async toRun(
+    public static check(
         hooks: Readonly<SpellEffectModel[]>
-    ): Promise<Map<SpellEffectModel, Model[]> | undefined> {
-        const result = new Map<SpellEffectModel, Model[]>();
+    ): Map<SpellEffectModel, SelectEvent[]> | undefined {
+        const result = new Map<SpellEffectModel, SelectEvent[]>();
         for (const hook of hooks) {
             const selectors = hook.toRun();
             if (!selectors) return;
@@ -59,13 +70,26 @@ export abstract class SpellEffectModel<
                 })
                 if (!item.options.length) return;
             }
-            const params: Model[] = [];
-            for (const item of selectors) {
-                const result = await SelectUtil.get(item);
+            result.set(hook, selectors);
+        }
+        return result;
+    }
+
+    public static async select(
+        hooks: Readonly<SpellEffectModel[]>
+    ): Promise<Map<SpellEffectModel, Model[]> | undefined> {
+        const result = new Map<SpellEffectModel, Model[]>();
+        const selectors = SpellEffectModel.check(hooks);
+        if (!selectors) return;
+        for (const item of selectors) {
+            const [key, value] = item;
+            const params: any[] = [];
+            for (const selector of value) {
+                const result = await SelectUtil.get(selector);
                 if (result === undefined) return;
                 params.push(result);
             }
-            result.set(hook, params);
+            result.set(key, params);
         }
         return result;
     }

@@ -1,34 +1,34 @@
 export enum ClassType {
-    WARRIOR = 1,
-    MAGE,
-    NEUTRAL,
-    PRIEST,
-    WARLOCK,
+    WARRIOR = 'Warrior',
+    MAGE = 'Mage',
+    NEUTRAL = 'Neutral',
+    PRIEST = 'Priest',
+    WARLOCK = 'Warlock',
 }
 
 export enum RarityType {
-    COMMON = 1,
-    RARE,
-    EPIC,
-    LEGENDARY,
+    COMMON = 'Common',
+    RARE = 'Rare',
+    EPIC = 'Epic',
+    LEGENDARY = 'Legendary',
 }
 
 export enum RaceType {
-    UNDEAD = 1,
-    BEAST,
-    ELEMENTAL,
-    MURLOC,
-    DRAENEI,
-    PIRATE,
-    DRAGON,
-    MECH,
-    DEMON
+    UNDEAD = 'Undead',
+    BEAST = 'Beast',
+    ELEMENTAL = 'Elemental',
+    MURLOC = 'Murloc',
+    DRAENEI = 'Draenei',
+    PIRATE = 'Pirate',
+    DRAGON = 'Dragon',
+    MECH = 'Mech',
+    DEMON = 'Demon',
 }
 
 export enum SchoolType {
-    FIRE,
-    FROST,
-    ARCANE,
-    HOLY,
-    SHADOW,
+    FIRE = 'Fire',
+    FROST = 'Frost',
+    ARCANE = 'Arcane',
+    HOLY = 'Holy',
+    SHADOW = 'Shadow',
 }

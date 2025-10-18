@@ -116,55 +116,20 @@ export class RoleActionModel extends Model<
         this.origin.state.comsume = 0;
     }
 
-    private async select(): Promise<RoleModel | undefined> {
-        const game = this.route.game;
-        if (!game) return;
-
-        const role = this.route.role;
-        if (!role) return;
-        const entries = role.child.feats;
-        const charge = entries.child.charge;
-        const sleep = role.child.sleep;
-
-        const player = this.route.player;
-        if (!player) return;
-        
-        const opponent = player.refer.opponent;
-        if (!opponent) return;
-
-        const board = opponent.child.board;
-        let options: RoleModel[] = board.child.minions.map(item => item.child.role);
-        if (!sleep.state.isActive || charge.state.isActive) {
-            options.push(opponent.child.hero.child.role);
-        }
-
-        const tauntOptions = options.filter(item => {
-            const entries = item.child.feats;
-            const taunt = entries.child.taunt;
-            const stealth = entries.child.stealth;
-            return taunt.state.isActive && !stealth.state.isActive;
-        });
-        if (tauntOptions.length) options = tauntOptions;
-
-        options = options.filter(item => {
-            const entries = item.child.feats;
-            const stealth = entries.child.stealth;
-            return !stealth.state.isActive;
-        })
-        const result = await SelectUtil.get(new SelectEvent(options, {}));
-        return result;
-    }
-
+    
     public async run() {
         if (!this.status) return;
 
         const game = this.route.game;
         if (!game) return;
         
+        // select
         const roleA = this.route.role;
         if (!roleA) return;
-        // select
-        const roleB = await this.select();
+        const attack = roleA.child.attack;
+        const selector = attack.selector;
+        if (!selector) return;
+        const roleB = await SelectUtil.get(selector);
         if (!roleB) return;
 
         const event = new AbortEvent({})
@@ -173,10 +138,8 @@ export class RoleActionModel extends Model<
 
         // mana
         if (!this.consume()) return;
-        // atytack
-        const attack = roleA.child.attack;
+        // attack
         await attack.run(roleB);
-        
         this.event.onRun(new Event({}));
     }
 

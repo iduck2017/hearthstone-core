@@ -1,5 +1,5 @@
 import { DebugUtil, Decor, Event, Method, Model, StateUtil, TemplUtil } from "set-piece";
-import { DamageEvent, DamageModel, MinionCardModel, RoleModel, GameModel, PlayerModel, HeroModel, WeaponCardModel, IRoleBuffModel } from "../../..";
+import { DamageEvent, DamageModel, MinionCardModel, RoleModel, GameModel, PlayerModel, HeroModel, WeaponCardModel, IRoleBuffModel, SelectEvent, SelectUtil } from "../../..";
 import { DamageType } from "../../../types/damage-event";
 import { Operator, OperatorType } from "../../../types/operator";
 import { AbortEvent } from "../../../types/abort-event";
@@ -86,6 +86,9 @@ export class RoleAttackModel extends Model<
         if (dispose.status) return false;
         // has attack
         if (this.state.current <= 0) return false;
+        // need target
+        const selector = this.selector;
+        if (!selector?.options.length) return false;
         return true;
     }
 
@@ -102,7 +105,46 @@ export class RoleAttackModel extends Model<
         });
     }
 
+    public get selector(): SelectEvent<RoleModel> | undefined {
+        const game = this.route.game;
+        if (!game) return;
 
+        const role = this.route.role;
+        if (!role) return;
+        const entries = role.child.feats;
+        const charge = entries.child.charge;
+        const sleep = role.child.sleep;
+
+        const player = this.route.player;
+        if (!player) return;
+        
+        const opponent = player.refer.opponent;
+        if (!opponent) return;
+
+        const board = opponent.child.board;
+        let options: RoleModel[] = board.child.minions.map(item => item.child.role);
+        if (!sleep.state.isActive || charge.state.isActive) {
+            options.push(opponent.child.hero.child.role);
+        }
+
+        const tauntOptions = options.filter(item => {
+            const entries = item.child.feats;
+            const taunt = entries.child.taunt;
+            const stealth = entries.child.stealth;
+            return taunt.state.isActive && !stealth.state.isActive;
+        });
+        if (tauntOptions.length) options = tauntOptions;
+
+        options = options.filter(item => {
+            const entries = item.child.feats;
+            const stealth = entries.child.stealth;
+            return !stealth.state.isActive;
+        })
+        return new SelectEvent(options, {});
+    }
+
+
+    @DebugUtil.span()
     public async run(roleB: RoleModel) {
         const roleA = this.route.role;
         if (!roleA) return;
@@ -118,6 +160,7 @@ export class RoleAttackModel extends Model<
         if (eventB.detail.isAbort) return;
 
         if (!this.status) return;
+
         const healthB = roleB.child.health;
         if (healthB.state.current <= 0) return;
 
@@ -125,6 +168,7 @@ export class RoleAttackModel extends Model<
         const sourceB = roleB.route.card ?? roleB.route.hero;
         if (!sourceA || !sourceB) return;
 
+        DebugUtil.log(`${roleA.name} Attack ${roleB.name}`);
         // execute
         DamageModel.deal([
             new DamageEvent({
