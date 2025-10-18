@@ -203,7 +203,7 @@ export class RoleHealthModel extends Model<
         const self: RoleHealthModel = this;
         return self.proxy.event?.onChange;
     }
-    @DebugUtil.log()
+    @DebugUtil.span()
     @TranxUtil.span()
     private handleChange(that: this, event: Event<Frame<RoleHealthModel>>) {
         const { memory, maximum, damage } = that.state;

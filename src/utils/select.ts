@@ -1,5 +1,4 @@
 import { Method, Model } from "set-piece";
-import { Option } from "../types/option";
 import { RoleModel } from "../models/role";
 import { CardModel } from "../models/cards";
 

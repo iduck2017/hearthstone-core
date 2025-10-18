@@ -8,7 +8,6 @@ import { ManaModel } from "./rules/hero/mana";
 import { HeroModel } from "./heroes";
 import { RoleModel } from "./role";
 import { FeatureModel } from "./features";
-import { Option } from "../types/option";
 import { SelectUtil } from "../utils/select";
 import { MageModel } from "./heroes/mage";
 import { CollectionModel } from "./cards/group/collection";
@@ -80,39 +79,6 @@ export class PlayerModel extends Model<
         return 'Player';
     }
 
-    public get options(): Option[] {
-        const result: Option[] = [];
-        const game = this.route.game;
-        if (!game) return result;
-        if (SelectUtil.current?.options) {
-            result.push(...SelectUtil.current.options.map(item => {
-                const name = item instanceof Model ? item.name : String(item);
-                const uuid = item instanceof Model ? item.uuid : String(item);
-                // return option
-                return new Option(`Select ${name}`,  `select-${uuid}`, () => SelectUtil.set(item))
-            }));
-            result.push(new Option('Cancel', 'cancel', () => SelectUtil.set(undefined)));
-            return result;
-        } else {
-            // base
-            result.push(new Option('End Turn', 'end-turn', () => game.child.turn.next()));
-            // play
-            const cards = this.child.hand.refer.queue;
-            cards?.forEach(item => {
-                if (!item.status) return;
-                result.push(new Option(`Play ${item.name}`, `play-${item.uuid}`, () => item.play()));
-            });
-            // act
-            const roles = this.query();
-            roles.forEach(item => {
-                const action = item.child.action;
-                if (!action.status) return;
-                result.push(new Option(`Act ${item.name}`, `act-${item.uuid}`, () => action.run()));
-            });
-            return result;
-        }
-        
-    }
     
     public get status(): boolean {
         const game = this.route.game;

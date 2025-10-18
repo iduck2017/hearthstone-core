@@ -165,7 +165,7 @@ export abstract class CardModel<
 
 
     // draw
-    @DebugUtil.log()
+    @DebugUtil.span()
     public draw() {
         if (!this.doDraw()) return;
         this.event.onDraw(new Event({}));
