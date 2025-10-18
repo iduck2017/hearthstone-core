@@ -1,5 +1,5 @@
 import { FeatureModel } from "..";
-import { SelectEvent, SelectUtil } from "../../../utils/select";
+import { SelectEvent } from "../../../utils/select";
 import { Model } from "set-piece";
 
 export namespace EffectModel {
@@ -12,7 +12,7 @@ export namespace EffectModel {
 }
 
 export abstract class EffectModel<
-    T extends Model[] = Model[],
+    T extends any[] = any[],
     E extends Partial<FeatureModel.E> & Model.E = {},
     S extends Partial<FeatureModel.S> & Model.S = {},
     C extends Partial<FeatureModel.C> & Model.C = {},

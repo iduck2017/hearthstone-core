@@ -15,7 +15,7 @@ export namespace WeaponBattlecryModel {
 }
 
 export abstract class WeaponBattlecryModel<
-    T extends Model[] = Model[],
+    T extends any[] = any[],
     E extends Partial<WeaponBattlecryModel.E> & Model.E = {},
     S extends Partial<WeaponBattlecryModel.S> & Model.S = {},
     C extends Partial<WeaponBattlecryModel.C> & Model.C = {},
@@ -30,11 +30,12 @@ export abstract class WeaponBattlecryModel<
         hooks: Readonly<WeaponBattlecryModel[]>
     ): Promise<Map<WeaponBattlecryModel, Model[]> | undefined> {
         const result = new Map<WeaponBattlecryModel, Model[]>();
-        for (const item of hooks) {
-            const selectors = item.toRun();
+        for (const hook of hooks) {
+            const selectors = hook.toRun();
             // condition not match
             if (!selectors) continue;
             for (const item of selectors) {
+                item.desc = hook.state.desc;
                 // invalid selector
                 if (!item.options.length) return;
             }
@@ -45,7 +46,7 @@ export abstract class WeaponBattlecryModel<
                 if (result === undefined) return;
                 params.push(result);
             }
-            result.set(item, params);
+            result.set(hook, params);
         }
         return result;
     }

@@ -17,7 +17,7 @@ export class SpellEffectDecor<S extends Model.S = {}> extends Decor<
 }
 
 export abstract class SpellEffectModel<
-    T extends Model[] = Model[],
+    T extends any[] = any[],
     E extends Partial<SpellEffectModel.E> & Model.E = {},
     S extends Partial<SpellEffectModel.S> & Model.S = {},
     C extends Partial<SpellEffectModel.C> & Model.C = {},
@@ -45,18 +45,19 @@ export abstract class SpellEffectModel<
         hooks: Readonly<SpellEffectModel[]>
     ): Promise<Map<SpellEffectModel, Model[]> | undefined> {
         const result = new Map<SpellEffectModel, Model[]>();
-        for (const item of hooks) {
-            const selectors = item.toRun();
+        for (const hook of hooks) {
+            const selectors = hook.toRun();
             if (!selectors) return;
-            for (const selector of selectors) {
-                selector.filter(item => {
+            for (const item of selectors) {
+                item.desc = hook.state.desc;
+                item.filter(item => {
                     if (!(item instanceof RoleModel)) return true;
                     const elusive = item.child.feats.child.elusive;
                     // exclude elusive
                     if (elusive.state.isActive) return false;
                     return true;
                 })
-                if (!selector.options.length) return;
+                if (!item.options.length) return;
             }
             const params: Model[] = [];
             for (const item of selectors) {
@@ -64,7 +65,7 @@ export abstract class SpellEffectModel<
                 if (result === undefined) return;
                 params.push(result);
             }
-            result.set(item, params);
+            result.set(hook, params);
         }
         return result;
     }

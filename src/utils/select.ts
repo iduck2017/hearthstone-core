@@ -6,13 +6,13 @@ export class SelectEvent<T = any> {
     public options: Readonly<T[]>;
 
     public readonly hint?: string;
-    public readonly desc?: string;
+    public desc?: string | ((item: T) => string);
 
     constructor(
         options: T[],
         props?: { 
             hint?: string; 
-            desc?: string;
+            desc?: string | ((item: T) => string);
         }
     ) {
         this.options = options;
@@ -22,11 +22,6 @@ export class SelectEvent<T = any> {
 
     public filter(handler: (item: T) => boolean) {
         this.options = this.options.filter(handler);
-    }
-
-    public get random(): T | undefined {
-        const index = Math.floor(Math.random() * this.options.length);
-        return this.options[index];
     }
 }
 

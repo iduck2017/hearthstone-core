@@ -23,7 +23,7 @@ export namespace SkillModel {
 }
 
 export abstract class SkillModel<
-    T extends Model[] = Model[],
+    T extends any[] = any[],
     E extends Partial<SkillModel.E> & Model.E = {},
     S extends Partial<SkillModel.S> & Model.S = {},
     C extends Partial<SkillModel.C> & Model.C = {},

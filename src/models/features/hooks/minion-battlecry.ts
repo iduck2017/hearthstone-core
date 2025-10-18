@@ -15,7 +15,7 @@ export namespace MinionBattlecryModel {
 }
 
 export abstract class MinionBattlecryModel<
-    T extends Model[] = Model[],
+    T extends any[] = any[],
     E extends Partial<MinionBattlecryModel.E> & Model.E = {},
     S extends Partial<MinionBattlecryModel.S> & Model.S = {},
     C extends Partial<MinionBattlecryModel.C> & Model.C = {},
@@ -41,12 +41,13 @@ export abstract class MinionBattlecryModel<
         hooks: Readonly<MinionBattlecryModel[]>
     ): Promise<Map<MinionBattlecryModel, Model[]> | undefined> {
         const result = new Map<MinionBattlecryModel, Model[]>();
-        for (const item of hooks) {
-            const selectors = item.toRun();
+        for (const hook of hooks) {
+            const selectors = hook.toRun();
             // condition not match
             if (!selectors) continue;
             let isValid = true;
             for (const item of selectors) {
+                item.desc = hook.state.desc;
                 // invalid selector
                 if (!item.options.length) isValid = false;
             }
@@ -58,7 +59,7 @@ export abstract class MinionBattlecryModel<
                 if (result === undefined) return;
                 params.push(result);
             }
-            result.set(item, params);
+            result.set(hook, params);
         }
         return result;
     }

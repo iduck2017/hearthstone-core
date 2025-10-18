@@ -154,10 +154,9 @@ export abstract class MinionCardModel<
         const board = player.child.board;
         const size = board.child.minions.length;
         const options = new Array(size + 1).fill(0).map((item, index) => index);
-        const position = await SelectUtil.get(new SelectEvent(options, {
-            desc: `Deploy ${this.name} to position`,
-        }));
-
+        const position = await SelectUtil.get(
+            new SelectEvent(options, { desc: (item) => `Deploy ${this.name} at position ${item + 1}` }
+        ));
         return position;
     }
 
