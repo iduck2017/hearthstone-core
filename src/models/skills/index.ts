@@ -34,6 +34,10 @@ export abstract class SkillModel<
     C & SkillModel.C,
     R & SkillModel.R
 > {
+    public get name() {
+        return this.state.name;
+    }
+
     public get chunk() {
         return {
             desc: this.state.desc,
@@ -50,6 +54,13 @@ export abstract class SkillModel<
             game: result.list.find(item => item instanceof GameModel),
             hero: result.list.find(item => item instanceof HeroModel),
         }
+    }
+
+    public get status() {
+        const cost = this.child.cost;
+        if (!cost.status) return false;
+        if (!this.toRun()) return false;
+        return true;
     }
 
     constructor(props: SkillModel['props'] & {

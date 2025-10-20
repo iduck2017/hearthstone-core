@@ -8,8 +8,8 @@ export class ArmorUpModel extends SkillModel<[]> {
         super({
             uuid: props?.uuid,
             state: {
-                desc: 'Armor Up!',
-                name: 'Gain 2 Armor.',
+                name: 'Armor Up!',
+                desc: 'Gain 2 Armor.',
                 ...props?.state,
             },
             child: {

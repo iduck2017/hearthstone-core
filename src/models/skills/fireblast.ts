@@ -12,8 +12,8 @@ export class FireBlastModel extends SkillModel<[RoleModel]> {
         super({
             uuid: props?.uuid,
             state: {
-                desc: 'Fireblast',
-                name: 'Deal 1 damage',
+                name: 'Fireblast',
+                desc: 'Deal 1 damage',
                 ...props?.state,
             },
             child: {
