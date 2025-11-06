@@ -1,5 +1,5 @@
 import { DebugUtil, Decor, Event, Model, StateUtil, TranxUtil } from "set-piece";
-import { BoardModel, SelectEvent, SelectUtil, MinionCardModel, RoleModel, PlayerModel, GameModel, CardModel, HeroModel } from "../../..";
+import { BoardModel, SelectEvent, MinionCardModel, RoleModel, PlayerModel, GameModel, CardModel, HeroModel } from "../../..";
 import { AbortEvent } from "../../../types/abort-event";
 
 export namespace RoleActionModel {
@@ -122,6 +122,9 @@ export class RoleActionModel extends Model<
 
         const game = this.route.game;
         if (!game) return;
+
+        const player = this.route.player;
+        if (!player) return;
         
         // select
         const roleA = this.route.role;
@@ -129,7 +132,7 @@ export class RoleActionModel extends Model<
         const attack = roleA.child.attack;
         const selector = attack.selector;
         if (!selector) return;
-        const roleB = await SelectUtil.get(selector);
+        const roleB = await player.child.controller.get(selector);
         if (!roleB) return;
 
         const event = new AbortEvent({})

@@ -1,8 +1,9 @@
 import { DebugUtil, Event, Method, Model } from "set-piece";
-import { SelectEvent, SelectUtil } from "../../../utils/select";
+import { SelectEvent } from "../../rules/controller";
 import { CardModel, FeatureModel, MinionCardModel } from "../../..";
 import { AbortEvent } from "../../../types/abort-event";
 import { CardFeatureModel } from "../card";
+import { PlayerModel } from "../../player";
 
 export namespace MinionBattlecryModel {
     export type E = {
@@ -38,6 +39,7 @@ export abstract class MinionBattlecryModel<
     }
 
     public static async select(
+        player: PlayerModel,
         hooks: Readonly<MinionBattlecryModel[]>
     ): Promise<Map<MinionBattlecryModel, Model[]> | undefined> {
         const result = new Map<MinionBattlecryModel, Model[]>();
@@ -54,7 +56,7 @@ export abstract class MinionBattlecryModel<
             if (!isValid) continue;
             const params: Model[] = [];
             for (const item of selectors) {
-                const result = await SelectUtil.get(item);
+                const result = await player.child.controller.get(item);
                 // canceled by user
                 if (result === undefined) return;
                 params.push(result);

@@ -3,13 +3,12 @@ export { DamageType } from "./types/damage-event";
 export { RaceType, SchoolType, RarityType, ClassType } from "./types/card-enums";
 
 // event
-export { SelectEvent } from "./utils/select";
+export { SelectEvent } from "./models/rules/controller";
 export { DamageEvent } from "./types/damage-event";
 export { RestoreEvent } from "./types/restore-event";
 
 // utils
 export { AnimeUtil } from "./utils/anime";
-export { SelectUtil } from "./utils/select";
 export { LibraryUtil } from "./utils/library";
 
 // rules

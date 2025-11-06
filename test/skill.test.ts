@@ -1,4 +1,4 @@
-import { BoardModel, GameModel, MageModel, ManaModel, PlayerModel, SelectUtil, AnimeUtil, WarriorModel } from "../src";
+import { BoardModel, GameModel, MageModel, ManaModel, PlayerModel, AnimeUtil, WarriorModel } from "../src";
 import { WispModel } from "./wisp";
 import { boot } from "./boot";
 
@@ -42,9 +42,9 @@ describe('skill', () => {
 
         const promise = charA.child.skill.run();
         await AnimeUtil.sleep();
-        expect(SelectUtil.current?.options).toContain(roleB);
-        expect(SelectUtil.current?.options).toContain(roleA);
-        SelectUtil.set(roleB);
+        expect(playerA.child.controller.current?.options).toContain(roleB);
+        expect(playerA.child.controller.current?.options).toContain(roleA);
+        playerA.child.controller.set(roleB);
         await promise;
 
         expect(roleB.child.health.state.current).toBe(29);

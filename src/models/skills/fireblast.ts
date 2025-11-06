@@ -1,5 +1,5 @@
 import { SkillModel } from ".";
-import { SelectEvent } from "../../utils/select";
+import { SelectEvent } from "../rules/controller";
 import { RoleModel } from "../role";
 import { CostModel } from "../rules/card/cost";
 import { DamageModel } from "../rules/card/damage";

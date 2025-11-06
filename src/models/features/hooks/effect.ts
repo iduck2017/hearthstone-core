@@ -1,6 +1,6 @@
 import { FeatureModel } from "..";
-import { SelectEvent } from "../../../utils/select";
 import { DebugUtil, Model } from "set-piece";
+import { SelectEvent } from "../../rules/controller";
 
 export namespace EffectModel {
     export type E = {};

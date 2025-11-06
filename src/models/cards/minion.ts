@@ -6,8 +6,8 @@ import { MinionDisposeModel } from "./dispose/minion";
 import { CardModel } from ".";
 import { AbortEvent } from "../../types/abort-event";
 import { MinionBattlecryModel } from "../features/hooks/minion-battlecry";
-import { SelectEvent, SelectUtil } from "../../utils/select";
 import { BoardModel } from "./group/board";
+import { SelectEvent } from "../rules/controller";
 
 export namespace MinionCardModel {
     export type S = {
@@ -165,9 +165,12 @@ export abstract class MinionCardModel<
         const to = await this.select();
         if (to === undefined) return;
 
+        const player = this.route.player;
+        if (!player) return;
+
         // battlecry
         const feats = this.child.feats;
-        const battlecry = await MinionBattlecryModel.select(feats.child.battlecry);
+        const battlecry = await MinionBattlecryModel.select(player, feats.child.battlecry);
         if (!battlecry) return;
 
         return [to, { battlecry }];
@@ -180,7 +183,7 @@ export abstract class MinionCardModel<
         const board = player.child.board;
         const size = board.child.minions.length;
         const options = new Array(size + 1).fill(0).map((item, index) => index);
-        const position = await SelectUtil.get(
+        const position = await player.child.controller.get(
             new SelectEvent(options, { desc: (item) => `Deploy ${this.name} at position ${item + 1}` }
         ));
         return position;

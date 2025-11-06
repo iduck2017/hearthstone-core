@@ -67,9 +67,11 @@ export abstract class SpellCardModel<
     }
 
     protected async toUse(): Promise<[SpellHooksOptions] | undefined> {
+        const player = this.route.player;
+        if (!player) return;
         // spell
         const effects = this.child.feats.child.effects;
-        const result = await SpellEffectModel.select(effects);
+        const result = await SpellEffectModel.select(player, effects);
         if (!result) return;
         return [{ effects: result }];
     }

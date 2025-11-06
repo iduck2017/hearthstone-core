@@ -1,6 +1,6 @@
 import { DebugUtil, Event, Method, Model } from "set-piece";
-import { SelectEvent, SelectUtil } from "../../../utils/select";
-import { FeatureModel } from "../../..";
+import { SelectEvent } from "../../rules/controller";
+import { FeatureModel, PlayerModel } from "../../..";
 import { AbortEvent } from "../../../types/abort-event";
 import { CardFeatureModel } from "../card";
 
@@ -27,6 +27,7 @@ export abstract class WeaponBattlecryModel<
     R & WeaponBattlecryModel.R
 > {
     public static async select(
+        player: PlayerModel,
         hooks: Readonly<WeaponBattlecryModel[]>
     ): Promise<Map<WeaponBattlecryModel, Model[]> | undefined> {
         const result = new Map<WeaponBattlecryModel, Model[]>();
@@ -41,7 +42,7 @@ export abstract class WeaponBattlecryModel<
             }
             const params: Model[] = [];
             for (const item of selectors) {
-                const result = await SelectUtil.get(item);
+                const result = await player.child.controller.get(item);
                 // canceled by user
                 if (result === undefined) return;
                 params.push(result);

@@ -8,9 +8,9 @@ import { ManaModel } from "./rules/hero/mana";
 import { HeroModel } from "./heroes";
 import { RoleModel } from "./role";
 import { FeatureModel } from "./features";
-import { SelectUtil } from "../utils/select";
 import { MageModel } from "./heroes/mage";
 import { CollectionModel } from "./cards/group/collection";
+import { ControllerModel } from "./rules/controller";
 
 export enum PlayerType {
     USER = 'user',
@@ -32,6 +32,8 @@ export namespace PlayerModel {
         readonly graveyard: GraveyardModel;
         readonly collection: CollectionModel;
         readonly feats: FeatureModel[];
+        // controller
+        readonly controller: ControllerModel;
     };
     export type R = {}
 }
@@ -115,6 +117,7 @@ export class PlayerModel extends Model<
                 board: child.board ?? new BoardModel(),
                 collection: child.collection ?? new CollectionModel(),
                 graveyard: child.graveyard ?? new GraveyardModel(),
+                controller: child.controller ?? new ControllerModel(),
                 ...child
             },
             refer: { ...props.refer },

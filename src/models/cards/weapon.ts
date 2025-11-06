@@ -96,13 +96,15 @@ export abstract class WeaponCardModel<
     }
 
     protected async toUse(): Promise<[WeaponHooksOptions] | undefined> {
+        const player = this.route.player;
+        if (!player) return;
+
         // battlecry
         const feats = this.child.feats;
-        const battlecry = await WeaponBattlecryModel.select(feats.child.battlecry);
+        const battlecry = await WeaponBattlecryModel.select(player, feats.child.battlecry);
         if (!battlecry) return;
         return [{ battlecry }];
     }
-
 
     
     // equip

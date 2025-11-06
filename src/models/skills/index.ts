@@ -1,5 +1,5 @@
 import { DebugUtil, Event, Method, Model } from "set-piece";
-import { SelectEvent, SelectUtil } from "../../utils/select";
+import { SelectEvent } from "../rules/controller";
 import { PlayerModel } from "../player";
 import { GameModel } from "../game";
 import { CostModel } from "../rules/card/cost";
@@ -95,7 +95,7 @@ export abstract class SkillModel<
         if (!options) return;
         const params: Model[] = [];
         for (const item of options) {
-            const result = await SelectUtil.get(item);
+            const result = await player.child.controller.get(item);
             if (result === undefined) return;
             params.push(result);
         }

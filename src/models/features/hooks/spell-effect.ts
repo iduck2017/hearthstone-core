@@ -1,5 +1,5 @@
 import { Decor, Model } from "set-piece";
-import { CardModel, EffectModel, FeatureModel, RoleModel, SelectEvent, SelectUtil, SpellCardModel } from "../../..";
+import { CardModel, EffectModel, FeatureModel, PlayerModel, RoleModel, SelectEvent, SpellCardModel } from "../../..";
 
 export namespace SpellEffectModel {
     export type E = {};
@@ -76,6 +76,7 @@ export abstract class SpellEffectModel<
     }
 
     public static async select(
+        player: PlayerModel,
         hooks: Readonly<SpellEffectModel[]>
     ): Promise<Map<SpellEffectModel, Model[]> | undefined> {
         const result = new Map<SpellEffectModel, Model[]>();
@@ -85,7 +86,7 @@ export abstract class SpellEffectModel<
             const [key, value] = item;
             const params: any[] = [];
             for (const selector of value) {
-                const result = await SelectUtil.get(selector);
+                const result = await player.child.controller.get(selector);
                 if (result === undefined) return;
                 params.push(result);
             }
