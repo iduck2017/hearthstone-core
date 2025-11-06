@@ -20,7 +20,7 @@ describe('game', () => {
                     }),
                     board: new BoardModel({
                         child: {
-                            minions: [
+                            cards: [
                                 new WispModel(),
                             ]
                         }
@@ -41,7 +41,7 @@ describe('game', () => {
                     }),
                     board: new BoardModel({
                         child: {
-                            minions: [new WispModel()]
+                            cards: [new WispModel()]
                         }
                     }),
                     hero: new MageModel()
@@ -80,7 +80,7 @@ describe('game', () => {
         turn.next();
 
         let card = hand.child.minions[0];
-        expect(board.child.minions.length).toBe(1);
+        expect(board.child.cards.length).toBe(1);
         // expect(board.refer.order.length).toBe(1);
         expect(hand.child.minions.length).toBe(2);
         expect(card).toBeDefined();
@@ -96,8 +96,8 @@ describe('game', () => {
         await promise;
         
         // minions
-        expect(board.child.minions.length).toBe(2);
-        expect(board.child.minions[1]).toBe(card);
+        expect(board.child.cards.length).toBe(2);
+        expect(board.child.cards[1]).toBe(card);
         // order
         // expect(board.refer.order.length).toBe(2);
         // expect(board.refer.order[0]).toBe(card);
@@ -113,7 +113,7 @@ describe('game', () => {
         player.child.controller.set(1);
         await promise;
         // expect(board.refer.order.length).toBe(3);
-        expect(board.child.minions[2]).toBe(card);
+        expect(board.child.cards[2]).toBe(card);
         // expect(board.refer.order[1]).toBe(card);
     })
 })

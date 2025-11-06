@@ -7,13 +7,9 @@ export namespace DeckModel {
     export type E = {}
     export type S = {}
     export type C = {
-        spells: SpellCardModel[],
-        minions: MinionCardModel[],
-        weapons: WeaponCardModel[]
+        cards: CardModel[]
     }
-    export type R = {
-        queue: CardModel[]
-    }
+    export type R = {}
 }
 
 export class DeckModel extends Model<
@@ -23,9 +19,7 @@ export class DeckModel extends Model<
     DeckModel.R
 > {
     public get chunk() {
-        return {
-            size: this.refer.queue.length,
-        }
+        return { size: this.child.cards.length }
     }
 
     constructor(props?: DeckModel['props']) {
@@ -33,46 +27,25 @@ export class DeckModel extends Model<
         super({
             uuid: props.uuid,
             child: { 
-                minions: [],
-                spells: [],
-                weapons: [],
+                cards: props.child?.cards ?? [],
                 ...props.child,
             },
             state: { ...props.state },
-            refer: { 
-                queue: [
-                    ...props.child?.minions ?? [],
-                    ...props.child?.spells ?? [],
-                    ...props.child?.weapons ?? [],
-                ],
-                ...props.refer 
-            }
+            refer: { ...props.refer }
         })
     }
 
     public draw() {
-        const card = this.refer.queue[0];
+        const card = this.child.cards[0];
         if (!card) return;
         card.draw();
         return card;
     }
 
-    public query(card: CardModel): CardModel[] | undefined {
-        if (card instanceof MinionCardModel) return this.origin.child.minions;
-        if (card instanceof SpellCardModel) return this.origin.child.spells;
-        if (card instanceof WeaponCardModel) return this.origin.child.weapons;
-    }
-
     public del(card: CardModel) {
         // remove from cards
-        let cards = this.query(card);
-        if (!cards) return;
-        let index = cards.indexOf(card);
-        if (index !== -1) cards.splice(index, 1);
-        
-        // remove from order
-        const order = this.origin.refer.queue ?? [];
-        index = order.indexOf(card);
-        if (index !== -1) order.splice(index, 1);
+        let index = this.child.cards.findIndex(item => item === card);
+        if (index === -1) return;
+        this.origin.child.cards.splice(index, 1);
     }
 }

@@ -143,7 +143,7 @@ export abstract class CardModel<
         mana.consume(cost.state.current, this);
         // use
         const hand = player.child.hand;
-        const from = hand.refer.queue.indexOf(this);
+        const from = hand.child.cards.indexOf(this);
         if (from === undefined) return;
         hand.drag(this);
         // run

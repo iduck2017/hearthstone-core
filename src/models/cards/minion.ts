@@ -64,7 +64,7 @@ export abstract class MinionCardModel<
         const player = this.route.player;
         const board = player?.child.board;
         if (!board) return false;
-        if (board.refer.queue.length >= 7) return false;
+        if (board.child.cards.length >= 7) return false;
         return true;
     }
 
@@ -99,7 +99,7 @@ export abstract class MinionCardModel<
         const board = this.route.board;
         const self: MinionCardModel = this;
         if (board) {
-            const index = board.refer.queue.indexOf(self);
+            const index = board.child.cards.indexOf(self);
             board.del(self);
             board.add(target, index);
         }
@@ -181,7 +181,7 @@ export abstract class MinionCardModel<
         if (!player) return;
 
         const board = player.child.board;
-        const size = board.child.minions.length;
+        const size = board.child.cards.length;
         const options = new Array(size + 1).fill(0).map((item, index) => index);
         const position = await player.child.controller.get(
             new SelectEvent(options, { desc: (item) => `Deploy ${this.name} at position ${item + 1}` }

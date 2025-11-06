@@ -17,7 +17,7 @@ describe('skill', () => {
                     mana: new ManaModel({ state: { origin: 10 }}),
                     hero: new WarriorModel({}),
                     board: new BoardModel({
-                        child: { minions: [new WispModel()] }
+                        child: { cards: [new WispModel()] }
                     }),
                 }
             }),

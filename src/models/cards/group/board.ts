@@ -1,4 +1,4 @@
-import { Model, TranxUtil } from "set-piece";
+import { Model } from "set-piece";
 import { GameModel, PlayerModel } from "../../..";
 import { MinionCardModel } from "../minion";
 import { CardModel } from "..";
@@ -10,12 +10,10 @@ export namespace BoardModel {
     export type S = {};
     export type C = {
         weapon?: WeaponCardModel;
-        readonly minions: MinionCardModel[]
+        readonly cards: CardModel[]
         readonly secrets: SecretCardModel[]
     };
-    export type R = {
-        readonly queue: CardModel[];
-    };
+    export type R = {};
 }
 
 export class BoardModel extends Model<
@@ -35,8 +33,9 @@ export class BoardModel extends Model<
 
     public get chunk() {
         return {
-            cards: this.refer.queue.map(item => item.chunk),
-            size: this.refer.queue.length,
+            weapon: this.child.weapon?.chunk,
+            cards: this.child.cards.map(item => item.chunk),
+            size: this.child.cards.length,
         }
     }
 
@@ -46,37 +45,31 @@ export class BoardModel extends Model<
             uuid: props.uuid,
             state: {},
             child: { 
-                minions: [],
+                cards: [],
                 secrets: [],
                 ...props.child,
             },
-            refer: { 
-                queue: props.child?.minions ?? [],
-                ...props.refer
-            },
+            refer: { ...props.refer },
         })
-    }
-
-    private query(card: CardModel): CardModel[] | undefined {
-        if (card instanceof MinionCardModel) return this.origin.child.minions;
-        if (card instanceof SecretCardModel) return this.origin.child.secrets;
     }
 
     public add(card: CardModel, position?: number): void {
         if (card instanceof WeaponCardModel) {
             this.origin.child.weapon = card;
-            return;
         }
-        let cards = this.query(card);
-        if (!cards) return;
-        cards.push(card);
-
-        if (card instanceof MinionCardModel) {
+        else if (card instanceof SecretCardModel) {
+            const that: SecretCardModel = card;
+            const secrets = this.origin.child.secrets ?? [];
+            if (position === -1) position = secrets.length;
+            if (position === undefined) position = secrets.length;
+            secrets.splice(position, 0, that);
+        }
+        else if (card instanceof MinionCardModel) {
             const that: MinionCardModel = card;
-            const queue = this.origin.refer.queue ?? [];
-            if (position === -1) position = queue.length;
-            if (position === undefined) position = queue.length;
-            queue.splice(position, 0, that);
+            const cards = this.origin.child.cards ?? [];
+            if (position === -1) position = cards.length;
+            if (position === undefined) position = cards.length;
+            cards.splice(position, 0, that);
         }
     }
 
@@ -84,15 +77,18 @@ export class BoardModel extends Model<
     public del(card: CardModel) {
         if (card instanceof WeaponCardModel) {
             this.origin.child.weapon = undefined;
-            return;
         }
-        let cards = this.query(card);
-        if (!cards) return;
-        let index = cards.indexOf(card);
-        if (index !== -1) cards.splice(index, 1);
-        
-        const queue = this.origin.refer.queue ?? [];
-        index = queue.indexOf(card);
-        if (index !== -1) queue.splice(index, 1);
+        else if (card instanceof SecretCardModel) {
+            const that: SecretCardModel = card;
+            const secrets = this.origin.child.secrets ?? [];
+            const index = secrets.indexOf(that);
+            if (index !== -1) secrets.splice(index, 1);
+        }
+        else if (card instanceof MinionCardModel) {
+            const that: MinionCardModel = card;
+            const cards = this.origin.child.cards ?? [];
+            const index = cards.indexOf(that);
+            if (index !== -1) cards.splice(index, 1);
+        }
     }
 }

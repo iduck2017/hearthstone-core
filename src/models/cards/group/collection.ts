@@ -38,25 +38,12 @@ export class CollectionModel extends Model<
     }
 
     public apply(): DeckModel {
-        const queue = this.child.cards
+        const cards = this.child.cards
             .map(item => TemplUtil.copy(item))
             .filter(item => item !== undefined)
             .sort((a, b) => Math.random() - 0.5);
-        const spells: SpellCardModel[] = [];
-        const minions: MinionCardModel[] = [];
-        const weapons: WeaponCardModel[] = [];
-        for (const card of queue) {
-            if (card instanceof SpellCardModel) spells.push(card);
-            if (card instanceof MinionCardModel) minions.push(card);
-            if (card instanceof WeaponCardModel) weapons.push(card);
-        }
         return new DeckModel({
-            child: {
-                spells,
-                minions,
-                weapons,
-            },
-            refer: { queue }
+            child: { cards },
         })
     }
 }

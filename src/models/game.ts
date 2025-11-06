@@ -65,7 +65,7 @@ export class GameModel extends Model<
         const playerA = this.child.playerA;
         const handA = playerA.child.hand;
         const deckA = playerA.child.deck;
-        const cardsA = deckA.refer.queue.slice(0, 3);
+        const cardsA = deckA.child.cards.slice(0, 3);
         for (const card of cardsA) {
             deckA.del(card);
             handA.add(card);
@@ -74,7 +74,7 @@ export class GameModel extends Model<
         const handB = playerB.child.hand;
         const deckB = playerB.child.deck;
         handB.add(new TheCoinModel());
-        const cardsB = deckB.refer.queue.slice(0, 4);
+        const cardsB = deckB.child.cards.slice(0, 4);
         for (const card of cardsB) {
             deckB.del(card);
             handB.add(card);

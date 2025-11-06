@@ -23,18 +23,9 @@ export namespace CostModel {
 
 export class CostDecor extends Decor<CostModel.S> {
 
-
     private operations: Operator[] = [];
     public get result() {
         const result = { ...this._origin };
-        // buff
-        // const buffs = this.operations
-        //     .filter(item => item.reason instanceof ICostBuffModel)
-        //     .sort((a, b) => a.reason.uuid.localeCompare(b.reason.uuid));
-        // buffs.forEach(item => {
-        //     if (item.type === OperationType.ADD) result.current += item.value;
-        //     if (item.type === OperationType.SET) result.current = item.value;
-        // })
         const items = this.operations; // .filter(item => !(item.reason instanceof IRoleBuffModel));
         // plus first
         items.sort((a, b) => {
@@ -42,7 +33,6 @@ export class CostDecor extends Decor<CostModel.S> {
             if (a.offset < 0 && b.offset > 0) return 1;
             return 0;
         })
-        // plus: 最大值小的优先执行，没有最大值则最后执行
         items.sort((a, b) => {
             if (a.offset < 0 || b.offset < 0) return 0;
             if (a.maximum === undefined) return 1;
@@ -50,7 +40,6 @@ export class CostDecor extends Decor<CostModel.S> {
             if (a.maximum < b.maximum) return -1;
             return 0;
         })
-        // minus: 最小值大的优先执行，没有最小值则最后执行
         items.sort((a, b) => {
             if (a.offset > 0 || b.offset > 0) return 0;
             if (a.minumum === undefined) return -1;
@@ -58,7 +47,6 @@ export class CostDecor extends Decor<CostModel.S> {
             if (a.minumum > b.minumum) return -1;
             return 0;
         })
-        // set: 最后执行
         items.sort((a, b) => {
             if (a.type === OperatorType.SET) return -1;
             if (b.type === OperatorType.SET) return 1;
@@ -87,33 +75,6 @@ export class CostDecor extends Decor<CostModel.S> {
     }
 }
 
-// export class CostDecor extends Decor<CostModel.S> {
-    
-//     private isFree = false;
-//     private laneAuraGt0: number[] = [];
-//     private laneAuraGt1: number[] = [];
-
-//     public get result() {
-//         const result = { ...this._origin }
-//         this.laneAuraGt0.forEach(item => {
-//             if (result.current + item < 0) result.current = 0;
-//             else result.current += item;
-//         });
-//         this.laneAuraGt1.forEach(item => {
-//             if (result.current + item < 1) return;
-//             else result.current += item;
-//         });
-//         if (this.isFree) result.current = 0;
-//         return result;
-//     }
-
-//     public add(value: number, isLimit?: boolean) {
-//         if (isLimit) this.laneAuraGt1.push(value);
-//         else this.laneAuraGt0.push(value);
-//     }
-
-//     public free() { this.isFree = true; }
-// }
 
 @TemplUtil.is('cost')
 export class CostModel extends Model<
