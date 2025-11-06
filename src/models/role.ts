@@ -42,19 +42,19 @@ export class RoleModel extends Model<
 
     public get route() {
         const result = super.route;
-        const card: CardModel | undefined = result.list.find(item => item instanceof CardModel);
-        const minion: MinionCardModel | undefined = result.list.find(item => item instanceof MinionCardModel);
+        const card: CardModel | undefined = result.items.find(item => item instanceof CardModel);
+        const minion: MinionCardModel | undefined = result.items.find(item => item instanceof MinionCardModel);
         return {
             ...result,
-            game: result.list.find(item => item instanceof GameModel),
-            player: result.list.find(item => item instanceof PlayerModel),
-            hero: result.list.find(item => item instanceof HeroModel),
+            game: result.items.find(item => item instanceof GameModel),
+            player: result.items.find(item => item instanceof PlayerModel),
+            hero: result.items.find(item => item instanceof HeroModel),
             card,
             minion,
-            board: result.list.find(item => item instanceof BoardModel),
-            deck: result.list.find(item => item instanceof DeckModel),
-            graveyard: result.list.find(item => item instanceof GraveyardModel),
-            hand: result.list.find(item => item instanceof HandModel),
+            board: result.items.find(item => item instanceof BoardModel),
+            deck: result.items.find(item => item instanceof DeckModel),
+            graveyard: result.items.find(item => item instanceof GraveyardModel),
+            hand: result.items.find(item => item instanceof HandModel),
         }
     }
 

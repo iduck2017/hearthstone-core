@@ -28,8 +28,8 @@ export abstract class MinionBattlecryModel<
 > {
     public get route() {
         const result = super.route;
-        const card: CardModel | undefined = result.list.find(item => item instanceof CardModel);
-        const minion: MinionCardModel | undefined = result.list.find(item => item instanceof MinionCardModel);
+        const card: CardModel | undefined = result.items.find(item => item instanceof CardModel);
+        const minion: MinionCardModel | undefined = result.items.find(item => item instanceof MinionCardModel);
         return {
             ...result,
             card,

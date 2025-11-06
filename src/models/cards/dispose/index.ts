@@ -82,9 +82,9 @@ export abstract class DisposeModel<
         const result = super.route;
         return {
             ...result,
-            player: result.list.find(item => item instanceof PlayerModel),
-            board: result.list.find(item => item instanceof BoardModel),
-            graveyard: result.list.find(item => item instanceof GraveyardModel),
+            player: result.items.find(item => item instanceof PlayerModel),
+            board: result.items.find(item => item instanceof BoardModel),
+            graveyard: result.items.find(item => item instanceof GraveyardModel),
         }
     }
     

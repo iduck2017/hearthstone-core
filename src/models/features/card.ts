@@ -18,15 +18,15 @@ export abstract class CardFeatureModel<
 
     public get route() {
         const result = super.route;
-        const card: CardModel | undefined = result.list.find(item => item instanceof CardModel);
+        const card: CardModel | undefined = result.items.find(item => item instanceof CardModel);
         return {
             ...result,
             card,
-            board: result.list.find(item => item instanceof BoardModel),
-            hand: result.list.find(item => item instanceof HandModel),
-            deck: result.list.find(item => item instanceof DeckModel),
-            graveyard: result.list.find(item => item instanceof GraveyardModel),
-            collection: result.list.find(item => item instanceof CollectionModel),
+            board: result.items.find(item => item instanceof BoardModel),
+            hand: result.items.find(item => item instanceof HandModel),
+            deck: result.items.find(item => item instanceof DeckModel),
+            graveyard: result.items.find(item => item instanceof GraveyardModel),
+            collection: result.items.find(item => item instanceof CollectionModel),
         }
     }
 

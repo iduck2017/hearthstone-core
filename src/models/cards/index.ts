@@ -81,12 +81,12 @@ export abstract class CardModel<
         const result = super.route;
         return {
             ...result,
-            hand: result.list.find(item => item instanceof HandModel),
-            player: result.list.find(item => item instanceof PlayerModel),
-            deck: result.list.find(item => item instanceof DeckModel),
-            board: result.list.find(item => item instanceof BoardModel),
-            graveyard: result.list.find(item => item instanceof GraveyardModel),
-            game: result.list.find(item => item instanceof GameModel),
+            hand: result.items.find(item => item instanceof HandModel),
+            player: result.items.find(item => item instanceof PlayerModel),
+            deck: result.items.find(item => item instanceof DeckModel),
+            board: result.items.find(item => item instanceof BoardModel),
+            graveyard: result.items.find(item => item instanceof GraveyardModel),
+            game: result.items.find(item => item instanceof GameModel),
         }
     }
 

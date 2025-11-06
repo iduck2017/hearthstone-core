@@ -29,7 +29,7 @@ export class TurnModel extends Model<
         const result = super.route;
         return {
             ...result,
-            game: result.list.find(item => item instanceof GameModel),
+            game: result.items.find(item => item instanceof GameModel),
         }
     }
 

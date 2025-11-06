@@ -57,11 +57,11 @@ export class RoleHealthModel extends Model<
 > {
     public get route() {
         const result = super.route;
-        const hero: HeroModel | undefined = result.list.find(item => item instanceof HeroModel);
-        const minion: MinionCardModel | undefined = result.list.find(item => item instanceof MinionCardModel);
+        const hero: HeroModel | undefined = result.items.find(item => item instanceof HeroModel);
+        const minion: MinionCardModel | undefined = result.items.find(item => item instanceof MinionCardModel);
         return {
             ...result,
-            role: result.list.find(item => item instanceof RoleModel),
+            role: result.items.find(item => item instanceof RoleModel),
             hero,
             minion,
         }

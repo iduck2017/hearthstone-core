@@ -24,7 +24,7 @@ export abstract class SecretFeatureModel<
 > {
     public get route() {
         const result = super.route;
-        const secret: SecretCardModel | undefined = result.list.find(item => item instanceof SecretCardModel)
+        const secret: SecretCardModel | undefined = result.items.find(item => item instanceof SecretCardModel)
         return {
             ...result,
             secret

@@ -25,7 +25,7 @@ export abstract class EndTurnHookModel<
 > {
     public get route() {
         const result = super.route;
-        const card: CardModel | undefined = result.list.find(item => item instanceof CardModel);
+        const card: CardModel | undefined = result.items.find(item => item instanceof CardModel);
         return {
             ...result,
             card,

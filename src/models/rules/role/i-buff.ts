@@ -44,7 +44,7 @@ export abstract class IRoleBuffModel<
         const result = super.route;
         return {
             ...result,
-            role: result.list.find(item => item instanceof RoleModel)
+            role: result.items.find(item => item instanceof RoleModel)
         }
     }
 

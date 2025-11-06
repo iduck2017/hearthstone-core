@@ -6,7 +6,7 @@ import { WeaponCardModel } from "../../..";
 export class WeaponDisposeModel extends DisposeModel {
     public get route() {
         const result = super.route;
-        const weapon: WeaponCardModel | undefined = result.list.find(item => item instanceof WeaponCardModel);
+        const weapon: WeaponCardModel | undefined = result.items.find(item => item instanceof WeaponCardModel);
         return {
             ...result,
             weapon,

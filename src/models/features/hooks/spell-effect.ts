@@ -43,8 +43,8 @@ export abstract class SpellEffectModel<
 
     public get route() {
         const result = super.route;
-        const card: CardModel | undefined = result.list.find(item => item instanceof CardModel);
-        const spell: SpellCardModel | undefined = result.list.find(item => item instanceof SpellCardModel);
+        const card: CardModel | undefined = result.items.find(item => item instanceof CardModel);
+        const spell: SpellCardModel | undefined = result.items.find(item => item instanceof SpellCardModel);
         return {
             ...result,
             card,

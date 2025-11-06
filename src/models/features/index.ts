@@ -30,8 +30,8 @@ export abstract class FeatureModel<
         const result = super.route;
         return {
             ...result,
-            player: result.list.find(item => item instanceof PlayerModel),
-            game: result.list.find(item => item instanceof GameModel),
+            player: result.items.find(item => item instanceof PlayerModel),
+            game: result.items.find(item => item instanceof GameModel),
         }
     }
 

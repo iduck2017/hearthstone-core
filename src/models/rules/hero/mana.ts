@@ -26,7 +26,7 @@ export class ManaModel extends Model<
         const result = super.route;
         return {
             ...result,
-            player: result.list.find(item => item instanceof PlayerModel),
+            player: result.items.find(item => item instanceof PlayerModel),
         }
     }
 

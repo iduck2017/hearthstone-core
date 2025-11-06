@@ -32,9 +32,9 @@ export class WeaponActionModel extends Model<
 
     public get route() {
         const result = super.route;
-        const weapon: WeaponCardModel | undefined = result.list.find(item => item instanceof WeaponCardModel);
-        const game: GameModel | undefined = result.list.find(item => item instanceof GameModel);
-        const player: PlayerModel | undefined = result.list.find(item => item instanceof PlayerModel);
+        const weapon: WeaponCardModel | undefined = result.items.find(item => item instanceof WeaponCardModel);
+        const game: GameModel | undefined = result.items.find(item => item instanceof GameModel);
+        const player: PlayerModel | undefined = result.items.find(item => item instanceof PlayerModel);
         return {
             ...result,
             weapon,

@@ -50,9 +50,9 @@ export abstract class SkillModel<
         const result = super.route;
         return {
             ...result,
-            player: result.list.find(item => item instanceof PlayerModel),
-            game: result.list.find(item => item instanceof GameModel),
-            hero: result.list.find(item => item instanceof HeroModel),
+            player: result.items.find(item => item instanceof PlayerModel),
+            game: result.items.find(item => item instanceof GameModel),
+            hero: result.items.find(item => item instanceof HeroModel),
         }
     }
 

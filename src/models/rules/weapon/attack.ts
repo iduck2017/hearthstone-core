@@ -31,10 +31,10 @@ export class WeaponAttackModel extends Model<
         const result = super.route;
         return {
             ...result,
-            weapon: result.list.find(item => item instanceof WeaponCardModel),
-            player: result.list.find(item => item instanceof PlayerModel),
-            game: result.list.find(item => item instanceof GameModel),
-            board: result.list.find(item => item instanceof BoardModel),
+            weapon: result.items.find(item => item instanceof WeaponCardModel),
+            player: result.items.find(item => item instanceof PlayerModel),
+            game: result.items.find(item => item instanceof GameModel),
+            board: result.items.find(item => item instanceof BoardModel),
         }
     }
 

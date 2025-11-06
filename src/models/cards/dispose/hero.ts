@@ -7,9 +7,9 @@ export class HeroDisposeModel extends DisposeModel {
         const result = super.route;
         return {
             ...result,
-            hero: result.list.find(item => item instanceof HeroModel),
-            player: result.list.find(item => item instanceof PlayerModel),
-            app: result.list.find(item => item instanceof AppModel),
+            hero: result.items.find(item => item instanceof HeroModel),
+            player: result.items.find(item => item instanceof PlayerModel),
+            app: result.items.find(item => item instanceof AppModel),
         }
     }
 

@@ -43,11 +43,11 @@ export class RoleActionModel extends Model<
         const result = super.route;
         return {
             ...result,
-            role: result.list.find(item => item instanceof RoleModel),
-            game: result.list.find(item => item instanceof GameModel),
-            player: result.list.find(item => item instanceof PlayerModel),
-            card: result.list.find(item => item instanceof CardModel),
-            hero: result.list.find(item => item instanceof HeroModel),
+            role: result.items.find(item => item instanceof RoleModel),
+            game: result.items.find(item => item instanceof GameModel),
+            player: result.items.find(item => item instanceof PlayerModel),
+            card: result.items.find(item => item instanceof CardModel),
+            hero: result.items.find(item => item instanceof HeroModel),
         }
     }
 

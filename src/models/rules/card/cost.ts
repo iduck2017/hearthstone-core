@@ -128,8 +128,8 @@ export class CostModel extends Model<
         const result = super.route;
         return {
             ...result,
-            player: result.list.find(item => item instanceof PlayerModel),
-            card: result.list.find(item => item instanceof CardModel),
+            player: result.items.find(item => item instanceof PlayerModel),
+            card: result.items.find(item => item instanceof CardModel),
         }
     }
 
