@@ -6,7 +6,7 @@ import { TheCoinModel } from "..";
 export namespace GameModel {
     export type S = {
         readonly debug?: {
-            readonly isDrawDisabled: boolean;
+            readonly isDrawDisabled?: boolean;
         }
     };
     export type E = {

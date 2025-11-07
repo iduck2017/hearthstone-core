@@ -122,9 +122,7 @@ export class RoleAttackModel extends Model<
         if (!opponent) return;
 
         const board = opponent.child.board;
-        let options: RoleModel[] = board.child.cards
-            .map(item => item instanceof MinionCardModel ? item.child.role : undefined)
-            .filter(item => item !== undefined);
+        let options: RoleModel[] = board.refer.minions.map(item => item.child.role);
         if (!sleep.state.isActive || charge.state.isActive) {
             options.push(opponent.child.hero.child.role);
         }

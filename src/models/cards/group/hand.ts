@@ -59,8 +59,8 @@ export class HandModel extends Model<
    
     @TranxUtil.span()
     public add(card: CardModel, position?: number, options?: {
-        isClone: boolean
-        isProto: boolean
+        isClone?: boolean
+        isProto?: boolean
     }) {
         if (position === -1) position = this.child.cards.length;
         if (position === undefined) position = this.child.cards.length;
@@ -71,24 +71,24 @@ export class HandModel extends Model<
             if (!copy) return;
             card = copy;
         }
-        this.origin.child.current.splice(position, 0, card);
+        this.origin.child.cards.splice(position, 0, card);
     }
 
     @TranxUtil.span()
     public drag(card: CardModel) {
-        const index = this.child.current.indexOf(card);
+        const index = this.child.cards.indexOf(card);
         if (index === -1) return;
-        this.origin.child.current.splice(index, 1);
+        this.origin.child.cards.splice(index, 1);
         this.origin.child.current.push(card);
     }
 
     @TranxUtil.span()
     public drop(card: CardModel): boolean {
         // remove from cache
-        const cache = this.origin.child.cards ?? [];
-        let index = cache.indexOf(card);
+        const current = this.origin.child.current ?? [];
+        let index = current.indexOf(card);
         if (index === -1) return false;
-        cache.splice(index, 1);
+        current.splice(index, 1);
         return true;
     }
 

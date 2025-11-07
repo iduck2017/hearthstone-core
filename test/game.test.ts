@@ -12,7 +12,7 @@ describe('game', () => {
                     hand: new HandModel(),
                     deck: new DeckModel({
                         child: { 
-                            minions: [
+                            cards: [
                                 new WispModel(),
                                 new WispModel(),
                             ]
@@ -33,7 +33,7 @@ describe('game', () => {
                     hand: new HandModel(),
                     deck: new DeckModel({
                         child: { 
-                            minions: [
+                            cards: [
                                 new WispModel(),
                                 new WispModel()
                             ]
@@ -64,25 +64,25 @@ describe('game', () => {
     })
 
     test('draw-card', async () => {
-        expect(deck.child.minions.length).toBe(2);
-        expect(hand.child.minions.length).toBe(0);
+        expect(deck.child.cards.length).toBe(2);
+        expect(hand.child.cards.length).toBe(0);
         let card = deck.draw();
         expect(card).toBeDefined();
-        expect(deck.child.minions.length).toBe(1);
-        expect(hand.child.minions.length).toBe(1);
+        expect(deck.child.cards.length).toBe(1);
+        expect(hand.child.cards.length).toBe(1);
 
         card = deck.draw();
-        expect(deck.child.minions.length).toBe(0);
-        expect(hand.child.minions.length).toBe(2);
+        expect(deck.child.cards.length).toBe(0);
+        expect(hand.child.cards.length).toBe(2);
     })
 
     test('play-card', async () => {
         turn.next();
 
-        let card = hand.child.minions[0];
+        let card = hand.child.cards[0];
         expect(board.child.cards.length).toBe(1);
         // expect(board.refer.order.length).toBe(1);
-        expect(hand.child.minions.length).toBe(2);
+        expect(hand.child.cards.length).toBe(2);
         expect(card).toBeDefined();
 
         let promise = card?.play();
@@ -97,14 +97,11 @@ describe('game', () => {
         
         // minions
         expect(board.child.cards.length).toBe(2);
-        expect(board.child.cards[1]).toBe(card);
-        // order
-        // expect(board.refer.order.length).toBe(2);
-        // expect(board.refer.order[0]).toBe(card);
+        expect(board.child.cards[0]).toBe(card);
         // hand
-        expect(hand.child.minions.length).toBe(1);
+        expect(hand.child.cards.length).toBe(1);
 
-        card = hand.child.minions[0];
+        card = hand.child.cards[0];
         promise = card?.play();
         await AnimeUtil.sleep();
         selector = player.child.controller.current;
@@ -113,7 +110,7 @@ describe('game', () => {
         player.child.controller.set(1);
         await promise;
         // expect(board.refer.order.length).toBe(3);
-        expect(board.child.cards[2]).toBe(card);
+        expect(board.child.cards[1]).toBe(card);
         // expect(board.refer.order[1]).toBe(card);
     })
 })

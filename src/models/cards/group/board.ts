@@ -39,6 +39,18 @@ export class BoardModel extends Model<
         }
     }
 
+    public get refer() {
+        const child = super.child;
+        const refer = super.refer;
+        const minions: MinionCardModel[] = child.cards
+            .map(item => item instanceof MinionCardModel ? item : undefined)
+            .filter(item => item !== undefined);
+        return {
+            ...refer,
+            minions,
+        }
+    }
+
     constructor(props?: BoardModel['props']) {
         props = props ?? {};
         super({

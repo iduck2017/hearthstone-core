@@ -177,8 +177,9 @@ export abstract class CardModel<
         if (!player) return false;
         DebugUtil.log(`${this.name} Drew`);
         const deck = player.child.deck;
+        const hand = player.child.hand;
         deck.del(this);
-        player.child.hand.add(this);
+        hand.add(this);
         return true;
     }
 

@@ -135,7 +135,7 @@ export class PlayerModel extends Model<
     }
 
     public query(isMinion?: boolean): RoleModel[] {
-        const minions = this.child.board.child.cards.filter(item => !item.child.dispose.status);
+        const minions = this.child.board.refer.minions.filter(item => !item.child.dispose?.status);
         const roles = minions.map(item => item.child.role);
         if (isMinion) return roles;
         return [this.child.hero.child.role, ...roles];
