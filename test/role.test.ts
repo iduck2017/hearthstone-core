@@ -69,7 +69,7 @@ describe('role', () => {
 
         expect(cardC.child.health.state.current).toBe(1);
         expect(cardC.child.dispose.status).toBe(false);
-        expect(cardC.child.attack.state.current).toBe(0);
+        expect(cardC.child.action.state.current).toBe(0);
     })
 
     test('wisp-attack', async () => {
@@ -83,19 +83,19 @@ describe('role', () => {
         expect(selector.options).toContain(heroA);
         expect(selector?.options).toContain(cardC);
         expect(selector?.options.length).toBe(2);
-        playerB.child.controller.set(heroA);
+        playerB.child.controller.set(cardC);
         await promise;
         
-        expect(heroA.child.health.state.current).toBe(0);
-        expect(heroA.child.health.state.damage).toBe(1);
-        expect(heroA.child.health.state.maximum).toBe(1);
+        expect(cardC.child.health.state.current).toBe(0);
+        expect(cardC.child.health.state.damage).toBe(1);
+        expect(cardC.child.health.state.maximum).toBe(1);
         expect(cardC.child.dispose.status).toBe(true);
 
         expect(cardD.child.health.state.current).toBe(0);
         expect(cardD.child.health.state.damage).toBe(1);
         expect(cardD.child.health.state.maximum).toBe(1);
         expect(cardD.child.dispose.status).toBe(true);
-        expect(cardD.child.attack.state.current).toBe(0);
+        expect(cardD.child.action.state.current).toBe(0);
 
         expect(boardA.child.cards.length).toBe(0);
         expect(boardB.child.cards.length).toBe(0);

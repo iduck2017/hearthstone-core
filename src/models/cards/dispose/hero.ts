@@ -5,9 +5,10 @@ import { AppModel, CardModel, HeroModel, PlayerModel } from "../../..";
 export class HeroDisposeModel extends DisposeModel {
     public get route() {
         const result = super.route;
+        const hero: HeroModel | undefined = result.items.find(item => item instanceof HeroModel);
         return {
             ...result,
-            hero: result.items.find(item => item instanceof HeroModel),
+            hero,
             player: result.items.find(item => item instanceof PlayerModel),
             app: result.items.find(item => item instanceof AppModel),
         }
@@ -26,8 +27,7 @@ export class HeroDisposeModel extends DisposeModel {
     public get status(): boolean {
         const hero = this.route.hero;
         if (!hero) return true;
-        const role = hero.child.role;
-        const health = role.child.health;
+        const health = hero.child.health;
         if (health.state.current <= 0) return true;
         return false;
     }
