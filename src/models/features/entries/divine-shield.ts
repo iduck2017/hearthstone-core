@@ -1,7 +1,7 @@
 import { DebugUtil, Event, TemplUtil, TranxUtil } from "set-piece";
 import { DamageEvent } from "../../../types/damage-event";
 import { FeatureModel } from "..";
-import { RoleFeatureModel } from "../role";
+import { MinionFeatureModel } from "../minion";
 
 export namespace DivineShieldModel {
     export type E = {
@@ -16,7 +16,7 @@ export namespace DivineShieldModel {
 }
 
 @TemplUtil.is('divine-shield')
-export class DivineShieldModel extends RoleFeatureModel<
+export class DivineShieldModel extends MinionFeatureModel<
     DivineShieldModel.E,
     DivineShieldModel.S,
     DivineShieldModel.C,

@@ -2,14 +2,15 @@ import { Model } from "set-piece";
 import { CardFeaturesModel } from "./group/card";
 import { FeatureModel } from ".";
 import { CardModel } from "../cards";
+import { CardFeatureModel } from "./card";
 import { BoardModel, CollectionModel, DeckModel, GraveyardModel, HandModel, HeroModel, MinionCardModel } from "../..";
 
-export abstract class RoleFeatureModel<
+export abstract class MinionFeatureModel<
     E extends Partial<CardFeaturesModel.E> & Model.E = {},
     S extends Partial<CardFeaturesModel.S> & Model.S = {},
     C extends Partial<CardFeaturesModel.C> & Model.C = {},
     R extends Partial<CardFeaturesModel.R> & Model.R = {},
-> extends FeatureModel<E, S, C, R> {
+> extends CardFeatureModel<E, S, C, R> {
 
     protected get status(): boolean {
         if (!this.route.minion) return false;
@@ -36,7 +37,7 @@ export abstract class RoleFeatureModel<
         }
     }
 
-    constructor(props: RoleFeatureModel['props'] & {
+    constructor(props: MinionFeatureModel['props'] & {
         uuid: string | undefined;
         state: S & FeatureModel.S;
         child: C;

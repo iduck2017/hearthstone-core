@@ -1,5 +1,5 @@
 import { Model, TemplUtil } from "set-piece";
-import { ChargeModel, DivineShieldModel, ElusiveModel, FeatureModel, FrozenModel, IRoleBuffModel, MinionBattlecryModel, OverhealModel, RoleFeatureModel, RushModel, StealthModel, TauntModel, WindfuryModel } from "../../..";
+import { ChargeModel, DivineShieldModel, ElusiveModel, FeatureModel, FrozenModel, IRoleBuffModel, MinionBattlecryModel, MinionFeatureModel, OverhealModel, RushModel, StealthModel, TauntModel, WindfuryModel } from "../../..";
 import { DeathrattleModel } from "../../..";
 import { StartTurnHookModel } from "../../..";
 import { EndTurnHookModel } from "../../..";
@@ -19,7 +19,6 @@ export namespace MinionFeaturesModel {
         readonly divineShield: DivineShieldModel;
         // feats
         readonly buffs: IRoleBuffModel[];
-        readonly items: RoleFeatureModel[];
         // hooks
         readonly overheal: OverhealModel[];
         readonly endTurn: EndTurnHookModel[];
@@ -88,5 +87,19 @@ export class MinionFeaturesModel extends CardFeaturesModel<
         if (feat instanceof StartTurnHookModel) return this.origin.child.startTurn;
         if (feat instanceof EndTurnHookModel) return this.origin.child.endTurn;
         return this.origin.child.items;
+    }
+
+    public add(feat: FeatureModel) {
+        let feats = this.query(feat);
+        if (!feats) return;
+        feats.push(feat);
+    }
+
+    public del(feat: FeatureModel) {
+        let feats = this.query(feat);
+        if (!feats) return;
+        const index = feats.indexOf(feat);
+        if (index == -1) return;
+        feats.splice(index, 1);
     }
 }

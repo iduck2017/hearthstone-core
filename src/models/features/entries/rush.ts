@@ -1,5 +1,5 @@
 import { DebugUtil, Event, TemplUtil } from "set-piece";
-import { RoleFeatureModel } from "../role";
+import { MinionFeatureModel } from "../minion";
 
 export namespace RushModel {
     export type E = {};
@@ -9,7 +9,7 @@ export namespace RushModel {
 }
 
 @TemplUtil.is('rush')
-export class RushModel extends RoleFeatureModel<
+export class RushModel extends MinionFeatureModel<
     RushModel.E,
     RushModel.S,
     RushModel.C,

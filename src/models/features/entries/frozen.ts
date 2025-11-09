@@ -1,6 +1,6 @@
 import { DebugUtil, Event, TemplUtil } from "set-piece";
 import { FeatureModel } from "..";
-import { RoleFeatureModel } from "../role";
+import { MinionFeatureModel } from "../minion";
 
 export namespace FrozenModel {
     export type E = {}
@@ -9,7 +9,7 @@ export namespace FrozenModel {
 }
 
 @TemplUtil.is('frozen')
-export class FrozenModel extends RoleFeatureModel<
+export class FrozenModel extends MinionFeatureModel<
     FrozenModel.E,
     FrozenModel.S,
     FrozenModel.C

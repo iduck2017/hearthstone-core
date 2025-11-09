@@ -1,6 +1,6 @@
 import { DebugUtil, Event, TemplUtil } from "set-piece";
 import { FeatureModel } from "..";
-import { RoleFeatureModel } from "../role";
+import { MinionFeatureModel } from "../minion";
 
 export namespace ElusiveModel {
     export type E = {}
@@ -10,7 +10,7 @@ export namespace ElusiveModel {
 }
 
 @TemplUtil.is('elusive')
-export class ElusiveModel extends RoleFeatureModel<
+export class ElusiveModel extends MinionFeatureModel<
     ElusiveModel.E,
     ElusiveModel.S,
     ElusiveModel.C,

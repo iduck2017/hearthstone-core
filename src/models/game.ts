@@ -1,7 +1,7 @@
 import { DebugUtil, Event, Method, Model, TemplUtil, TranxUtil } from "set-piece";
 import { PlayerModel } from "./player";
 import { TurnModel } from "./rules/turn";
-import { TheCoinModel } from "..";
+import { MinionCardModel, RoleModel, TheCoinModel } from "..";
 
 export namespace GameModel {
     export type S = {
@@ -81,13 +81,20 @@ export class GameModel extends Model<
         }
     }
 
+    public query(isMinion: true): MinionCardModel[];
+    public query(): RoleModel[];
     public query(isMinion?: boolean) {
         const playerA = this.child.playerA;
         const playerB = this.child.playerB;
-        const minions = [
-            ...playerA.query(isMinion),
-            ...playerB.query(isMinion)
-        ];
-        return minions;
+        if (isMinion) {
+            return [
+                ...playerA.query(true),
+                ...playerB.query(true)
+            ];
+        }
+        return [
+            ...playerA.query(),
+            ...playerB.query()
+        ]
     }
 }

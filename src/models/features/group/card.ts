@@ -7,7 +7,7 @@ export namespace CardFeaturesModel {
     export type S = {};
     export type C = {
         readonly poisonous: PoisonousModel;
-        readonly feats: CardFeatureModel[];
+        readonly items: CardFeatureModel[];
     };
     export type R = {};
 }
@@ -24,7 +24,7 @@ export abstract class CardFeaturesModel<
     R & CardFeaturesModel.R
 > {
     public get chunk() {
-        const feats = this.child.feats.map(item => item.chunk).filter(Boolean);
+        const feats = this.child.items.map(item => item.chunk).filter(Boolean);
         return {
             poisonous: this.child.poisonous.state.isActive || undefined,
             feats: feats.length ? feats : undefined,
@@ -41,7 +41,7 @@ export abstract class CardFeaturesModel<
             state: { ...props.state },
             child: {    
                 poisonous: props.child.poisonous ?? new PoisonousModel({ state: { isActive: false }}),
-                feats: props.child.feats ?? [],
+                items: props.child.items ?? [],
                 ...props.child 
             },
             refer: { ...props.refer },

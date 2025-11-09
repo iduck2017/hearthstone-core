@@ -1,6 +1,6 @@
 import { Decor, Event, StateUtil, TemplUtil, TranxUtil } from "set-piece";
 import { RoleActionModel, RoleActionDecor } from "../../rules/role/action";
-import { RoleFeatureModel } from "../role";
+import { MinionFeatureModel } from "../minion";
 
 export namespace WindfuryModel {
     export type E = {};
@@ -12,7 +12,7 @@ export namespace WindfuryModel {
 }
 
 @TemplUtil.is('windfury')
-export class WindfuryModel extends RoleFeatureModel<
+export class WindfuryModel extends MinionFeatureModel<
     WindfuryModel.E,
     WindfuryModel.S,
     WindfuryModel.C,

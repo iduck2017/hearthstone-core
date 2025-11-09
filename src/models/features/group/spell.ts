@@ -56,6 +56,6 @@ export class SpellFeaturesModel extends CardFeaturesModel<
     }
     
     protected query(feat: FeatureModel): FeatureModel[] | undefined {
-        return this.origin.child.feats;
+        return this.origin.child.items;
     }
 }

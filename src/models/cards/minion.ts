@@ -87,7 +87,7 @@ export abstract class MinionCardModel<
             uuid: props.uuid,
             state: { ...props.state },
             child: { 
-                sleep: props.child.sleep ?? new SleepModel({ state: { isActive: false }}),
+                sleep: props.child.sleep ?? new SleepModel(),
                 health: props.child.health ?? new RoleHealthModel(),
                 attack: props.child.attack ?? new RoleAttackModel(),
                 action: props.child.action ?? new RoleActionModel(),

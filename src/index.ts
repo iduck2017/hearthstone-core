@@ -65,7 +65,7 @@ export { PoisonousModel } from "./models/features/entries/poisonous";
 // features
 export { FeatureModel } from './models/features'
 export { CardFeatureModel } from './models/features/card';
-export { RoleFeatureModel } from './models/features/role';
+export { MinionFeatureModel } from './models/features/minion';
 export { SecretFeatureModel } from "./models/features/secret";
 export { IRoleBuffModel } from "./models/rules/role/i-buff";
 export { RoleBuffModel } from "./models/rules/role/buff";
@@ -97,3 +97,4 @@ export { OperatorType, Operator } from "./types/operator";
 export { AbortEvent } from "./types/abort-event";
 
 export { TheCoinModel } from "./models/cards/the-coin";
+export { RoleModel } from "./models/features/group/hero";

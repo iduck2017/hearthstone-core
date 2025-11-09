@@ -1,6 +1,6 @@
 import { Event, TemplUtil } from "set-piece";
 import { FeatureModel } from "..";
-import { RoleFeatureModel } from "../role";
+import { MinionFeatureModel } from "../minion";
 
 export namespace ChargeModel {
     export type E = {}
@@ -10,7 +10,7 @@ export namespace ChargeModel {
 }
 
 @TemplUtil.is('charge')
-export class ChargeModel extends RoleFeatureModel<
+export class ChargeModel extends MinionFeatureModel<
     ChargeModel.E,
     ChargeModel.S,
     ChargeModel.C,

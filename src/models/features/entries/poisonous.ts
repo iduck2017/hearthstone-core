@@ -1,6 +1,6 @@
 import { DebugUtil, Event, TemplUtil } from "set-piece"
 import { FeatureModel } from ".."
-import { RoleFeatureModel } from "../role"
+import { MinionFeatureModel } from "../minion"
 
 export namespace PoisonousModel {  
     export type E = {
@@ -12,7 +12,7 @@ export namespace PoisonousModel {
 }
 
 @TemplUtil.is('poisonous')
-export class PoisonousModel extends RoleFeatureModel<
+export class PoisonousModel extends MinionFeatureModel<
     PoisonousModel.E,
     PoisonousModel.S,
     PoisonousModel.C,

@@ -72,4 +72,20 @@ export class HeroFeaturesModel extends Model<
     protected query(feat: FeatureModel): FeatureModel[] | undefined {
         return this.origin.child.items;
     }
+
+    
+
+    public add(feat: FeatureModel) {
+        let feats = this.query(feat);
+        if (!feats) return;
+        feats.push(feat);
+    }
+
+    public del(feat: FeatureModel) {
+        let feats = this.query(feat);
+        if (!feats) return;
+        const index = feats.indexOf(feat);
+        if (index == -1) return;
+        feats.splice(index, 1);
+    }
 }

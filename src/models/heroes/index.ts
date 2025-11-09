@@ -5,6 +5,7 @@ import { DamageModel, OverhealModel, RestoreModel, RoleAttackModel, RoleHealthMo
 import { HeroDisposeModel } from "../cards/dispose/hero";
 import { HeroFeaturesModel } from "../features/group/hero";
 import { RoleActionModel } from "../rules/role/action";
+import { PlayerModel } from "../player";
 
 export namespace HeroModel {
     export type E = {};
@@ -35,6 +36,15 @@ export abstract class HeroModel<
     C & HeroModel.C,
     R & HeroModel.R
 > {
+    public get route() {
+        const result = super.route;
+        const player: PlayerModel | undefined = result.items.find(item => item instanceof PlayerModel);
+        return {
+            ...result,
+            player
+        }
+    }
+
     constructor(props: HeroModel['props'] & {
         state: S & HeroModel.S;
         child: C & Pick<HeroModel.C, 'skill'>;
@@ -45,7 +55,7 @@ export abstract class HeroModel<
             state: { ...props.state },
             child: {
                 overheal: [],
-                sleep: props.child.sleep ?? new SleepModel({ state: { isActive: false }}),
+                sleep: props.child.sleep ?? new SleepModel(),
                 health: props.child.health ?? new RoleHealthModel(),
                 attack: props.child.attack ?? new RoleAttackModel(),
                 action: props.child.action ?? new RoleActionModel(),

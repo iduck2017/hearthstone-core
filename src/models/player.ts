@@ -11,6 +11,7 @@ import { MageModel } from "./heroes/mage";
 import { CollectionModel } from "./cards/group/collection";
 import { ControllerModel } from "./rules/controller";
 import { RoleModel } from "./features/group/hero";
+import { MinionCardModel } from "./cards/minion";
 
 export enum PlayerType {
     USER = 'user',
@@ -136,6 +137,8 @@ export class PlayerModel extends Model<
         this.origin.child.feats.splice(index, 1);
     }
 
+    public query(isMinion: true): MinionCardModel[];
+    public query(): RoleModel[];
     public query(isMinion?: boolean): RoleModel[] {
         const minions = this.child.board.refer.minions.filter(item => !item.child.dispose?.status);
         const roles = minions.map(item => item);

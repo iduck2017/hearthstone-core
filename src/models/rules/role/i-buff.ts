@@ -2,7 +2,7 @@ import { RoleAttackDecor, RoleAttackModel } from "./attack";
 import { RoleHealthDecor, RoleHealthModel } from "./health";
 import { OperatorType } from "../../../types/operator";
 import { Model, StateUtil, TemplUtil } from "set-piece";
-import { RoleFeatureModel } from "../../features/role";
+import { MinionFeatureModel } from "../../features/minion";
 import { FeatureModel } from "../../features";
 import { HeroModel } from "../../heroes";
 import { MinionCardModel } from "../../cards/minion";
@@ -21,7 +21,7 @@ export abstract class IRoleBuffModel<
     S extends Partial<IRoleBuffModel.S & FeatureModel.S> & Model.S = {},
     C extends Partial<IRoleBuffModel.C & FeatureModel.C> & Model.C = {},
     R extends Partial<IRoleBuffModel.R & FeatureModel.R> & Model.R = {}
-> extends RoleFeatureModel<
+> extends MinionFeatureModel<
     E & IRoleBuffModel.E,
     S & IRoleBuffModel.S,
     C & IRoleBuffModel.C,
