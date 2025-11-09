@@ -35,70 +35,67 @@ describe('role', () => {
     const boardB = playerB.child.board;
     const cardC = boardA.child.cards.find(item => item instanceof WispModel);
     const cardD = boardB.child.cards.find(item => item instanceof WispModel);
-    const roleC = cardC?.child.role;
-    const roleD = cardD?.child.role;
-    const roleA = playerA.child.hero.child.role;
-    const roleB = playerB.child.hero.child.role;
     const turn = game.child.turn;
-    if (!roleC || !roleD) throw new Error()
+    const heroA = playerA.child.hero;
+    const heroB = playerB.child.hero;
+    if (!cardC || !cardD) throw new Error()
 
     test('initial-state', () => {
         // roleB
-        expect(roleD.child.action.state.current).toBe(1);
+        expect(cardD.child.attack.state.current).toBe(1);
         // roleA
-        expect(roleC.child.action.state.current).toBe(1);
-        expect(roleC.child.health.state.current).toBe(1);
-        expect(roleC.child.health.state.damage).toBe(0);
-        expect(roleC.child.health.state.maximum).toBe(1);
-        expect(roleC.child.attack.state.current).toBe(1);
+        expect(cardC.child.attack.state.current).toBe(1);
+        expect(cardC.child.health.state.current).toBe(1);
+        expect(cardC.child.health.state.damage).toBe(0);
+        expect(cardC.child.health.state.maximum).toBe(1);
         expect(cardC.child.dispose.status).toBe(false);
     })
 
     test('wisp-attack', async () => {
-        const promise = roleC.child.action.run();
+        const promise = cardC.child.action.run();
         await AnimeUtil.sleep();
         const selector = playerA.child.controller.current;
         expect(selector).toBeDefined();
         if (!selector) return;
-        expect(selector.options).toContain(roleB);
-        expect(selector?.options).toContain(roleD);
+        expect(selector.options).toContain(heroB);
+        expect(selector?.options).toContain(cardD);
         expect(selector?.options.length).toBe(2);
-        playerA.child.controller.set(roleB);
+        playerA.child.controller.set(heroB);
         await promise;
 
-        expect(roleB.child.health.state.current).toBe(29);
-        expect(roleB.child.health.state.damage).toBe(1);
-        expect(roleB.child.health.state.maximum).toBe(30);
+        expect(heroB.child.health.state.current).toBe(29);
+        expect(heroB.child.health.state.damage).toBe(1);
+        expect(heroB.child.health.state.maximum).toBe(30);
 
-        expect(roleC.child.health.state.current).toBe(1);
+        expect(cardC.child.health.state.current).toBe(1);
         expect(cardC.child.dispose.status).toBe(false);
-        expect(roleC.child.action.state.current).toBe(0);
+        expect(cardC.child.attack.state.current).toBe(0);
     })
 
     test('wisp-attack', async () => {
         turn.next();
 
-        const promise = roleD.child.action.run();
+        const promise = cardD.child.action.run();
         await AnimeUtil.sleep();
         const selector = playerB.child.controller.current;
         expect(selector).toBeDefined();
         if (!selector) return;
-        expect(selector.options).toContain(roleA);
-        expect(selector?.options).toContain(roleC);
+        expect(selector.options).toContain(heroA);
+        expect(selector?.options).toContain(cardC);
         expect(selector?.options.length).toBe(2);
-        playerB.child.controller.set(roleC);
+        playerB.child.controller.set(heroA);
         await promise;
         
-        expect(roleC.child.health.state.current).toBe(0);
-        expect(roleC.child.health.state.damage).toBe(1);
-        expect(roleC.child.health.state.maximum).toBe(1);
+        expect(heroA.child.health.state.current).toBe(0);
+        expect(heroA.child.health.state.damage).toBe(1);
+        expect(heroA.child.health.state.maximum).toBe(1);
         expect(cardC.child.dispose.status).toBe(true);
 
-        expect(roleD.child.health.state.current).toBe(0);
-        expect(roleD.child.health.state.damage).toBe(1);
-        expect(roleD.child.health.state.maximum).toBe(1);
+        expect(cardD.child.health.state.current).toBe(0);
+        expect(cardD.child.health.state.damage).toBe(1);
+        expect(cardD.child.health.state.maximum).toBe(1);
         expect(cardD.child.dispose.status).toBe(true);
-        expect(roleD.child.action.state.current).toBe(0);
+        expect(cardD.child.attack.state.current).toBe(0);
 
         expect(boardA.child.cards.length).toBe(0);
         expect(boardB.child.cards.length).toBe(0);

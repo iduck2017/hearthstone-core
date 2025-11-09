@@ -1,9 +1,11 @@
 import { RoleAttackDecor, RoleAttackModel } from "./attack";
 import { RoleHealthDecor, RoleHealthModel } from "./health";
-import { FeatureModel, RoleModel } from "../../..";
 import { OperatorType } from "../../../types/operator";
 import { Model, StateUtil, TemplUtil } from "set-piece";
 import { RoleFeatureModel } from "../../features/role";
+import { FeatureModel } from "../../features";
+import { HeroModel } from "../../heroes";
+import { MinionCardModel } from "../../cards/minion";
 
 export namespace IRoleBuffModel {
     export type S = {
@@ -42,9 +44,13 @@ export abstract class IRoleBuffModel<
 
     public get route() {
         const result = super.route;
+        const hero: HeroModel | undefined = result.items.find(item => item instanceof HeroModel);
+        const minion: MinionCardModel | undefined = result.items.find(item => item instanceof MinionCardModel);
         return {
             ...result,
-            role: result.items.find(item => item instanceof RoleModel)
+            role: hero ?? minion,
+            hero,
+            minion,
         }
     }
 

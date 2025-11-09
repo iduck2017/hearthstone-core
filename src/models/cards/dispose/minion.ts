@@ -1,7 +1,6 @@
 import { DebugUtil, Model, TranxUtil } from "set-piece";
 import { DisposeModel } from ".";
-import { MinionCardModel, PlayerModel } from "../../..";
-
+import { MinionCardModel } from "../../..";
 
 export class MinionDisposeModel extends DisposeModel {
     public get route() {
@@ -16,8 +15,7 @@ export class MinionDisposeModel extends DisposeModel {
     public get status(): boolean {
         const minion = this.route.minion;
         if (!minion) return true;
-        const role = minion.child.role;
-        const health = role.child.health;
+        const health = minion.child.health;
         if (health.state.current <= 0) return true;
         return super.status || false;
     }

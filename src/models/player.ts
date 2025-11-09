@@ -6,11 +6,11 @@ import { DeckModel } from "./cards/group/deck";
 import { GraveyardModel } from "./cards/group/graveyard";
 import { ManaModel } from "./rules/hero/mana";
 import { HeroModel } from "./heroes";
-import { RoleModel } from "./role";
 import { FeatureModel } from "./features";
 import { MageModel } from "./heroes/mage";
 import { CollectionModel } from "./cards/group/collection";
 import { ControllerModel } from "./rules/controller";
+import { RoleModel } from "./features/group/hero";
 
 export enum PlayerType {
     USER = 'user',
@@ -62,7 +62,9 @@ export class PlayerModel extends Model<
     public get chunk() {
         const feats = this.child.feats.map(item => item.chunk).filter(Boolean);
         return {
-            role: this.child.hero.child.role.chunk,
+            attack: this.child.hero.child.attack.chunk,
+            health: this.child.hero.child.health.chunk,
+            action: this.child.hero.child.action.chunk,
             armor: this.child.hero.child.armor.state.current,
             skill: this.child.hero.child.skill.chunk,
             mana: this.child.mana.chunk,
@@ -136,11 +138,10 @@ export class PlayerModel extends Model<
 
     public query(isMinion?: boolean): RoleModel[] {
         const minions = this.child.board.refer.minions.filter(item => !item.child.dispose?.status);
-        const roles = minions.map(item => item.child.role);
+        const roles = minions.map(item => item);
         if (isMinion) return roles;
-        return [this.child.hero.child.role, ...roles];
+        return [this.child.hero, ...roles];
     }
-
 
 }
 

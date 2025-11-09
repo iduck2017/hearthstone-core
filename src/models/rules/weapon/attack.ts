@@ -81,7 +81,7 @@ export class WeaponAttackModel extends Model<
 
     @StateUtil.on(self => self.modifyAttack)
     private listenAttack() {
-        return this.route.player?.proxy.child.hero.child.role.child.attack.decor;
+        return this.route.player?.proxy.child.hero.child.attack.decor;
     }
     private modifyAttack(that: RoleAttackModel, decor: RoleAttackDecor) {
         if (!this.status) return;

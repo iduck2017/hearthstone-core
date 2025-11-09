@@ -29,25 +29,23 @@ describe('skill', () => {
     const boardB = playerB.child.board;
     const handA = playerA.child.hand;
     const handB = playerB.child.hand;
-    const charA = playerA.child.hero;
-    const charB = playerB.child.hero;
-    const roleA = charA.child.role;
-    const roleB = charB.child.role;
-    if (!roleA || !roleB) throw new Error();
+    const heroA = playerA.child.hero;
+    const heroB = playerB.child.hero;
+    if (!heroA || !heroB) throw new Error();
 
     test('fireblast', async () => {
-        expect(roleA.child.health.state.current).toBe(30);
-        expect(roleB.child.health.state.current).toBe(30);
+        expect(heroA.child.health.state.current).toBe(30);
+        expect(heroB.child.health.state.current).toBe(30);
         expect(playerA.child.mana.state.current).toBe(10);
 
-        const promise = charA.child.skill.run();
+        const promise = heroA.child.skill.run();
         await AnimeUtil.sleep();
-        expect(playerA.child.controller.current?.options).toContain(roleB);
-        expect(playerA.child.controller.current?.options).toContain(roleA);
-        playerA.child.controller.set(roleB);
+        expect(playerA.child.controller.current?.options).toContain(heroB);
+        expect(playerA.child.controller.current?.options).toContain(heroA);
+        playerA.child.controller.set(heroB);
         await promise;
 
-        expect(roleB.child.health.state.current).toBe(29);
+        expect(heroB.child.health.state.current).toBe(29);
         expect(playerA.child.mana.state.current).toBe(8);
     })
 })

@@ -1,5 +1,5 @@
 import { DebugUtil, Decor, Event, EventUtil, Frame, Method, Model, StateUtil, TemplUtil, TranxUtil } from "set-piece";
-import { RoleModel, MinionCardModel, GameModel, PlayerModel, CardModel, HeroModel, IRoleBuffModel } from "../../..";
+import { MinionCardModel, GameModel, PlayerModel, CardModel, HeroModel, IRoleBuffModel } from "../../..";
 import { DamageEvent } from "../../../types/damage-event";
 import { RestoreEvent } from "../../../types/restore-event";
 import { OperatorType } from "../../../types/operator";
@@ -61,7 +61,7 @@ export class RoleHealthModel extends Model<
         const minion: MinionCardModel | undefined = result.items.find(item => item instanceof MinionCardModel);
         return {
             ...result,
-            role: result.items.find(item => item instanceof RoleModel),
+            role: hero ?? minion,
             hero,
             minion,
         }

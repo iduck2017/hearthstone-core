@@ -1,8 +1,9 @@
 import { DebugUtil, Decor, Event, Method, Model, StateUtil, TemplUtil } from "set-piece";
-import { DamageEvent, DamageModel, MinionCardModel, RoleModel, GameModel, PlayerModel, HeroModel, WeaponCardModel, IRoleBuffModel, Selector } from "../../..";
+import { DamageEvent, DamageModel, MinionCardModel, GameModel, PlayerModel, HeroModel, WeaponCardModel, IRoleBuffModel, Selector } from "../../..";
 import { DamageType } from "../../../types/damage-event";
 import { Operator, OperatorType } from "../../../types/operator";
 import { AbortEvent } from "../../../types/abort-event";
+import { RoleModel } from "../../features/group/hero";
 
 export namespace RoleAttackModel {
     export type E = {
@@ -55,13 +56,15 @@ export class RoleAttackModel extends Model<
 > {
     public get route() {
         const result = super.route;
+        const hero: HeroModel | undefined = result.items.find(item => item instanceof HeroModel);
+        const minion: MinionCardModel | undefined = result.items.find(item => item instanceof MinionCardModel);
         return {
             ...result,
-            role: result.items.find(item => item instanceof RoleModel),
-            minion: result.items.find(item => item instanceof MinionCardModel),
-            hero: result.items.find(item => item instanceof HeroModel),
+            role: hero ?? minion,
             game: result.items.find(item => item instanceof GameModel),
             player: result.items.find(item => item instanceof PlayerModel),
+            hero,
+            minion,
         }
     }
 
@@ -92,7 +95,8 @@ export class RoleAttackModel extends Model<
         return true;
     }
 
-    constructor(props: RoleAttackModel['props']) {
+    constructor(props?: RoleAttackModel['props']) {
+        props = props ?? {};
         super({
             uuid: props.uuid,
             state: { 
@@ -110,9 +114,10 @@ export class RoleAttackModel extends Model<
         if (!game) return;
 
         const role = this.route.role;
+        const minion = this.route.minion;
         if (!role) return;
-        const entries = role.child.feats;
-        const charge = entries.child.charge;
+
+        const charge = minion ? minion.child.feats.child.charge : undefined;
         const sleep = role.child.sleep;
 
         const player = this.route.player;
@@ -122,9 +127,9 @@ export class RoleAttackModel extends Model<
         if (!opponent) return;
 
         const board = opponent.child.board;
-        let options: RoleModel[] = board.refer.minions.map(item => item.child.role);
-        if (!sleep.state.isActive || charge.state.isActive) {
-            options.push(opponent.child.hero.child.role);
+        let options: RoleModel[] = board.refer.minions;
+        if (!sleep.state.isActive || charge?.state.isActive) {
+            options.push(opponent.child.hero);
         }
 
         const tauntOptions = options.filter(item => {
@@ -164,9 +169,6 @@ export class RoleAttackModel extends Model<
         const healthB = roleB.child.health;
         if (healthB.state.current <= 0) return;
 
-        const sourceA = roleA.route.card ?? roleA.route.hero;
-        const sourceB = roleB.route.card ?? roleB.route.hero;
-        if (!sourceA || !sourceB) return;
 
         DebugUtil.log(`${roleA.name} Attack ${roleB.name}`);
         // execute
@@ -175,14 +177,14 @@ export class RoleAttackModel extends Model<
                 target: roleB,
                 method: this,
                 type: DamageType.ATTACK,
-                source: sourceA,
+                source: roleA,
                 origin: this.state.current,
             }),
             new DamageEvent({
                 target: roleA,
                 method: this,
                 type: DamageType.DEFEND,
-                source: sourceB,
+                source: roleB,
                 origin: attackB.state.current,
             }),
         ])

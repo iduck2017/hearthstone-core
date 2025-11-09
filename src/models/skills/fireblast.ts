@@ -1,10 +1,12 @@
 import { SkillModel } from ".";
 import { Selector } from "../rules/selector";
-import { RoleModel } from "../role";
 import { CostModel } from "../rules/card/cost";
 import { DamageModel } from "../rules/card/damage";
 import { DamageEvent, DamageType } from "../../types/damage-event";
 import { TemplUtil } from "set-piece";
+import { HeroModel } from "../heroes";
+import { MinionCardModel } from "../cards/minion";
+import { RoleModel } from "../features/group/hero";
 
 @TemplUtil.is('fireblast')
 export class FireBlastModel extends SkillModel<[RoleModel]> {

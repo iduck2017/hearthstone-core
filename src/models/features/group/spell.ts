@@ -1,17 +1,19 @@
-import { Event, Model } from "set-piece";
-import { FeatureModel, RoleModel, SpellEffectDecor, SpellEffectModel } from "../../..";
+import { Model } from "set-piece";
+import { FeatureModel, HeroModel, MinionCardModel, SpellEffectModel } from "../../..";
 import { CardFeaturesModel } from "./card";
 import { AbortEvent } from "../../../types/abort-event";
+import { RoleModel } from "./hero";
 
 export type SpellHooksOptions = {
     effects: Map<SpellEffectModel, Model[]>;
 }
 
 export class SpellCastEvent extends AbortEvent<{ options: SpellHooksOptions }> {
-    public redirect(role: RoleModel) {
+    public redirect(target: RoleModel) {
         this._detail.options.effects.forEach((value, key) => {
             value.forEach((item, index) => {
-                if (item instanceof RoleModel) value[index] = role;
+                if (item instanceof MinionCardModel) value[index] = target;
+                if (item instanceof HeroModel) value[index] = target;
             })
         })
     }

@@ -1,5 +1,5 @@
 import { Decor, Model } from "set-piece";
-import { CardModel, EffectModel, FeatureModel, PlayerModel, RoleModel, Selector, SpellCardModel } from "../../..";
+import { CardModel, EffectModel, FeatureModel, HeroModel, MinionCardModel, PlayerModel, Selector, SpellCardModel } from "../../..";
 
 export namespace SpellEffectModel {
     export type E = {};
@@ -52,7 +52,7 @@ export abstract class SpellEffectModel<
         }
     }
 
-    public static check(
+    public static status(
         hooks: Readonly<SpellEffectModel[]>
     ): Map<SpellEffectModel, Selector[]> | undefined {
         const result = new Map<SpellEffectModel, Selector[]>();
@@ -62,7 +62,7 @@ export abstract class SpellEffectModel<
             for (const item of selectors) {
                 item.desc = hook.state.desc;
                 item.exclude(item => {
-                    if (!(item instanceof RoleModel)) return true;
+                    if (!(item instanceof MinionCardModel || item instanceof HeroModel)) return false;
                     const elusive = item.child.feats.child.elusive;
                     // exclude elusive
                     if (elusive.state.isActive) return false;
@@ -80,7 +80,7 @@ export abstract class SpellEffectModel<
         hooks: Readonly<SpellEffectModel[]>
     ): Promise<Map<SpellEffectModel, Model[]> | undefined> {
         const result = new Map<SpellEffectModel, Model[]>();
-        const selectors = SpellEffectModel.check(hooks);
+        const selectors = SpellEffectModel.status(hooks);
         if (!selectors) return;
         for (const item of selectors) {
             const [key, value] = item;

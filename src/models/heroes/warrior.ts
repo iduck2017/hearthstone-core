@@ -1,4 +1,3 @@
-import { RoleModel } from "../role";
 import { RoleHealthModel } from "../rules/role/health";
 import { RoleAttackModel } from "../rules/role/attack";
 import { PlayerModel } from "../player";
@@ -14,12 +13,8 @@ export class WarriorModel extends HeroModel {
             uuid: props.uuid,
             state: { ...props.state },
             child: {
-                role: props.child?.role ?? new RoleModel({
-                    child: {
-                        health: new RoleHealthModel({ state: { origin: 30 }}),
-                        attack: new RoleAttackModel({ state: { origin: 0 }}),
-                    },
-                }),
+                health: new RoleHealthModel({ state: { origin: 30 }}),
+                attack: new RoleAttackModel({ state: { origin: 0 }}),
                 skill: props.child?.skill ?? new ArmorUpModel(),
                 ...props.child,
             },

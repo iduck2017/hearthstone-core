@@ -1,5 +1,5 @@
-import { DebugUtil, Decor, Event, Model, StateUtil, TranxUtil } from "set-piece";
-import { RoleModel, PlayerModel, GameModel, CardModel, HeroModel } from "../../..";
+import { Decor, Event, Model, TranxUtil } from "set-piece";
+import { PlayerModel, GameModel, CardModel, HeroModel, MinionCardModel } from "../../..";
 import { AbortEvent } from "../../../types/abort-event";
 
 export namespace RoleActionModel {
@@ -41,13 +41,16 @@ export class RoleActionModel extends Model<
 
     public get route() {
         const result = super.route;
+        const hero: HeroModel | undefined = result.items.find(item => item instanceof HeroModel);
+        const minion: MinionCardModel | undefined = result.items.find(item => item instanceof MinionCardModel);
         return {
             ...result,
-            role: result.items.find(item => item instanceof RoleModel),
             game: result.items.find(item => item instanceof GameModel),
             player: result.items.find(item => item instanceof PlayerModel),
             card: result.items.find(item => item instanceof CardModel),
-            hero: result.items.find(item => item instanceof HeroModel),
+            role: hero ?? minion,
+            hero,
+            minion
         }
     }
 
@@ -76,21 +79,24 @@ export class RoleActionModel extends Model<
         const turn = game.child.turn;
         const player = this.route.player;
         if (turn.refer.current !== player) return false;
+
         const role = this.route.role;
         if (!role) return false;
 
+        const minion = this.route.minion;
+        const rush = minion ? minion.child.feats.child.rush : undefined;
+        const charge = minion ? minion.child.feats.child.charge : undefined;
+
         const entries = role.child.feats;
-        const rush = entries.child.rush;
         const sleep = role.child.sleep;
         const attack = role.child.attack;
         const frozen = entries.child.frozen;
-        const charge = entries.child.charge;
 
         if (frozen.state.isActive) return false;
         if (
             sleep.state.isActive &&
-            !charge.state.isActive &&
-            !rush.state.isActive
+            !charge?.state.isActive &&
+            !rush?.state.isActive
         ) return false;
         
         if (!attack.status) return false;

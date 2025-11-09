@@ -1,8 +1,8 @@
 import { Event, Model } from "set-piece";
-import { RoleModel } from "../models/role";
 import { DamageModel } from "../models/rules/card/damage";
-import { CardModel, HeroModel } from "..";
+import { CardModel, HeroModel, MinionCardModel } from "..";
 import { AbortEvent } from "./abort-event";
+import { RoleModel } from "../models/features/group/hero";
 
 export enum DamageType {
     DEFAULT = 0,

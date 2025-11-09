@@ -1,4 +1,3 @@
-import { RoleModel } from "../role";
 import { RoleAttackModel } from "../rules/role/attack";
 import { RoleHealthModel } from "../rules/role/health";
 import { FireBlastModel } from "../skills/fireblast";
@@ -13,12 +12,8 @@ export class MageModel extends HeroModel {
             uuid: props.uuid,
             state: { ...props.state },
             child: {
-                role: props.child?.role ?? new RoleModel({ 
-                    child: {
-                        health: new RoleHealthModel({ state: { origin: 30 }}),
-                        attack: new RoleAttackModel({ state: { origin: 0 }}),
-                    },
-                }),
+                health: new RoleHealthModel({ state: { origin: 30 }}),
+                attack: new RoleAttackModel({ state: { origin: 0 }}),
                 skill: props.child?.skill ?? new FireBlastModel(),
                 ...props.child,
             },

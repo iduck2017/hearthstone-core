@@ -1,5 +1,5 @@
 import { Model, TemplUtil } from "set-piece";
-import { FeatureModel, MinionBattlecryModel } from "../../..";
+import { ChargeModel, DivineShieldModel, ElusiveModel, FeatureModel, FrozenModel, IRoleBuffModel, MinionBattlecryModel, OverhealModel, RoleFeatureModel, RushModel, StealthModel, TauntModel, WindfuryModel } from "../../..";
 import { DeathrattleModel } from "../../..";
 import { StartTurnHookModel } from "../../..";
 import { EndTurnHookModel } from "../../..";
@@ -9,6 +9,19 @@ export namespace MinionFeaturesModel {
     export type E = {};
     export type S = {};
     export type C = {
+        readonly rush: RushModel;
+        readonly taunt: TauntModel;
+        readonly charge: ChargeModel;
+        readonly frozen: FrozenModel;
+        readonly stealth: StealthModel;
+        readonly elusive: ElusiveModel;
+        readonly windfury: WindfuryModel;
+        readonly divineShield: DivineShieldModel;
+        // feats
+        readonly buffs: IRoleBuffModel[];
+        readonly items: RoleFeatureModel[];
+        // hooks
+        readonly overheal: OverhealModel[];
         readonly endTurn: EndTurnHookModel[];
         readonly startTurn: StartTurnHookModel[];
         readonly battlecry: MinionBattlecryModel[];
@@ -48,10 +61,21 @@ export class MinionFeaturesModel extends CardFeaturesModel<
             uuid: props?.uuid,
             state: { ...props?.state },
             child: { 
+                buffs: [],
+                items: [],
                 endTurn: [],
                 startTurn: [],
                 battlecry: [],
                 deathrattle: [],
+                overheal: [],
+                rush: props?.child?.rush ?? new RushModel({ state: { isActive: false }}),
+                taunt: props?.child?.taunt ?? new TauntModel({ state: { isActive: false }}),
+                charge: props?.child?.charge ?? new ChargeModel({ state: { isActive: false }}),
+                frozen: props?.child?.frozen ?? new FrozenModel({ state: { isActive: false }}),
+                stealth: props?.child?.stealth ?? new StealthModel({ state: { isActive: false }}),
+                elusive: props?.child?.elusive ?? new ElusiveModel({ state: { isActive: false }}),
+                windfury: props?.child?.windfury ?? new WindfuryModel({ state: { isActive: false }}),
+                divineShield: props?.child?.divineShield ?? new DivineShieldModel({ state: { isActive: false }}),
                 ...props?.child 
             },
             refer: { ...props?.refer },
@@ -63,6 +87,6 @@ export class MinionFeaturesModel extends CardFeaturesModel<
         if (feat instanceof DeathrattleModel) return this.origin.child.deathrattle;
         if (feat instanceof StartTurnHookModel) return this.origin.child.startTurn;
         if (feat instanceof EndTurnHookModel) return this.origin.child.endTurn;
-        return this.origin.child.feats;
+        return this.origin.child.items;
     }
 }

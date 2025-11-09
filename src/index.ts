@@ -43,7 +43,6 @@ export { WeaponCardModel } from "./models/cards/weapon";
 // game
 export { AppModel } from "./models/app";
 export { PlayerModel, PlayerType } from "./models/player";
-export { RoleModel } from "./models/role";
 export { GameModel } from "./models/game";
 export { HandModel } from "./models/cards/group/hand";
 export { BoardModel } from "./models/cards/group/board";
@@ -52,7 +51,6 @@ export { GraveyardModel } from "./models/cards/group/graveyard";
 export { CollectionModel } from "./models/cards/group/collection";
 
 // entries
-export { RoleFeaturesModel } from "./models/features/group/role";
 export { FrozenModel } from "./models/features/entries/frozen";
 export { RushModel } from "./models/features/entries/rush";
 export { ChargeModel } from "./models/features/entries/charge";

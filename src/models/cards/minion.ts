@@ -1,13 +1,16 @@
 import { Event, Method, State, TranxUtil, Model, DebugUtil } from "set-piece";
 import { MinionHooksOptions, MinionFeaturesModel } from "../features/group/minion";
 import { RaceType } from "../../types/card-enums";
-import { RoleModel } from "../role";
 import { MinionDisposeModel } from "./dispose/minion";
 import { CardModel } from ".";
 import { AbortEvent } from "../../types/abort-event";
 import { MinionBattlecryModel } from "../features/hooks/minion-battlecry";
 import { BoardModel } from "./group/board";
 import { Selector } from "../rules/selector";
+import { SleepModel } from "../rules/role/sleep";
+import { RoleHealthModel } from "../rules/role/health";
+import { RoleAttackModel } from "../rules/role/attack";
+import { RoleActionModel } from "../rules/role/action";
 
 export namespace MinionCardModel {
     export type S = {
@@ -18,9 +21,12 @@ export namespace MinionCardModel {
         readonly onSilence: Event;
     };
     export type C = {
-        readonly feats: MinionFeaturesModel;
-        readonly role: RoleModel;
+        readonly sleep: SleepModel;
+        readonly health: RoleHealthModel;
+        readonly attack: RoleAttackModel;
+        readonly action: RoleActionModel;
         readonly dispose: MinionDisposeModel
+        readonly feats: MinionFeaturesModel;
     };
     export type R = {};
 }
@@ -46,14 +52,17 @@ export abstract class MinionCardModel<
         if (board || hand) {
             return {
                 ...result,
-                role: this.child.role.chunk,
+                attack: this.child.attack.chunk,
+                health: this.child.health.chunk,
+                action: this.child.action.chunk,
+                sleep: (this.child.sleep.state.isActive && Boolean(board)) || undefined,
                 races: races.length ? races : undefined,
             }
         }
         return {
             ...result,
-            attack: this.child.role.child.attack.state.origin,
-            health: this.child.role.child.health.state.origin,
+            attack: this.child.attack.state.origin,
+            health: this.child.health.state.origin,
             races: races.length ? races : undefined,
         }
     }
@@ -71,13 +80,17 @@ export abstract class MinionCardModel<
     constructor(props: MinionCardModel['props'] & {
         uuid: string | undefined;
         state: S & State<Omit<CardModel.S, 'isActive'> & MinionCardModel.S>;
-        child: C & Pick<MinionCardModel.C, 'role'> & Pick<CardModel.C, 'cost'>;
+        child: C & Pick<CardModel.C, 'cost'>;
         refer: R;
     }) {
         super({
             uuid: props.uuid,
             state: { ...props.state },
             child: { 
+                sleep: props.child.sleep ?? new SleepModel({ state: { isActive: false }}),
+                health: props.child.health ?? new RoleHealthModel(),
+                attack: props.child.attack ?? new RoleAttackModel(),
+                action: props.child.action ?? new RoleActionModel(),
                 feats: props.child.feats ?? new MinionFeaturesModel(),
                 dispose: props.child.dispose ?? new MinionDisposeModel(),
                 ...props.child 
@@ -116,22 +129,23 @@ export abstract class MinionCardModel<
     @TranxUtil.span()
     @DebugUtil.span()
     private doSilence() {
-        this.child.feats.child.feats.forEach(item => item.deactive());
+        // feats
+        this.child.feats.child.items.forEach(item => item.deactive());
+        this.child.feats.child.buffs.forEach(item => item.deactive());
+        // hooks
         this.child.feats.child.battlecry.forEach(item => item.deactive());
         this.child.feats.child.deathrattle.forEach(item => item.deactive());
         this.child.feats.child.startTurn.forEach(item => item.deactive());
         this.child.feats.child.endTurn.forEach(item => item.deactive());
-        const role = this.child.role;
-        role.child.feats.child.buffs.forEach(item => item.deactive());
-        role.child.feats.child.feats.forEach(item => item.deactive());
-        role.child.feats.child.charge.deactive();
-        role.child.feats.child.divineShield.deactive();
-        role.child.feats.child.elusive.deactive();
-        role.child.feats.child.frozen.deactive();
-        role.child.feats.child.rush.deactive();
-        role.child.feats.child.stealth.deactive();
-        role.child.feats.child.taunt.deactive();
-        role.child.feats.child.windfury.deactive();
+        // entries
+        this.child.feats.child.charge.deactive();
+        this.child.feats.child.divineShield.deactive();
+        this.child.feats.child.elusive.deactive();
+        this.child.feats.child.frozen.deactive();
+        this.child.feats.child.rush.deactive();
+        this.child.feats.child.stealth.deactive();
+        this.child.feats.child.taunt.deactive();
+        this.child.feats.child.windfury.deactive();
     }
 
 

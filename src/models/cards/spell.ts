@@ -45,7 +45,7 @@ export abstract class SpellCardModel<
         if (!super.status) return false;
         // need target
         const effects = this.child.feats.child.effects;
-        const selectors = SpellEffectModel.check(effects);
+        const selectors = SpellEffectModel.status(effects);
         if (!selectors) return false;
         return true;
     }
