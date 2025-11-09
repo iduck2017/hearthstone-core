@@ -1,6 +1,6 @@
 import { FeatureModel } from "..";
 import { DebugUtil, Model } from "set-piece";
-import { SelectEvent } from "../../rules/controller";
+import { Selector } from "../../rules/selector";
 
 export namespace EffectModel {
     export type E = {};
@@ -55,5 +55,5 @@ export abstract class EffectModel<
 
     protected abstract doRun(...params: T): Promise<void>;
 
-    public abstract toRun(): { [K in keyof T]: SelectEvent<T[K]> } | undefined;
+    public abstract toRun(): { [K in keyof T]: Selector<T[K]> } | undefined;
 }

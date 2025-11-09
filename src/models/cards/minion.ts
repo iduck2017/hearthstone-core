@@ -7,7 +7,7 @@ import { CardModel } from ".";
 import { AbortEvent } from "../../types/abort-event";
 import { MinionBattlecryModel } from "../features/hooks/minion-battlecry";
 import { BoardModel } from "./group/board";
-import { SelectEvent } from "../rules/controller";
+import { Selector } from "../rules/selector";
 
 export namespace MinionCardModel {
     export type S = {
@@ -184,7 +184,7 @@ export abstract class MinionCardModel<
         const size = board.child.cards.length;
         const options = new Array(size + 1).fill(0).map((item, index) => index);
         const position = await player.child.controller.get(
-            new SelectEvent(options, { desc: (item) => `Deploy ${this.name} at position ${item + 1}` }
+            new Selector(options, { desc: `Deploy ${this.name} at certain position` }
         ));
         return position;
     }

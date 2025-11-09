@@ -1,5 +1,5 @@
 import { DebugUtil, Decor, Event, Method, Model, StateUtil, TemplUtil } from "set-piece";
-import { DamageEvent, DamageModel, MinionCardModel, RoleModel, GameModel, PlayerModel, HeroModel, WeaponCardModel, IRoleBuffModel, SelectEvent } from "../../..";
+import { DamageEvent, DamageModel, MinionCardModel, RoleModel, GameModel, PlayerModel, HeroModel, WeaponCardModel, IRoleBuffModel, Selector } from "../../..";
 import { DamageType } from "../../../types/damage-event";
 import { Operator, OperatorType } from "../../../types/operator";
 import { AbortEvent } from "../../../types/abort-event";
@@ -105,7 +105,7 @@ export class RoleAttackModel extends Model<
         });
     }
 
-    public get selector(): SelectEvent<RoleModel> | undefined {
+    public get selector(): Selector<RoleModel> | undefined {
         const game = this.route.game;
         if (!game) return;
 
@@ -140,7 +140,7 @@ export class RoleAttackModel extends Model<
             const stealth = entries.child.stealth;
             return !stealth.state.isActive;
         })
-        return new SelectEvent(options, {});
+        return new Selector(options, {});
     }
 
 

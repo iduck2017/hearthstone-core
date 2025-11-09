@@ -2,8 +2,10 @@
 export { DamageType } from "./types/damage-event";
 export { RaceType, SchoolType, RarityType, ClassType } from "./types/card-enums";
 
+export { SelectorModel, Selector } from "./models/rules/selector";
+export { ControllerModel } from "./models/rules/controller";
+
 // event
-export { SelectEvent } from "./models/rules/controller";
 export { DamageEvent } from "./types/damage-event";
 export { RestoreEvent } from "./types/restore-event";
 

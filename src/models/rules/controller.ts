@@ -1,37 +1,15 @@
 import { Model } from "set-piece";
 import { GameModel } from "../game";
 import { PlayerModel } from "../player";
-
-export class SelectEvent<T = any> {
-    public options: Readonly<T[]>;
-
-    public readonly hint?: string;
-    public desc?: string | ((item: T) => string);
-
-    constructor(
-        options: T[],
-        props?: { 
-            hint?: string; 
-            desc?: string | ((item: T) => string);
-        }
-    ) {
-        this.options = options;
-        this.hint = props?.hint;
-        this.desc = props?.desc;
-    }
-
-    public filter(handler: (item: T) => boolean) {
-        this.options = this.options.filter(handler);
-    }
-    
-    public resolve?: (target: T) => void;
-}
+import { Selector, SelectorModel } from "./selector";
 
 export namespace ControllerModel {
     export type E = {}
     export type S = {}
     export type C = {}
-    export type R = {}
+    export type R = {
+        selectors: SelectorModel[];
+    }
 }
 
 export class ControllerModel extends Model<
@@ -49,29 +27,38 @@ export class ControllerModel extends Model<
         }
     }
 
-    private _items: SelectEvent[] = [];
+    private selectors: Selector[] = [];
     public get current() {
-        return this._items[0];
+        return this.selectors[0];
     }
     constructor(props?: ControllerModel['props']) {
         super({
             uuid: props?.uuid,
             state: { ...props?.state },
             child: { ...props?.child },
-            refer: { ...props?.refer },
+            refer: { 
+                selectors: [],
+                ...props?.refer 
+            },
         });
     }
 
-    public async get<T>(event: SelectEvent<T>) {
-        if (!event.options) return;
+    public get<T>(param: Selector<T> | SelectorModel<T>): Promise<T | undefined> {
+        if (param instanceof SelectorModel) {
+            this.origin.refer.selectors?.push(param);
+            return this.get(param.selector);
+        }
+        if (!param.options.length) return Promise.resolve(undefined);
+        this.selectors.push(param);
         return new Promise<T | undefined>((resolve) => {
-            event.resolve = resolve;
-            this._items.push(event);
-        })
+            param.then(resolve);
+        });
     }
 
-    public set(target: any) {
-        const event = this._items.shift();
-        event?.resolve?.(target);
+    public set<T>(target: T) {
+        const selector = this.selectors.shift();
+        if (!selector) return;
+        if (!selector.options.includes(target)) return;
+        selector.emit(target);
     }
 }

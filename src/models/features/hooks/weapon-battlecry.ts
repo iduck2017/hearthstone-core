@@ -1,5 +1,5 @@
 import { DebugUtil, Event, Method, Model } from "set-piece";
-import { SelectEvent } from "../../rules/controller";
+import { Selector } from "../../rules/selector";
 import { FeatureModel, PlayerModel } from "../../..";
 import { AbortEvent } from "../../../types/abort-event";
 import { CardFeatureModel } from "../card";
@@ -83,5 +83,5 @@ export abstract class WeaponBattlecryModel<
 
     protected abstract doRun(from: number, ...params: T): Promise<void>;
 
-    public abstract toRun(): { [K in keyof T]: SelectEvent<T[K]> } | undefined;
+    public abstract toRun(): { [K in keyof T]: Selector<T[K]> } | undefined;
 }

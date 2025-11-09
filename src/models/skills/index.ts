@@ -1,5 +1,5 @@
 import { DebugUtil, Event, Method, Model } from "set-piece";
-import { SelectEvent } from "../rules/controller";
+import { Selector } from "../rules/selector";
 import { PlayerModel } from "../player";
 import { GameModel } from "../game";
 import { CostModel } from "../rules/card/cost";
@@ -112,5 +112,5 @@ export abstract class SkillModel<
 
     protected abstract doRun(...params: T): Promise<void>;
 
-    protected abstract toRun(): { [K in keyof T]: SelectEvent<T[K]> } | undefined;
+    protected abstract toRun(): { [K in keyof T]: Selector<T[K]> } | undefined;
 }

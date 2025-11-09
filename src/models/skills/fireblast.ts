@@ -1,5 +1,5 @@
 import { SkillModel } from ".";
-import { SelectEvent } from "../rules/controller";
+import { Selector } from "../rules/selector";
 import { RoleModel } from "../role";
 import { CostModel } from "../rules/card/cost";
 import { DamageModel } from "../rules/card/damage";
@@ -38,10 +38,10 @@ export class FireBlastModel extends SkillModel<[RoleModel]> {
         ])
     }
 
-    protected toRun(): [SelectEvent<RoleModel>] | undefined {
+    protected toRun(): [Selector<RoleModel>] | undefined {
         const game = this.route.game;
         if (!game) return;
         const roles = game.query();
-        return [new SelectEvent(roles, {})];
+        return [new Selector(roles, {})];
     }
 }

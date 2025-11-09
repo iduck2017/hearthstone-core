@@ -1,6 +1,5 @@
 import { DebugUtil, Event, Method, Model } from "set-piece";
-import { SelectEvent } from "../../rules/controller";
-import { CardModel, FeatureModel, MinionCardModel } from "../../..";
+import { CardModel, FeatureModel, MinionCardModel, Selector } from "../../..";
 import { AbortEvent } from "../../../types/abort-event";
 import { CardFeatureModel } from "../card";
 import { PlayerModel } from "../../player";
@@ -97,5 +96,5 @@ export abstract class MinionBattlecryModel<
 
     protected abstract doRun(from: number, to: number, ...params: T): Promise<void>;
 
-    public abstract toRun(): { [K in keyof T]: SelectEvent<T[K]> } | undefined;
+    public abstract toRun(): { [K in keyof T]: Selector<T[K]> } | undefined;
 }
