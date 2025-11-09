@@ -55,10 +55,10 @@ export class ControllerModel extends Model<
         });
     }
 
-    public set<T>(target: T) {
+    public set<T>(target: T | undefined) {
         const selector = this.selectors.shift();
         if (!selector) return;
-        if (!selector.options.includes(target)) return;
+        if (!selector.options.includes(target)) selector.emit(undefined);
         selector.emit(target);
     }
 }
