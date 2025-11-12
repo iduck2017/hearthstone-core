@@ -10,11 +10,13 @@ export namespace WeaponPlayModel {
     export type E = {}
     export type S = {
         from: number;
+        index: number;
         isPending: boolean;
     }
-    export type C = {}
-    export type R = {
+    export type C = {
         params: WeakMapModel<WeaponBattlecryModel, Model[]>[]
+    }
+    export type R = {
     }
 }
 
@@ -40,12 +42,15 @@ export class WeaponPlayModel extends Model<
             uuid: props.uuid,
             state: { 
                 from: 0,
+                index: 0,
                 isPending: false,
                 ...props.state 
             },
-            child: { ...props.child },
-            refer: { 
+            child: { 
                 params: [],
+                ...props.child 
+            },
+            refer: { 
                 ...props.refer 
             },
         });
@@ -53,7 +58,7 @@ export class WeaponPlayModel extends Model<
 
     public get config(): WeaponHooksOptions {
         const result = new Map<WeaponBattlecryModel, Model[]>();
-        this.origin.refer.params?.forEach(item => {
+        this.origin.child.params?.forEach(item => {
             if (!item.refer.key) return;
             if (!item.refer.value) return;
             result.set(item.refer.key, item.refer.value);
@@ -64,7 +69,7 @@ export class WeaponPlayModel extends Model<
     }
 
     public del(hook: WeaponBattlecryModel) {
-        const params = this.origin.refer.params;
+        const params = this.origin.child.params;
         if (!params) return;
         const index = params.findIndex(item => item.refer.key === hook);
         if (index === -1) return;
@@ -78,14 +83,16 @@ export class WeaponPlayModel extends Model<
         if (!weapon) return;
         // battlecry
         this.toRun(from, config);
+        this.next()
     }
 
     @TranxUtil.span()
     protected toRun(from: number, config: WeaponHooksOptions) {
         this.origin.state.isPending = true;
         this.origin.state.from = from;
+        this.origin.state.index = 0;
         config.battlecry.forEach((params, item) => {
-            this.origin.refer.params?.push(
+            this.origin.child.params?.push(
                 new WeakMapModel({
                     refer: {
                         key: item,
@@ -94,12 +101,13 @@ export class WeaponPlayModel extends Model<
                 })
             )
         })
-        this.next()
     }
 
     next(hook?: WeaponBattlecryModel) {
         const from = this.origin.state.from;
-        const pair = this.origin.refer.params?.shift();
+        const index = this.origin.state.index;
+        this.origin.state.index += 1;
+        const pair = this.origin.child.params?.[index];
         if (!pair) {
             console.log('🔍 finish weapon battlecry')
             const weapon = this.route.weapon;
@@ -109,9 +117,9 @@ export class WeaponPlayModel extends Model<
         } else {
             const key = pair.refer.key;
             const value = pair.refer.value;
+            console.log('🔍 run weapon battlecry', key?.name, value?.map(item => item.name))
             if (!key) return;
             if (!value) return;
-            console.log('🔍 run weapon battlecry', key.name, value.map(item => item.name))
             key.promise(this);
             key.run(from, ...value);
         }
@@ -121,7 +129,8 @@ export class WeaponPlayModel extends Model<
     protected reset() {
         this.origin.state.isPending = false;
         this.origin.state.from = 0;
-        this.origin.refer.params = [];
+        this.origin.state.index = 0;
+        this.origin.child.params = [];
     }
 }
 

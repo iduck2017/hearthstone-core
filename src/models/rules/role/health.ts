@@ -146,8 +146,8 @@ export class RoleHealthModel extends Model<
         const poisonous = source.child.feats.child.poisonous;
         if (poisonous.state.isActive && minion) event.config({ isPoisonous: true });
 
-        DebugUtil.log(`${role.name} receive ${result} Damage`);
         this.origin.state.damage += result;
+        DebugUtil.log(`${role.name} receive ${result} Damage, total ${this.origin.state.damage}`);
         dispose.active(false, event.detail.source, event.detail.method);
         return event;
     }

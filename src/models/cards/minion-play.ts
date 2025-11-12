@@ -11,11 +11,13 @@ export namespace MinionPlayModel {
     export type S = {
         from: number;
         to: number;
+        index: number;
         isPending: boolean;
     }
-    export type C = {}
-    export type R = {
+    export type C = {
         params: WeakMapModel<MinionBattlecryModel, Model[]>[]
+    }
+    export type R = {
     }
 }
 
@@ -42,12 +44,15 @@ export class MinionPlayModel extends Model<
             state: { 
                 from: 0,
                 to: 0,
+                index: 0,
                 isPending: false,
                 ...props.state 
             },
-            child: { ...props.child },
-            refer: { 
+            child: { 
                 params: [],
+                ...props.child 
+            },
+            refer: { 
                 ...props.refer 
             },
         });
@@ -55,7 +60,7 @@ export class MinionPlayModel extends Model<
 
     public get config(): MinionHooksConfig {
         const result = new Map<MinionBattlecryModel, Model[]>();
-        this.origin.refer.params?.forEach(item => {
+        this.origin.child.params?.forEach(item => {
             if (!item.refer.key) return;
             if (!item.refer.value) return;
             result.set(item.refer.key, item.refer.value);
@@ -66,7 +71,7 @@ export class MinionPlayModel extends Model<
     }
 
     public del(hook: MinionBattlecryModel) {
-        const params = this.origin.refer.params;
+        const params = this.origin.child.params;
         if (!params) return;
         const index = params.findIndex(item => item.refer.key === hook);
         if (index === -1) return;
@@ -80,6 +85,7 @@ export class MinionPlayModel extends Model<
         if (!minion) return;
         // battlecry
         this.toRun(from, to, config);
+        this.next()
     }
 
     @TranxUtil.span()
@@ -87,8 +93,9 @@ export class MinionPlayModel extends Model<
         this.origin.state.isPending = true;
         this.origin.state.from = from;
         this.origin.state.to = to;
+        this.origin.state.index = 0;
         config.battlecry.forEach((params, item) => {
-            this.origin.refer.params?.push(
+            this.origin.child.params?.push(
                 new WeakMapModel({
                     refer: {
                         key: item,
@@ -97,13 +104,14 @@ export class MinionPlayModel extends Model<
                 })
             )
         })
-        this.next()
     }
 
     next() {
         const from = this.origin.state.from;
         const to = this.origin.state.to;
-        const pair = this.origin.refer.params?.shift();
+        const index = this.origin.state.index;
+        this.origin.state.index += 1;
+        const pair = this.origin.child.params?.[index];
         if (!pair) {
             console.log('🔍 finish battlecry')
             const minion = this.route.minion;
@@ -113,9 +121,9 @@ export class MinionPlayModel extends Model<
         } else {
             const key = pair.refer.key;
             const value = pair.refer.value;
+            console.log('🔍 run battlecry', key?.name, value?.map(item => item.name))
             if (!key) return;
             if (!value) return;
-            console.log('🔍 run battlecry', key.name, value.map(item => item.name))
             key.promise(this);
             key.run(from, to, ...value);
         }
@@ -126,6 +134,7 @@ export class MinionPlayModel extends Model<
         this.origin.state.isPending = false;
         this.origin.state.from = 0;
         this.origin.state.to = 0;
-        this.origin.refer.params = [];
+        this.origin.state.index = 0;
+        this.origin.child.params = [];
     }
 }

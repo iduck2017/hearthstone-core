@@ -103,7 +103,10 @@ export abstract class SpellCardModel<
         // end
         const board = player.child.board;
         if (!board) return;
+        console.log('🔍 spell done', this.name)
+        this.deploy();
         this.event.onUse(new Event({}));
+        this.onPlay(from, options);
     }
 
     public deploy(board?: BoardModel) {}

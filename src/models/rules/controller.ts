@@ -8,7 +8,7 @@ export namespace ControllerModel {
     export type S = {}
     export type C = {}
     export type R = {
-        selectors: SelectorModel[];
+        factories: SelectorModel[];
     }
 }
 
@@ -37,21 +37,31 @@ export class ControllerModel extends Model<
             state: { ...props?.state },
             child: { ...props?.child },
             refer: { 
-                selectors: [],
+                factories: [],
                 ...props?.refer 
             },
         });
     }
 
-    public get<T>(param: Selector<T> | SelectorModel<T>): Promise<T | undefined> {
-        if (param instanceof SelectorModel) {
-            this.origin.refer.selectors?.push(param);
-            return this.get(param.selector);
-        }
-        if (!param.options.length) return Promise.resolve(undefined);
-        this.selectors.push(param);
+    public bind(factory: SelectorModel): void {
+        const selector = factory.selector;
+        this.origin.refer.factories?.push(factory);
+        this.selectors.push(selector);
+        selector.then(() => this.unbind(factory));
+    }
+
+    private unbind(factory: SelectorModel): void {
+        const index = this.origin.refer.factories?.indexOf(factory);
+        if (index === undefined) return;
+        if (index === -1) return;
+        this.origin.refer.factories?.splice(index, 1);
+    }
+
+    public get<T>(selector: Selector<T>): Promise<T | undefined> {
+        if (!selector.options.length) return Promise.resolve(undefined);
+        this.selectors.push(selector);
         return new Promise<T | undefined>((resolve) => {
-            param.then(resolve);
+            selector.then(resolve);
         });
     }
 

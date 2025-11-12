@@ -98,3 +98,5 @@ export { AbortEvent } from "./types/abort-event";
 
 export { TheCoinModel } from "./models/cards/the-coin";
 export { RoleModel } from "./models/features/group/hero";
+
+export { DiscoverModel } from "./models/rules/discover";
