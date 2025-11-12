@@ -47,7 +47,7 @@ export abstract class StartTurnHookModel<
     private listenTurn() {
         return this.route.game?.proxy.child.turn.event?.doStart;
     }
-    protected async handleTurn(that: TurnModel, event: Event) {
+    protected handleTurn(that: TurnModel, event: Event) {
         if (!this.state.isActive) return;
 
         const game = this.route.game;
@@ -59,9 +59,9 @@ export abstract class StartTurnHookModel<
         const isCurrent = current === player;
 
         DebugUtil.log(`${this.state.name} run (${this.state.desc})`);
-        await this.doRun(isCurrent);
+        this.doRun(isCurrent);
         this.event.onRun(new Event({}));
     }
 
-    protected abstract doRun(isCurrent: boolean): Promise<void>;
+    protected abstract doRun(isCurrent: boolean): void;
 }

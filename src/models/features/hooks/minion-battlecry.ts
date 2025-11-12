@@ -47,7 +47,7 @@ export abstract class MinionBattlecryModel<
         }
     }
 
-    public static async select(
+    public static async toRun(
         player: PlayerModel,
         hooks: Readonly<MinionBattlecryModel[]>
     ): Promise<Map<MinionBattlecryModel, Model[]> | undefined> {

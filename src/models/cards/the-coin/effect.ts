@@ -20,7 +20,7 @@ export class TheCoinEffectModel extends SpellEffectModel<[]> {
 
     toRun(): [] { return []; }
 
-    protected async doRun(): Promise<void> {
+    protected doRun() {
         const player = this.route.player;
         if (!player) return;
         player.child.mana.restore(1);

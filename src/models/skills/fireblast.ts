@@ -26,7 +26,7 @@ export class FireBlastModel extends SkillModel<[RoleModel]> {
         });
     }
 
-    protected async doRun(target: RoleModel): Promise<void> {
+    protected doRun(target: RoleModel) {
         const hero = this.route.hero;
         if (!hero) return;
         DamageModel.deal([

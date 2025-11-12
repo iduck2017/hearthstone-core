@@ -126,12 +126,10 @@ export abstract class CardModel<
     // play
     @DebugUtil.span()
     public async play() {
-        console.log('🔍 toUse', this.name, this.status)
         if (!this.status) return;
         const params = await this.toUse();
         // cancel by user
         if (!params) return;
-        console.log('🔍 play card', this.name)
         this.doPlay(...params);
     }
 

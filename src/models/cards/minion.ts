@@ -179,7 +179,7 @@ export abstract class MinionCardModel<
 
     // use
     protected async toUse(): Promise<[number, MinionHooksConfig] | undefined> {
-        const to = await this.select();
+        const to = await this.toDeploy();
         if (to === undefined) return;
 
         const player = this.route.player;
@@ -187,13 +187,13 @@ export abstract class MinionCardModel<
 
         // battlecry
         const feats = this.child.feats;
-        const battlecry = await MinionBattlecryModel.select(player, feats.child.battlecry);
+        const battlecry = await MinionBattlecryModel.toRun(player, feats.child.battlecry);
         if (!battlecry) return;
 
         return [to, { battlecry }];
     }
 
-    private async select(): Promise<number | undefined> {
+    private async toDeploy(): Promise<number | undefined> {
         const player = this.route.player;
         if (!player) return;
 

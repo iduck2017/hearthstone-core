@@ -78,7 +78,7 @@ export abstract class SpellEffectModel<
         return result;
     }
 
-    public static async select(
+    public static async toRun(
         player: PlayerModel,
         hooks: Readonly<SpellEffectModel[]>
     ): Promise<Map<SpellEffectModel, Model[]> | undefined> {

@@ -148,7 +148,7 @@ export class RoleActionModel extends Model<
         // mana
         if (!this.consume()) return;
         // attack
-        await attack.run(roleB);
+        attack.run(roleB);
         this.event.onRun(new Event({}));
     }
 

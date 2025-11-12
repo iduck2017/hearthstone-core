@@ -15,6 +15,7 @@ export namespace SkillModel {
     export type S = {
         desc: string,
         name: string;
+        isAsync?: boolean;
     };
     export type C = {
         cost: CostModel,
@@ -106,11 +107,15 @@ export abstract class SkillModel<
         const self: SkillModel = this;
         
         DebugUtil.log(`Use Skill (${this.state.desc})`);
-        await self.doRun(...params);
+        self.doRun(...params);
+        if (!this.state.isAsync) this.onRun();
+    }
+
+    protected onRun() {
         this.event.onRun(new Event({}));
     }
 
-    protected abstract doRun(...params: T): Promise<void>;
+    protected abstract doRun(...params: T): void;
 
     protected abstract toRun(): { [K in keyof T]: Selector<T[K]> } | undefined;
 }

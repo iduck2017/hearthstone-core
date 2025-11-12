@@ -7,6 +7,7 @@ import { WeaponDisposeModel } from "./dispose/weapon";
 import { AbortEvent } from "../../types/abort-event";
 import { WeaponBattlecryModel } from "../features/hooks/weapon-battlecry";
 import { BoardModel } from "./group/board";
+import { WeaponPlayModel } from "./weapon-play";
 
 export namespace WeaponCardModel {
     export type S = {};
@@ -14,6 +15,7 @@ export namespace WeaponCardModel {
 
     };
     export type C = {
+        readonly play: WeaponPlayModel;
         readonly feats: WeaponFeaturesModel;
         readonly attack: WeaponAttackModel;
         readonly action: WeaponActionModel;
@@ -62,6 +64,7 @@ export abstract class WeaponCardModel<
             uuid: props.uuid,
             state: { ...props.state },
             child: {
+                play: props.child.play ?? new WeaponPlayModel(),
                 dispose: props.child.dispose ?? new WeaponDisposeModel(),
                 feats: props.child.feats ?? new WeaponFeaturesModel(),
                 ...props.child,
@@ -70,7 +73,6 @@ export abstract class WeaponCardModel<
         })
     }
 
-    
     public use(from: number, options: WeaponHooksOptions) {
         const event = new AbortEvent({})
         this.event.toUse(event);
@@ -80,18 +82,16 @@ export abstract class WeaponCardModel<
         if (!player) return;
 
         // battlecry
-        const feats = this.child.feats;
-        const battlecry = feats.child.battlecry;
-        for (const item of battlecry) {
-            const params = options.battlecry.get(item);
-            if (!params) continue;
-            item.run(from, ...params);
-        }
+        this.child.play.run(from, options);
+    }
+
+    public onUse(from: number, options: WeaponHooksOptions) {
+        const player = this.route.player;
+        if (!player) return;
         // end
         const board = player.child.board;
         if (!board) return;
         this.deploy(board);
-
         this.event.onUse(new Event({}));
     }
 

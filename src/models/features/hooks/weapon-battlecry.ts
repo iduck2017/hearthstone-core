@@ -3,29 +3,38 @@ import { Selector } from "../../rules/selector";
 import { FeatureModel, PlayerModel } from "../../..";
 import { AbortEvent } from "../../../types/abort-event";
 import { CardFeatureModel } from "../card";
+import { CallerModel } from "../../rules/caller";
+import { CalleeModel } from "../../rules/callee";
 
 export namespace WeaponBattlecryModel {
     export type E = {
         toRun: AbortEvent;
         onRun: {};
     };
-    export type S = {};
+    export type S = {
+        isAsync: boolean;
+    };
     export type C = {};
-    export type R = {};
+    export type R = {
+        callers: CallerModel<[WeaponBattlecryModel]>[]
+    };
 }
 
 export abstract class WeaponBattlecryModel<
     T extends any[] = any[],
-    E extends Partial<WeaponBattlecryModel.E> & Model.E = {},
-    S extends Partial<WeaponBattlecryModel.S> & Model.S = {},
-    C extends Partial<WeaponBattlecryModel.C> & Model.C = {},
-    R extends Partial<WeaponBattlecryModel.R> & Model.R = {},
+    E extends Partial<WeaponBattlecryModel.E> & Partial<FeatureModel.E> & Model.E = {},
+    S extends Partial<WeaponBattlecryModel.S> & Partial<FeatureModel.S> & Model.S = {},
+    C extends Partial<WeaponBattlecryModel.C> & Partial<FeatureModel.C> & Model.C = {},
+    R extends Partial<WeaponBattlecryModel.R> & Partial<FeatureModel.R> & Model.R = {},
 > extends CardFeatureModel<
     E & WeaponBattlecryModel.E, 
     S & WeaponBattlecryModel.S, 
     C & WeaponBattlecryModel.C, 
     R & WeaponBattlecryModel.R
-> {
+> implements CalleeModel<[WeaponBattlecryModel]> {
+    
+    public readonly promise = CalleeModel.prototype.promise.bind(this);
+    public readonly resolve = CalleeModel.prototype.resolve.bind(this);
     public static async select(
         player: PlayerModel,
         hooks: Readonly<WeaponBattlecryModel[]>
@@ -62,14 +71,18 @@ export abstract class WeaponBattlecryModel<
             uuid: props.uuid,
             state: { 
                 isActive: true,
+                isAsync: false,
                 ...props.state,
             },
             child: { ...props.child },
-            refer: { ...props.refer },
+            refer: { 
+                callers: [],
+                ...props.refer 
+            },
         });
     }
 
-    public async run(from: number, ...params: T) {
+    public run(from: number, ...params: T) {
         if (!this.state.isActive) return;
         
         const event = new AbortEvent({});
@@ -77,11 +90,16 @@ export abstract class WeaponBattlecryModel<
         if (event.detail.isAbort) return;
 
         DebugUtil.log(`${this.state.name} run (${this.state.desc})`);
-        await this.doRun(from, ...params);
-        this.event.onRun(new Event({}));
-    }   
+        this.doRun(from, ...params);
+        if (!this.state.isAsync) this.onRun();
+    }
 
-    protected abstract doRun(from: number, ...params: T): Promise<void>;
+    protected onRun() {
+        this.event.onRun(new Event({}));
+        this.resolve(this);
+    }
+
+    protected abstract doRun(from: number, ...params: T): void;
 
     public abstract toRun(): { [K in keyof T]: Selector<T[K]> } | undefined;
 }

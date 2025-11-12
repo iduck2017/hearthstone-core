@@ -75,7 +75,7 @@ export abstract class SpellCardModel<
         if (!player) return;
         // spell
         const effects = this.child.feats.child.effects;
-        const result = await SpellEffectModel.select(player, effects);
+        const result = await SpellEffectModel.toRun(player, effects);
         if (!result) return;
         return [{ effects: result }];
     }
@@ -105,5 +105,7 @@ export abstract class SpellCardModel<
         if (!board) return;
         this.event.onUse(new Event({}));
     }
+
+    public deploy(board?: BoardModel) {}
 
 }
