@@ -45,7 +45,7 @@ export abstract class SpellCardModel<
         if (!super.status) return false;
         // need target
         const effects = this.child.feats.child.effects;
-        const selectors = SpellEffectModel.status(effects);
+        const selectors = SpellEffectModel.getSelector(effects);
         if (!selectors) return false;
         return true;
     }
@@ -76,7 +76,7 @@ export abstract class SpellCardModel<
         return [{ effects: result }];
     }
     
-    public async use(from: number, options: SpellHooksOptions) {
+    public use(from: number, options: SpellHooksOptions) {
         const event = new SpellCastEvent({ options: options })
         this.event.toUse(event);
         this.event.toCast(event);
@@ -90,7 +90,7 @@ export abstract class SpellCardModel<
         for (const item of effects) {
             const params = options.effects.get(item);
             if (!params) continue;
-            await item.run(...params);
+            item.run(...params);
         }
         const board = player.child.board;
         this.deploy(board);

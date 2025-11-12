@@ -1,5 +1,5 @@
 import { Event, Method, State, TranxUtil, Model, DebugUtil } from "set-piece";
-import { MinionHooksOptions, MinionFeaturesModel } from "../features/group/minion";
+import { MinionHooksConfig, MinionFeaturesModel } from "../features/group/minion";
 import { RaceType } from "../../types/card-enums";
 import { MinionDisposeModel } from "./dispose/minion";
 import { CardModel } from ".";
@@ -11,6 +11,7 @@ import { SleepModel } from "../rules/role/sleep";
 import { RoleHealthModel } from "../rules/role/health";
 import { RoleAttackModel } from "../rules/role/attack";
 import { RoleActionModel } from "../rules/role/action";
+import { MinionPlayModel } from "./minion-play";
 
 export namespace MinionCardModel {
     export type S = {
@@ -21,11 +22,13 @@ export namespace MinionCardModel {
         readonly onSilence: Event;
     };
     export type C = {
+        readonly play: MinionPlayModel;
+        readonly dispose: MinionDisposeModel
+
         readonly sleep: SleepModel;
         readonly health: RoleHealthModel;
         readonly attack: RoleAttackModel;
         readonly action: RoleActionModel;
-        readonly dispose: MinionDisposeModel
         readonly feats: MinionFeaturesModel;
     };
     export type R = {};
@@ -38,7 +41,7 @@ export abstract class MinionCardModel<
     C extends Partial<MinionCardModel.C & CardModel.C> & Model.C = {},
     R extends Partial<MinionCardModel.R & CardModel.R> & Model.R = {}
 > extends CardModel<
-    [number, MinionHooksOptions],
+    [number, MinionHooksConfig],
     E & MinionCardModel.E, 
     S & MinionCardModel.S, 
     C & MinionCardModel.C,
@@ -87,6 +90,7 @@ export abstract class MinionCardModel<
             uuid: props.uuid,
             state: { ...props.state },
             child: { 
+                play: props.child.play ?? new MinionPlayModel(),
                 sleep: props.child.sleep ?? new SleepModel(),
                 health: props.child.health ?? new RoleHealthModel(),
                 attack: props.child.attack ?? new RoleAttackModel(),
@@ -149,7 +153,7 @@ export abstract class MinionCardModel<
     }
 
 
-    public async use(from: number, to: number, options: MinionHooksOptions) {
+    public use(from: number, to: number, config: MinionHooksConfig) {
         const event = new AbortEvent({})
         this.event.toUse(event);
         if (event.detail.isAbort) return;
@@ -158,24 +162,23 @@ export abstract class MinionCardModel<
         if (!player) return;
 
         // battlecry
-        const feats = this.child.feats;
-        const battlecry = feats.child.battlecry;
-        for (const item of battlecry) {
-            const params = options.battlecry.get(item);
-            if (!params) continue;
-            await item.run(from, to, ...params);
-        }
+        this.child.play.run(from, to, config);
+    }
 
+    public onUse(from: number, to: number, config: MinionHooksConfig) {
+        const player = this.route.player;
+        if (!player) return;
         // end
         const board = player.child.board;
         if (!board) return;
         this.deploy(board, to);
         this.event.onUse(new Event({}));
+        this.onPlay(from, to, config);
     }
 
 
     // use
-    protected async toUse(): Promise<[number, MinionHooksOptions] | undefined> {
+    protected async toUse(): Promise<[number, MinionHooksConfig] | undefined> {
         const to = await this.select();
         if (to === undefined) return;
 
@@ -202,7 +205,6 @@ export abstract class MinionCardModel<
         ));
         return position;
     }
-
 
     // summon
     public deploy(board?: BoardModel, index?: number) {

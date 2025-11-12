@@ -29,7 +29,7 @@ export namespace MinionFeaturesModel {
     export type R = {};
 }
 
-export type MinionHooksOptions = {
+export type MinionHooksConfig = {
     battlecry: Map<MinionBattlecryModel, Model[]>
 }
 

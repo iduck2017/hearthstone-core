@@ -71,7 +71,7 @@ export abstract class WeaponCardModel<
     }
 
     
-    public async use(from: number, options: WeaponHooksOptions) {
+    public use(from: number, options: WeaponHooksOptions) {
         const event = new AbortEvent({})
         this.event.toUse(event);
         if (event.detail.isAbort) return;
@@ -85,7 +85,7 @@ export abstract class WeaponCardModel<
         for (const item of battlecry) {
             const params = options.battlecry.get(item);
             if (!params) continue;
-            await item.run(from, ...params);
+            item.run(from, ...params);
         }
         // end
         const board = player.child.board;

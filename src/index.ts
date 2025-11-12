@@ -73,7 +73,7 @@ export { RoleBuffModel } from "./models/rules/role/buff";
 
 // hooks
 export { SpellHooksOptions, SpellFeaturesModel, SpellCastEvent } from "./models/features/group/spell";
-export { MinionHooksOptions, MinionFeaturesModel } from "./models/features/group/minion";
+export { MinionHooksConfig as MinionHooksOptions, MinionFeaturesModel } from "./models/features/group/minion";
 export { MinionBattlecryModel } from "./models/features/hooks/minion-battlecry";
 export { WeaponBattlecryModel } from "./models/features/hooks/weapon-battlecry";
 export { DeathrattleModel } from "./models/features/hooks/deathrattle";

@@ -3,29 +3,39 @@ import { CardModel, FeatureModel, MinionCardModel, Selector } from "../../..";
 import { AbortEvent } from "../../../types/abort-event";
 import { CardFeatureModel } from "../card";
 import { PlayerModel } from "../../player";
+import { CallerModel } from "../../rules/caller";
+import { CalleeModel } from "../../rules/callee";
 
 export namespace MinionBattlecryModel {
     export type E = {
         toRun: AbortEvent;
         onRun: {};
     };
-    export type S = {};
+    export type S = {
+        isAsync: boolean;
+    };
     export type C = {};
-    export type R = {};
+    export type R = {
+        callers: CallerModel<[MinionBattlecryModel]>[]
+    };
 }
 
 export abstract class MinionBattlecryModel<
     T extends any[] = any[],
-    E extends Partial<MinionBattlecryModel.E> & Model.E = {},
-    S extends Partial<MinionBattlecryModel.S> & Model.S = {},
-    C extends Partial<MinionBattlecryModel.C> & Model.C = {},
-    R extends Partial<MinionBattlecryModel.R> & Model.R = {}
+    E extends Partial<MinionBattlecryModel.E> & Partial<FeatureModel.E> & Model.E = {},
+    S extends Partial<MinionBattlecryModel.S> & Partial<FeatureModel.S> & Model.S = {},
+    C extends Partial<MinionBattlecryModel.C> & Partial<FeatureModel.C> & Model.C = {},
+    R extends Partial<MinionBattlecryModel.R> & Partial<FeatureModel.R> & Model.R = {}
 > extends CardFeatureModel<
-    E & MinionBattlecryModel.E, 
+    E & MinionBattlecryModel.E,
     S & MinionBattlecryModel.S, 
     C & MinionBattlecryModel.C, 
     R & MinionBattlecryModel.R
-> {
+> implements CalleeModel<[MinionBattlecryModel]> {
+    
+    public readonly promise = CalleeModel.prototype.promise.bind(this);
+    public readonly resolve = CalleeModel.prototype.resolve.bind(this);
+
     public get route() {
         const result = super.route;
         const card: CardModel | undefined = result.items.find(item => item instanceof CardModel);
@@ -75,14 +85,19 @@ export abstract class MinionBattlecryModel<
             uuid: props.uuid,
             state: { 
                 isActive: true,
+                isAsync: false,
                 ...props.state,
             },
             child: { ...props.child },
-            refer: { ...props.refer },
+            refer: { 
+                callers: [],
+                ...props.refer 
+            },
         });
     }
 
-    public async run(from: number, to: number, ...params: T) {
+
+    public run(from: number, to: number, ...params: T) {
         if (!this.state.isActive) return;
       
         const event = new AbortEvent({});
@@ -90,11 +105,19 @@ export abstract class MinionBattlecryModel<
         if (event.detail.isAbort) return;
         
         DebugUtil.log(`${this.state.name} run (${this.state.desc})`);
-        await this.doRun(from, to, ...params);
-        this.event.onRun(new Event({}));
-    }   
 
-    protected abstract doRun(from: number, to: number, ...params: T): Promise<void>;
+        
+        this.doRun(from, to, ...params);
+        if (!this.state.isAsync) this.onRun();
+    }
+
+    protected onRun() {
+        this.event.onRun(new Event({}));
+        this.resolve(this);
+    }
+
+    protected abstract doRun(from: number, to: number, ...params: T): void;
 
     public abstract toRun(): { [K in keyof T]: Selector<T[K]> } | undefined;
 }
+

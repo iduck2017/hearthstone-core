@@ -130,11 +130,10 @@ export abstract class CardModel<
         const params = await this.toUse();
         // cancel by user
         if (!params) return;
-        await this.doPlay(...params);
-        await this.event.onPlay(new Event({}));
+        this.doPlay(...params);
     }
 
-    protected async doPlay(...params: T) {
+    protected doPlay(...params: T) {
         const player = this.route.player;
         if (!player) return;
         // mana
@@ -148,9 +147,13 @@ export abstract class CardModel<
         hand.drag(this);
         // run
         DebugUtil.log(`${this.name} Played`);
-        await this.use(from, ...params);
+        this.use(from, ...params);
+    }
+
+    protected onPlay(from: number, ...params: T) {
         // try to dispose if not perform
         this.clear();
+        this.event.onPlay(new Event({}));
     }
 
     @TranxUtil.span()
@@ -187,7 +190,7 @@ export abstract class CardModel<
     // perform
     protected abstract toUse(): Promise<T | undefined>;
 
-    public abstract use(from: number, ...params: T): Promise<void>;
+    public abstract use(from: number, ...params: T): void;
 
     public abstract deploy(board?: BoardModel): void;
 }

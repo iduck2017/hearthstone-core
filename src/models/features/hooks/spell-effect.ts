@@ -1,5 +1,7 @@
 import { Decor, Model } from "set-piece";
 import { CardModel, EffectModel, FeatureModel, HeroModel, MinionCardModel, PlayerModel, Selector, SpellCardModel } from "../../..";
+import { CalleeModel } from "../../rules/callee";
+import { CallerModel } from "../../rules/caller";
 
 export namespace SpellEffectModel {
     export type E = {};
@@ -27,8 +29,9 @@ export abstract class SpellEffectModel<
     S & SpellEffectModel.S,
     C & SpellEffectModel.C,
     R & SpellEffectModel.R
-> {
+>{
     public get decor(): SpellEffectDecor<S> { return new SpellEffectDecor(this); }
+
 
     public get state() {
         const result = super.state;
@@ -52,7 +55,7 @@ export abstract class SpellEffectModel<
         }
     }
 
-    public static status(
+    public static getSelector(
         hooks: Readonly<SpellEffectModel[]>
     ): Map<SpellEffectModel, Selector[]> | undefined {
         const result = new Map<SpellEffectModel, Selector[]>();
@@ -72,7 +75,7 @@ export abstract class SpellEffectModel<
             }
             result.set(hook, selectors);
         }
-        return result;
+        return;
     }
 
     public static async select(
@@ -80,7 +83,7 @@ export abstract class SpellEffectModel<
         hooks: Readonly<SpellEffectModel[]>
     ): Promise<Map<SpellEffectModel, Model[]> | undefined> {
         const result = new Map<SpellEffectModel, Model[]>();
-        const selectors = SpellEffectModel.status(hooks);
+        const selectors = SpellEffectModel.getSelector(hooks);
         if (!selectors) return;
         for (const item of selectors) {
             const [key, value] = item;
@@ -104,7 +107,10 @@ export abstract class SpellEffectModel<
             uuid: props.uuid,
             state: { ...props.state },
             child: { ...props.child },
-            refer: { ...props.refer },
+            refer: { 
+                callers: [],
+                ...props.refer 
+            },
         })
     }
 }
