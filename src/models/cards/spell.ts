@@ -5,6 +5,8 @@ import { SchoolType } from "../../types/card-enums";
 import { SpellEffectModel } from "../..";
 import { CardModel } from ".";
 import { BoardModel } from "./group/board";
+import { SpellPlayModel } from "./spell-play";
+import { AbortEvent } from "../../types/abort-event";
 
 export namespace SpellCardModel {
     export type S = {
@@ -14,6 +16,7 @@ export namespace SpellCardModel {
         toCast: SpellCastEvent;
     };
     export type C = {
+        readonly play: SpellPlayModel;
         readonly feats: SpellFeaturesModel;
     };
     export type R = {};
@@ -59,6 +62,7 @@ export abstract class SpellCardModel<
             uuid: props.uuid,
             state: { ...props.state },
             child: { 
+                play: props.child.play ?? new SpellPlayModel(),
                 feats: props.child.feats ?? new SpellFeaturesModel(),
                 ...props.child,
             },
@@ -77,24 +81,29 @@ export abstract class SpellCardModel<
     }
     
     public use(from: number, options: SpellHooksOptions) {
-        const event = new SpellCastEvent({ options: options })
+        const event = new AbortEvent({})
         this.event.toUse(event);
-        this.event.toCast(event);
         if (event.detail.isAbort) return;
-        options = event.detail.options;
+
+        const castEvent = new SpellCastEvent({ options: options })
+        this.event.toCast(castEvent);
+        if (castEvent.detail.isAbort) return;
+        options = castEvent.detail.options;
         
         const player = this.route.player;
         if (!player) return;
-        // spell
-        const effects = this.child.feats.child.effects;
-        for (const item of effects) {
-            const params = options.effects.get(item);
-            if (!params) continue;
-            item.run(...params);
-        }
-        const board = player.child.board;
-        this.deploy(board);
+
+        // effect
+        this.child.play.run(from, options);
     }
 
-    public deploy(board: BoardModel) {}
+    public onUse(from: number, options: SpellHooksOptions) {
+        const player = this.route.player;
+        if (!player) return;
+        // end
+        const board = player.child.board;
+        if (!board) return;
+        this.event.onUse(new Event({}));
+    }
+
 }

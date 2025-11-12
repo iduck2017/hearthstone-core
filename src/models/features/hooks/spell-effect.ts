@@ -75,7 +75,7 @@ export abstract class SpellEffectModel<
             }
             result.set(hook, selectors);
         }
-        return;
+        return result;
     }
 
     public static async select(
