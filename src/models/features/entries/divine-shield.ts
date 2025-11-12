@@ -38,7 +38,7 @@ export class DivineShieldModel extends MinionFeatureModel<
     }
 
     @TranxUtil.span()
-    public restore(): boolean {
+    public active(): boolean {
         if (this.state.isActive) return false; 
         const role = this.route.role;
         if (!role) return false;

@@ -4,6 +4,11 @@ export enum ClassType {
     NEUTRAL = 'Neutral',
     PRIEST = 'Priest',
     WARLOCK = 'Warlock',
+    DRUID = 'Druid',
+    PALADIN = 'Paladin',
+    HUNTER = 'Hunter',
+    ROGUE = 'Rogue',
+    SHAMAN = 'Shaman',
 }
 
 export enum RarityType {
@@ -31,4 +36,5 @@ export enum SchoolType {
     ARCANE = 'Arcane',
     HOLY = 'Holy',
     SHADOW = 'Shadow',
+    NATURE = 'Nature',
 }
