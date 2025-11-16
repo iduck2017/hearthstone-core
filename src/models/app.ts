@@ -1,6 +1,6 @@
-import { DebugUtil, Model, TemplUtil } from "set-piece";
-import { GameModel } from "./game";
-import { CollectionModel } from "./cards/group/collection";
+import { Model, TemplUtil } from "set-piece";
+import { GameModel } from "./entities/game";
+import { CollectionModel } from "./entities/collection";
 
 export namespace AppModel {
     export type S = {
@@ -10,7 +10,7 @@ export namespace AppModel {
     export type E = {};
     export type C = {
         game?: GameModel;
-        configs: CollectionModel[]
+        readonly configs: CollectionModel[]
     };
 }
 
@@ -37,12 +37,20 @@ export class AppModel extends Model<
         });
     }
 
-    public set(config: CollectionModel): void;
-    public set(game: GameModel): void;
-    public set(value: GameModel | CollectionModel) {
+    public start(value: GameModel) {
         if (value instanceof GameModel) this.origin.child.game = value;
-        if (value instanceof CollectionModel) this.origin.child.configs.push(value);
     }
 
     public end() { this.origin.child.game = undefined; }
+
+
+    public collect(value: CollectionModel) { 
+        this.origin.child.configs.push(value); 
+    }
+
+    public uncollect(value: CollectionModel) { 
+        const index = this.origin.child.configs.indexOf(value);
+        if (index === -1) return;
+        this.origin.child.configs.splice(index, 1);
+    }
 }

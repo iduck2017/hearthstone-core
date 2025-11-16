@@ -1,6 +1,6 @@
 import { DebugUtil, Event, TemplUtil } from "set-piece"
-import { FeatureModel } from ".."
-import { MinionFeatureModel } from "../minion"
+import { FeatureModel } from "../../features"
+import { RoleFeatureModel } from "../../features/minion"
 
 export namespace PoisonousModel {  
     export type E = {
@@ -12,7 +12,7 @@ export namespace PoisonousModel {
 }
 
 @TemplUtil.is('poisonous')
-export class PoisonousModel extends MinionFeatureModel<
+export class PoisonousModel extends RoleFeatureModel<
     PoisonousModel.E,
     PoisonousModel.S,
     PoisonousModel.C,
@@ -22,7 +22,7 @@ export class PoisonousModel extends MinionFeatureModel<
         super({
             uuid: props?.uuid,
             state: { 
-                isActive: true,
+                actived: true,
                 name: 'Poisonous',
                 desc: 'Destroy any miniondamaged by this.',
                 ...props?.state 
@@ -33,12 +33,12 @@ export class PoisonousModel extends MinionFeatureModel<
     }
 
     public active(): boolean {
-        if (this.state.isActive) return false;
+        if (this.state.actived) return false;
         const role = this.route.role;
         if (!role) return false;
         DebugUtil.log(`${role.name} gain Poisonous`);
-        this.origin.state.isActive = true;
-        this.event.onActive(new Event({}));
+        this.origin.state.actived = true;
+        this.event.onEnable(new Event({}));
         return true;
     }
 }

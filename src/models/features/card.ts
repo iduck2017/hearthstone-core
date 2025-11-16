@@ -1,20 +1,14 @@
 import { Model } from "set-piece";
-import { CardFeaturesModel } from "./group/card";
 import { FeatureModel } from ".";
-import { CardModel } from "../cards";
+import { CardModel } from "../entities/cards";
 import { BoardModel, CollectionModel, DeckModel, GraveyardModel, HandModel } from "../..";
 
 export abstract class CardFeatureModel<
-    E extends Partial<CardFeaturesModel.E> & Model.E = {},
-    S extends Partial<CardFeaturesModel.S> & Model.S = {},
-    C extends Partial<CardFeaturesModel.C> & Model.C = {},
-    R extends Partial<CardFeaturesModel.R> & Model.R = {},
+    E extends Partial<FeatureModel.E> & Model.E = {},
+    S extends Partial<FeatureModel.S> & Model.S = {},
+    C extends Partial<FeatureModel.C> & Model.C = {},
+    R extends Partial<FeatureModel.R> & Model.R = {},
 > extends FeatureModel<E, S, C, R> {
-
-    protected get status(): boolean {
-        if (!this.route.board) return false;
-        return true;
-    }
 
     public get route() {
         const result = super.route;

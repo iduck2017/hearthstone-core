@@ -1,6 +1,6 @@
 import { DebugUtil, Event, TemplUtil } from "set-piece";
-import { FeatureModel } from "..";
-import { MinionFeatureModel } from "../minion";
+import { FeatureModel } from "../../features";
+import { RoleFeatureModel } from "../../features/minion";
 
 export namespace ElusiveModel {
     export type E = {}
@@ -10,7 +10,7 @@ export namespace ElusiveModel {
 }
 
 @TemplUtil.is('elusive')
-export class ElusiveModel extends MinionFeatureModel<
+export class ElusiveModel extends RoleFeatureModel<
     ElusiveModel.E,
     ElusiveModel.S,
     ElusiveModel.C,
@@ -22,7 +22,7 @@ export class ElusiveModel extends MinionFeatureModel<
             state: {
                 name: 'Elusive',
                 desc: 'Can\'t be targeted by spells or Hero Powers.',
-                isActive: true,
+                actived: true,
                 ...props?.state,
             },
             child: { ...props?.child },
@@ -31,10 +31,12 @@ export class ElusiveModel extends MinionFeatureModel<
     }
 
     public active(): boolean {
-        if (this.state.isActive) return false;
-        DebugUtil.log(`${this.route.role?.name} gain Elusive`);
-        this.origin.state.isActive = true;
-        this.event.onActive(new Event({}));
+        if (this.state.actived) return false;
+        const role = this.route.role;
+        if (!role) return false;
+        DebugUtil.log(`${role.name} gain Elusive`);
+        this.origin.state.actived = true;
+        this.event.onEnable(new Event({}));
         return true;
     }
 }

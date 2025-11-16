@@ -1,7 +1,6 @@
 import { Decor, Model } from "set-piece";
-import { CardModel, EffectModel, FeatureModel, HeroModel, MinionCardModel, PlayerModel, Selector, SpellCardModel } from "../../..";
-import { CalleeModel } from "../../rules/callee";
-import { CallerModel } from "../../rules/caller";
+import { FeatureModel, CardModel, SpellCardModel } from "../../..";
+import { EffectModel } from "./effect";
 
 export namespace SpellEffectModel {
     export type E = {};
@@ -19,7 +18,7 @@ export class SpellEffectDecor<S extends Model.S = {}> extends Decor<
 }
 
 export abstract class SpellEffectModel<
-    T extends any[] = any[],
+    T extends Model = Model,
     E extends Partial<SpellEffectModel.E> & Model.E = {},
     S extends Partial<SpellEffectModel.S> & Model.S = {},
     C extends Partial<SpellEffectModel.C> & Model.C = {},
@@ -55,48 +54,6 @@ export abstract class SpellEffectModel<
         }
     }
 
-    public static getSelector(
-        hooks: Readonly<SpellEffectModel[]>
-    ): Map<SpellEffectModel, Selector[]> | undefined {
-        const result = new Map<SpellEffectModel, Selector[]>();
-        for (const hook of hooks) {
-            const selectors = hook.toRun();
-            if (!selectors) return;
-            for (const item of selectors) {
-                item.desc = hook.state.desc;
-                item.exclude(item => {
-                    if (!(item instanceof MinionCardModel || item instanceof HeroModel)) return false;
-                    const elusive = item.child.feats.child.elusive;
-                    // exclude elusive
-                    if (elusive.state.isActive) return false;
-                    return true;
-                })
-                if (!item.options.length) return;
-            }
-            result.set(hook, selectors);
-        }
-        return result;
-    }
-
-    public static async toRun(
-        player: PlayerModel,
-        hooks: Readonly<SpellEffectModel[]>
-    ): Promise<Map<SpellEffectModel, Model[]> | undefined> {
-        const result = new Map<SpellEffectModel, Model[]>();
-        const selectors = SpellEffectModel.getSelector(hooks);
-        if (!selectors) return;
-        for (const item of selectors) {
-            const [key, value] = item;
-            const params: any[] = [];
-            for (const selector of value) {
-                const result = await player.child.controller.get(selector);
-                if (result === undefined) return;
-                params.push(result);
-            }
-            result.set(key, params);
-        }
-        return result;
-    }
 
     constructor(props: SpellEffectModel['props'] & {
         child: C;

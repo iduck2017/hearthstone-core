@@ -1,11 +1,12 @@
 import { DebugUtil, Event, Method, Model } from "set-piece";
-import { AbortEvent } from "../../../types/abort-event";
-import { BoardModel, CardFeatureModel, CardModel, FeatureModel } from "../../..";
+import { AbortEvent } from "../../../types/events/abort";
+import { FeatureModel, CardModel } from "../../..";
+import { CardFeatureModel } from "../card";
 
 export namespace DeathrattleModel {
     export type E = {
         toRun: AbortEvent;
-        onRun: {};
+        onRun: Event;
     };
     export type S = {};
     export type C = {};
@@ -32,7 +33,7 @@ export abstract class DeathrattleModel<
         super({
             uuid: props.uuid,
             state: {
-                isActive: true,
+                actived: true,
                 ...props.state,
             },
             child: { ...props.child },
@@ -41,17 +42,19 @@ export abstract class DeathrattleModel<
     }
 
     @DebugUtil.span()
-    public run() {
-        if (!this.state.isActive) return;
+    public start() {
+        if (!this.state.actived) return;
         
         const event = new AbortEvent({});
         this.event.toRun(event);
-        if (event.detail.isAbort) return;
+        if (event.detail.aborted) return;
 
-        DebugUtil.log(`${this.state.name} run (${this.state.desc})`);
-        this.doRun();
+        const name = this.state.name;
+        const desc = this.state.desc;
+        DebugUtil.log(`${name} run (${desc})`);
+        this.run();
         this.event.onRun(new Event({}));
     }
 
-    protected abstract doRun(): void;
+    protected abstract run(): void;
 }

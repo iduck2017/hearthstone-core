@@ -1,8 +1,6 @@
 import { DebugUtil, Event, EventUtil, Method, Model } from "set-piece";
-import { EndTurnHookModel } from "./end-turn";
 import { FeatureModel } from "..";
-import { TurnModel } from "../../rules/turn";
-import { CardModel } from "../../..";
+import { TurnModel } from "../rules/turn";
 import { CardFeatureModel } from "../card";
 
 export namespace StartTurnHookModel {
@@ -35,7 +33,7 @@ export abstract class StartTurnHookModel<
         super({
             uuid: props.uuid,
             state: {
-                isActive: true,
+                actived: true,
                 ...props.state,
             },
             child: { ...props.child },
@@ -43,12 +41,8 @@ export abstract class StartTurnHookModel<
         });
     }
 
-    @EventUtil.on(self => self.handleTurn)
-    private listenTurn() {
-        return this.route.game?.proxy.child.turn.event?.doStart;
-    }
-    protected handleTurn(that: TurnModel, event: Event) {
-        if (!this.state.isActive) return;
+    public start(that: TurnModel, event: Event) {
+        if (!this.state.actived) return;
 
         const game = this.route.game;
         if (!game) return;
@@ -56,12 +50,14 @@ export abstract class StartTurnHookModel<
         if (!player) return;
         const turn = game.child.turn;
         const current = turn.refer.current;
-        const isCurrent = current === player;
+        const actived = current === player;
 
-        DebugUtil.log(`${this.state.name} run (${this.state.desc})`);
-        this.doRun(isCurrent);
+        const name = this.state.name;
+        const desc = this.state.desc;
+        DebugUtil.log(`${name} run (${desc})`);
+        this.run(actived);
         this.event.onRun(new Event({}));
     }
 
-    protected abstract doRun(isCurrent: boolean): void;
+    protected abstract run(actived: boolean): void;
 }

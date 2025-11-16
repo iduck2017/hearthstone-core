@@ -2,7 +2,7 @@ import { Model } from "set-piece";
 
 export type Operator = {
     maximum?: number;
-    minumum?: number;
+    minimum?: number;
     type: OperatorType;
     offset: number;
     reason: Model;

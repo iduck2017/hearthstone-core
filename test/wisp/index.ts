@@ -1,5 +1,5 @@
 import { MinionCardModel, CostModel, RoleHealthModel, RoleAttackModel } from "../../src";
-import { RarityType, ClassType, RaceType } from "../../src/types/card-enums";
+import { RarityType, ClassType, RaceType } from "../../src/types/card";
 
 export class WispModel extends MinionCardModel {
     constructor(props?: WispModel['props']) {
@@ -12,7 +12,7 @@ export class WispModel extends MinionCardModel {
                 flavorDesc: '',
                 rarity: RarityType.COMMON,
                 class: ClassType.NEUTRAL,
-                isCollectible: false,
+                collectible: false,
                 races: [RaceType.UNDEAD],
                 ...props.state,
             },

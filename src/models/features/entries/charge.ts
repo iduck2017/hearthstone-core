@@ -1,6 +1,6 @@
 import { Event, TemplUtil } from "set-piece";
-import { FeatureModel } from "..";
-import { MinionFeatureModel } from "../minion";
+import { FeatureModel } from "../../features";
+import { RoleFeatureModel } from "../../features/minion";
 
 export namespace ChargeModel {
     export type E = {}
@@ -10,7 +10,7 @@ export namespace ChargeModel {
 }
 
 @TemplUtil.is('charge')
-export class ChargeModel extends MinionFeatureModel<
+export class ChargeModel extends RoleFeatureModel<
     ChargeModel.E,
     ChargeModel.S,
     ChargeModel.C,
@@ -22,7 +22,7 @@ export class ChargeModel extends MinionFeatureModel<
             state: {
                 name: 'Charge',
                 desc: 'Can attack immediately.',
-                isActive: true,
+                actived: true,
                 ...props?.state,
             },
             child: { ...props?.child },

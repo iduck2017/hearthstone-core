@@ -1,5 +1,5 @@
 import { DebugUtil, Event, TemplUtil } from "set-piece";
-import { MinionFeatureModel } from "../minion";
+import { RoleFeatureModel } from "../../features/minion";
 
 export namespace RushModel {
     export type E = {};
@@ -9,7 +9,7 @@ export namespace RushModel {
 }
 
 @TemplUtil.is('rush')
-export class RushModel extends MinionFeatureModel<
+export class RushModel extends RoleFeatureModel<
     RushModel.E,
     RushModel.S,
     RushModel.C,
@@ -21,7 +21,7 @@ export class RushModel extends MinionFeatureModel<
             state: {
                 name: 'Rush',
                 desc: 'Can attack minions immediately.',
-                isActive: true,
+                actived: true,
                 ...props?.state,
             },
             child: { ...props?.child },
@@ -30,12 +30,12 @@ export class RushModel extends MinionFeatureModel<
     }
 
     public active(): boolean {
-        if (this.state.isActive) return false;
+        if (this.state.actived) return false;
         const role = this.route.role;
         if (!role) return false;
         DebugUtil.log(`${role.name} gain Rush`);
-        this.origin.state.isActive = true;
-        this.event.onActive(new Event({}));
+        this.origin.state.actived = true;
+        this.event.onEnable(new Event({}));
         return true;
     }
 }

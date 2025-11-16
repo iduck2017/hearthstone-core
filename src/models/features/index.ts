@@ -1,15 +1,15 @@
-import { EventUtil, Method, Model, StateUtil, TranxUtil } from "set-piece";
-import { BoardModel, DeckModel, GameModel, GraveyardModel, HandModel, PlayerModel, SecretFeatureModel } from "../..";
+import { EventUtil, Model, StateUtil } from "set-piece";
+import { GameModel, PlayerModel } from "../..";
 
 export namespace FeatureModel {
     export type E = {
-        onActive: {};
-        onDeactive: {};
+        onEnable: {};
+        onDisable: {};
     };
     export type S = {
         name: string;
         desc: string;
-        isActive: boolean;
+        actived: boolean;
     }
     export type C = {};
     export type R = {};
@@ -36,13 +36,14 @@ export abstract class FeatureModel<
     }
 
     public get chunk() {
-        if (!this.state.isActive) return undefined;
-        return {
-            desc: this.state.desc,
-        }
+        if (!this.state.actived) return undefined;
+        return { desc: this.state.desc }
     }
 
-    protected abstract get status(): boolean;
+    public get status(): boolean {
+        if (!this.origin.state.actived) return false;
+        return true;
+    }
 
     constructor(props: FeatureModel['props'] & {
         uuid: string | undefined;
@@ -61,14 +62,12 @@ export abstract class FeatureModel<
     @EventUtil.if()
     @StateUtil.if()
     private check() {
-        if (!this.origin.state.isActive) return false;
-        if (!this.status) return false;
-        return true;
+        return this.status;
     }
 
-    public deactive() {
-        this.origin.state.isActive = false;
+    public disable() {
+        this.origin.state.actived = false;
         this.reload();
-        this.event.onDeactive({});
+        this.event.onDisable({});
     }
 }

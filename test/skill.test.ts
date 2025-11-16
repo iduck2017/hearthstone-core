@@ -38,8 +38,7 @@ describe('skill', () => {
         expect(heroB.child.health.state.current).toBe(30);
         expect(playerA.child.mana.state.current).toBe(10);
 
-        const promise = heroA.child.skill.run();
-        await AnimeUtil.sleep();
+        const promise = heroA.child.skill.start();
         expect(playerA.child.controller.current?.options).toContain(heroB);
         expect(playerA.child.controller.current?.options).toContain(heroA);
         playerA.child.controller.set(heroB);

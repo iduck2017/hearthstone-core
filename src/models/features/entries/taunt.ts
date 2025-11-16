@@ -1,6 +1,6 @@
 import { DebugUtil, Event, TemplUtil } from "set-piece";
-import { FeatureModel } from "..";
-import { MinionFeatureModel } from "../minion";
+import { FeatureModel } from "../../features";
+import { RoleFeatureModel } from "../../features/minion";
 
 export namespace TauntModel {
     export type E = {};
@@ -10,7 +10,7 @@ export namespace TauntModel {
 }
 
 @TemplUtil.is('taunt')
-export class TauntModel extends MinionFeatureModel<
+export class TauntModel extends RoleFeatureModel<
     TauntModel.E, 
     TauntModel.S, 
     TauntModel.C, 
@@ -23,7 +23,7 @@ export class TauntModel extends MinionFeatureModel<
             state: {
                 name: 'Taunt',
                 desc: 'Enemies must attack this minion.',
-                isActive: true,
+                actived: true,
                 ...props.state,
             },
             child: { ...props.child },
@@ -32,18 +32,18 @@ export class TauntModel extends MinionFeatureModel<
     }
 
     public active(): boolean {
-        if (this.state.isActive) return false;
+        if (this.state.actived) return false;
         const role = this.route.role;
         if (!role) return false;
         DebugUtil.log(`${role.name} gain Taunt`);
-        this.origin.state.isActive = true;
-        this.event.onActive(new Event({}));
+        this.origin.state.actived = true;
+        this.event.onEnable(new Event({}));
         return true;
     }
 
-    public deactive() {
+    public disable() {
         const role = this.route.role;
         if (!role) return false;
-        super.deactive();
+        super.disable();
     }
 }

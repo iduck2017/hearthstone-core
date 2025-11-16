@@ -1,6 +1,6 @@
 import { DebugUtil, Event, TemplUtil } from "set-piece";
-import { FeatureModel } from "..";
-import { MinionFeatureModel } from "../minion";
+import { FeatureModel } from "../../features";
+import { RoleFeatureModel } from "../../features/minion";
 
 export namespace StealthModel {
     export type E = {};
@@ -10,7 +10,7 @@ export namespace StealthModel {
 }
 
 @TemplUtil.is('stealth')
-export class StealthModel extends MinionFeatureModel<
+export class StealthModel extends RoleFeatureModel<
     StealthModel.E,
     StealthModel.S,
     StealthModel.C,
@@ -23,7 +23,7 @@ export class StealthModel extends MinionFeatureModel<
             state: {
                 name: 'Stealth',
                 desc: 'Can not be attacked or targeted until it attacks.',
-                isActive: true,
+                actived: true,
                 ...props.state,
             },
             child: { ...props.child },
@@ -32,18 +32,18 @@ export class StealthModel extends MinionFeatureModel<
     }
 
     public active() {
-        if (this.state.isActive) return false; 
+        if (this.state.actived) return false; 
         const role = this.route.role;
         if (!role) return false;
         DebugUtil.log(`${role.name} gain Stealth`);
-        this.origin.state.isActive = true;
-        this.event.onActive(new Event({}));
+        this.origin.state.actived = true;
+        this.event.onEnable(new Event({}));
         return true;
     }
 
-    public deactive() {
+    public disable() {
         const role = this.route.role;
         if (!role) return false;
-        super.deactive();
+        super.disable();
     }
 }

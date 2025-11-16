@@ -1,9 +1,10 @@
-import { BoardModel, DeckModel, GameModel, HandModel, MageModel, PlayerModel, AnimeUtil } from "../src";
+import { BoardModel, DeckModel, GameModel, HandModel, MageModel, PlayerModel, AnimeUtil, AppModel, LibraryUtil, TheCoinModel, HeroModel, RoleHealthModel, RoleActionDecor, RoleActionModel } from "../src";
 import { WispModel } from "./wisp";
 import { DebugUtil } from "set-piece";
 import { boot } from "./boot";
 
 describe('game', () => {
+    
     const game = new GameModel({
         state: { debug: { isDrawDisabled: true }},
         child: {
@@ -86,7 +87,6 @@ describe('game', () => {
         expect(card).toBeDefined();
 
         let promise = card?.play();
-        await AnimeUtil.sleep()
         let selector = player.child.controller.current;
         expect(selector).toBeDefined();
         expect(selector?.options).toContain(0);
@@ -103,7 +103,6 @@ describe('game', () => {
 
         card = hand.child.cards[0];
         promise = card?.play();
-        await AnimeUtil.sleep();
         selector = player.child.controller.current;
         expect(selector).toBeDefined();
         expect(selector?.options.length).toBe(3);

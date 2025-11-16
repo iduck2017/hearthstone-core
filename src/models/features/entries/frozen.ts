@@ -1,6 +1,6 @@
 import { DebugUtil, Event, TemplUtil } from "set-piece";
-import { FeatureModel } from "..";
-import { MinionFeatureModel } from "../minion";
+import { FeatureModel } from "../../features";
+import { RoleFeatureModel } from "../../features/minion";
 
 export namespace FrozenModel {
     export type E = {}
@@ -9,7 +9,7 @@ export namespace FrozenModel {
 }
 
 @TemplUtil.is('frozen')
-export class FrozenModel extends MinionFeatureModel<
+export class FrozenModel extends RoleFeatureModel<
     FrozenModel.E,
     FrozenModel.S,
     FrozenModel.C
@@ -20,7 +20,7 @@ export class FrozenModel extends MinionFeatureModel<
             state: {
                 name: 'Frozen',
                 desc: 'Frozen charactoers lose their next attack.',
-                isActive: true,
+                actived: true,
                 ...props?.state,
             },
             child: { ...props?.child },
@@ -29,30 +29,30 @@ export class FrozenModel extends MinionFeatureModel<
     }
 
     public active(): boolean {
-        if (this.state.isActive) return false;
+        if (this.state.actived) return false;
         const role = this.route.role;
         if (!role) return false;
         DebugUtil.log(`${role.name} Frozen`);
-        this.origin.state.isActive = true;
-        this.event.onActive(new Event({}));
+        this.origin.state.actived = true;
+        this.event.onEnable(new Event({}));
         return true;
     }
 
     public unfreeze() {
-        if (!this.state.isActive) return;
+        if (!this.state.actived) return;
         const role = this.route.role;
         if (!role) return false;
         if (role.child.action.state.current <= 0) return;
-        if (role.child.action.state.isLock) return;
-        if (role.child.sleep.state.isActive) return;
-        this.deactive();
+        if (!role.child.action.state.actived) return;
+        if (role.child.sleep.state.actived) return;
+        this.disable();
     }
 
-    public deactive() {
+    public disable() {
         const role = this.route.role;
         if (!role) return false;
         DebugUtil.log(`${role.name} Unfrozen`);
-        super.deactive();
+        super.disable();
     }
 
 }

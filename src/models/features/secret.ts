@@ -1,8 +1,8 @@
 import { Method, Model } from "set-piece";
-import { SecretCardModel } from "../cards/secret";
 import { FeatureModel } from ".";
-import { BoardModel } from "../cards/group/board";
+import { BoardModel } from "../entities/board";
 import { CardFeatureModel } from "./card";
+import { SecretCardModel } from "../entities/cards/secret";
 
 export namespace SecretFeatureModel {
     export type E = {};
@@ -31,7 +31,8 @@ export abstract class SecretFeatureModel<
         }
     }
 
-    protected get status(): boolean {
+    public get status(): boolean {
+        if (!super.status) return false;
         const board = this.route.board;
         if (!board) return false;
         return true;
@@ -60,7 +61,7 @@ export abstract class SecretFeatureModel<
                     // dispose
                     const secret = this.route.secret;
                     if (!secret) return true;
-                    secret.child.dispose.active(true);
+                    secret.child.dispose.destroy();
                     return true;
                 }
             }
@@ -78,7 +79,7 @@ export abstract class SecretFeatureModel<
         super({
             uuid: props.uuid,
             state: { 
-                isActive: true,
+                actived: true,
                 ...props.state 
             },
             child: { ...props.child },

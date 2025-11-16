@@ -1,8 +1,8 @@
 import { FeatureModel } from "..";
 import { DebugUtil, Event, Model } from "set-piece";
-import { Selector } from "../../rules/selector";
-import { CallerModel } from "../../rules/caller";
-import { CalleeModel } from "../../rules/callee";
+import { Selector } from "../../../types/selector";
+import { CallerModel } from "../../common/caller";
+import { CalleeModel } from "../../common/callee";
 
 export namespace EffectModel {
     export type E = {
@@ -10,7 +10,8 @@ export namespace EffectModel {
     };
     export type S = {
         power: number;
-        isAsync: boolean;
+        multiselect: boolean;
+        async: boolean;
     };
     export type C = {};
     export type R = {
@@ -19,7 +20,7 @@ export namespace EffectModel {
 }
 
 export abstract class EffectModel<
-    T extends any[] = any[],
+    T extends Model = Model,
     E extends Partial<EffectModel.E> & Partial<FeatureModel.E> & Model.E = {},
     S extends Partial<EffectModel.S> & Partial<FeatureModel.S> & Model.S = {},
     C extends Partial<EffectModel.C> & Partial<FeatureModel.C> & Model.C = {},
@@ -30,10 +31,7 @@ export abstract class EffectModel<
     C & EffectModel.C, 
     R & EffectModel.R
 >  implements CalleeModel<[EffectModel]>  {
-    protected get status(): boolean {
-        return true
-    }
-    
+
     public readonly promise = CalleeModel.prototype.promise.bind(this);
     public readonly resolve = CalleeModel.prototype.resolve.bind(this);
 
@@ -47,8 +45,9 @@ export abstract class EffectModel<
             uuid: props.uuid,
             state: {
                 power: 0,
-                isActive: true,
-                isAsync: false,
+                actived: true,
+                async: false,
+                multiselect: false,
                 ...props.state 
             },
             child: { ...props.child },
@@ -59,20 +58,22 @@ export abstract class EffectModel<
         })
     }
 
-    public run(...params: T) {
-        if (!this.state.isActive) return;
+    public start(...params: T[]) {
+        if (!this.state.actived) return;
 
-        DebugUtil.log(`${this.state.name} run (${this.state.desc})`);
-        this.doRun(...params);
-        if (!this.state.isAsync) this.onRun();
+        const name = this.state.name;
+        const desc = this.state.desc;
+        DebugUtil.log(`${name} run (${desc})`);
+        this.run(...params);
+        if (!this.state.async) this.end();
     }
 
-    protected onRun() {
+    protected end() {
         this.event.onRun(new Event({}));
         this.resolve(this);
     }
 
-    protected abstract doRun(...params: T): void;
+    protected abstract run(...params: T[]): void;
 
-    public abstract toRun(): { [K in keyof T]: Selector<T[K]> } | undefined;
+    public abstract prepare(...prev: T[]): Selector<T> | undefined;
 }
