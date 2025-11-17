@@ -88,8 +88,8 @@ export { EffectModel } from './models/features/hooks/effect';
 export { OverhealModel } from "./models/features/hooks/overheal";
 export { BattlecryModel } from "./models/features/hooks/battlecry";
 export { DeathrattleModel } from "./models/features/hooks/deathrattle";
-export { EndTurnHookModel } from "./models/features/hooks/end-turn";
-export { StartTurnHookModel } from "./models/features/hooks/start-turn";
+export { TurnEndModel } from "./models/features/hooks/turn-end";
+export { TurnStartModel } from "./models/features/hooks/turn-start";
 export { SpellEffectModel, SpellEffectDecor } from './models/features/hooks/spell-effect';
 
 // heroes

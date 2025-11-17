@@ -1,7 +1,7 @@
 import { Method, Model } from "set-piece";
 import { SkillModel } from "../skills";
 import { ArmorModel } from "../../features/rules/armor";
-import { DamageModel, EndTurnHookModel, FrozenModel, MinionCardModel, OverhealModel, RestoreModel, RoleAttackModel, RoleHealthModel, SleepModel, StartTurnHookModel, WeaponCardModel } from "../../..";
+import { DamageModel, FrozenModel, MinionCardModel, OverhealModel, RestoreModel, RoleAttackModel, RoleHealthModel, SleepModel, TurnEndModel, TurnStartModel, WeaponCardModel } from "../../..";
 import { HeroDisposeModel } from "../../features/dispose/hero";
 import { RoleActionModel } from "../../features/rules/role-action";
 import { PlayerModel } from "../player";
@@ -44,8 +44,8 @@ export namespace HeroModel {
         readonly feats: FeatureModel[];
         // hooks
         readonly overheal: OverhealModel[];
-        readonly startTurn: StartTurnHookModel[];
-        readonly endTurn: EndTurnHookModel[];
+        readonly turnStart: TurnStartModel[];
+        readonly turnEnd: TurnEndModel[];
     };
     export type R = {};
 }
@@ -81,8 +81,8 @@ export abstract class HeroModel<
             child: {
                 // hooks
                 overheal: props.child.overheal ?? [],
-                startTurn: props.child.startTurn ?? [],
-                endTurn: props.child.endTurn ?? [],
+                turnStart: props.child.turnStart ?? [],
+                turnEnd: props.child.turnEnd ?? [],
 
                 sleep: props.child.sleep ?? new SleepModel(),
                 health: props.child.health ?? new RoleHealthModel(),
@@ -112,8 +112,8 @@ export abstract class HeroModel<
     public buff(feat: IRoleBuffModel): void
     public buff(feat: BattlecryModel): void
     public buff(feat: OverhealModel): void
-    public buff(feat: StartTurnHookModel): void
-    public buff(feat: EndTurnHookModel): void
+    public buff(feat: TurnStartModel): void
+    public buff(feat: TurnEndModel): void
     public buff(feat: FeatureModel): void {
         const child = this.origin.child;
         if (feat instanceof IRoleBuffModel) child.buffs.push(feat);

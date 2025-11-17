@@ -3,7 +3,7 @@ import { FeatureModel } from "..";
 import { TurnModel } from "../rules/turn";
 import { CardFeatureModel } from "../card";
 
-export namespace StartTurnHookModel {
+export namespace TurnStartModel {
     export type E = {
         onRun: Event;
     };
@@ -12,19 +12,19 @@ export namespace StartTurnHookModel {
     export type R = {};
 }
 
-export abstract class StartTurnHookModel<
-    E extends Partial<StartTurnHookModel.E> & Model.E = {},
-    S extends Partial<StartTurnHookModel.S> & Model.S = {},
-    C extends Partial<StartTurnHookModel.C> & Model.C = {},
-    R extends Partial<StartTurnHookModel.R> & Model.R = {},
+export abstract class TurnStartModel<
+    E extends Partial<TurnStartModel.E> & Model.E = {},
+    S extends Partial<TurnStartModel.S> & Model.S = {},
+    C extends Partial<TurnStartModel.C> & Model.C = {},
+    R extends Partial<TurnStartModel.R> & Model.R = {},
 > extends CardFeatureModel<
-    E & StartTurnHookModel.E,
-    S & StartTurnHookModel.S,
-    C & StartTurnHookModel.C,
-    R & StartTurnHookModel.R
+    E & TurnStartModel.E,
+    S & TurnStartModel.S,
+    C & TurnStartModel.C,
+    R & TurnStartModel.R
 > {
 
-    constructor(props: StartTurnHookModel['props'] & {
+    constructor(props: TurnStartModel['props'] & {
         uuid: string | undefined;
         state: S & Pick<FeatureModel.S, 'desc' | 'name'>;
         child: C;

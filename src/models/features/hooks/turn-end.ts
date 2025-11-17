@@ -3,7 +3,7 @@ import { TurnModel } from "../rules/turn";
 import { FeatureModel, CardModel } from "../../..";
 import { CardFeatureModel } from "../card";
 
-export namespace EndTurnHookModel {
+export namespace TurnEndModel {
     export type E = {
         onRun: Event;
     };
@@ -12,16 +12,16 @@ export namespace EndTurnHookModel {
     export type R = {};
 }
 
-export abstract class EndTurnHookModel<
-    E extends Partial<EndTurnHookModel.E> & Model.E = {},
-    S extends Partial<EndTurnHookModel.S> & Model.S = {},
-    C extends Partial<EndTurnHookModel.C> & Model.C = {},
-    R extends Partial<EndTurnHookModel.R> & Model.R = {},
+export abstract class TurnEndModel<
+    E extends Partial<TurnEndModel.E> & Model.E = {},
+    S extends Partial<TurnEndModel.S> & Model.S = {},
+    C extends Partial<TurnEndModel.C> & Model.C = {},
+    R extends Partial<TurnEndModel.R> & Model.R = {},
 > extends CardFeatureModel<
-    E & EndTurnHookModel.E,
-    S & EndTurnHookModel.S,
-    C & EndTurnHookModel.C,
-    R & EndTurnHookModel.R
+    E & TurnEndModel.E,
+    S & TurnEndModel.S,
+    C & TurnEndModel.C,
+    R & TurnEndModel.R
 > {
     public get route() {
         const result = super.route;
@@ -32,7 +32,7 @@ export abstract class EndTurnHookModel<
         }
     }
     
-    constructor(props: EndTurnHookModel['props'] & {
+    constructor(props: TurnEndModel['props'] & {
         uuid: string | undefined;
         state: S & Pick<FeatureModel.S, 'desc' | 'name'>;
         child: C;

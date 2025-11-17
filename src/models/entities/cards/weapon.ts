@@ -5,10 +5,10 @@ import { WeaponActionModel } from "../../features/rules/weapon-action";
 import { WeaponDisposeModel } from "../../features/dispose/weapon";
 import { FeatureModel } from "../../features";
 import { BattlecryModel } from "../../features/hooks/battlecry";
-import { EndTurnHookModel } from "../../features/hooks/end-turn";
-import { StartTurnHookModel } from "../../features/hooks/start-turn";
+import { TurnEndModel } from "../../features/hooks/turn-end";
 import { WeaponPerformModel } from "../../features/perform/weapon";
 import { DeathrattleModel } from "../../features/hooks/deathrattle";
+import { TurnStartModel } from "../../features/hooks/turn-start";
 
 export namespace WeaponCardModel {
     export type S = {};
@@ -71,8 +71,8 @@ export abstract class WeaponCardModel<
                 feats: props.child.feats ?? [],
                 battlecry: props.child.battlecry ?? [],
                 deathrattle: props.child.deathrattle ?? [],
-                startTurn: props.child.startTurn ?? [],
-                endTurn: props.child.endTurn ?? [],
+                turnStart: props.child.turnStart ?? [],
+                turnEnd: props.child.turnEnd ?? [],
                 ...props.child,
             },
             refer: { ...props.refer },
@@ -82,14 +82,14 @@ export abstract class WeaponCardModel<
 
     public buff(feat: BattlecryModel): void;
     public buff(feat: DeathrattleModel): void;
-    public buff(feat: StartTurnHookModel): void;
-    public buff(feat: EndTurnHookModel): void;
+    public buff(feat: TurnStartModel): void;
+    public buff(feat: TurnEndModel): void;
     public buff(feat: FeatureModel): void;
     public buff(feat: FeatureModel): void {
         const child = this.origin.child;
         if (feat instanceof BattlecryModel) child.battlecry.push(feat);
-        else if (feat instanceof StartTurnHookModel) child.startTurn.push(feat);
-        else if (feat instanceof EndTurnHookModel) child.endTurn.push(feat);
+        else if (feat instanceof TurnStartModel) child.turnStart.push(feat);
+        else if (feat instanceof TurnEndModel) child.turnEnd.push(feat);
         else if (feat instanceof DeathrattleModel) child.deathrattle.push(feat);
         else if (feat instanceof FeatureModel) child.feats.push(feat);
     }

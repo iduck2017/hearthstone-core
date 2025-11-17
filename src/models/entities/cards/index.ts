@@ -1,7 +1,7 @@
 import { DebugUtil, Model, TranxUtil, Event, Method, Route, TemplUtil } from "set-piece";
 import { CostModel } from "../../features/rules/cost";
 import { ClassType, RarityType } from "../../../types/card";
-import { AppModel, CardFeatureModel, DamageModel, DisposeModel, EndTurnHookModel, LibraryUtil, PoisonousModel, RestoreModel, StartTurnHookModel } from "../../..";
+import { AppModel, CardFeatureModel, DamageModel, DisposeModel, LibraryUtil, PoisonousModel, RestoreModel, TurnEndModel, TurnStartModel } from "../../..";
 import { PlayerModel, GameModel, HandModel, DeckModel, BoardModel, GraveyardModel } from "../../..";
 import { PerformModel } from "../../features/perform";
 
@@ -29,8 +29,8 @@ export namespace CardModel {
         // feats
         readonly feats: CardFeatureModel[];
         // hooks
-        readonly startTurn: StartTurnHookModel[];
-        readonly endTurn: EndTurnHookModel[];
+        readonly turnStart: TurnStartModel[];
+        readonly turnEnd: TurnEndModel[];
     };
     export type R = {
         creator?: Model;
@@ -114,8 +114,8 @@ export abstract class CardModel<
                 damage: props.child.damage ?? new DamageModel(),
                 restore: props.child.restore ?? new RestoreModel(),
                 poisonous: props.child.poisonous ?? new PoisonousModel({ state: { actived: false }}),
-                startTurn: props.child.startTurn ?? [],
-                endTurn: props.child.endTurn ?? [],
+                turnStart: props.child.turnStart ?? [],
+                turnEnd: props.child.turnEnd ?? [],
                 ...props.child 
             },
             refer: { ...props.refer },

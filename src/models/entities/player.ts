@@ -11,8 +11,8 @@ import { MageModel } from "./heroes/mage";
 import { CollectionModel } from "./collection";
 import { ControllerModel } from "../common/controller";
 import { MinionCardModel } from "./cards/minion";
-import { StartTurnHookModel } from "../features/hooks/start-turn";
-import { EndTurnHookModel } from "../features/hooks/end-turn";
+import { TurnStartModel } from "../features/hooks/turn-start";
+import { TurnEndModel } from "../features/hooks/turn-end";
 import { CardModel } from "./cards";
 
 export enum PlayerType {
@@ -39,8 +39,8 @@ export namespace PlayerModel {
         // controller
         readonly controller: ControllerModel;
         // hooks
-        readonly startTurn: StartTurnHookModel[];
-        readonly endTurn: EndTurnHookModel[];
+        readonly turnStart: TurnStartModel[];
+        readonly turnEnd: TurnEndModel[];
     };
     export type R = {}
 }
@@ -139,8 +139,8 @@ export class PlayerModel extends Model<
                 collection: child.collection ?? new CollectionModel(),
                 graveyard: child.graveyard ?? new GraveyardModel(),
                 controller: child.controller ?? new ControllerModel(),
-                startTurn: child.startTurn ?? [],
-                endTurn: child.endTurn ?? [],
+                turnStart: child.turnStart ?? [],
+                turnEnd: child.turnEnd ?? [],
                 ...child
             },
             refer: { ...props.refer },

@@ -74,7 +74,7 @@ export class TurnModel extends Model<
             opponent.child.hero,
         ]
         entites.forEach(entity => {
-            entity.child.startTurn.forEach(item => {
+            entity.child.turnStart.forEach(item => {
                 item.start()
             })
         })
@@ -112,7 +112,7 @@ export class TurnModel extends Model<
             opponent.child.hero,
         ]
         entites.forEach(entity => {
-            entity.child.endTurn.forEach(item => {
+            entity.child.turnEnd.forEach(item => {
                 item.start()
             })
         })

@@ -20,12 +20,12 @@ import { StealthModel } from "../../features/entries/stealth";
 import { ElusiveModel } from "../../features/entries/elusive";
 import { WindfuryModel } from "../../features/entries/windfury";
 import { DivineShieldModel } from "../../features/entries/divine-shield";
-import { EndTurnHookModel } from "../../features/hooks/end-turn";
-import { StartTurnHookModel } from "../../features/hooks/start-turn";
+import { TurnEndModel } from "../../features/hooks/turn-end";
 import { DeathrattleModel } from "../../features/hooks/deathrattle";
 import { OverhealModel } from "../../features/hooks/overheal";
 import { FeatureModel } from "../../features";
 import { CardFeatureModel } from "../../features/card";
+import { TurnStartModel } from "../../features/hooks/turn-start";
 
 export namespace MinionCardModel {
     export type S = {
@@ -179,8 +179,8 @@ export abstract class MinionCardModel<
         // hooks
         this.child.battlecry.forEach(item => item.disable());
         this.child.deathrattle.forEach(item => item.disable());
-        this.child.startTurn.forEach(item => item.disable());
-        this.child.endTurn.forEach(item => item.disable());
+        this.child.turnStart.forEach(item => item.disable());
+        this.child.turnEnd.forEach(item => item.disable());
         // entries
         this.child.charge.disable();
         this.child.divineShield.disable();
@@ -196,8 +196,8 @@ export abstract class MinionCardModel<
     public buff(feat: IRoleBuffModel): void;
     public buff(feat: BattlecryModel): void;
     public buff(feat: DeathrattleModel): void;
-    public buff(feat: StartTurnHookModel): void;
-    public buff(feat: EndTurnHookModel): void;
+    public buff(feat: TurnStartModel): void;
+    public buff(feat: TurnEndModel): void;
     public buff(feat: OverhealModel): void;
     public buff(feat: CardFeatureModel): void;
     public buff(feat: CardFeatureModel): void {
@@ -205,8 +205,8 @@ export abstract class MinionCardModel<
         if (feat instanceof IRoleBuffModel) child.buffs.push(feat);
         else if (feat instanceof BattlecryModel) child.battlecry.push(feat);
         else if (feat instanceof DeathrattleModel) child.deathrattle.push(feat);
-        else if (feat instanceof StartTurnHookModel) child.startTurn.push(feat);
-        else if (feat instanceof EndTurnHookModel) child.endTurn.push(feat);
+        else if (feat instanceof TurnStartModel) child.turnStart.push(feat);
+        else if (feat instanceof TurnEndModel) child.turnEnd.push(feat);
         else if (feat instanceof OverhealModel) child.overheal.push(feat);
         else if (feat instanceof FeatureModel) child.feats.push(feat);
     }
