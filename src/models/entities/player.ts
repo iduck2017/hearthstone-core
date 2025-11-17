@@ -11,6 +11,9 @@ import { MageModel } from "./heroes/mage";
 import { CollectionModel } from "./collection";
 import { ControllerModel } from "../common/controller";
 import { MinionCardModel } from "./cards/minion";
+import { StartTurnHookModel } from "../features/hooks/start-turn";
+import { EndTurnHookModel } from "../features/hooks/end-turn";
+import { CardModel } from "./cards";
 
 export enum PlayerType {
     USER = 'user',
@@ -35,6 +38,9 @@ export namespace PlayerModel {
         readonly feats: FeatureModel[];
         // controller
         readonly controller: ControllerModel;
+        // hooks
+        readonly startTurn: StartTurnHookModel[];
+        readonly endTurn: EndTurnHookModel[];
     };
     export type R = {}
 }
@@ -57,11 +63,19 @@ export class PlayerModel extends Model<
         const child = this.child;
         const minions: MinionCardModel[] = child.board.refer.minions.filter(item => !item.child.dispose?.status);
         const roles: RoleModel[] = [child.hero, ...minions];
+        const cards: CardModel[] = [
+            ...child.hand.child.cards,
+            ...child.deck.child.cards,
+            ...child.board.child.cards,
+            ...child.board.child.secrets
+        ]
+        if (child.hero.child.weapon) cards.push(child.hero.child.weapon);
         return { 
             ...super.refer, 
             opponent: this.opponent, 
             roles,
             minions,
+            cards,
         }
     }
 
@@ -125,6 +139,8 @@ export class PlayerModel extends Model<
                 collection: child.collection ?? new CollectionModel(),
                 graveyard: child.graveyard ?? new GraveyardModel(),
                 controller: child.controller ?? new ControllerModel(),
+                startTurn: child.startTurn ?? [],
+                endTurn: child.endTurn ?? [],
                 ...child
             },
             refer: { ...props.refer },

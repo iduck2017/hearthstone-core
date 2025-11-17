@@ -62,6 +62,7 @@ export class BoardModel extends Model<
         })
     }
 
+
     public add(card: SecretCardModel): void
     public add(card: MinionCardModel, position?: number): void
     public add(card: CardModel, position?: number): void {

@@ -1,7 +1,7 @@
-import { DebugUtil, Model, TranxUtil, Event, Method, Route } from "set-piece";
+import { DebugUtil, Model, TranxUtil, Event, Method, Route, TemplUtil } from "set-piece";
 import { CostModel } from "../../features/rules/cost";
 import { ClassType, RarityType } from "../../../types/card";
-import { CardFeatureModel, DamageModel, DisposeModel, EndTurnHookModel, PoisonousModel, RestoreModel, StartTurnHookModel } from "../../..";
+import { AppModel, CardFeatureModel, DamageModel, DisposeModel, EndTurnHookModel, LibraryUtil, PoisonousModel, RestoreModel, StartTurnHookModel } from "../../..";
 import { PlayerModel, GameModel, HandModel, DeckModel, BoardModel, GraveyardModel } from "../../..";
 import { PerformModel } from "../../features/perform";
 
@@ -81,6 +81,7 @@ export abstract class CardModel<
         board: BoardModel;
         graveyard: GraveyardModel;
         game: GameModel;
+        app: AppModel;
     }> {
         const result = super.route;
         return {
@@ -91,6 +92,7 @@ export abstract class CardModel<
             board: result.items.find(item => item instanceof BoardModel),
             graveyard: result.items.find(item => item instanceof GraveyardModel),
             game: result.items.find(item => item instanceof GameModel),
+            app: result.items.find(item => item instanceof AppModel),
         }
     }
 
@@ -135,11 +137,30 @@ export abstract class CardModel<
         const player = this.route.player;
         if (!player) return false;
         DebugUtil.log(`${this.name} Drew`);
+        
+        // draw from deck
         const deck = player.child.deck;
-        const hand = player.child.hand;
         deck.del(this);
+
+        // draw to hand
+        const hand = player.child.hand;
         hand.add(this);
         return true;
     }
 
+
+    public clone<T extends CardModel>(this: T, original?: boolean): T | undefined {
+        const copy = TemplUtil.copy(this, {
+            state: original ? {} : { ...this.props.state },
+            child: original ? {} : { ...this.props.child },
+            refer: { ...this.props.refer, creator: this },
+        });
+        if (!copy) return;
+
+        // link to root
+        const app = this.route.app;
+        if (!app) return;
+        app.link(copy);
+        return copy;
+    }
 }

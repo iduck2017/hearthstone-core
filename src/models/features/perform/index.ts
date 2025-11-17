@@ -3,6 +3,7 @@ import { PlayerModel } from "../../entities/player";
 import { HandModel } from "../../entities/hand";
 import { CardModel } from "../../entities/cards";
 import { AbortEvent } from "../../../types/events/abort";
+import { AppModel } from "../../app";
 
 export namespace PerformModel {
     export type E = {
@@ -38,6 +39,7 @@ export abstract class PerformModel<
             player,
             hand: result.items.find(item => item instanceof HandModel),
             card,
+            app: result.items.find(item => item instanceof AppModel),
         }
     }
 
@@ -66,7 +68,7 @@ export abstract class PerformModel<
         const mana = player.child.mana;
         const cost = card.child.cost;
         if (!cost) return;
-        mana.consume(cost.state.current, this);
+        mana.consume(cost.state.current, card);
     }
 
     constructor(props: PerformModel['props'] & {

@@ -11,6 +11,7 @@ export namespace AppModel {
     export type C = {
         game?: GameModel;
         readonly configs: CollectionModel[]
+        readonly templates: Model[]
     };
 }
 
@@ -31,6 +32,7 @@ export class AppModel extends Model<
             },
             child: { 
                 configs: props.child?.configs ?? [],
+                templates: props.child?.templates ?? [],
                 ...props.child 
             },
             refer: { ...props.refer },
@@ -52,5 +54,17 @@ export class AppModel extends Model<
         const index = this.origin.child.configs.indexOf(value);
         if (index === -1) return;
         this.origin.child.configs.splice(index, 1);
+    }
+
+
+    public link(value: Model) {
+        this.origin.child.templates.push(value);
+    }
+
+    public unlink(value: Model) {
+        const templates = this.origin.child.templates;
+        const index = templates.indexOf(value);
+        if (index === -1) return;
+        templates.splice(index, 1);
     }
 }

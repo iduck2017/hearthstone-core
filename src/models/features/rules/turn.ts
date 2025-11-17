@@ -7,8 +7,6 @@ export namespace TurnModel {
         current: number;
     };
     export type E = {
-        doEnd: Event;
-        doStart: Event;
         onEnd: Event;
         onStart: Event;
     };
@@ -60,22 +58,37 @@ export class TurnModel extends Model<
         const board = player?.child.board;
         if (!board) return;
         DebugUtil.log(`${player.name} Turn Start`);
-        const roles = player.refer.roles;
-
-        player.child.mana.reset();
-        roles.forEach(item => {
-            item.child.action.reset();
-            item.child.sleep.disable();
-        });
-
-        // draw a card
+        
         const game = this.route.game;
+        if (!game) return;
+
+        const allies = player.refer.roles;
+        const opponent = player.refer.opponent;
+        if (!opponent) return;
+        const entites = [
+            ...game.refer.cards,
+            // player and hero
+            player,
+            player.child.hero,
+            opponent,
+            opponent.child.hero,
+        ]
+        entites.forEach(entity => {
+            entity.child.startTurn.forEach(item => {
+                item.start()
+            })
+        })
+        
+
+        // reset mana
+        player.child.mana.reset();
+        // reset actions
+        allies.forEach(item => item.child.action.reset())
+        allies.forEach(item => item.child.sleep.disable())
+        // draw card
         if (!game?.state.debug?.isDrawDisabled) {
             player.child.deck.draw();
         }
-
-        // start hook
-        this.event.doStart(new Event({}));
         this.event.onStart(new Event({}));
     }
     
@@ -86,12 +99,29 @@ export class TurnModel extends Model<
         if (!board) return;
         DebugUtil.log(`${player.name} Turn End`);
 
+        const game = this.route.game;
+        if (!game) return;
+        const opponent = player.refer.opponent;
+        if (!opponent) return;
+        const entites = [
+            ...game.refer.cards,
+            // player and hero
+            player,
+            player.child.hero,
+            opponent,
+            opponent.child.hero,
+        ]
+        entites.forEach(entity => {
+            entity.child.endTurn.forEach(item => {
+                item.start()
+            })
+        })
+
         const roles = player.refer.roles;
         roles.forEach(item => {
             item.child.frozen.unfreeze();
         });
         
-        this.event.doEnd(new Event({}));
         this.event.onEnd(new Event({}));
     }
 

@@ -44,6 +44,8 @@ export namespace HeroModel {
         readonly feats: FeatureModel[];
         // hooks
         readonly overheal: OverhealModel[];
+        readonly startTurn: StartTurnHookModel[];
+        readonly endTurn: EndTurnHookModel[];
     };
     export type R = {};
 }
@@ -77,7 +79,11 @@ export abstract class HeroModel<
             uuid: props.uuid,
             state: { ...props.state },
             child: {
-                overheal: [],
+                // hooks
+                overheal: props.child.overheal ?? [],
+                startTurn: props.child.startTurn ?? [],
+                endTurn: props.child.endTurn ?? [],
+
                 sleep: props.child.sleep ?? new SleepModel(),
                 health: props.child.health ?? new RoleHealthModel(),
                 attack: props.child.attack ?? new RoleAttackModel(),
@@ -106,6 +112,8 @@ export abstract class HeroModel<
     public buff(feat: IRoleBuffModel): void
     public buff(feat: BattlecryModel): void
     public buff(feat: OverhealModel): void
+    public buff(feat: StartTurnHookModel): void
+    public buff(feat: EndTurnHookModel): void
     public buff(feat: FeatureModel): void {
         const child = this.origin.child;
         if (feat instanceof IRoleBuffModel) child.buffs.push(feat);

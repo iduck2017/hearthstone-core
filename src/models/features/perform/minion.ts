@@ -7,6 +7,7 @@ import { AbortEvent } from "../../../types/events/abort";
 import { BoardModel } from "../../entities/board";
 import { Selector } from "../../../types/selector";
 import { PerformModel } from ".";
+import { AppModel } from "../../app";
 
 export type MinionHooksConfig = {
     battlecry: Map<BattlecryModel, Model[]>
@@ -177,23 +178,30 @@ export class MinionPerformModel extends PerformModel<
         this.event.onPlay(new Event({}));
     }
 
-    public summon(board?: BoardModel, index?: number) {
+    public summon(board?: BoardModel, position?: number) {
         const player = this.route.player;
         if (!board) board = player?.child.board;
         if (!board) return;
-        this._summon(board, index);
+        this._summon(board, position);
         this.event.onSummon(new Event({}));
     }
     @TranxUtil.span()
-    private _summon(board: BoardModel, index?: number) {
-        console.log('🔍 summon', this.route.minion);
+    private _summon(board: BoardModel, position?: number) {
         const minion = this.route.minion;
         if (!minion) return;
         DebugUtil.log(`${minion.name} Summoned`);
         const player = this.route.player;
+
+        // summon from hand
         const hand = player?.child.hand;
         if (hand) hand.del(minion);
-        board.add(minion, index);
+        
+        // summon from template
+        const app = this.route.app;
+        if (app) app.unlink(minion);
+        
+        // add to board
+        board.add(minion, position);
     }
 
 

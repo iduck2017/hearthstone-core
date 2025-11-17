@@ -39,9 +39,15 @@ export class SecretPerformModel extends SpellPerformModel {
         if (!player) return;
         const secret = this.route.secret;
         if (!secret) return;
+
+        // deploy from hand
         const hand = player.child.hand;
-        if (!hand) return;
-        hand.del(secret);
+        if (hand) hand.del(secret);
+        
+        // deploy from template
+        const app = this.route.app;
+        if (app) app.unlink(secret);
+
         const board = player.child.board;
         if (!board) return;
         board.add(secret);

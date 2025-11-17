@@ -9,9 +9,7 @@ export namespace SpellCardModel {
     export type S = {
         readonly schools: SchoolType[];
     };
-    export type E = {
-        toCast: SpellCastEvent;
-    };
+    export type E = {};
     export type C = {
         readonly perform: SpellPerformModel;
         readonly effects: SpellEffectModel[];

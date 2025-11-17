@@ -23,8 +23,6 @@ export namespace WeaponCardModel {
         readonly feats: FeatureModel[];
         readonly battlecry: BattlecryModel[];
         readonly deathrattle: DeathrattleModel[];
-        readonly startTurn: StartTurnHookModel[];
-        readonly endTurn: EndTurnHookModel[];
     };
     export type R = {};
 }

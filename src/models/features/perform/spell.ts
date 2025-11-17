@@ -5,13 +5,16 @@ import { CallerModel } from "../../common/caller"
 import { SpellCardModel } from "../../entities/cards/spell"
 import { PerformModel } from "."
 import { AbortEvent } from "../../../types/events/abort"
+import { SpellCastEvent } from "../../../types/events/spell-cast"
 
 export type SpellHooksConfig = {
     effects: Map<SpellEffectModel, Model[]>
 }
 
 export namespace SpellPerformModel {
-    export type E = {}
+    export type E = {
+        toCast: SpellCastEvent;
+    }
     export type S = {
         from: number;
         index: number;
@@ -77,21 +80,22 @@ export class SpellPerformModel extends PerformModel<
         const config = await this.prepare();
         // cancel by user
         if (!config) return;
-        this._play(config);
-    }
-    protected _play(config: SpellHooksConfig) {
+        
         const player = this.route.player;
         if (!player) return;
         const spell = this.route.spell;
         if (!spell) return;
         this.expand()
+
         // use
         const hand = player.child.hand;
         const from = hand.child.cards.indexOf(spell);
+        
         // run
         DebugUtil.log(`${spell.name} Played`);
         this.start(from, config);
     }
+
 
     public get config(): SpellHooksConfig {
         const result = new Map<SpellEffectModel, Model[]>();
@@ -108,10 +112,27 @@ export class SpellPerformModel extends PerformModel<
         const spell = this.route.spell;
         if (!player) return;
         if (!spell) return;
+        
+        // precheck
+        const eventB = new AbortEvent({});
+        this.event.toRun(eventB);
+        if (eventB.detail.aborted) {
+            const hand = player.child.hand;
+            hand.del(spell);
+            return;
+        }
+
+        const eventA = new SpellCastEvent({ config });
+        this.event.toRun(eventA);
+        if (eventA.detail.aborted) {
+            const hand = player.child.hand;
+            hand.del(spell);
+            return;
+        }
+
+        
         this.deploy();
-        const event = new AbortEvent({});
-        this.event.toRun(event);
-        if (event.detail.aborted) return;
+
         // hooks
         this._start(from, config);
         this.next()

@@ -15,10 +15,10 @@ export namespace SecretCardModel {
 }
 
 export abstract class SecretCardModel<
-    E extends Partial<SecretCardModel.E & SpellCardModel.E> & Model.E = {},
-    S extends Partial<SecretCardModel.S & SpellCardModel.S> & Model.S = {},
-    C extends Partial<SecretCardModel.C & SpellCardModel.C> & Model.C = {},
-    R extends Partial<SecretCardModel.R & SpellCardModel.R> & Model.R = {}
+    E extends Partial<SecretCardModel.E & SpellCardModel.E & CardModel.E> & Model.E = {},
+    S extends Partial<SecretCardModel.S & SpellCardModel.S & CardModel.S> & Model.S = {},
+    C extends Partial<SecretCardModel.C & SpellCardModel.C & CardModel.C> & Model.C = {},
+    R extends Partial<SecretCardModel.R & SpellCardModel.R & CardModel.R> & Model.R = {}
 > extends SpellCardModel<
     E & SecretCardModel.E,
     S & SecretCardModel.S,

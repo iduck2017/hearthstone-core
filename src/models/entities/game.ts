@@ -1,7 +1,7 @@
 import { DebugUtil, Event, Model, TemplUtil, TranxUtil } from "set-piece";
 import { PlayerModel } from "./player";
 import { TurnModel } from "../features/rules/turn";
-import { MinionCardModel, TheCoinModel } from "../..";
+import { AppModel, CardModel, MinionCardModel, TheCoinModel } from "../..";
 import { RoleModel } from "./heroes";
 
 export namespace GameModel {
@@ -48,10 +48,24 @@ export class GameModel extends Model<
             ...child.playerA.refer.roles, 
             ...child.playerB.refer.roles,
         ];
+        const cards: CardModel[] = [
+            ...child.playerA.refer.cards,
+            ...child.playerB.refer.cards,
+        ];
         return {
             ...super.refer,
             minions,
             roles,
+            cards,
+        }
+    }
+
+
+    public get route() {
+        const result = super.route;
+        return {
+            ...result,
+            app: result.items.find(item => item instanceof AppModel),
         }
     }
     

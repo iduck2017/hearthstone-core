@@ -1,4 +1,4 @@
-import { Event, Method, State, TranxUtil, Model, DebugUtil } from "set-piece";
+import { Event, Method, State, TranxUtil, Model, DebugUtil, TemplUtil } from "set-piece";
 import { RaceType } from "../../../types/card";
 import { MinionDisposeModel } from "../../features/dispose/minion";
 import { CardModel } from ".";
@@ -211,7 +211,7 @@ export abstract class MinionCardModel<
         else if (feat instanceof FeatureModel) child.feats.push(feat);
     }
 
-    public summon(board?: BoardModel, index?: number) {
-        this.child.perform.summon(board, index);
+    public summon(board?: BoardModel, position?: number) {
+        this.child.perform.summon(board, position);
     }
 }

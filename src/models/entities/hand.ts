@@ -56,20 +56,10 @@ export class HandModel extends Model<
     }
    
     @TranxUtil.span()
-    public add(card: CardModel, position?: number, options?: {
-        cloned?: boolean
-        original?: boolean
-    }) {
+    public add(card: CardModel, position?: number) {
         const child = this.origin.child;
         if (position === -1) position = child.cards.length;
         if (position === undefined) position = child.cards.length;
-        if (options?.cloned) {
-            const copy = TemplUtil.copy(card, {
-                refer: { ...card.props.refer, creator: card },
-            });
-            if (!copy) return;
-            card = copy;
-        }
         child.cards.splice(position, 0, card);
     }
 

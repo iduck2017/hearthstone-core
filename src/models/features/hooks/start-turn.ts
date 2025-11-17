@@ -41,7 +41,7 @@ export abstract class StartTurnHookModel<
         });
     }
 
-    public start(that: TurnModel, event: Event) {
+    public start() {
         if (!this.state.actived) return;
 
         const game = this.route.game;
