@@ -1,4 +1,4 @@
-import { Event, Model } from "set-piece";
+import { Event, Model, Route } from "set-piece";
 import { PlayerModel } from "../../entities/player";
 import { HandModel } from "../../entities/hand";
 import { CardModel } from "../../entities/cards";
@@ -17,6 +17,12 @@ export namespace PerformModel {
     }
     export type C = {};
     export type R = {};
+    export type P = {
+        player: PlayerModel | undefined;
+        hand: HandModel | undefined;
+        card: CardModel | undefined;
+        app: AppModel | undefined;
+    }
 }
 
 export abstract class PerformModel<
@@ -30,7 +36,7 @@ export abstract class PerformModel<
     C & PerformModel.C, 
     R & PerformModel.R
 > {
-    public get route() {
+    public get route(): Route & PerformModel.P {
         const result = super.route;
         const player: PlayerModel | undefined = result.items.find(item => item instanceof PlayerModel)
         const card: CardModel | undefined = result.items.find(item => item instanceof CardModel)

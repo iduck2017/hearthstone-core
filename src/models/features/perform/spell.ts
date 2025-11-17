@@ -1,4 +1,4 @@
-import { DebugUtil, Event, Model, TranxUtil } from "set-piece"
+import { DebugUtil, Event, Model, Route, TranxUtil } from "set-piece"
 import { SpellEffectModel } from "../hooks/spell-effect"
 import { WeakMapModel } from "../../common/weak-map"
 import { CallerModel } from "../../common/caller"
@@ -13,7 +13,7 @@ export type SpellHooksConfig = {
 
 export namespace SpellPerformModel {
     export type E = {
-        toCast: SpellCastEvent;
+        toCast: SpellCastEvent
     }
     export type S = {
         from: number;
@@ -23,6 +23,9 @@ export namespace SpellPerformModel {
         params: WeakMapModel<SpellEffectModel, Model[]>[]
     }
     export type R = {}
+    export type P = {
+        spell: SpellCardModel | undefined;
+    }
 }
 
 
@@ -32,7 +35,7 @@ export class SpellPerformModel extends PerformModel<
     SpellPerformModel.C,
     SpellPerformModel.R
 > implements CallerModel<[SpellEffectModel]> {
-    public get route() {
+    public get route(): Route & SpellPerformModel.P & PerformModel.P {
         const result = super.route;
         const spell: SpellCardModel | undefined = result.items.find(item => item instanceof SpellCardModel)
         return {
@@ -123,15 +126,14 @@ export class SpellPerformModel extends PerformModel<
         }
 
         const eventA = new SpellCastEvent({ config });
-        this.event.toRun(eventA);
+        this.event.toCast(eventA);
         if (eventA.detail.aborted) {
             const hand = player.child.hand;
             hand.del(spell);
             return;
         }
-
         
-        this.deploy();
+        this.cast();
 
         // hooks
         this._start(from, config);
@@ -221,7 +223,7 @@ export class SpellPerformModel extends PerformModel<
     }
 
 
-    public deploy() {
+    public cast() {
         const player = this.route.player;
         if (!player) return;
         const spell = this.route.spell;

@@ -34,7 +34,7 @@ export class SecretPerformModel extends SpellPerformModel {
     }
 
     @TranxUtil.span()
-    public deploy() {
+    public cast() {
         const player = this.route.player;
         if (!player) return;
         const secret = this.route.secret;
