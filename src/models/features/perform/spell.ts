@@ -6,6 +6,8 @@ import { SpellCardModel } from "../../entities/cards/spell"
 import { PerformModel } from "."
 import { AbortEvent } from "../../../types/events/abort"
 import { SpellCastEvent } from "../../../types/events/spell-cast"
+import { MinionCardModel } from "../../entities/cards/minion"
+import { HeroModel, RoleModel } from "../../entities/heroes"
 
 export type SpellHooksConfig = {
     effects: Map<SpellEffectModel, Model[]>
@@ -54,7 +56,7 @@ export class SpellPerformModel extends PerformModel<
         for (const item of effects) {
             // At least one valid target (If need)
             while (true) {
-                const selector = item.prepare();
+                const selector = item.prepare([]);
                 if (!selector) break;
                 if (!selector.options.length) return false;
                 if (!item.state.multiselect) break;
@@ -207,8 +209,19 @@ export class SpellPerformModel extends PerformModel<
         for (const item of effects) {
             const params: any[] = []
             while (true) {
-                const selector = item.prepare(...params);
+                const selector = item.prepare(params);
                 if (!selector) break;
+
+                // exclude elusive
+                selector.exclude((item) => {
+                    if (item instanceof MinionCardModel || item instanceof HeroModel) {
+                        const _item: RoleModel = item;
+                        const elusive = _item.child.elusive;
+                        if (elusive.state.actived) return false;
+                    }
+                    return true;
+                })
+                    
                 if (!selector.options.length) params.push(undefined);
                 else {
                     const option = await player.child.controller.get(selector);

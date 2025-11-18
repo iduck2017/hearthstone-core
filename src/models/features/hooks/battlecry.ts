@@ -1,5 +1,5 @@
 import { DebugUtil, Event, Model } from "set-piece";
-import { CardModel, FeatureModel, MinionCardModel, WeaponCardModel } from "../../..";
+import { CardModel, FeatureModel, MinionCardModel, RoleModel, WeaponCardModel } from "../../..";
 import { AbortEvent } from "../../../types/events/abort";
 import { CardFeatureModel } from "../card";
 import { CallerModel } from "../../common/caller";
@@ -75,7 +75,7 @@ export abstract class BattlecryModel<
     }
 
 
-    public start(...params: T[]) {
+    public start(...params: Array<T | undefined>) {
         if (!this.state.actived) return;
         const event = new AbortEvent({});
         this.event.toRun(event);
@@ -83,7 +83,7 @@ export abstract class BattlecryModel<
         const name = this.state.name;
         const desc = this.state.desc;
         DebugUtil.log(`${name} run (${desc})`);
-        this.run(...params);
+        this.run(params);
         if (!this.state.async) this.end();
     }
 
@@ -92,10 +92,9 @@ export abstract class BattlecryModel<
         this.resolve(this);
     }
 
-    protected abstract run(...params: T[]): void;
+    protected abstract run(params: Array<T | undefined>): void;
 
-    public abstract prepare(...prev: T[]): Selector<T> | undefined;
+    public abstract prepare(prev: Array<T | undefined>): Selector<T> | undefined;
 
 }
-
 

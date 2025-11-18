@@ -1,6 +1,6 @@
 import { DebugUtil, Event, Method, Model } from "set-piece";
 import { AbortEvent } from "../../../types/events/abort";
-import { FeatureModel, CardModel } from "../../..";
+import { FeatureModel, CardModel, MinionCardModel } from "../../..";
 import { CardFeatureModel } from "../card";
 
 export namespace DeathrattleModel {
@@ -24,6 +24,17 @@ export abstract class DeathrattleModel<
     C & DeathrattleModel.C, 
     R & DeathrattleModel.R
 > {
+    public get route() {
+        const result = super.route;
+        const minion: MinionCardModel | undefined = result.items.find(item => item instanceof MinionCardModel);
+        const card: CardModel | undefined = result.items.find(item => item instanceof CardModel);
+        return {
+            ...result,
+            card,
+            minion,
+        }
+    }
+
     constructor(props: DeathrattleModel['props'] & {
         uuid: string | undefined;
         state: S & Pick<FeatureModel.S, 'desc' | 'name'>;

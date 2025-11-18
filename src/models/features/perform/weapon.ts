@@ -212,7 +212,7 @@ export class WeaponPerformModel extends PerformModel<
         for (const item of battlecry) {
             const params: any[] = []
             while (true) {
-                const selector = item.prepare(...params);
+                const selector = item.prepare(params);
                 if (!selector) break;
                 if (!selector.options.length) params.push(undefined);
                 else {

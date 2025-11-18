@@ -75,6 +75,9 @@ export { SecretFeatureModel } from "./models/features/secret";
 export { IRoleBuffModel } from "./models/features/rules/i-role-buff";
 export { RoleBuffModel } from "./models/features/rules/role-buff";
 
+export { SpellPerformModel } from "./models/features/perform/spell";
+export { WeaponPerformModel } from "./models/features/perform/weapon";
+export { MinionPerformModel } from "./models/features/perform/minion";
 
 // hooks
 export { SpellHooksConfig } from "./models/features/perform/spell";
