@@ -9,8 +9,6 @@ export namespace PerformModel {
     export type E = {
         toPlay: AbortEvent;
         onPlay: Event,
-        toRun: AbortEvent;
-        onRun: Event;
     }
     export type S = {
         locked: boolean;
@@ -65,8 +63,9 @@ export abstract class PerformModel<
 
     public abstract play(): Promise<void>;
 
+    public abstract doPlay(): void;
 
-    public expand() {
+    public consume() {
         const player = this.route.player;
         if (!player) return;
         const card = this.route.card;

@@ -32,7 +32,7 @@ export class HeroDisposeModel extends DisposeModel {
         return false;
     }
 
-    protected start() {
+    protected run() {
         const app = this.route.app;
         if (!app) return;
         const player = this.route.player;
@@ -41,6 +41,6 @@ export class HeroDisposeModel extends DisposeModel {
         const opponent = player.refer.opponent;
         const dispose = opponent?.child.hero.child.dispose;
         if (!dispose?.status) DebugUtil.log(`${opponent?.name} Win!`);
-        app.end();
+        app.del();
     }
 }

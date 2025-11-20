@@ -23,14 +23,14 @@ export class SecretDisposeModel extends DisposeModel {
         });
     }
 
-    protected start() {
+    protected run() {
         const secret = this.route.secret;
         if (!secret) return;
-        this.run();
+        this.doRun();
     }
 
     @TranxUtil.span()
-    public run() {
+    private doRun() {
         const secret = this.route.secret;
         if (!secret) return;
         const player = this.route.player;

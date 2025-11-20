@@ -113,8 +113,7 @@ export class RoleActionModel extends Model<
         this.origin.state.comsume = 0;
     }
 
-    
-    public async start() {
+    public async run() {
         if (!this.status) return;
 
         const game = this.route.game;
@@ -139,7 +138,7 @@ export class RoleActionModel extends Model<
         // mana
         if (!this.consume()) return;
         // attack
-        attack.start(roleB);
+        attack.run(roleB);
         this.event.onRun(new Event({}));
     }
 

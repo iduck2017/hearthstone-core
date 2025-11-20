@@ -23,7 +23,6 @@ export abstract class TurnStartModel<
     C & TurnStartModel.C,
     R & TurnStartModel.R
 > {
-
     constructor(props: TurnStartModel['props'] & {
         uuid: string | undefined;
         state: S & Pick<FeatureModel.S, 'desc' | 'name'>;
@@ -41,7 +40,7 @@ export abstract class TurnStartModel<
         });
     }
 
-    public start() {
+    public run() {
         if (!this.state.actived) return;
 
         const game = this.route.game;
@@ -55,9 +54,9 @@ export abstract class TurnStartModel<
         const name = this.state.name;
         const desc = this.state.desc;
         DebugUtil.log(`${name} run (${desc})`);
-        this.run(actived);
+        this.doRun(actived);
         this.event.onRun(new Event({}));
     }
 
-    protected abstract run(actived: boolean): void;
+    protected abstract doRun(actived: boolean): void;
 }

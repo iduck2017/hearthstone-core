@@ -75,7 +75,7 @@ export class TurnModel extends Model<
         ]
         entites.forEach(entity => {
             entity.child.turnStart.forEach(item => {
-                item.start()
+                item.run()
             })
         })
         
@@ -113,7 +113,7 @@ export class TurnModel extends Model<
         ]
         entites.forEach(entity => {
             entity.child.turnEnd.forEach(item => {
-                item.start()
+                item.run()
             })
         })
 

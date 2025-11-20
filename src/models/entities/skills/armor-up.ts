@@ -20,7 +20,7 @@ export class ArmorUpModel extends SkillModel<never> {
         })
     }
 
-    protected execute() {
+    protected doRun() {
         const player = this.route.player;
         if (!player) return;
         const armor = player.child.hero.child.armor;

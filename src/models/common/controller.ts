@@ -59,6 +59,8 @@ export class ControllerModel extends Model<
         selectors?.splice(index, 1);
     }
 
+
+    
     public get<T>(selector: Selector<T>): Promise<T | undefined> {
         if (!selector.options.length) return Promise.resolve(undefined);
         this.selectors.push(selector);

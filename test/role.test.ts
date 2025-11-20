@@ -52,7 +52,7 @@ describe('role', () => {
     })
 
     test('wisp-attack', async () => {
-        const promise = cardC.child.action.start();
+        const promise = cardC.child.action.run();
         const selector = playerA.child.controller.current;
         expect(selector).toBeDefined();
         if (!selector) return;
@@ -74,7 +74,7 @@ describe('role', () => {
     test('wisp-attack', async () => {
         turn.next();
 
-        const promise = cardD.child.action.start();
+        const promise = cardD.child.action.run();
         const selector = playerB.child.controller.current;
         expect(selector).toBeDefined();
         if (!selector) return;

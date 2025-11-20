@@ -1,8 +1,9 @@
 import { FeatureModel } from "..";
 import { DebugUtil, Event, Model } from "set-piece";
 import { Selector } from "../../../types/selector";
-import { CallerModel } from "../../common/caller";
-import { CalleeModel } from "../../common/callee";
+import { SpellCardModel } from "../../entities/cards/spell";
+import { SpellPerformModel } from "../perform/spell";
+import { PerformModel } from "../perform";
 
 export namespace EffectModel {
     export type E = {
@@ -11,11 +12,12 @@ export namespace EffectModel {
     export type S = {
         power: number;
         multiselect: boolean;
+        pending: boolean;
         async: boolean;
     };
     export type C = {};
     export type R = {
-        callers: CallerModel<[EffectModel]>[]
+        caller?: PerformModel 
     };
 }
 
@@ -30,10 +32,7 @@ export abstract class EffectModel<
     S & EffectModel.S,
     C & EffectModel.C, 
     R & EffectModel.R
->  implements CalleeModel<[EffectModel]>  {
-
-    public readonly promise = CalleeModel.prototype.promise.bind(this);
-    public readonly resolve = CalleeModel.prototype.resolve.bind(this);
+> {
 
     constructor(props: EffectModel['props'] & {
         uuid: string | undefined,
@@ -44,6 +43,7 @@ export abstract class EffectModel<
         super({
             uuid: props.uuid,
             state: {
+                pending: false,
                 power: 0,
                 actived: true,
                 async: false,
@@ -58,23 +58,33 @@ export abstract class EffectModel<
         })
     }
 
-    public start(...params: Array<T | undefined>) {
-        if (!this.state.actived) return;
+
+    public run(...params: Array<T | undefined>) {
+        if (!this.toRun()) return;
+        this.doRun(...params);
+        if (!this.state.async) this.onRun();
+    }
+
+
+    protected toRun(): boolean {
+        if (!this.status) return false;
 
         const name = this.state.name;
         const desc = this.state.desc;
-        DebugUtil.log(`${name} run (${desc})`);
-        this.run(params);
-        if (!this.state.async) this.end();
+        DebugUtil.log(`${name} run: ${desc}`);
+        return true;
     }
 
-    protected end() {
+    protected onRun() {
+        this.origin.state.pending = false;
+        const caller = this.origin.refer.caller;
+        this.origin.refer.caller = undefined;
+        if (caller) caller.doPlay();
         this.event.onRun(new Event({}));
-        this.resolve(this);
     }
 
-    protected abstract run(params: Array<T | undefined>): void;
+    protected abstract doRun(...params: Array<T | undefined>): void;
 
-    public abstract prepare(prev: Array<T | undefined>): Selector<T> | undefined;
+    public abstract prepare(...params: Array<T | undefined>): Selector<T> | undefined;
 }
 

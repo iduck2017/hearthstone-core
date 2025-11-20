@@ -10,7 +10,7 @@ export namespace AppModel {
     export type E = {};
     export type C = {
         game?: GameModel;
-        readonly configs: CollectionModel[]
+        readonly collections: CollectionModel[]
         readonly templates: Model[]
     };
 }
@@ -31,7 +31,7 @@ export class AppModel extends Model<
                 ...props.state
             },
             child: { 
-                configs: props.child?.configs ?? [],
+                collections: props.child?.collections ?? [],
                 templates: props.child?.templates ?? [],
                 ...props.child 
             },
@@ -39,21 +39,12 @@ export class AppModel extends Model<
         });
     }
 
-    public start(value: GameModel) {
-        if (value instanceof GameModel) this.origin.child.game = value;
+    public set(value: GameModel) {
+        this.origin.child.game = value;
     }
 
-    public end() { this.origin.child.game = undefined; }
-
-
-    public collect(value: CollectionModel) { 
-        this.origin.child.configs.push(value); 
-    }
-
-    public uncollect(value: CollectionModel) { 
-        const index = this.origin.child.configs.indexOf(value);
-        if (index === -1) return;
-        this.origin.child.configs.splice(index, 1);
+    public del(): void { 
+        this.origin.child.game = undefined;
     }
 
 
@@ -66,5 +57,10 @@ export class AppModel extends Model<
         const index = templates.indexOf(value);
         if (index === -1) return;
         templates.splice(index, 1);
+    }
+
+    public has(value: Model): boolean {
+        const templates = this.origin.child.templates;
+        return templates.includes(value);
     }
 }

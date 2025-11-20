@@ -30,17 +30,16 @@ export class WeaponDisposeModel extends DisposeModel {
         });
     }
 
-    protected start() {
+    protected run() {
         const weapon = this.route.weapon;
         if (!weapon) return;
         DebugUtil.log(`${weapon.name} Break`);
-        this.run();
-        const deathrattle = weapon.child.deathrattle;
-        deathrattle.forEach(item => item.start());
+        this.doRun();
+        this.onRun();
     }
 
     @TranxUtil.span()
-    public run() {
+    protected doRun() {
         const weapon = this.route.weapon;
         if (!weapon) return;
         const player = this.route.player;
@@ -49,5 +48,12 @@ export class WeaponDisposeModel extends DisposeModel {
         hero.unequip(weapon);
         const graveyard = player.child.graveyard;
         graveyard.add(weapon);
+    }
+
+    protected onRun() {
+        const weapon = this.route.weapon;
+        if (!weapon) return;
+        const deathrattle = weapon.child.deathrattle;
+        deathrattle.forEach(item => item.run());
     }
 }

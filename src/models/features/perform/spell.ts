@@ -1,7 +1,6 @@
 import { DebugUtil, Event, Model, Route, TranxUtil } from "set-piece"
 import { SpellEffectModel } from "../hooks/spell-effect"
 import { WeakMapModel } from "../../common/weak-map"
-import { CallerModel } from "../../common/caller"
 import { SpellCardModel } from "../../entities/cards/spell"
 import { PerformModel } from "."
 import { AbortEvent } from "../../../types/events/abort"
@@ -16,13 +15,14 @@ export type SpellHooksConfig = {
 export namespace SpellPerformModel {
     export type E = {
         toCast: SpellCastEvent
+        onCast: Event
     }
     export type S = {
         from: number;
         index: number;
     }
     export type C = {
-        params: WeakMapModel<SpellEffectModel, Model[]>[]
+        params: WeakMapModel<SpellEffectModel, Model>[]
     }
     export type R = {}
     export type P = {
@@ -36,7 +36,7 @@ export class SpellPerformModel extends PerformModel<
     SpellPerformModel.S,
     SpellPerformModel.C,
     SpellPerformModel.R
-> implements CallerModel<[SpellEffectModel]> {
+> {
     public get route(): Route & SpellPerformModel.P & PerformModel.P {
         const result = super.route;
         const spell: SpellCardModel | undefined = result.items.find(item => item instanceof SpellCardModel)
@@ -46,17 +46,17 @@ export class SpellPerformModel extends PerformModel<
         }
     }
 
-
     public get status(): boolean {
         if (!super.status) return false;
         const spell = this.route.spell;
         if (!spell) return false;
-        const effects = spell.child.effects;
+
         // At least one valid effect
+        const effects = spell.child.effects;
         for (const item of effects) {
             // At least one valid target (If need)
             while (true) {
-                const selector = item.prepare([]);
+                const selector = item.prepare();
                 if (!selector) break;
                 if (!selector.options.length) return false;
                 if (!item.state.multiselect) break;
@@ -64,6 +64,8 @@ export class SpellPerformModel extends PerformModel<
         }
         return true;
     }
+
+    private resolve?: () => void;
 
     constructor(props?: SpellPerformModel['props']) {
         props = props ?? {}
@@ -80,85 +82,63 @@ export class SpellPerformModel extends PerformModel<
     }
 
     // play
-    public async play() {
-        if (!this.status) return;
+    public async play(): Promise<void> {
+        // doPlay
         const config = await this.prepare();
-        // cancel by user
         if (!config) return;
-        
-        const player = this.route.player;
-        if (!player) return;
-        const spell = this.route.spell;
-        if (!spell) return;
-        this.expand()
 
-        // use
+        let aborted = !this.toPlay(config);
+        if (aborted) return;
+
+        this.doPlay()
+        return new Promise((resolve) => {
+            this.resolve = resolve;
+        })
+    }
+
+    public toPlay(config: SpellHooksConfig): boolean {
+        // status
+        if (!this.status) return false;
+        const spell = this.route.spell;
+        if (!spell) return false;
+ 
+        // from
+        const player = this.route.player;
+        if (!player) return false;
         const hand = player.child.hand;
         const from = hand.child.cards.indexOf(spell);
-        
-        // run
+        if (from === -1) return false;
+ 
+        // toPlay
+        const event = new AbortEvent({});
+        this.event.toPlay(event);
+        let aborted = event.detail.aborted;
+
+        // toCast
+        const eventB = new SpellCastEvent({ config });
+        this.event.toCast(eventB);
+        aborted = event.detail.aborted;
+
+        // consume
+        this.consume()
+        if (aborted) {
+            // counter
+            hand.del(spell);
+            return false;
+        }
+
+        // summon
+        this.use();
+        // doPLay
+        this.init(from, config);
+
+        // debug
+        if (!spell) return false;
         DebugUtil.log(`${spell.name} Played`);
-        this.start(from, config);
+        return true;
     }
 
-
-    public get config(): SpellHooksConfig {
-        const result = new Map<SpellEffectModel, Model[]>();
-        this.origin.child.params?.forEach(item => {
-            if (!item.refer.key) return;
-            if (!item.refer.value) return;
-            result.set(item.refer.key, item.refer.value);
-        })
-        return { effects: result };
-    }
-
-    public start(from: number, config: SpellHooksConfig) {
-        const player = this.route.player;
-        const spell = this.route.spell;
-        if (!player) return;
-        if (!spell) return;
-        
-        // precheck
-        const eventB = new AbortEvent({});
-        this.event.toRun(eventB);
-        if (eventB.detail.aborted) {
-            const hand = player.child.hand;
-            hand.del(spell);
-            return;
-        }
-
-        const eventA = new SpellCastEvent({ config });
-        this.event.toCast(eventA);
-        if (eventA.detail.aborted) {
-            const hand = player.child.hand;
-            hand.del(spell);
-            return;
-        }
-        
-        this.cast();
-
-        // hooks
-        this._start(from, config);
-        this.next()
-    }
-    @TranxUtil.span()
-    protected _start(from: number, config: SpellHooksConfig) {
-        this.origin.state.from = from;
-        this.origin.state.locked = true;
-        this.origin.state.index = 0;
-        config.effects.forEach((params, item) => {
-            this.origin.child.params?.push(
-                new WeakMapModel({
-                    refer: {
-                        key: item,
-                        value: params,
-                    }
-                })
-            )
-        })
-    }
-
-    public next() {
+    public doPlay() {
         const from = this.origin.state.from;
         const index = this.origin.state.index;
         this.origin.state.index += 1;
@@ -167,25 +147,35 @@ export class SpellPerformModel extends PerformModel<
             const spell = this.route.spell;
             if (!spell) return;
             this.reset();
-            this.end(from, this.config)
+            this.onPlay()
         } else {
-            const key = pair.refer.key;
-            const value = pair.refer.value;
-            if (!key) return;
-            if (!value) return;
-            key.promise(this);
-            key.start(...value);
+            const effect = pair.refer.key;
+            const params = pair.values;
+            if (!effect) return;
+            if (!params) return;
+            effect.run(...params);
         }
     }
 
-    private end(from: number, config: SpellHooksConfig) {
-        const player = this.route.player;
-        if (!player) return;
-        // end
-        this.event.onRun(new Event({}));
+    private onPlay() {;
+        // resolve
+        this.resolve?.();
+        this.resolve = undefined;
+        // event
         this.event.onPlay(new Event({}));
     }
 
+    // lifecycle
+    @TranxUtil.span()
+    protected init(from: number, config: SpellHooksConfig) {
+        this.origin.state.from = from;
+        this.origin.state.locked = true;
+        this.origin.state.index = 0;
+        config.effects.forEach((params, item) => {
+            const map = WeakMapModel.generate(params, item);
+            this.origin.child.params?.push(map);
+        })
+    }
 
     @TranxUtil.span()
     protected reset() {
@@ -195,13 +185,17 @@ export class SpellPerformModel extends PerformModel<
         this.origin.child.params = [];
     }
 
-    // use
+
+    // prepare
     protected async prepare(): Promise<SpellHooksConfig | undefined> {
+        if (!this.status) return;
+
         const player = this.route.player;
         if (!player) return;
-        // hooks
         const spell = this.route.spell;
         if (!spell) return;
+
+        // hooks
         const config: SpellHooksConfig = {
             effects: new Map(),
         }
@@ -209,7 +203,7 @@ export class SpellPerformModel extends PerformModel<
         for (const item of effects) {
             const params: any[] = []
             while (true) {
-                const selector = item.prepare(params);
+                const selector = item.prepare(...params);
                 if (!selector) break;
 
                 // exclude elusive
@@ -236,7 +230,10 @@ export class SpellPerformModel extends PerformModel<
     }
 
 
-    public cast() {
+
+
+    @TranxUtil.span()
+    protected use() {
         const player = this.route.player;
         if (!player) return;
         const spell = this.route.spell;
@@ -246,6 +243,5 @@ export class SpellPerformModel extends PerformModel<
         const graveyard = player.child.graveyard;
         graveyard.add(spell);
     }
-
 
 }

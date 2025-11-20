@@ -9,13 +9,10 @@ export class AnimeUtil {
         AnimeUtil._current += value;
     }
 
-    public static reset() { 
+    public static clear() { 
         AnimeUtil._current = 0; 
     }
 
-    public static async pause(time: number = 10) {
-        return new Promise(resolve => setTimeout(resolve, time));
-    }
 
     private constructor() {}
 }

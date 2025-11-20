@@ -41,7 +41,7 @@ export abstract class OverhealModel<
         });
     }
 
-    public start() {
+    public run() {
         if (!this.state.actived) return;
         
         const event = new AbortEvent({})
@@ -51,9 +51,9 @@ export abstract class OverhealModel<
         const name = this.state.name;
         const desc = this.state.desc;
         DebugUtil.log(`${name} run (${desc})`);
-        this.run();
+        this.doRun();
         this.event.onRun(new Event({}));
     }
 
-    protected abstract run(): void;
+    protected abstract doRun(): void;
 }

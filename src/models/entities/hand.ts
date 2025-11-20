@@ -71,4 +71,9 @@ export class HandModel extends Model<
         if (index === -1) return;
         cards.splice(index, 1);
     }
+
+    public has(card: CardModel): boolean {
+        const cards = this.origin.child.cards;
+        return cards.includes(card);
+    }
 }

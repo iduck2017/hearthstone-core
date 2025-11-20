@@ -123,7 +123,7 @@ export class RoleAttackModel extends Model<
 
 
     @DebugUtil.span()
-    public start(roleB: RoleModel) {
+    public run(roleB: RoleModel) {
         const roleA = this.route.role;
         if (!roleA) return;
         if (!this.status) return;
@@ -164,11 +164,11 @@ export class RoleAttackModel extends Model<
                 origin: attackB.state.current,
             }),
         ])
-        this.end(roleB);
+        this.onRun(roleB);
     }
 
 
-    protected end(roleB: RoleModel) {
+    protected onRun(roleB: RoleModel) {
         const roleA = this.route.role;
         if (!roleA) return;
 

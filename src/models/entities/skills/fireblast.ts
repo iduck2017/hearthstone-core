@@ -24,7 +24,7 @@ export class FireBlastModel extends SkillModel<RoleModel> {
         });
     }
 
-    protected execute(target: RoleModel) {
+    protected doRun(target: RoleModel) {
         const hero = this.route.hero;
         if (!hero) return;
         DamageModel.deal([

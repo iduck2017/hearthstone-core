@@ -172,7 +172,7 @@ export class RoleHealthModel extends Model<
         if (event.detail.result > 0) this.event.onHeal(event);
         if (event.detail.overflow > 0) {
             const overheal = role.child.overheal;
-            overheal.forEach(item => item.start());
+            overheal.forEach(item => item.run());
         }
     }
     

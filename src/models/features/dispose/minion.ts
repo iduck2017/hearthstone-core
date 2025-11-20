@@ -31,22 +31,28 @@ export class MinionDisposeModel extends DisposeModel {
     }
 
     @DebugUtil.span()
-    protected start() {
+    protected run() {
         const minion = this.route.minion;
         if (!minion) return;
         DebugUtil.log(`${minion.name} Die`);
-        this.run();
-        const deathrattle = minion.child.deathrattle;
-        deathrattle.forEach(item => item.start());
+        this.doRun();
+        this.onRun();
     }
 
     @TranxUtil.span()
-    public run() {
+    private doRun() {
         const player = this.route.player;
         if (!player) return;
         const minion: MinionCardModel | undefined = this.route.minion;
         if (!minion) return;
         player.child.board.del(minion);
         player.child.graveyard.add(minion);
+    }
+
+    private onRun() {
+        const minion = this.route.minion;
+        if (!minion) return;
+        const deathrattle = minion.child.deathrattle;
+        deathrattle.forEach(item => item.run());
     }
 }

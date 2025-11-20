@@ -53,19 +53,28 @@ export abstract class DeathrattleModel<
     }
 
     @DebugUtil.span()
-    public start() {
-        if (!this.state.actived) return;
-        
+    public run() {
+        if (!this.toRun()) return;
+        this.doRun();
+        this.onRun();
+    }
+
+    protected toRun(): boolean | undefined {
+        if (!this.status) return;
+
         const event = new AbortEvent({});
         this.event.toRun(event);
         if (event.detail.aborted) return;
 
         const name = this.state.name;
         const desc = this.state.desc;
-        DebugUtil.log(`${name} run (${desc})`);
-        this.run();
+        DebugUtil.log(`${name} run: ${desc}`);
+        return true
+    }
+
+    protected onRun() {
         this.event.onRun(new Event({}));
     }
 
-    protected abstract run(): void;
+    protected abstract doRun(): void;
 }

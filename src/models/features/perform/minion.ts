@@ -2,7 +2,6 @@ import { DebugUtil, Event, Model, TranxUtil } from "set-piece";
 import { BattlecryModel } from "../hooks/battlecry";
 import { WeakMapModel } from "../../common/weak-map";
 import { MinionCardModel } from "../../entities/cards/minion";
-import { CallerModel } from "../../common/caller";
 import { AbortEvent } from "../../../types/events/abort";
 import { BoardModel } from "../../entities/board";
 import { Selector } from "../../../types/selector";
@@ -10,7 +9,7 @@ import { PerformModel } from ".";
 import { AppModel } from "../../app";
 
 export type MinionHooksConfig = {
-    battlecry: Map<BattlecryModel, Model[]>
+    battlecry: Map<BattlecryModel, Array<Model | undefined>>
 }
 
 export namespace MinionPerformModel {
@@ -24,7 +23,7 @@ export namespace MinionPerformModel {
         index: number;
     }
     export type C = {
-        params: WeakMapModel<BattlecryModel, Model[]>[]
+        params: WeakMapModel<BattlecryModel, Model>[]
     }
     export type R = {
     }
@@ -35,7 +34,7 @@ export class MinionPerformModel extends PerformModel<
     MinionPerformModel.S,
     MinionPerformModel.C,
     MinionPerformModel.R
-> implements CallerModel<[BattlecryModel]> {
+> {
     public get route() {
         const result = super.route;
         const minion: MinionCardModel | undefined = result.items.find(item => item instanceof MinionCardModel)
@@ -49,12 +48,16 @@ export class MinionPerformModel extends PerformModel<
         if (!super.status) return false;
         const player = this.route.player;
         if (!player) return false;
+
         // board size
         const board = player.child.board;
         if (!board) return false;
         if (board.child.cards.length >= 7) return false;
+        
         return true;
     }
+
+    private resolve?: () => void;
 
     constructor(props?: MinionPerformModel['props']) {
         props = props ?? {}
@@ -72,121 +75,117 @@ export class MinionPerformModel extends PerformModel<
     }
 
     // play
-    public async play() {
-        // Common checks
-        if (!this.status) return;
-        const player = this.route.player;
-        if (!player) return;
-        const minion = this.route.minion;
-        if (!minion) return;
-
+    public async play(): Promise<void> {
+        // prepare
         const params = await this.prepare();
-        // cancel by user
         if (!params) return;
 
-        const event = new AbortEvent({});
-        this.event.toRun(event);
-        if (event.detail.aborted) return;
+        // toPlay
+        let aborted = !this.toPlay(...params);
+        if (aborted) return;
+        
+        // doPlay
+        this.doPlay()
+        return new Promise((resolve) => {
+            this.resolve = resolve;
+        })
+    }
 
-        this.expand()
-        // use
+    public toPlay(to: number, config: MinionHooksConfig): boolean {
+        // status
+        if (!this.status) return false;
+
+        const minion = this.route.minion;
+        if (!minion) return false;
+
+        // from
+        const player = this.route.player;
+        if (!player) return false;
         const hand = player.child.hand;
         const from = hand.child.cards.indexOf(minion);
-        DebugUtil.log(`${minion.name} Played`);
-        this.start(from, ...params);
-    }
+        if (from === -1) return false;
 
-    public get config(): MinionHooksConfig {
-        const result = new Map<BattlecryModel, Model[]>();
-        this.origin.child.params?.forEach(item => {
-            if (!item.refer.key) return;
-            if (!item.refer.value) return;
-            result.set(item.refer.key, item.refer.value);
-        })
-        return {
-            battlecry: result,
-        };
-    }
+        // toPlay
+        let event = new AbortEvent({});
+        this.event.toPlay(event);
+        let aborted = event.detail.aborted;
 
-    public start(from: number, to: number, config: MinionHooksConfig) {
-        const player = this.route.player;
-        const minion = this.route.minion;
-        if (!player) return;
-        if (!minion) return;
-
-        const event = new AbortEvent({});
-        this.event.toRun(event);
-        if (event.detail.aborted) {
-            const hand = player.child.hand;
+        // consume
+        this.consume()
+        if (aborted) {
             hand.del(minion);
-            return;
+            return false;
         }
 
-        // deploy
+        // summon
         const board = player.child.board;
-        if (!board) return;
-        this._summon(board, to);
-        // hooks
-        this._start(from, to, config);
-        this.next()
-    }
-    @TranxUtil.span()
-    protected _start(from: number, to: number, config: MinionHooksConfig) {
-        this.origin.state.from = from;
-        this.origin.state.locked = true;
-        this.origin.state.to = to;
-        this.origin.state.index = 0;
-        config.battlecry.forEach((params, item) => {
-            this.origin.child.params?.push(
-                new WeakMapModel({
-                    refer: {
-                        key: item,
-                        value: params,
-                    }
-                })
-            )
-        })
+        aborted = this.toSummon(board, to);
+        this.doSummon(board, to);
+        if (aborted) return false;
+
+        // doPLay
+        this.init(from, to, config);
+
+        // debug
+        if (!minion) return false;
+        DebugUtil.log(`${minion.name} Played`);
+        return true;
     }
 
-    public next() {
-        const from = this.origin.state.from;
-        const to = this.origin.state.to;
+    public doPlay() {
         const index = this.origin.state.index;
         this.origin.state.index += 1;
+
         const pair = this.origin.child.params?.[index];
         if (!pair) {
             const minion = this.route.minion;
             if (!minion) return;
             this.reset();
-            this.end(from, to, this.config)
+            this.onPlay()
         } else {
-            const key = pair.refer.key;
-            const value = pair.refer.value;
-            if (!key) return;
-            if (!value) return;
-            key.promise(this);
-            key.start(...value);
+            const hook = pair.refer.key;
+            const params = pair.values;
+            if (!hook) return;
+            if (!params) return;
+            hook.run(...params);
         }
     }
 
-    private end(from: number, to: number, config: MinionHooksConfig) {
-        const player = this.route.player;
-        if (!player) return;
-        // end
-        this.event.onSummon(new Event({}));
-        this.event.onRun(new Event({}));
+    private onPlay() {
+        // resolve
+        this.resolve?.();
+        this.resolve = undefined;
+
+        // event
+        this.onSummon();
         this.event.onPlay(new Event({}));
     }
 
-    public summon(board?: BoardModel, position?: number) {
+
+    // summon
+    public summon(board?: BoardModel, to?: number) {
+        // params
         const player = this.route.player;
         if (!board) board = player?.child.board;
         if (!board) return;
-        this._summon(board, position);
+
+        // summon
+        const aborted = !this.toSummon(board, to);
+        if (aborted) return;
+        this.doSummon(board, to);
         this.event.onSummon(new Event({}));
     }
+
+    private toSummon(board: BoardModel, to?: number): boolean {
+        const event = new AbortEvent({});
+        this.event.toSummon(event);
+        const aborted = event.detail.aborted;
+        if (aborted) return false;
+        return true;
+    }
+
     @TranxUtil.span()
-    private _summon(board: BoardModel, position?: number) {
+    private doSummon(board: BoardModel, to?: number) {
         const minion = this.route.minion;
         if (!minion) return;
         DebugUtil.log(`${minion.name} Summoned`);
@@ -201,9 +200,26 @@ export class MinionPerformModel extends PerformModel<
         if (app) app.unlink(minion);
         
         // add to board
-        board.add(minion, position);
+        board.add(minion, to);
     }
 
+    private onSummon() {
+        this.event.onSummon(new Event({}));
+    }
+
+
+    // lifecycle
+    @TranxUtil.span()
+    protected init(from: number, to: number, config: MinionHooksConfig) {
+        this.origin.state.from = from;
+        this.origin.state.locked = true;
+        this.origin.state.to = to;
+        this.origin.state.index = 0;
+        config.battlecry.forEach((params, item) => {
+            const map = WeakMapModel.generate(params, item);
+            this.origin.child.params?.push(map);
+        })
+    }
 
     @TranxUtil.span()
     protected reset() {
@@ -214,8 +230,12 @@ export class MinionPerformModel extends PerformModel<
         this.origin.child.params = [];
     }
 
-    // use
+
+
+    // prepare
     protected async prepare(): Promise<[number, MinionHooksConfig] | undefined> {
+        if (!this.status) return;
+
         const player = this.route.player;
         if (!player) return;
         // position
@@ -234,9 +254,9 @@ export class MinionPerformModel extends PerformModel<
         }
         const battlecry = minion.child.battlecry;
         for (const item of battlecry) {
-            const params: any[] = []
+            const params: Array<Model | undefined> = []
             while (true) {
-                const selector = item.prepare(params);
+                const selector = item.prepare(...params);
                 if (!selector) break;
                 if (!selector.options.length) params.push(undefined);
                 else {
@@ -250,6 +270,5 @@ export class MinionPerformModel extends PerformModel<
         }
         return [to, config];
     }
-
 
 }

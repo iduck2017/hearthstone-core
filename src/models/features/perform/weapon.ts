@@ -1,7 +1,6 @@
 import { DebugUtil, Event, Model, TranxUtil } from "set-piece";
 import { BattlecryModel } from "../hooks/battlecry";
 import { WeakMapModel } from "../../common/weak-map";
-import { CallerModel } from "../../common/caller";
 import { AbortEvent } from "../../../types/events/abort";
 import { BoardModel } from "../../entities/board";
 import { PerformModel } from ".";
@@ -22,7 +21,7 @@ export namespace WeaponPerformModel {
         index: number;
     }
     export type C = {
-        params: WeakMapModel<BattlecryModel, Model[]>[]
+        params: WeakMapModel<BattlecryModel, Model>[]
     }
     export type R = {
     }
@@ -33,7 +32,7 @@ export class WeaponPerformModel extends PerformModel<
     WeaponPerformModel.S,
     WeaponPerformModel.C,
     WeaponPerformModel.R
-> implements CallerModel<[BattlecryModel]> {
+> {
     public get route() {
         const result = super.route;
         const weapon: WeaponCardModel | undefined = result.items.find(item => item instanceof WeaponCardModel)
@@ -43,16 +42,7 @@ export class WeaponPerformModel extends PerformModel<
         }
     }
 
-    public get status(): boolean {
-        if (!super.status) return false;
-        const player = this.route.player;
-        if (!player) return false;
-        // board size
-        const board = player.child.board;
-        if (!board) return false;
-        if (board.child.cards.length >= 7) return false;
-        return true;
-    }
+    private resolve?: () => void;
 
     constructor(props?: WeaponPerformModel['props']) {
         props = props ?? {}
@@ -70,111 +60,106 @@ export class WeaponPerformModel extends PerformModel<
     }
 
     // play
-    public async play() {
-        if (!this.status) return;
+    public async play(): Promise<void> {
+        // doPlay
         const config = await this.prepare();
-        // cancel by user
         if (!config) return;
-        this._play(config);
+
+        let aborted = !this.toPlay(config);
+        if (aborted) return;
+
+        this.doPlay()
+        return new Promise((resolve) => {
+            this.resolve = resolve;
+        })
     }
-    protected _play(config: WeaponHooksConfig) {
-        const player = this.route.player;
-        if (!player) return;
+
+    
+    public toPlay(config: WeaponHooksConfig): boolean {
+        // status
+        if (!this.status) return false;
+
         const weapon = this.route.weapon;
-        if (!weapon) return;
-        this.expand()
-        // use
+        if (!weapon) return false;
+
+        // from
+        const player = this.route.player;
+        if (!player) return false;
         const hand = player.child.hand;
         const from = hand.child.cards.indexOf(weapon);
-        // run
-        DebugUtil.log(`${weapon.name} Played`);
-        this.start(from, config);
-    }
+        if (from === -1) return false;
 
-    public get config(): WeaponHooksConfig {
-        const result = new Map<BattlecryModel, Model[]>();
-        this.origin.child.params?.forEach(item => {
-            if (!item.refer.key) return;
-            if (!item.refer.value) return;
-            result.set(item.refer.key, item.refer.value);
-        })
-        return {
-            battlecry: result,
-        };
-    }
+        // toPlay
+        let event = new AbortEvent({});
+        this.event.toPlay(event);
+        let aborted = event.detail.aborted;
 
-    public start(from: number, config: WeaponHooksConfig) {
-        const event = new AbortEvent({});
-        this.event.toRun(event);
-        if (event.detail.aborted) return;
-        const player = this.route.player;
-        const weapon = this.route.weapon;
-        if (!player) return;
-        if (!weapon) return;
-        // deploy
+        // consume
+        this.consume()
+        if (aborted) {
+            hand.del(weapon);
+            return false;
+        }
+
+        // summon
         const board = player.child.board;
-        if (!board) return;
-        this._deploy(board);
-        // hooks
-        this._start(from, config);
-        this.next()
-    }
-    @TranxUtil.span()
-    protected _start(from: number, config: WeaponHooksConfig) {
-        this.origin.state.from = from;
-        this.origin.state.locked = true;
-        this.origin.state.index = 0;
-        config.battlecry.forEach((params, item) => {
-            this.origin.child.params?.push(
-                new WeakMapModel({
-                    refer: {
-                        key: item,
-                        value: params,
-                    }
-                })
-            )
-        })
+        aborted = !this.toEquip(board);
+        if (aborted) return false;
+        this.doEquip(board);
+
+        // doPLay
+        this.init(from, config);
+
+        // debug
+        if (!weapon) return false;
+        DebugUtil.log(`${weapon.name} Played`);
+        return true;
     }
 
-    public next() {
-        const from = this.origin.state.from;
-        const to = this.origin.state.to;
+    public doPlay() {
         const index = this.origin.state.index;
         this.origin.state.index += 1;
+
         const pair = this.origin.child.params?.[index];
         if (!pair) {
             const weapon = this.route.weapon;
             if (!weapon) return;
             this.reset();
-            this.end(from, this.config)
+            this.onEquip()
         } else {
-            const key = pair.refer.key;
-            const value = pair.refer.value;
-            if (!key) return;
-            if (!value) return;
-            key.promise(this);
-            key.start(...value);
+            const hook = pair.refer.key;
+            const params = pair.values;
+            if (!hook) return;
+            if (!params) return;
+            hook.run(...params);
         }
     }
 
-    private end(from: number, config: WeaponHooksConfig) {
-        const player = this.route.player;
-        if (!player) return;
-        // end
-        this.event.onEquip(new Event({}));
-        this.event.onRun(new Event({}));
-        this.event.onPlay(new Event({}));
-    }
 
-    public deploy(board?: BoardModel, index?: number) {
+    // equip
+    public equip(board?: BoardModel, index?: number) {
         const player = this.route.player;
         if (!board) board = player?.child.board;
         if (!board) return;
-        this._deploy(board, index);
+        let aborted = !this.toEquip(board);
+        if (aborted) return;
+        this.doEquip(board);
+        this.onEquip();
+    }
+
+    private toEquip(board: BoardModel): boolean {
+        const event = new AbortEvent({});
+        this.event.toEquip(event);
+        if (event.detail.aborted) return false;
+        return true;
+    }
+
+    private onEquip() {
         this.event.onEquip(new Event({}));
     }
+
     @TranxUtil.span()
-    private _deploy(board: BoardModel, index?: number) {
+    private doEquip(board: BoardModel) {
         const weapon = this.route.weapon;
         if (!weapon) return;
         DebugUtil.log(`${weapon.name} Deployed`);
@@ -196,8 +181,25 @@ export class WeaponPerformModel extends PerformModel<
         this.origin.child.params = [];
     }
 
+
+    
+    // lifecycle
+    @TranxUtil.span()
+    protected init(from: number, config: WeaponHooksConfig) {
+        this.origin.state.from = from;
+        this.origin.state.locked = true;
+        this.origin.state.index = 0;
+        config.battlecry.forEach((params, item) => {
+            const map = WeakMapModel.generate(params, item);
+            this.origin.child.params?.push(map);
+        })
+    }
+
+
     // use
     protected async prepare(): Promise<WeaponHooksConfig | undefined> {
+        if (!this.status) return;
+
         const player = this.route.player;
         if (!player) return;
         // position
@@ -212,7 +214,7 @@ export class WeaponPerformModel extends PerformModel<
         for (const item of battlecry) {
             const params: any[] = []
             while (true) {
-                const selector = item.prepare(params);
+                const selector = item.prepare(...params);
                 if (!selector) break;
                 if (!selector.options.length) params.push(undefined);
                 else {

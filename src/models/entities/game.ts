@@ -88,12 +88,12 @@ export class GameModel extends Model<
 
     public start() {
         DebugUtil.log('Game Start');
-        this._start();
-        this.event.onStart(new Event({}));
-        this.child.turn.next();
+        this.doStart();
+        this.onStart();
     }
+    
     @TranxUtil.span()
-    private _start() {
+    private doStart() {
         const playerA = this.child.playerA;
         const handA = playerA.child.hand;
         const deckA = playerA.child.deck;
@@ -111,5 +111,10 @@ export class GameModel extends Model<
             deckB.del(card);
             handB.add(card);
         }
+    }
+
+    private onStart() {
+        this.event.onStart(new Event({}));
+        this.child.turn.next();
     }
 }

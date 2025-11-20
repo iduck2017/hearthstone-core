@@ -49,7 +49,7 @@ export abstract class TurnEndModel<
         })
     }
 
-    public start() {
+    public run() {
         if (!this.state.actived) return;
 
         const game = this.route.game;
@@ -61,9 +61,9 @@ export abstract class TurnEndModel<
         const actived = current === player;
 
         DebugUtil.log(`${this.state.name} run (${this.state.desc})`);
-        this.run(actived);
+        this.doRun(actived);
         this.event.onRun(new Event({}));
     }
 
-    protected abstract run(actived: boolean): void;
+    protected abstract doRun(actived: boolean): void;
 }

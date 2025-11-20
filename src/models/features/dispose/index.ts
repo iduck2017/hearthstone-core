@@ -58,11 +58,11 @@ export abstract class DisposeModel<
                     if (result instanceof Promise) {
                         result.then(() => {
                             DisposeModel._locked = false;
-                            DisposeModel.end();
+                            DisposeModel.close();
                         })
                     } else {
                         DisposeModel._locked = false;
-                        DisposeModel.end();
+                        DisposeModel.close();
                     }
                     return result;
                 }
@@ -72,10 +72,10 @@ export abstract class DisposeModel<
         }
     }
     
-    public static end() {
+    public static close() {
         const tasks = DisposeModel.tasks.filter(item => item.status);
         DisposeModel.tasks = [];
-        tasks.forEach(item => item.start());
+        tasks.forEach(item => item.run());
     }
 
     public get route() {
@@ -128,6 +128,6 @@ export abstract class DisposeModel<
         DisposeModel.add(this);
     }
 
-    protected abstract start(): void;
+    protected abstract run(): void;
 
 }

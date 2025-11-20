@@ -1,10 +1,9 @@
 import { DebugUtil, Event, Model } from "set-piece";
-import { CardModel, FeatureModel, MinionCardModel, RoleModel, WeaponCardModel } from "../../..";
+import { CardModel, FeatureModel, MinionCardModel, MinionPerformModel, RoleModel, WeaponCardModel, WeaponPerformModel } from "../../..";
 import { AbortEvent } from "../../../types/events/abort";
 import { CardFeatureModel } from "../card";
-import { CallerModel } from "../../common/caller";
-import { CalleeModel } from "../../common/callee";
 import { Selector } from "../../../types/selector";
+import { PerformModel } from "../perform";
 
 export namespace BattlecryModel {
     export type E = {
@@ -13,11 +12,12 @@ export namespace BattlecryModel {
     };
     export type S = {
         async: boolean;
+        pending: boolean;
         multiselect: boolean;
     };
     export type C = {};
     export type R = {
-        callers: CallerModel<[BattlecryModel]>[]
+        caller?: PerformModel
     };
 }
 
@@ -32,11 +32,8 @@ export abstract class BattlecryModel<
     S & BattlecryModel.S, 
     C & BattlecryModel.C, 
     R & BattlecryModel.R
-> implements CalleeModel<[BattlecryModel]> {
+> {
     
-    public readonly promise = CalleeModel.prototype.promise.bind(this);
-    public readonly resolve = CalleeModel.prototype.resolve.bind(this);
-
     public get route() {
         const result = super.route;
         const card: CardModel | undefined = result.items.find(item => item instanceof CardModel);
@@ -50,6 +47,12 @@ export abstract class BattlecryModel<
         }
     }
 
+    public get status() {
+        if (!super.status) return false;
+        if (this.state.pending) return false;
+        return true;
+    }
+
     constructor(props: BattlecryModel['props'] & {
         uuid: string | undefined;
         state: S & Pick<FeatureModel.S, 'desc' | 'name'>;
@@ -61,40 +64,46 @@ export abstract class BattlecryModel<
             state: { 
                 actived: true,
                 async: false,
+                pending: false,
                 multiselect: false,
                 ...props.state,
             },
-            child: { 
-                ...props.child,
-            },
-            refer: { 
-                callers: [],
-                ...props.refer 
-            },
+            child: { ...props.child },
+            refer: {  ...props.refer },
         });
     }
 
+    public run(...params: Array<T | undefined>) {
+        if (!this.toRun()) return;
+        this.doRun(...params);
+        if (this.state.async) return;
+        this.onRun();
+    }
 
-    public start(...params: Array<T | undefined>) {
-        if (!this.state.actived) return;
+    protected toRun(): boolean | undefined {
+        if (!this.status) return;
         const event = new AbortEvent({});
         this.event.toRun(event);
+
         if (event.detail.aborted) return;
+
         const name = this.state.name;
         const desc = this.state.desc;
         DebugUtil.log(`${name} run (${desc})`);
-        this.run(params);
-        if (!this.state.async) this.end();
+        return true;
     }
 
-    protected end() {
+    protected onRun() {
+        this.origin.state.pending = false;
+        const caller = this.origin.refer.caller;
+        this.origin.refer.caller = undefined;
+        if (caller) caller.doPlay();
         this.event.onRun(new Event({}));
-        this.resolve(this);
     }
 
-    protected abstract run(params: Array<T | undefined>): void;
+    protected abstract doRun(...params: Array<T | undefined>): void;
 
-    public abstract prepare(prev: Array<T | undefined>): Selector<T> | undefined;
+    public abstract prepare: (...params: Array<T | undefined>) => Selector<T> | undefined;
 
 }
 
