@@ -1,5 +1,5 @@
 import { DebugUtil, Event, Model, Route, TranxUtil } from "set-piece"
-import { SpellEffectModel } from "../hooks/spell-effect"
+import { SpellEffectModel } from "../../features/hooks/spell-effect"
 import { DependencyModel } from "../../common/dependency"
 import { SpellCardModel } from "../../entities/cards/spell"
 import { PerformModel } from "."

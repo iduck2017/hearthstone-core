@@ -1,4 +1,4 @@
-import { RoleAttackModel } from "../features/rules/role-attack";
+import { RoleAttackModel } from "./role-attack";
 import { RoleAttackDecor } from "../../types/decors/role-attack";
 import { RoleHealthModel } from "./role-health";
 import { RoleHealthDecor } from "../../types/decors/role-health";

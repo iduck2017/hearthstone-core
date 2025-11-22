@@ -1,6 +1,6 @@
 import { MinionCardModel } from "../../models/entities/cards/minion";
 import { HeroModel, RoleModel } from "../../models/entities/heroes";
-import { SpellHooksConfig } from "../../models/features/perform/spell";
+import { SpellHooksConfig } from "../../models/rules/perform/spell";
 import { AbortEvent } from "./abort";
 
 export class SpellCastEvent extends AbortEvent<{ config: SpellHooksConfig }> {

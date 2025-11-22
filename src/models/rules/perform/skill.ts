@@ -1,5 +1,5 @@
 import { DebugUtil, Event, Model, Route, TranxUtil } from "set-piece";
-import { EffectModel } from "../hooks/effect";
+import { EffectModel } from "../../features/hooks/effect";
 import { DependencyModel } from "../../common/dependency";
 import { SkillModel } from "../../entities/skill";
 import { PerformModel } from ".";

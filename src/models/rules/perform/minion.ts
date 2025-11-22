@@ -1,5 +1,5 @@
 import { DebugUtil, Event, Model, TranxUtil } from "set-piece";
-import { BattlecryModel } from "../hooks/battlecry";
+import { BattlecryModel } from "../../features/hooks/battlecry";
 import { DependencyModel } from "../../common/dependency";
 import { MinionCardModel } from "../../entities/cards/minion";
 import { AbortEvent } from "../../../types/events/abort";
