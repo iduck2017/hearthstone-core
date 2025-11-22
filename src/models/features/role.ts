@@ -1,7 +1,7 @@
 import { Model } from "set-piece";
 import { FeatureModel } from ".";
 import { CardModel } from "../entities/cards";
-import { BoardModel, CollectionModel, DeckModel, GraveyardModel, HandModel, HeroModel, MinionCardModel } from "../..";
+import { HeroModel, MinionCardModel } from "../..";
 
 export abstract class RoleFeatureModel<
     E extends Partial<FeatureModel.E> & Model.E = {},

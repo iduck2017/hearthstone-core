@@ -24,6 +24,13 @@ export abstract class TurnEndModel<
     C & TurnEndModel.C,
     R & TurnEndModel.R
 > {
+    protected get isActived(): boolean {
+        if (!super.isActived) return false;
+        const board = this.route.board;
+        if (!board) return false;
+        return true;
+    }
+
     public get route() {
         const result = super.route;
         const card: CardModel | undefined = result.items.find(item => item instanceof CardModel);

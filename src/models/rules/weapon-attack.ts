@@ -33,6 +33,7 @@ export class WeaponAttackModel extends Model<
             player: result.items.find(item => item instanceof PlayerModel),
             game: result.items.find(item => item instanceof GameModel),
             board: result.items.find(item => item instanceof BoardModel),
+            hero: result.items.find(item => item instanceof HeroModel),
         }
     }
 
@@ -48,7 +49,9 @@ export class WeaponAttackModel extends Model<
         const player = this.route.player;
         if (!player) return false
         if (!player.state.isCurrent) return false;
-        return false;
+
+        if (!this.route.hero) return false;
+        return true;
     }
 
     constructor(props: WeaponAttackModel['props'] & {
@@ -87,7 +90,7 @@ export class WeaponAttackModel extends Model<
     }
     private modifyAttack(that: RoleAttackModel, decor: RoleAttackDecor) {
         if (!this.isReady) return;
-        if (!this.route.board) return;
+        if (!this.route.hero) return;
         decor.add({
             type: OperatorType.ADD,
             offset: this.state.current,

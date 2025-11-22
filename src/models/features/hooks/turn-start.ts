@@ -23,6 +23,15 @@ export abstract class TurnStartModel<
     C & TurnStartModel.C,
     R & TurnStartModel.R
 > {
+
+    protected get isActived(): boolean {
+        if (!super.isActived) return false;
+        const board = this.route.board;
+        if (!board) return false;
+        return true;
+    }
+
+
     constructor(props: TurnStartModel['props'] & {
         uuid: string | undefined;
         state: S & Pick<FeatureModel.S, 'desc' | 'name'>;

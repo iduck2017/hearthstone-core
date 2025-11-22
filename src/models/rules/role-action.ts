@@ -65,6 +65,7 @@ export class RoleActionModel extends Model<
 
     protected get isReady(): boolean {
         if (!super.state.isEnabled) return false;
+        
         const current = this.current;
         if (current <= 0) return false;
 
