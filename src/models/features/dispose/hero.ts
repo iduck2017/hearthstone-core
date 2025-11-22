@@ -24,9 +24,10 @@ export class HeroDisposeModel extends DisposeModel {
         });
     }
 
-    public get status(): boolean {
+    public get isDisposable(): boolean {
         const hero = this.route.hero;
         if (!hero) return true;
+
         const health = hero.child.health;
         if (health.state.current <= 0) return true;
         return false;
@@ -35,12 +36,14 @@ export class HeroDisposeModel extends DisposeModel {
     protected run() {
         const app = this.route.app;
         if (!app) return;
+        
         const player = this.route.player;
         if (!player) return;
         DebugUtil.log(`${player.name} Die`);
+
         const opponent = player.refer.opponent;
         const dispose = opponent?.child.hero.child.dispose;
-        if (!dispose?.status) DebugUtil.log(`${opponent?.name} Win!`);
+        if (!dispose?.isDisposable) DebugUtil.log(`${opponent?.name} Win!`);
         app.del();
     }
 }

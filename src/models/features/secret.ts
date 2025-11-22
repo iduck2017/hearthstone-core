@@ -1,6 +1,6 @@
 import { Method, Model } from "set-piece";
 import { FeatureModel } from ".";
-import { BoardModel } from "../entities/board";
+import { BoardModel } from "../entities/containers/board";
 import { CardFeatureModel } from "./card";
 import { SecretCardModel } from "../entities/cards/secret";
 
@@ -31,8 +31,8 @@ export abstract class SecretFeatureModel<
         }
     }
 
-    public get status(): boolean {
-        if (!super.status) return false;
+    public get isValid(): boolean {
+        if (!super.isValid) return false;
         const board = this.route.board;
         if (!board) return false;
         return true;
@@ -49,7 +49,7 @@ export abstract class SecretFeatureModel<
             const instance = {
                 [key](this: SecretFeatureModel, ...args: any[]) {
                     // precheck
-                    if (!this.status) return false;
+                    if (!this.isValid) return false;
                     const player = this.route.player;
                     const game = this.route.game;
                     if (!player) return false;
@@ -79,7 +79,7 @@ export abstract class SecretFeatureModel<
         super({
             uuid: props.uuid,
             state: { 
-                actived: true,
+                isActived: true,
                 ...props.state 
             },
             child: { ...props.child },

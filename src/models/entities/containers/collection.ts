@@ -1,7 +1,5 @@
-import { DebugUtil, Model, TemplUtil } from "set-piece";
-import { MinionCardModel } from "../..";
-import { GameModel } from "./game";
-import { CardModel, DeckModel, PlayerModel, SpellCardModel, WeaponCardModel } from "../..";
+import { Model, TemplUtil } from "set-piece";
+import { CardModel, DeckModel } from "../../..";
 
 export namespace CollectionModel {
     export type E = {};
@@ -37,13 +35,31 @@ export class CollectionModel extends Model<
         })
     }
 
+    public has(card: CardModel): boolean {
+        const cards = this.origin.child.cards;
+        return cards.includes(card);
+    }
+
+    public del(card: CardModel): void {
+        const cards = this.origin.child.cards;
+        const index = cards.indexOf(card);
+        if (index === -1) return;
+        cards.splice(index, 1);
+    }
+
+    public add(card: CardModel, index?: number): void {
+        const cards = this.origin.child.cards;
+        if (index === undefined) index = cards.length;
+        if (index === -1) index = cards.length;
+        cards.splice(index, 0, card);
+    }
+
     public apply(): DeckModel {
         const cards = this.child.cards
             .map(item => TemplUtil.copy(item))
             .filter(item => item !== undefined)
-            .sort((a, b) => Math.random() - 0.5);
-        return new DeckModel({
-            child: { cards },
-        })
+            .sort(Math.random);
+
+        return new DeckModel({ child: { cards }})
     }
 }

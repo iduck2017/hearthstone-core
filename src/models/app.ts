@@ -1,6 +1,7 @@
 import { Model, TemplUtil } from "set-piece";
 import { GameModel } from "./entities/game";
-import { CollectionModel } from "./entities/collection";
+import { CollectionModel } from "./entities/containers/collection";
+import { CacheModel } from "./entities/containers/cache";
 
 export namespace AppModel {
     export type S = {
@@ -11,7 +12,7 @@ export namespace AppModel {
     export type C = {
         game?: GameModel;
         readonly collections: CollectionModel[]
-        readonly templates: Model[]
+        readonly cache: CacheModel
     };
 }
 
@@ -32,7 +33,7 @@ export class AppModel extends Model<
             },
             child: { 
                 collections: props.child?.collections ?? [],
-                templates: props.child?.templates ?? [],
+                cache: props.child?.cache ?? new CacheModel({}),
                 ...props.child 
             },
             refer: { ...props.refer },
@@ -45,22 +46,5 @@ export class AppModel extends Model<
 
     public del(): void { 
         this.origin.child.game = undefined;
-    }
-
-
-    public link(value: Model) {
-        this.origin.child.templates.push(value);
-    }
-
-    public unlink(value: Model) {
-        const templates = this.origin.child.templates;
-        const index = templates.indexOf(value);
-        if (index === -1) return;
-        templates.splice(index, 1);
-    }
-
-    public has(value: Model): boolean {
-        const templates = this.origin.child.templates;
-        return templates.includes(value);
     }
 }

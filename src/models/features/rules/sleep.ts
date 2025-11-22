@@ -6,7 +6,7 @@ export namespace SleepModel {
         onDisable: Event;
     };
     export type S = {
-        actived: boolean;
+        isActived: boolean;
     }
     export type C = {};
     export type R = {}
@@ -22,7 +22,7 @@ export class SleepModel extends Model<
         super({
             uuid: props?.uuid,
             state: {
-                actived: true,
+                isActived: true,
                 ...props?.state
             },
             child: { ...props?.child },
@@ -31,12 +31,12 @@ export class SleepModel extends Model<
     }
 
     public active() {
-        this.origin.state.actived = true;
+        this.origin.state.isActived = true;
         this.event.onActive(new Event({}));
     }
 
     public disable() {
-        this.origin.state.actived = false;
+        this.origin.state.isActived = false;
         this.event.onDisable(new Event({}));
     }
 }

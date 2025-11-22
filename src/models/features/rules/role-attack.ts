@@ -54,21 +54,23 @@ export class RoleAttackModel extends Model<
         return new RoleAttackDecor(this);
     }
 
-    public get status() { 
+    public get isValid() { 
         // is alive
         const minion = this.route.minion;
         const hero = this.route.hero;
         const entity = minion ?? hero;
         if (!entity) return false;
         const dispose = entity.child.dispose;
-        if (dispose.status) return false;
+        if (dispose.isDisposable) return false;
         // has attack
         if (this.state.current <= 0) return false;
         // need target
-        const selector = this.selector;
+        const selector = this.prepare();
         if (!selector?.options.length) return false;
         return true;
     }
+
+    
 
     constructor(props?: RoleAttackModel['props']) {
         props = props ?? {};
@@ -84,39 +86,43 @@ export class RoleAttackModel extends Model<
         });
     }
 
-    public get selector(): Selector<RoleModel> | undefined {
+    
+    public prepare(): Selector<RoleModel> | undefined {
         const game = this.route.game;
         if (!game) return;
 
         const role = this.route.role;
-        const minion = this.route.minion;
         if (!role) return;
 
+        const minion = this.route.minion;
         const charge = minion ? minion.child.charge : undefined;
         const sleep = role.child.sleep;
 
         const player = this.route.player;
         if (!player) return;
-        
         const opponent = player.refer.opponent;
         if (!opponent) return;
 
         const board = opponent.child.board;
         let options: RoleModel[] = board.refer.minions;
-        if (!sleep.state.actived || charge?.state.actived) {
+
+        // include hero
+        if (!sleep.state.isActived || charge?.state.isActived) {
             options.push(opponent.child.hero);
         }
 
+        // consider taunt
         const tauntOptions = options.filter(item => {
             const taunt = item.child.taunt;
             const stealth = item.child.stealth;
-            return taunt.state.actived && !stealth.state.actived;
+            return taunt.state.isActived && !stealth.state.isActived;
         });
         if (tauntOptions.length) options = tauntOptions;
 
+        // exclude stealth
         options = options.filter(item => {
             const stealth = item.child.stealth;
-            return !stealth.state.actived;
+            return !stealth.state.isActived;
         })
         return new Selector(options, {});
     }
@@ -126,7 +132,7 @@ export class RoleAttackModel extends Model<
     public run(roleB: RoleModel) {
         const roleA = this.route.role;
         if (!roleA) return;
-        if (!this.status) return;
+        if (!this.isValid) return;
 
         const attackB = roleB.child.attack;
         const healthB = roleB.child.health;
@@ -134,19 +140,18 @@ export class RoleAttackModel extends Model<
         // attack        
         const eventA = new AbortEvent({ target: roleB })
         this.event.toRun(eventA);
-        if (eventA.detail.aborted) return;
+        let isValid = eventA.detail.isValid;
+        if (!isValid) return;
 
         // receive
         const eventB = new AbortEvent({ source: roleA });
         attackB.event.toReceive(eventB);
-        if (eventB.detail.aborted) return;
+        isValid = eventB.detail.isValid;
+        if (!isValid) return;
 
-        if (!this.status) return;
-
+        if (!this.isValid) return;
         if (healthB.state.current <= 0) return;
 
-
-        DebugUtil.log(`${roleA.name} Attack ${roleB.name}`);
         // execute
         DamageModel.deal([
             new DamageEvent({
@@ -164,14 +169,8 @@ export class RoleAttackModel extends Model<
                 origin: attackB.state.current,
             }),
         ])
-        this.onRun(roleB);
-    }
-
-
-    protected onRun(roleB: RoleModel) {
-        const roleA = this.route.role;
-        if (!roleA) return;
-
+        
+        // after
         const hero = this.route.hero;
         if (hero) {
             const player = this.route.player;
@@ -180,12 +179,13 @@ export class RoleAttackModel extends Model<
             const weapon = hero.child.weapon;
             if (weapon) weapon.child.action.consume();
         }
-
         // stealth
         const stealth = roleA.child.stealth;
-        stealth.disable();
+        stealth.deactive();
 
+        DebugUtil.log(`${roleA.name} Attack ${roleB.name}`);
         this.event.onRun(new Event({ target: roleB })); 
     }
+
 
 }

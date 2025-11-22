@@ -1,10 +1,11 @@
 import { DebugUtil, Event, EventUtil, Method, Model  } from "set-piece";
 import { TurnModel } from "../rules/turn";
-import { FeatureModel, CardModel } from "../../..";
+import { FeatureModel, CardModel, AbortEvent } from "../../..";
 import { CardFeatureModel } from "../card";
 
 export namespace TurnEndModel {
     export type E = {
+        toRun: AbortEvent;
         onRun: Event;
     };
     export type S = {};
@@ -41,7 +42,7 @@ export abstract class TurnEndModel<
         super({
             uuid: props.uuid,
             state: {
-                actived: true,
+                isActived: true,
                 ...props.state,
             },
             child: { ...props.child },
@@ -49,21 +50,29 @@ export abstract class TurnEndModel<
         })
     }
 
-    public run() {
-        if (!this.state.actived) return;
 
-        const game = this.route.game;
-        if (!game) return;
+    public run() {
+        if (!this.isValid) return;
+        // toRun
+        const event = new AbortEvent({});
+        this.event.toRun(event);
+        const isValid = event.detail.isValid;
+        if (!isValid) return;
+        // run
         const player = this.route.player;
         if (!player) return;
+        const game = this.route.game;
+        if (!game) return;
         const turn = game.child.turn;
         const current = turn.refer.current;
-        const actived = current === player;
-
-        DebugUtil.log(`${this.state.name} run (${this.state.desc})`);
-        this.doRun(actived);
+        const isCurrent = current === player;
+        this.doRun(isCurrent);
+        // onRun
+        const name = this.state.name;
+        const desc = this.state.desc;
+        DebugUtil.log(`${name} run: ${desc}`);
         this.event.onRun(new Event({}));
     }
 
-    protected abstract doRun(actived: boolean): void;
+    protected abstract doRun(isCurrent: boolean): void;
 }

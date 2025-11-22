@@ -12,12 +12,12 @@ export class MinionDisposeModel extends DisposeModel {
         }
     }
 
-    public get status(): boolean {
+    public get isDisposable(): boolean {
         const minion = this.route.minion;
         if (!minion) return true;
         const health = minion.child.health;
         if (health.state.current <= 0) return true;
-        return super.status || false;
+        return super.isDisposable || false;
     }
 
     constructor(props?: MinionDisposeModel['props']) {
@@ -34,9 +34,13 @@ export class MinionDisposeModel extends DisposeModel {
     protected run() {
         const minion = this.route.minion;
         if (!minion) return;
-        DebugUtil.log(`${minion.name} Die`);
+
+        // execute
         this.doRun();
-        this.onRun();
+        // after
+        DebugUtil.log(`${minion.name} Die`);
+        const deathrattle = minion.child.deathrattle;
+        deathrattle.forEach(item => item.run());
     }
 
     @TranxUtil.span()
@@ -49,10 +53,4 @@ export class MinionDisposeModel extends DisposeModel {
         player.child.graveyard.add(minion);
     }
 
-    private onRun() {
-        const minion = this.route.minion;
-        if (!minion) return;
-        const deathrattle = minion.child.deathrattle;
-        deathrattle.forEach(item => item.run());
-    }
 }

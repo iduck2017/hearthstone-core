@@ -22,13 +22,13 @@ export class RestoreModel extends Model<
 > {
     public static deal(tasks: RestoreEvent[]) {
         tasks.forEach(item => item.detail.source.child.restore.event.toDeal(item));
-        tasks.forEach(item => item.detail.target.child.health.startRestore(item));
+        tasks.forEach(item => item.detail.target.child.health.toRestore(item));
         
-        tasks = tasks.filter(item => !item.detail.aborted);
+        tasks = tasks.filter(item => !item.detail.isValid);
         tasks = RestoreModel._deal(tasks);
 
-        tasks = tasks.filter(item => !item.detail.aborted);
-        tasks.forEach(item => item.detail.target.child.health.endRestore(item));
+        tasks = tasks.filter(item => !item.detail.isValid);
+        tasks.forEach(item => item.detail.target.child.health.onRestore(item));
         tasks.forEach(item => item.detail.source.child.restore.event.onDeal(item));
     }
 

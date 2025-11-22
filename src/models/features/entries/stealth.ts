@@ -23,7 +23,7 @@ export class StealthModel extends RoleFeatureModel<
             state: {
                 name: 'Stealth',
                 desc: 'Can not be attacked or targeted until it attacks.',
-                actived: true,
+                isActived: true,
                 ...props.state,
             },
             child: { ...props.child },
@@ -32,18 +32,15 @@ export class StealthModel extends RoleFeatureModel<
     }
 
     public active() {
-        if (this.state.actived) return false; 
+        // before
+        if (this.origin.state.isActived) return;
         const role = this.route.role;
-        if (!role) return false;
-        DebugUtil.log(`${role.name} gain Stealth`);
-        this.origin.state.actived = true;
-        this.event.onEnable(new Event({}));
-        return true;
-    }
+        if (!role) return;
 
-    public disable() {
-        const role = this.route.role;
-        if (!role) return false;
-        super.disable();
+        // execute
+        this.origin.state.isActived = true;
+        // after
+        DebugUtil.log(`${role.name} gain Stealth`);
+        this.event.onActive(new Event({}));
     }
 }

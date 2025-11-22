@@ -33,7 +33,7 @@ export abstract class OverhealModel<
         super({
             uuid: props.uuid,
             state: {
-                actived: true,
+                isActived: true,
                 ...props.state,
             },
             child: { ...props.child },
@@ -42,16 +42,18 @@ export abstract class OverhealModel<
     }
 
     public run() {
-        if (!this.state.actived) return;
-        
-        const event = new AbortEvent({})
+        if (!this.isValid) return;
+        // toRun
+        const event = new AbortEvent({});
         this.event.toRun(event);
-        if (event.detail.aborted) return;
-
+        const isValid = event.detail.isValid;
+        if (!isValid) return false;
+        // run
+        this.run();
+        // onRun
         const name = this.state.name;
         const desc = this.state.desc;
-        DebugUtil.log(`${name} run (${desc})`);
-        this.doRun();
+        DebugUtil.log(`${name} run: ${desc}`);
         this.event.onRun(new Event({}));
     }
 

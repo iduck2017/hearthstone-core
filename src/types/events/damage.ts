@@ -19,8 +19,8 @@ export class DamageEvent extends AbortEvent<{
     origin: number;
     result: number;
     detail: {
-        poisonous?: boolean;
-        block?: boolean;
+        isPoisonous?: boolean;
+        isBlock?: boolean;
     }
 }> {
     constructor(props: {
@@ -40,8 +40,8 @@ export class DamageEvent extends AbortEvent<{
     public update(value: number) { this.origin.result = value; }
 
     public supplement(options: {
-        poisonous?: boolean;
-        block?: boolean;
+        isPoisonous?: boolean;
+        isBlock?: boolean;
     }) {
         this.origin.detail = {
             ...this.origin.detail,

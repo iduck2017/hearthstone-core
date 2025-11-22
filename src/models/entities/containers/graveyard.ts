@@ -1,7 +1,7 @@
 import { Model } from "set-piece";
-import { MinionCardModel } from "../..";
-import { GameModel } from "./game";
-import { WeaponCardModel, PlayerModel, CardModel, SpellCardModel } from "../..";
+import { MinionCardModel } from "../../..";
+import { GameModel } from "../game";
+import { WeaponCardModel, PlayerModel, CardModel, SpellCardModel } from "../../..";
 
 export namespace GraveyardModel {
     export type E = {}
@@ -32,7 +32,13 @@ export class GraveyardModel extends Model<
     }
 
     public add(card: CardModel): boolean {
-        this.origin.child.cards.push(card);
+        const cards = this.origin.child.cards;
+        cards.push(card);
         return true;
+    }
+
+    public has(card: CardModel): boolean {
+        const cards = this.origin.child.cards;
+        return cards.includes(card);
     }
 }

@@ -25,7 +25,7 @@ export class SpellDamageModel extends CardFeatureModel<
                 offset: 0,
                 name: 'Spell Damage',
                 desc: 'Your spell cards deal extra damage.',
-                actived: true,
+                isActived: true,
                 ...props?.state,
             },
             child: { ...props?.child },
@@ -34,12 +34,12 @@ export class SpellDamageModel extends CardFeatureModel<
     }
 
     @StateUtil.on(self => self.modifyDamage)
-    private listenDamage() {
+    protected listenDamage() {
         return this.route.player?.proxy.any(SpellEffectModel).decor;
     }
-    private modifyDamage(that: SpellEffectModel, decor: SpellEffectDecor) {
+    protected modifyDamage(that: SpellEffectModel, decor: SpellEffectDecor) {
         if (!this.route.player) return;
-        if (!this.state.actived) return;
+        if (!this.state.isActived) return;
         decor.add(this.state.offset);
     }
 }

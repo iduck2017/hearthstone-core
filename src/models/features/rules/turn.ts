@@ -74,9 +74,7 @@ export class TurnModel extends Model<
             opponent.child.hero,
         ]
         entites.forEach(entity => {
-            entity.child.turnStart.forEach(item => {
-                item.run()
-            })
+            entity.child.turnStart.forEach(item => item.run())
         })
         
 
@@ -112,14 +110,12 @@ export class TurnModel extends Model<
             opponent.child.hero,
         ]
         entites.forEach(entity => {
-            entity.child.turnEnd.forEach(item => {
-                item.run()
-            })
+            entity.child.turnEnd.forEach(item => item.run())
         })
 
         const roles = player.refer.roles;
         roles.forEach(item => {
-            item.child.frozen.unfreeze();
+            item.child.frozen.overcome();
         });
         
         this.event.onEnd(new Event({}));

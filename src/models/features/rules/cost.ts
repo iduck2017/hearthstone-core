@@ -46,7 +46,7 @@ export class CostModel extends Model<
         }
     }
 
-    public get status() {
+    public get isValid() {
         const player = this.route.player;
         if (!player) return false;
         if (this.state.type === CostType.MANA) {

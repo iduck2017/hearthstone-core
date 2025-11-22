@@ -1,55 +1,68 @@
-import { DebugUtil, Event, Model, Route, TranxUtil } from "set-piece"
-import { SpellEffectModel } from "../hooks/spell-effect"
-import { DependencyModel } from "../../common/dependency"
-import { SpellCardModel } from "../../entities/cards/spell"
-import { PerformModel } from "."
-import { SpellCastEvent } from "../../../types/events/spell-cast"
-import { MinionCardModel } from "../../entities/cards/minion"
-import { HeroModel, RoleModel } from "../../entities/heroes"
-import { AbortEvent } from "../../../types/events/abort"
+import { DebugUtil, Event, Model, Route, TranxUtil } from "set-piece";
+import { EffectModel } from "../hooks/effect";
+import { DependencyModel } from "../../common/dependency";
+import { SkillModel } from "../../entities/skill";
+import { PerformModel } from ".";
+import { AbortEvent } from "../../../types/events/abort";
+import { MinionCardModel } from "../../entities/cards/minion";
+import { HeroModel, RoleModel } from "../../entities/heroes";
 
-export type SpellHooksConfig = {
-    effects: Map<SpellEffectModel, Model[]>
+export type SkillHooksConfig = {
+    effects: Map<EffectModel, Model[]>
 }
 
-export namespace SpellPerformModel {
-    export type E = {}
+export namespace SkillPerformModel {
+    export type E = {
+        toRun: AbortEvent;
+        onRun: Event;
+    }
     export type S = {
-        from: number;
         index: number;
     }
     export type C = {
-        dependencies: DependencyModel<SpellEffectModel>[]
+        dependencies: DependencyModel<EffectModel>[]
     }
     export type R = {}
     export type P = {
-        spell: SpellCardModel | undefined;
+        skill: SkillModel | undefined;
     }
 }
 
-
-export class SpellPerformModel extends PerformModel<
-    SpellPerformModel.E,
-    SpellPerformModel.S,
-    SpellPerformModel.C,
-    SpellPerformModel.R
+export class SkillPerformModel extends PerformModel<
+    SkillPerformModel.E,
+    SkillPerformModel.S,
+    SkillPerformModel.C,
+    SkillPerformModel.R
 > {
-    public get route(): Route & SpellPerformModel.P & PerformModel.P {
+    public get route(): Route & SkillPerformModel.P & PerformModel.P {
         const result = super.route;
-        const spell: SpellCardModel | undefined = result.items.find(item => item instanceof SpellCardModel)
+        const skill: SkillModel | undefined = result.items.find(item => item instanceof SkillModel)
         return {
             ...result,
-            spell,
+            skill,
         }
     }
 
     public get isValid(): boolean {
-        if (!super.isValid) return false;
-        const spell = this.route.spell;
-        if (!spell) return false;
+        // turn check
+        const game = this.route.game;
+        if (!game) return false;
+        const player = this.route.player;
+        if (!player) return false;
+        const turn = game.child.turn;
+        const current = turn.refer.current;
+        if (current !== player) return false;
+
+        // skill check
+        const skill = this.route.skill;
+        if (!skill) return false;
+        
+        // cost check
+        const cost = skill.child.cost;
+        if (!cost.isValid) return false;
 
         // At least one valid effect
-        const effects = spell.child.effects;
+        const effects = skill.child.effects;
         for (const item of effects) {
             // At least one valid target (If need)
             while (true) {
@@ -62,12 +75,11 @@ export class SpellPerformModel extends PerformModel<
         return true;
     }
 
-    constructor(props?: SpellPerformModel['props']) {
+    constructor(props?: SkillPerformModel['props']) {
         props = props ?? {}
         super({
             uuid: props.uuid,
             state: { 
-                from: 0,
                 index: 0,
                 ...props.state 
             },
@@ -80,17 +92,17 @@ export class SpellPerformModel extends PerformModel<
     public consume() {
         const player = this.route.player;
         if (!player) return;
-        const card = this.route.card;
-        if (!card) return;
+        const skill = this.route.skill;
+        if (!skill) return;
         const mana = player.child.mana;
-        const cost = card.child.cost;
+        const cost = skill.child.cost;
         if (!cost) return;
-        mana.consume(cost.state.current, card);
+        mana.consume(cost.state.current, skill);
     }
 
     // play
     public async run(): Promise<void> {
-        const card = this.route.spell;
+        const card = this.route.skill;
         if (!card) return;
 
         if (!this.state.isPending) {
@@ -101,29 +113,19 @@ export class SpellPerformModel extends PerformModel<
             if (!config) return;
 
             // before
-            const player = this.route.player;
-            if (!player) return;
-            const hand = player.child.hand;
-            const from = hand.child.cards.indexOf(card);
-            if (from === -1) return;
-
             let event = new AbortEvent({});
             this.event.toRun(event);
             let isValid = event.detail.isValid;
 
             // execute
             this.consume();
-            if (!isValid) {
-                const hand = player.child.hand;
-                hand.del(card);
-                return;
-            };
-            this.init(from, config);
+            if (!isValid) return;
+            this.init(config);
         }
 
         // execute
-        const index = this.origin.state.index;
         while (true) {
+            const index = this.origin.state.index;
             const task = this.origin.child.dependencies[index];
             if (!task) break;
 
@@ -131,19 +133,22 @@ export class SpellPerformModel extends PerformModel<
             const params = task.values;
             if (!hook) continue;
             if (!params) continue;
+            console.log(hook.name, params);
+
+            this.origin.state.index += 1;
             await hook.run(params);
         }
         this.reset();
 
         // after
-        DebugUtil.log(`${card.name} Played`);
+        DebugUtil.log(`${card.name} Used`);
         this.event.onRun(new Event({}));
     }
 
+
     // lifecycle
     @TranxUtil.span()
-    protected init(from: number, config: SpellHooksConfig) {
-        this.origin.state.from = from;
+    protected init(config: SkillHooksConfig) {
         this.origin.state.isPending = true;
         this.origin.state.index = 0;
         config.effects.forEach((params, item) => {
@@ -155,26 +160,25 @@ export class SpellPerformModel extends PerformModel<
     @TranxUtil.span()
     protected reset() {
         this.origin.state.isPending = false;
-        this.origin.state.from = 0;
         this.origin.state.index = 0;
         this.origin.child.dependencies = [];
     }
 
-
     // prepare
-    protected async prepare(): Promise<SpellHooksConfig | undefined> {
+    protected async prepare(): Promise<SkillHooksConfig | undefined> {
         if (!this.isValid) return;
 
         const player = this.route.player;
         if (!player) return;
-        const spell = this.route.spell;
-        if (!spell) return;
+        const skill = this.route.skill;
+        if (!skill) return;
+
 
         // hooks
-        const config: SpellHooksConfig = {
+        const config: SkillHooksConfig = {
             effects: new Map(),
         }
-        const effects = spell.child.effects;
+        const effects = skill.child.effects;
         for (const item of effects) {
             const params: any[] = []
             while (true) {
@@ -203,5 +207,5 @@ export class SpellPerformModel extends PerformModel<
         }
         return config;
     }
-
 }
+

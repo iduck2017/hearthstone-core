@@ -23,7 +23,7 @@ export class TauntModel extends RoleFeatureModel<
             state: {
                 name: 'Taunt',
                 desc: 'Enemies must attack this minion.',
-                actived: true,
+                isActived: true,
                 ...props.state,
             },
             child: { ...props.child },
@@ -31,19 +31,22 @@ export class TauntModel extends RoleFeatureModel<
         })
     }
 
-    public active(): boolean {
-        if (this.state.actived) return false;
+    public active() {
+        // before
+        if (this.origin.state.isActived) return;
         const role = this.route.role;
-        if (!role) return false;
+        if (!role) return;
+
+        // execute
+        this.origin.state.isActived = true;
+        // after
         DebugUtil.log(`${role.name} gain Taunt`);
-        this.origin.state.actived = true;
-        this.event.onEnable(new Event({}));
-        return true;
+        this.event.onActive(new Event({}));
     }
 
-    public disable() {
+    public deactive() {
         const role = this.route.role;
         if (!role) return false;
-        super.disable();
+        super.deactive();
     }
 }

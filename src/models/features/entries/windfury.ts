@@ -6,7 +6,7 @@ import { RoleActionDecor } from "../../../types/decors/role-action";
 export namespace WindfuryModel {
     export type E = {};
     export type S = {
-        advanced: boolean;
+        isAdvanced: boolean;
     };
     export type C = {};
     export type R = {};
@@ -27,8 +27,8 @@ export class WindfuryModel extends RoleFeatureModel<
             state: {
                 name: 'Windfury',
                 desc: 'Can attack twice each turn.',
-                advanced: false,
-                actived: true,
+                isAdvanced: false,
+                isActived: true,
                 ...props.state,
             },
             child: { ...props.child },
@@ -36,32 +36,35 @@ export class WindfuryModel extends RoleFeatureModel<
         });
     }
 
-    public active(advanced?: boolean): boolean {
-        if (!advanced && this.state.actived) return false;
-        if (this.state.actived && this.state.advanced) return false; 
-        this._active(advanced);
-        this.event.onEnable(new Event({}));
-        return true;
-    }
-    @TranxUtil.span()
-    private _active(advanced?: boolean) {
-        this.origin.state.actived = true;
-        this.origin.state.advanced = advanced ?? false;
+    public active(isAdvanced?: boolean) {
+        // before
+        if (!isAdvanced && this.state.isActived) return false;
+        if (isAdvanced && this.state.isAdvanced) return false;
+        // execute
+        this.doActive(isAdvanced);
+        // after
+        this.event.onActive(new Event({}));
     }
 
+    @TranxUtil.span()
+    private doActive(isAdvanced?: boolean) {
+        this.origin.state.isActived = true;
+        this.origin.state.isAdvanced = isAdvanced ?? false;
+    }
+
+    @TranxUtil.span()
+    protected doDeactive() {
+        super.doDeactive();
+        this.origin.state.isAdvanced = false;
+    }
+
+    
     @StateUtil.on(self => self.modifyAction)
-    private listenAction() { 
+    protected listenAction() { 
         return this.route.role?.proxy.child.action?.decor;
     }
     protected modifyAction(that: RoleActionModel, decor: RoleActionDecor) {
-        if (!this.state.actived) return;
-        decor.add(this.state.advanced ? 3 : 1);
-    }
-
-
-    @TranxUtil.span()
-    public disable() {
-        super.disable();
-        this.origin.state.advanced = false;
+        if (!this.state.isActived) return;
+        decor.add(this.state.isAdvanced ? 3 : 1);
     }
 }

@@ -1,8 +1,7 @@
 import { DebugUtil, Event, Model, TranxUtil } from "set-piece";
 import { BattlecryModel } from "../hooks/battlecry";
-import { WeakMapModel } from "../../common/weak-map";
+import { DependencyModel } from "../../common/dependency";
 import { AbortEvent } from "../../../types/events/abort";
-import { BoardModel } from "../../entities/board";
 import { PerformModel } from ".";
 import { WeaponCardModel } from "../../entities/cards/weapon";
 
@@ -11,17 +10,14 @@ export type WeaponHooksConfig = {
 }
 
 export namespace WeaponPerformModel {
-    export type E = {
-        toEquip: AbortEvent;
-        onEquip: Event;
-    }
+    export type E = {}
     export type S = {
         from: number;
         to: number;
         index: number;
     }
     export type C = {
-        params: WeakMapModel<BattlecryModel, Model>[]
+        dependencies: DependencyModel<BattlecryModel>[]
     }
     export type R = {
     }
@@ -42,8 +38,6 @@ export class WeaponPerformModel extends PerformModel<
         }
     }
 
-    private resolve?: () => void;
-
     constructor(props?: WeaponPerformModel['props']) {
         props = props ?? {}
         super({
@@ -54,151 +48,100 @@ export class WeaponPerformModel extends PerformModel<
                 index: 0,
                 ...props.state 
             },
-            child: { params: [], ...props.child },
+            child: { dependencies: [], ...props.child },
             refer: { ...props.refer },
         });
     }
 
-    // play
-    public async play(): Promise<void> {
-        // doPlay
-        const config = await this.prepare();
-        if (!config) return;
-
-        let aborted = !this.toPlay(config);
-        if (aborted) return;
-
-        this.doPlay()
-        return new Promise((resolve) => {
-            this.resolve = resolve;
-        })
-    }
-
-    
-    public toPlay(config: WeaponHooksConfig): boolean {
-        // status
-        if (!this.status) return false;
-
-        const weapon = this.route.weapon;
-        if (!weapon) return false;
-
-        // from
-        const player = this.route.player;
-        if (!player) return false;
-        const hand = player.child.hand;
-        const from = hand.child.cards.indexOf(weapon);
-        if (from === -1) return false;
-
-        // toPlay
-        let event = new AbortEvent({});
-        this.event.toPlay(event);
-        let aborted = event.detail.aborted;
-
-        // consume
-        this.consume()
-        if (aborted) {
-            hand.del(weapon);
-            return false;
-        }
-
-        // summon
-        const board = player.child.board;
-        aborted = !this.toEquip(board);
-        if (aborted) return false;
-        this.doEquip(board);
-
-        // doPLay
-        this.init(from, config);
-
-        // debug
-        if (!weapon) return false;
-        DebugUtil.log(`${weapon.name} Played`);
-        return true;
-    }
-
-    public doPlay() {
-        const index = this.origin.state.index;
-        this.origin.state.index += 1;
-
-        const pair = this.origin.child.params?.[index];
-        if (!pair) {
-            const weapon = this.route.weapon;
-            if (!weapon) return;
-            this.reset();
-            this.onEquip()
-        } else {
-            const hook = pair.refer.key;
-            const params = pair.values;
-            if (!hook) return;
-            if (!params) return;
-            hook.run(...params);
-        }
-    }
-
-
-    // equip
-    public equip(board?: BoardModel, index?: number) {
-        const player = this.route.player;
-        if (!board) board = player?.child.board;
-        if (!board) return;
-        let aborted = !this.toEquip(board);
-        if (aborted) return;
-        this.doEquip(board);
-        this.onEquip();
-    }
-
-    private toEquip(board: BoardModel): boolean {
-        const event = new AbortEvent({});
-        this.event.toEquip(event);
-        if (event.detail.aborted) return false;
-        return true;
-    }
-
-    private onEquip() {
-        this.event.onEquip(new Event({}));
-    }
-
-    @TranxUtil.span()
-    private doEquip(board: BoardModel) {
-        const weapon = this.route.weapon;
-        if (!weapon) return;
-        DebugUtil.log(`${weapon.name} Deployed`);
+    public consume() {
         const player = this.route.player;
         if (!player) return;
-        const hand = player.child.hand;
-        if (hand) hand.del(weapon);
-        const hero = player.child.hero;
-        hero.equip(weapon);
+        const card = this.route.card;
+        if (!card) return;
+        const mana = player.child.mana;
+        const cost = card.child.cost;
+        if (!cost) return;
+        mana.consume(cost.state.current, card);
+    }
+
+    // play
+    public async run(): Promise<void> {
+        const card = this.route.weapon;
+        if (!card) return;
+
+        if (!this.state.isPending) {
+            if (!this.isValid) return;
+
+            // prepare
+            const config = await this.prepare();
+            if (!config) return;
+
+            // before
+            const player = this.route.player;
+            if (!player) return;
+            const hand = player.child.hand;
+            const from = hand.child.cards.indexOf(card);
+            if (from === -1) return;
+
+            let event = new AbortEvent({});
+            this.event.toRun(event);
+            let isValid = event.detail.isValid;
+
+            // execute
+            this.consume();
+            if (!isValid) {
+                const hand = player.child.hand;
+                hand.del(card);
+                return;
+            };
+            card.equip(player);
+            this.init(from, config);
+        }
+
+        // execute
+        const index = this.origin.state.index;
+        while (true) {
+            const task = this.origin.child.dependencies[index];
+            if (!task) break;
+
+            const hook = task.refer.key;
+            const params = task.values;
+            if (!hook) continue;
+            if (!params) continue;
+            await hook.run(params);
+        }
+        this.reset();
+
+        // after
+        DebugUtil.log(`${card.name} Played`);
+        this.event.onRun(new Event({}));
     }
 
 
     @TranxUtil.span()
     protected reset() {
-        this.origin.state.locked = false;
+        this.origin.state.isPending = false;
         this.origin.state.from = 0;
         this.origin.state.to = 0;
         this.origin.state.index = 0;
-        this.origin.child.params = [];
+        this.origin.child.dependencies = [];
     }
 
-
-    
     // lifecycle
     @TranxUtil.span()
     protected init(from: number, config: WeaponHooksConfig) {
         this.origin.state.from = from;
-        this.origin.state.locked = true;
+        this.origin.state.isPending = true;
         this.origin.state.index = 0;
         config.battlecry.forEach((params, item) => {
-            const map = WeakMapModel.generate(params, item);
-            this.origin.child.params?.push(map);
+            const map = DependencyModel.new(params, item);
+            this.origin.child.dependencies?.push(map);
         })
     }
 
-
     // use
     protected async prepare(): Promise<WeaponHooksConfig | undefined> {
-        if (!this.status) return;
+        if (!this.isValid) return;
 
         const player = this.route.player;
         if (!player) return;
@@ -214,15 +157,15 @@ export class WeaponPerformModel extends PerformModel<
         for (const item of battlecry) {
             const params: any[] = []
             while (true) {
-                const selector = item.prepare(...params);
+                const selector = item.prepare(params);
                 if (!selector) break;
                 if (!selector.options.length) params.push(undefined);
                 else {
-                    const option = await player.child.controller.get(selector);
+                    const option = await player.controller.get(selector);
                     if (option === undefined) return;
                     else params.push(option);
                 }
-                if (!item.state.multiselect) break;
+                if (!item.state.isMultiselect) break;
             }
             config.battlecry.set(item, params);
         }

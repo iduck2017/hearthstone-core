@@ -1,17 +1,18 @@
 import { Event, Model, Route } from "set-piece";
 import { PlayerModel } from "../../entities/player";
-import { HandModel } from "../../entities/hand";
+import { HandModel } from "../../entities/containers/hand";
 import { CardModel } from "../../entities/cards";
-import { AbortEvent } from "../../../types/events/abort";
 import { AppModel } from "../../app";
+import { GameModel } from "../../entities/game";
+import { AbortEvent } from "../../../types/events/abort";
 
 export namespace PerformModel {
     export type E = {
-        toPlay: AbortEvent;
-        onPlay: Event,
+        toRun: AbortEvent;
+        onRun: Event
     }
     export type S = {
-        locked: boolean;
+        isPending: boolean;
     }
     export type C = {};
     export type R = {};
@@ -20,6 +21,7 @@ export namespace PerformModel {
         hand: HandModel | undefined;
         card: CardModel | undefined;
         app: AppModel | undefined;
+        game: GameModel | undefined;
     }
 }
 
@@ -44,36 +46,28 @@ export abstract class PerformModel<
             hand: result.items.find(item => item instanceof HandModel),
             card,
             app: result.items.find(item => item instanceof AppModel),
+            game: result.items.find(item => item instanceof GameModel),
         }
     }
 
-    public get status(): boolean {
+    protected get isValid(): boolean {
+        // turn check
+        const game = this.route.game;
+        if (!game) return false;
         const player = this.route.player;
         if (!player) return false;
-        if (!player.status) return false;
+        const turn = game.child.turn;
+        const current = turn.refer.current;
+        if (current !== player) return false;
+        // hand check
         const hand = this.route.hand;
         if (!hand) return false;
         const card = this.route.card;
         if (!card) return false;
+        // cost check
         const cost = card.child.cost;
-        if (!cost) return false;
-        if (!cost.status) return false;
+        if (!cost.isValid) return false;
         return true;
-    }
-
-    public abstract play(): Promise<void>;
-
-    public abstract doPlay(): void;
-
-    public consume() {
-        const player = this.route.player;
-        if (!player) return;
-        const card = this.route.card;
-        if (!card) return;
-        const mana = player.child.mana;
-        const cost = card.child.cost;
-        if (!cost) return;
-        mana.consume(cost.state.current, card);
     }
 
     constructor(props: PerformModel['props'] & {
@@ -85,11 +79,15 @@ export abstract class PerformModel<
         super({
             uuid: props.uuid,
             state: {
-                locked: false,
+                isPending: false,
                 ...props.state
             },
             child: { ...props.child },
             refer: { ...props.refer }
         })
     }
+
+    public abstract run(): Promise<void>;
+
+
 }

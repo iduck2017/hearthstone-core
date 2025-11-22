@@ -22,7 +22,7 @@ export class ElusiveModel extends RoleFeatureModel<
             state: {
                 name: 'Elusive',
                 desc: 'Can\'t be targeted by spells or Hero Powers.',
-                actived: true,
+                isActived: true,
                 ...props?.state,
             },
             child: { ...props?.child },
@@ -30,13 +30,17 @@ export class ElusiveModel extends RoleFeatureModel<
         })
     }
 
-    public active(): boolean {
-        if (this.state.actived) return false;
+    public active() {
+        // before
+        if (this.origin.state.isActived) return;
         const role = this.route.role;
         if (!role) return false;
+
+        // execute
+        this.origin.state.isActived = true;
+        
+        // after
         DebugUtil.log(`${role.name} gain Elusive`);
-        this.origin.state.actived = true;
-        this.event.onEnable(new Event({}));
-        return true;
+        this.event.onActive(new Event({}));
     }
 }

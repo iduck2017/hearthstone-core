@@ -7,7 +7,7 @@ export class RoleBuffModel extends IRoleBuffModel {
         super({
             uuid: props.uuid,
             state: { 
-                actived: true,
+                isActived: true,
                 offset: [0, 0],
                 name: 'Unknown buff',
                 desc: '+0/+0',

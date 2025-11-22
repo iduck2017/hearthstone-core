@@ -1,13 +1,11 @@
 import { DebugUtil, Model } from "set-piece";
-import { MinionCardModel } from "./cards/minion";
-import { GameModel } from "./game";
-import { CardModel, PlayerModel, SpellCardModel, WeaponCardModel } from "../..";
+import { CardModel } from "../../..";
 
 export namespace DeckModel {
     export type E = {}
     export type S = {}
     export type C = {
-        cards: CardModel[]
+        readonly cards: CardModel[]
     }
     export type R = {}
 }
@@ -42,10 +40,22 @@ export class DeckModel extends Model<
         return card;
     }
 
+    public add(item: CardModel, index?: number): void {
+        const items = this.origin.child.cards;
+        if (index === undefined) index = items.length;
+        if (index === -1) index = items.length;
+        items.splice(index, 0, item);
+    }
+
     public del(card: CardModel) {
-        // remove from cards
-        let index = this.child.cards.findIndex(item => item === card);
+        const cards = this.origin.child.cards;
+        let index = cards.findIndex(item => item === card);
         if (index === -1) return;
-        this.origin.child.cards.splice(index, 1);
+        cards.splice(index, 1);
+    }
+
+    public has(card: CardModel): boolean {
+        const cards = this.origin.child.cards;
+        return cards.includes(card);
     }
 }

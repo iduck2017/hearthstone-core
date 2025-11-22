@@ -2,15 +2,15 @@ import { Event } from "set-piece";
 
 export class AbortEvent<
     T extends Record<string, any> = {}
-> extends Event<T & { aborted: boolean }> {
+> extends Event<T & { isValid: boolean }> {
     constructor(props: T) {
         super({ 
-            aborted: false, 
+            isValid: true, 
             ...props,
         });
     }
 
     public abort() {
-        this.origin.aborted = true;
+        this.origin.isValid = false;
     }
 }

@@ -1,4 +1,4 @@
-import { Event, Model, TranxUtil } from "set-piece";
+import { DebugUtil, Event, Model, TranxUtil } from "set-piece";
 import { CardModel } from ".";
 import { WeaponAttackModel } from "../../features/rules/weapon-attack";
 import { WeaponActionModel } from "../../features/rules/weapon-action";
@@ -9,10 +9,16 @@ import { TurnEndModel } from "../../features/hooks/turn-end";
 import { WeaponPerformModel } from "../../features/perform/weapon";
 import { DeathrattleModel } from "../../features/hooks/deathrattle";
 import { TurnStartModel } from "../../features/hooks/turn-start";
+import { PlayerModel } from "../player";
+import { AbortEvent } from "../../../types/events/abort";
+import { DisposeModel } from "../../features/dispose";
 
 export namespace WeaponCardModel {
     export type S = {};
-    export type E = {};
+    export type E = {
+        toEquip: AbortEvent;
+        onEquip: Event;
+    };
     export type C = {
         readonly attack: WeaponAttackModel;
         readonly action: WeaponActionModel;
@@ -93,4 +99,36 @@ export abstract class WeaponCardModel<
         else if (feat instanceof DeathrattleModel) child.deathrattle.push(feat);
         else if (feat instanceof FeatureModel) child.feats.push(feat);
     }
+
+    // equip
+    @DisposeModel.span()
+    public equip(player?: PlayerModel, index?: number) {
+        if (!player) player = this.route.player;
+        if (!player) return;
+
+        // before
+        const event = new AbortEvent({ player });
+        this.event.toEquip(event);
+        const isValid = event.detail.isValid;
+        if (!isValid) return;
+
+        // execute
+        const hero = player.child.hero;
+        const prev = hero.child.weapon;
+        if (prev) prev.child.dispose.destroy();
+        this.doEquip(player);
+        
+        // after
+        DebugUtil.log(`${this.name} Equipped`);
+        this.event.onEquip(new Event({}));
+    }
+
+    @TranxUtil.span()
+    private doEquip(player: PlayerModel) {
+        const hand = player.child.hand;
+        if (hand) hand.del(this);
+        const hero = player.child.hero;
+        hero.equip(this);
+    }
+    
 }

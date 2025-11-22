@@ -20,7 +20,7 @@ export class FrozenModel extends RoleFeatureModel<
             state: {
                 name: 'Frozen',
                 desc: 'Frozen charactoers lose their next attack.',
-                actived: true,
+                isActived: true,
                 ...props?.state,
             },
             child: { ...props?.child },
@@ -28,31 +28,39 @@ export class FrozenModel extends RoleFeatureModel<
         });
     }
 
-    public active(): boolean {
-        if (this.state.actived) return false;
+    public active() {
+        // before
+        if (this.origin.state.isActived) return;
         const role = this.route.role;
-        if (!role) return false;
+        if (!role) return;
+
+        // execute
+        this.origin.state.isActived = true;
+
+        // after
         DebugUtil.log(`${role.name} Frozen`);
-        this.origin.state.actived = true;
-        this.event.onEnable(new Event({}));
-        return true;
+        this.event.onActive(new Event({}));
     }
 
-    public unfreeze() {
-        if (!this.state.actived) return;
+    public overcome() {
+        if (!this.origin.state.isActived) return;
+
+        // condition check
         const role = this.route.role;
         if (!role) return false;
         if (role.child.action.state.current <= 0) return;
-        if (!role.child.action.state.actived) return;
-        if (role.child.sleep.state.actived) return;
-        this.disable();
+        if (!role.child.action.state.isEnabled) return;
+        if (role.child.sleep.state.isActived) return;
+
+        this.deactive();
     }
 
-    public disable() {
+    protected onDeactive() {
         const role = this.route.role;
         if (!role) return false;
         DebugUtil.log(`${role.name} Unfrozen`);
-        super.disable();
+
+        super.deactive();
     }
 
 }

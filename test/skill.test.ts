@@ -39,9 +39,10 @@ describe('skill', () => {
         expect(playerA.child.mana.state.current).toBe(10);
 
         const promise = heroA.child.skill.use();
-        expect(playerA.child.controller.current?.options).toContain(heroB);
-        expect(playerA.child.controller.current?.options).toContain(heroA);
-        playerA.child.controller.set(heroB);
+        const selector = playerA.controller.current;
+        expect(selector?.options).toContain(heroB);
+        expect(selector?.options).toContain(heroA);
+        playerA.controller.set(heroB);
         await promise;
 
         expect(heroB.child.health.state.current).toBe(29);

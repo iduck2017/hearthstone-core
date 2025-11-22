@@ -1,9 +1,8 @@
 import { DebugUtil, Event, Model } from "set-piece";
-import { CardModel, FeatureModel, MinionCardModel, MinionPerformModel, RoleModel, WeaponCardModel, WeaponPerformModel } from "../../..";
+import { CardModel, FeatureModel, MinionCardModel, WeaponCardModel } from "../../..";
 import { AbortEvent } from "../../../types/events/abort";
 import { CardFeatureModel } from "../card";
 import { Selector } from "../../../types/selector";
-import { PerformModel } from "../perform";
 
 export namespace BattlecryModel {
     export type E = {
@@ -11,14 +10,11 @@ export namespace BattlecryModel {
         onRun: Event;
     };
     export type S = {
-        async: boolean;
-        pending: boolean;
-        multiselect: boolean;
+        isPending: boolean;
+        isMultiselect: boolean;
     };
     export type C = {};
-    export type R = {
-        caller?: PerformModel
-    };
+    export type R = {};
 }
 
 export abstract class BattlecryModel<
@@ -47,12 +43,6 @@ export abstract class BattlecryModel<
         }
     }
 
-    public get status() {
-        if (!super.status) return false;
-        if (this.state.pending) return false;
-        return true;
-    }
-
     constructor(props: BattlecryModel['props'] & {
         uuid: string | undefined;
         state: S & Pick<FeatureModel.S, 'desc' | 'name'>;
@@ -62,10 +52,9 @@ export abstract class BattlecryModel<
         super({
             uuid: props.uuid,
             state: { 
-                actived: true,
-                async: false,
-                pending: false,
-                multiselect: false,
+                isActived: true,
+                isPending: false,
+                isMultiselect: false,
                 ...props.state,
             },
             child: { ...props.child },
@@ -73,37 +62,32 @@ export abstract class BattlecryModel<
         });
     }
 
-    public run(...params: Array<T | undefined>) {
-        if (!this.toRun()) return;
-        this.doRun(...params);
-        if (this.state.async) return;
-        this.onRun();
-    }
+    public async run(params: Array<T | undefined>) {
+        // toRun
+        if (!this.state.isPending) {
+            if (!this.isValid) return;
+            const event = new AbortEvent({});
+            this.event.toRun(event);
+            const isValid = event.detail.isValid;
+            if (!isValid) return;
 
-    protected toRun(): boolean | undefined {
-        if (!this.status) return;
-        const event = new AbortEvent({});
-        this.event.toRun(event);
+            this.origin.state.isPending = true;
+        }
+        
+        // run
+        await this.doRun(params);
+        this.origin.state.isPending = false;
 
-        if (event.detail.aborted) return;
-
+        // onRun
         const name = this.state.name;
         const desc = this.state.desc;
-        DebugUtil.log(`${name} run (${desc})`);
-        return true;
-    }
-
-    protected onRun() {
-        this.origin.state.pending = false;
-        const caller = this.origin.refer.caller;
-        this.origin.refer.caller = undefined;
-        if (caller) caller.doPlay();
+        DebugUtil.log(`${name} run: ${desc}`);
         this.event.onRun(new Event({}));
     }
 
-    protected abstract doRun(...params: Array<T | undefined>): void;
+    protected abstract doRun(params: Array<T | undefined>): Promise<void>;
 
-    public abstract prepare: (...params: Array<T | undefined>) => Selector<T> | undefined;
+    public abstract prepare(params: Array<T | undefined>): Selector<T> | undefined;
 
 }
 

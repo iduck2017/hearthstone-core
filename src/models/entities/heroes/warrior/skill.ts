@@ -1,9 +1,10 @@
 import { TemplUtil } from "set-piece";
-import { SkillModel } from ".";
-import { CostModel } from "../../features/rules/cost";
+import { SkillModel } from "../../skill";
+import { CostModel } from "../../../features/rules/cost";
+import { ArmorUpEffectModel } from "./effect";
 
 @TemplUtil.is('armor-up')
-export class ArmorUpModel extends SkillModel<never> {
+export class ArmorUpModel extends SkillModel {
     constructor(props?: ArmorUpModel['props']) {
         super({
             uuid: props?.uuid,
@@ -14,20 +15,10 @@ export class ArmorUpModel extends SkillModel<never> {
             },
             child: {
                 cost: props?.child?.cost ?? new CostModel({ state: { origin: 2 }}),
+                effects: props?.child?.effects ?? [new ArmorUpEffectModel()],
                 ...props?.child,
             },
             refer: { ...props?.refer },
         })
-    }
-
-    protected doRun() {
-        const player = this.route.player;
-        if (!player) return;
-        const armor = player.child.hero.child.armor;
-        armor.gain(2);
-    }
-
-    protected prepare() {
-        return undefined;
     }
 }

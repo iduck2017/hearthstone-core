@@ -14,7 +14,7 @@ export class TheCoinModel extends SpellCardModel {
                 name: "The Coin",
                 desc: "Gain 1 Mana Crystal this turn only.",
                 flavorDesc: "",
-                collectible: false,
+                isCollectible: false,
                 rarity: RarityType.COMMON,
                 class: ClassType.NEUTRAL,
                 schools: [],

@@ -1,7 +1,7 @@
 import { Model, TemplUtil, TranxUtil } from "set-piece";
-import { PlayerModel } from "./player";
-import { GameModel } from "./game";
-import { CardModel } from "../..";
+import { PlayerModel } from "../player";
+import { GameModel } from "../game";
+import { CardModel } from "../../..";
 
 export namespace HandModel {
     export type E = {}
@@ -35,9 +35,9 @@ export class HandModel extends Model<
         if (!game) return;
         const turn = game.child.turn;
         const current = turn.refer.current;
-        const actived = current === player;
+        const isCurrent = current === player;
         return {
-            cards: actived ? this.child.cards.map(item => item.chunk) : undefined,
+            cards: isCurrent ? this.child.cards.map(item => item.chunk) : undefined,
             size: this.child.cards.length,
         }
     }

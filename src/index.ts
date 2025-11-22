@@ -4,8 +4,7 @@ export { RaceType, SchoolType, RarityType, ClassType } from "./types/card";
 export { PlayerModel, PlayerType } from "./models/entities/player";
 
 export { Selector } from "./types/selector";
-export { SelectorModel } from "./models/common/selector";
-export { ControllerModel } from "./models/common/controller";
+export { Controller } from "./types/controller";
 
 // event
 export { DamageEvent } from "./types/events/damage";
@@ -49,11 +48,11 @@ export { WeaponCardModel } from "./models/entities/cards/weapon";
 // game
 export { AppModel } from "./models/app";
 export { GameModel } from "./models/entities/game";
-export { HandModel } from "./models/entities/hand";
-export { BoardModel } from "./models/entities/board";
-export { DeckModel } from "./models/entities/deck";
-export { GraveyardModel } from "./models/entities/graveyard";
-export { CollectionModel } from "./models/entities/collection";
+export { HandModel } from "./models/entities/containers/hand";
+export { BoardModel } from "./models/entities/containers/board";
+export { DeckModel } from "./models/entities/containers/deck";
+export { GraveyardModel } from "./models/entities/containers/graveyard";
+export { CollectionModel } from "./models/entities/containers/collection";
 
 // entries
 export { FrozenModel } from "./models/features/entries/frozen";
@@ -101,9 +100,9 @@ export { MageModel } from "./models/entities/heroes/mage";
 export { WarriorModel } from "./models/entities/heroes/warrior";
 
 // skills
-export { SkillModel } from "./models/entities/skills";
-export { FireBlastModel } from "./models/entities/skills/fireblast";
-export { ArmorUpModel } from "./models/entities/skills/armor-up";
+export { SkillModel } from "./models/entities/skill";
+export { FireBlastModel } from "./models/entities/heroes/mage/skill";
+export { ArmorUpModel } from "./models/entities/heroes/warrior/skill";
 
 export { OperatorType, Operator } from "./types/operator";
 export { AbortEvent } from "./types/events/abort";

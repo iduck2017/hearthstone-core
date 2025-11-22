@@ -22,7 +22,7 @@ export class ChargeModel extends RoleFeatureModel<
             state: {
                 name: 'Charge',
                 desc: 'Can attack immediately.',
-                actived: true,
+                isActived: true,
                 ...props?.state,
             },
             child: { ...props?.child },

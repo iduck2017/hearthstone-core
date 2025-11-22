@@ -11,8 +11,8 @@ export abstract class RoleFeatureModel<
     R extends Partial<FeatureModel.R> & Model.R = {},
 > extends CardFeatureModel<E, S, C, R> {
 
-    public get status(): boolean {
-        if (!super.status) return false;
+    public get isValid(): boolean {
+        if (!super.isValid) return false;
         if (!this.route.minion) return false;
         if (!this.route.board) return false;
         return true;

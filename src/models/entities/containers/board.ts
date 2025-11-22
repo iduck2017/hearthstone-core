@@ -1,8 +1,8 @@
 import { Model } from "set-piece";
-import { GameModel, PlayerModel } from "../..";
-import { MinionCardModel } from "./cards/minion";
-import { CardModel } from "./cards";
-import { SecretCardModel } from "../..";
+import { GameModel, PlayerModel } from "../../..";
+import { MinionCardModel } from "../cards/minion";
+import { CardModel } from "../cards";
+import { SecretCardModel } from "../../..";
 
 export namespace BoardModel {
     export type E = {};
@@ -85,5 +85,16 @@ export class BoardModel extends Model<
         if (!cards) return;
         const index = cards.indexOf(card);
         if (index !== -1) cards.splice(index, 1);
+    }
+
+    public has(card: CardModel): boolean {
+        const cards = this.origin.child.cards;
+        const secrets = this.origin.child.secrets;
+
+        if (cards.includes(card)) return true;
+        if (card instanceof SecretCardModel) {
+            if (secrets.includes(card)) return true;
+        }
+        return false;
     }
 }

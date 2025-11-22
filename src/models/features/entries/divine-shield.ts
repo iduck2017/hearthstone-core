@@ -1,9 +1,11 @@
 import { DebugUtil, Event, TemplUtil, TranxUtil } from "set-piece";
 import { DamageEvent } from "../../../types/events/damage";
 import { RoleFeatureModel } from "../../features/minion";
+import { AbortEvent } from "../../../types/events/abort";
 
 export namespace DivineShieldModel {
     export type E = {
+        toActive: AbortEvent
         onConsume: DamageEvent
         onRestore: Event
     }
@@ -27,8 +29,8 @@ export class DivineShieldModel extends RoleFeatureModel<
             state: {
                 name: 'Divine Shield',
                 desc: 'The first time you take damage, ignore it.',
-                actived: true,
-                count: props?.state?.actived ? 1 : 0,
+                isActived: true,
+                count: props?.state?.isActived ? 1 : 0,
                 ...props?.state,
             },
             child: { ...props?.child },
@@ -36,37 +38,58 @@ export class DivineShieldModel extends RoleFeatureModel<
         })
     }
 
-    public active(): boolean {
-        if (this.state.actived) return false; 
+    public active() {
+        // before
+        if (this.origin.state.isActived) return;
         const role = this.route.role;
-        if (!role) return false;
+        if (!role) return;
+
+        const event = new AbortEvent({});
+        this.event.toActive(event);
+        let isValid = event.detail.isValid;
+        if (!isValid) return false;
+
+        // execute
+        this.doActive();
+
+        // after
         DebugUtil.log(`${role.name} gain Divine Shield`);
-        this._active();
         this.event.onRestore(new Event({}));
-        return true;
     }
+
     @TranxUtil.span()
-    private _active() {
-        this.origin.state.actived = true;
+    private doActive() {
+        this.origin.state.isActived = true;
         this.origin.state.count = 1;
     }
 
-    @TranxUtil.span()
+
     public consume(event: DamageEvent) {
-        if (!this.state.actived) return false;
-        if (this.origin.state.count <= 1) this.origin.state.actived = false;
+        // before
         const role = this.route.role;
         if (!role) return false;
+        if (!this.isValid) return false;
+        
+        // execute
+        this.doConsume(event);
+        event.supplement({ isBlock: true });
+
+        // after
         DebugUtil.log(`${role.name} lost Divine Shield`);
-        this.origin.state.count =- 1;
-        event.supplement({ block: true });
         this.event.onConsume(event);
-        return true;
     }
 
 
-    public disable() {
-        super.disable();
+    protected doConsume(event: DamageEvent) {
+        if (this.origin.state.count <= 1) {
+            this.origin.state.isActived = false;
+        }
+        this.origin.state.count =- 1;
+    }
+
+    @TranxUtil.span()
+    protected doDeactive() {
+        super.doDeactive();
         this.origin.state.count = 0;
     }
 }

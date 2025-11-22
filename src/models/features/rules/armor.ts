@@ -1,5 +1,4 @@
 import { DebugUtil, Event, Model } from "set-piece";
-import { HeroModel } from "../../entities/heroes";
 import { PlayerModel } from "../../entities/player";
 
 export namespace ArmorModel {
@@ -40,10 +39,13 @@ export class ArmorModel extends Model<
         });
     }
 
-    public gain(value: number) {
+    public gain(value: number): number {
         const player = this.route.player;
-        DebugUtil.log(`${player?.name} restore ${value} Armor`);
+        if (!player) return 0;
+
         const result = this.add(value);
+
+        DebugUtil.log(`${player?.name} restore ${value} Armor`);
         this.event.onRestore(new Event({ value: result }));
         return result;
     }
@@ -55,16 +57,20 @@ export class ArmorModel extends Model<
     }
 
     protected del(value: number) { 
-        const player = this.route.player;
-        value = Math.min(value, this.origin.state.current);
+        const state = this.origin.state;
+        value = Math.min(value, state.current);
         if (value <= 0) return 0;
-        DebugUtil.log(`${player?.name} lost ${value} Armor`);
-        this.origin.state.current -= value;
+        state.current -= value;
         return value;
     }
 
     public consume(value: number) {
+        const player = this.route.player;
+        if (!player) return 0;
+        // execute
         const result = this.del(value);
+        // event
+        DebugUtil.log(`${player.name} lost ${value} Armor`);
         this.event.onConsume(new Event({ value: result }));
         return result;
     }

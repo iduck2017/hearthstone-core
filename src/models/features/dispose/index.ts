@@ -9,7 +9,7 @@ export namespace DisposeModel {
         toDestroy: AbortEvent;
     }
     export type S = {
-        destroyed: boolean;
+        isDestroyed: boolean;
     }
     export type C = {}
     export type R = {
@@ -29,9 +29,9 @@ export abstract class DisposeModel<
     C & DisposeModel.C,
     R & DisposeModel.R
 > {
-    private static _locked = false;
-    public static get locked() {
-        return DisposeModel._locked;
+    private static _isLock = false;
+    public static get isLock() {
+        return DisposeModel._isLock;
     }
 
     private static tasks: Array<DisposeModel> = [];
@@ -52,16 +52,16 @@ export abstract class DisposeModel<
             if (!handler) return descriptor;
             const instance = {
                 [key](this: unknown, ...args: any[]) {
-                    if (DisposeModel._locked) return handler.call(this, ...args);
-                    DisposeModel._locked = true;
+                    if (DisposeModel._isLock) return handler.call(this, ...args);
+                    DisposeModel._isLock = true;
                     const result = handler.call(this, ...args);
                     if (result instanceof Promise) {
                         result.then(() => {
-                            DisposeModel._locked = false;
+                            DisposeModel._isLock = false;
                             DisposeModel.close();
                         })
                     } else {
-                        DisposeModel._locked = false;
+                        DisposeModel._isLock = false;
                         DisposeModel.close();
                     }
                     return result;
@@ -73,7 +73,7 @@ export abstract class DisposeModel<
     }
     
     public static close() {
-        const tasks = DisposeModel.tasks.filter(item => item.status);
+        const tasks = DisposeModel.tasks.filter(item => item.isDisposable);
         DisposeModel.tasks = [];
         tasks.forEach(item => item.run());
     }
@@ -88,8 +88,8 @@ export abstract class DisposeModel<
         }
     }
     
-    public get status() {
-        return Boolean(this.state.destroyed);
+    public get isDisposable() {
+        return Boolean(this.state.isDestroyed);
     }
 
     constructor(props: DisposeModel['props'] & {
@@ -101,7 +101,7 @@ export abstract class DisposeModel<
         super({
             uuid: props.uuid,
             state: { 
-                destroyed: false,
+                isDestroyed: false,
                 ...props.state,
             },
             child: { ...props.child },
@@ -113,10 +113,10 @@ export abstract class DisposeModel<
     public destroy(source?: CardModel | HeroModel, reason?: Model) {
         const event = new AbortEvent({})
         this.event.toDestroy(event);
-        if (event.detail.aborted) return;
+        if (event.detail.isValid) return;
         const parent = this.route.parent;
         DebugUtil.log(`${parent?.name} Destroyed`);
-        this.origin.state.destroyed = true;
+        this.origin.state.isDestroyed = true;
         this.check(source, reason);
     }
 

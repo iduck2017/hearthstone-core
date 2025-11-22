@@ -1,9 +1,8 @@
 import { DebugUtil, Event, Model, TranxUtil } from "set-piece";
 import { BattlecryModel } from "../hooks/battlecry";
-import { WeakMapModel } from "../../common/weak-map";
+import { DependencyModel } from "../../common/dependency";
 import { MinionCardModel } from "../../entities/cards/minion";
 import { AbortEvent } from "../../../types/events/abort";
-import { BoardModel } from "../../entities/board";
 import { Selector } from "../../../types/selector";
 import { PerformModel } from ".";
 import { AppModel } from "../../app";
@@ -14,8 +13,8 @@ export type MinionHooksConfig = {
 
 export namespace MinionPerformModel {
     export type E = {
-        toSummon: AbortEvent;
-        onSummon: Event;
+        toRun: AbortEvent;
+        onRun: Event,
     }
     export type S = {
         from: number;
@@ -23,10 +22,9 @@ export namespace MinionPerformModel {
         index: number;
     }
     export type C = {
-        params: WeakMapModel<BattlecryModel, Model>[]
+        dependencies: DependencyModel<BattlecryModel>[]
     }
-    export type R = {
-    }
+    export type R = {}
 }
 
 export class MinionPerformModel extends PerformModel<
@@ -43,21 +41,17 @@ export class MinionPerformModel extends PerformModel<
             minion,
         }
     }
-
-    public get status(): boolean {
-        if (!super.status) return false;
+    
+    public get isValid(): boolean {
+        if (!super.isValid) return false;
         const player = this.route.player;
         if (!player) return false;
 
-        // board size
         const board = player.child.board;
         if (!board) return false;
         if (board.child.cards.length >= 7) return false;
-        
         return true;
     }
-
-    private resolve?: () => void;
 
     constructor(props?: MinionPerformModel['props']) {
         props = props ?? {}
@@ -69,142 +63,78 @@ export class MinionPerformModel extends PerformModel<
                 index: 0,
                 ...props.state 
             },
-            child: { params: [], ...props.child },
+            child: { dependencies: [], ...props.child },
             refer: { ...props.refer },
         });
     }
 
+    
+    public consume() {
+        const player = this.route.player;
+        if (!player) return;
+        const card = this.route.card;
+        if (!card) return;
+        const mana = player.child.mana;
+        const cost = card.child.cost;
+        if (!cost) return;
+        mana.consume(cost.state.current, card);
+    }
+
     // play
-    public async play(): Promise<void> {
-        // prepare
-        const params = await this.prepare();
-        if (!params) return;
+    public async run(): Promise<void> {
+        const card = this.route.minion;
+        if (!card) return;
 
-        // toPlay
-        let aborted = !this.toPlay(...params);
-        if (aborted) return;
-        
-        // doPlay
-        this.doPlay()
-        return new Promise((resolve) => {
-            this.resolve = resolve;
-        })
-    }
+        if (!this.state.isPending) {
+            if (!this.isValid) return;
 
-    public toPlay(to: number, config: MinionHooksConfig): boolean {
-        // status
-        if (!this.status) return false;
-
-        const minion = this.route.minion;
-        if (!minion) return false;
-
-        // from
-        const player = this.route.player;
-        if (!player) return false;
-        const hand = player.child.hand;
-        const from = hand.child.cards.indexOf(minion);
-        if (from === -1) return false;
-
-        // toPlay
-        let event = new AbortEvent({});
-        this.event.toPlay(event);
-        let aborted = event.detail.aborted;
-
-        // consume
-        this.consume()
-        if (aborted) {
-            hand.del(minion);
-            return false;
-        }
-
-        // summon
-        const board = player.child.board;
-        aborted = this.toSummon(board, to);
-        this.doSummon(board, to);
-        if (aborted) return false;
-
-        // doPLay
-        this.init(from, to, config);
-
-        // debug
-        if (!minion) return false;
-        DebugUtil.log(`${minion.name} Played`);
-        return true;
-    }
-
-    public doPlay() {
-        const index = this.origin.state.index;
-        this.origin.state.index += 1;
-
-        const pair = this.origin.child.params?.[index];
-        if (!pair) {
-            const minion = this.route.minion;
-            if (!minion) return;
-            this.reset();
-            this.onPlay()
-        } else {
-            const hook = pair.refer.key;
-            const params = pair.values;
-            if (!hook) return;
+            // prepare
+            const params = await this.prepare();
             if (!params) return;
-            hook.run(...params);
+
+            // before
+            const player = this.route.player;
+            if (!player) return;
+            const to = params[0];
+            const config = params[1];
+            const hand = player.child.hand;
+            const from = hand.child.cards.indexOf(card);
+            if (from === -1) return;
+
+            let event = new AbortEvent({});
+            this.event.toRun(event);
+            let isValid = event.detail.isValid;
+
+            // execute
+            this.consume();
+            if (!isValid) {
+                const hand = player.child.hand;
+                hand.del(card);
+                return;
+            }
+            const board = player.child.board;
+            card.summon(board, to);
+
+            this.init(from, to, config);
         }
-    }
 
-    private onPlay() {
-        // resolve
-        this.resolve?.();
-        this.resolve = undefined;
+        // execute
+        const index = this.origin.state.index;
+        while (true) {
+            const task = this.origin.child.dependencies[index];
+            if (!task) break;
 
-        // event
-        this.onSummon();
-        this.event.onPlay(new Event({}));
-    }
+            const hook = task.refer.key;
+            const params = task.values;
+            if (!hook) continue;
+            if (!params) continue;
+            await hook.run(params);
+        }
+        this.reset();
 
-
-    // summon
-    public summon(board?: BoardModel, to?: number) {
-        // params
-        const player = this.route.player;
-        if (!board) board = player?.child.board;
-        if (!board) return;
-
-        // summon
-        const aborted = !this.toSummon(board, to);
-        if (aborted) return;
-        this.doSummon(board, to);
-        this.event.onSummon(new Event({}));
-    }
-
-    private toSummon(board: BoardModel, to?: number): boolean {
-        const event = new AbortEvent({});
-        this.event.toSummon(event);
-        const aborted = event.detail.aborted;
-        if (aborted) return false;
-        return true;
-    }
-
-    @TranxUtil.span()
-    private doSummon(board: BoardModel, to?: number) {
-        const minion = this.route.minion;
-        if (!minion) return;
-        DebugUtil.log(`${minion.name} Summoned`);
-        const player = this.route.player;
-
-        // summon from hand
-        const hand = player?.child.hand;
-        if (hand) hand.del(minion);
-        
-        // summon from template
-        const app = this.route.app;
-        if (app) app.unlink(minion);
-        
-        // add to board
-        board.add(minion, to);
-    }
-
-    private onSummon() {
-        this.event.onSummon(new Event({}));
+        // after
+        DebugUtil.log(`${card.name} Played`);
+        this.event.onRun(new Event({}));
     }
 
 
@@ -212,30 +142,26 @@ export class MinionPerformModel extends PerformModel<
     @TranxUtil.span()
     protected init(from: number, to: number, config: MinionHooksConfig) {
         this.origin.state.from = from;
-        this.origin.state.locked = true;
+        this.origin.state.isPending = true;
         this.origin.state.to = to;
         this.origin.state.index = 0;
         config.battlecry.forEach((params, item) => {
-            const map = WeakMapModel.generate(params, item);
-            this.origin.child.params?.push(map);
+            const map = DependencyModel.new(params, item);
+            this.origin.child.dependencies?.push(map);
         })
     }
 
     @TranxUtil.span()
     protected reset() {
-        this.origin.state.locked = false;
+        this.origin.state.isPending = false;
         this.origin.state.from = 0;
         this.origin.state.to = 0;
         this.origin.state.index = 0;
-        this.origin.child.params = [];
+        this.origin.child.dependencies = [];
     }
-
-
 
     // prepare
     protected async prepare(): Promise<[number, MinionHooksConfig] | undefined> {
-        if (!this.status) return;
-
         const player = this.route.player;
         if (!player) return;
         // position
@@ -243,7 +169,7 @@ export class MinionPerformModel extends PerformModel<
         const size = board.child.cards.length;
         const options = new Array(size + 1).fill(0).map((item, index) => index);
         const selector = new Selector(options, { desc: `Deploy ${this.name} at certain position` });
-        const to = await player.child.controller.get(selector);
+        const to = await player.controller.get(selector);
         if (to === undefined) return;
 
         // hooks
@@ -256,19 +182,20 @@ export class MinionPerformModel extends PerformModel<
         for (const item of battlecry) {
             const params: Array<Model | undefined> = []
             while (true) {
-                const selector = item.prepare(...params);
+                const selector = item.prepare(params);
                 if (!selector) break;
                 if (!selector.options.length) params.push(undefined);
                 else {
-                    const option = await player.child.controller.get(selector);
+                    const option = await player.controller.get(selector);
                     if (option === undefined) return;
                     else params.push(option);
                 }
-                if (!item.state.multiselect) break;
+                if (!item.state.isMultiselect) break;
             }
             config.battlecry.set(item, params);
         }
         return [to, config];
     }
+
 
 }

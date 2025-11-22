@@ -1,10 +1,10 @@
-import { Event, Method, State, TranxUtil, Model, DebugUtil, TemplUtil } from "set-piece";
+import { Event, Method, State, TranxUtil, Model, DebugUtil, TemplUtil, Emitter } from "set-piece";
 import { RaceType } from "../../../types/card";
 import { MinionDisposeModel } from "../../features/dispose/minion";
 import { CardModel } from ".";
 import { AbortEvent } from "../../../types/events/abort";
 import { BattlecryModel } from "../../features/hooks/battlecry";
-import { BoardModel } from "../board";
+import { BoardModel } from "../containers/board";
 import { SleepModel } from "../../features/rules/sleep";
 import { RoleHealthModel } from "../../features/rules/role-health";
 import { RoleAttackModel } from "../../features/rules/role-attack";
@@ -32,8 +32,11 @@ export namespace MinionCardModel {
         readonly races: RaceType[];
     };
     export type E = {
+        readonly toTransform: AbortEvent<{ target: MinionCardModel }>;
         readonly onTransform: Event<{ target: MinionCardModel }>;
         readonly onSilence: Event;
+        readonly toSummon: AbortEvent<{ board: BoardModel; to?: number }>;
+        readonly onSummon: Event;
     };
     export type C = {
         readonly perform: MinionPerformModel;
@@ -74,6 +77,7 @@ export abstract class MinionCardModel<
     C & MinionCardModel.C,
     R & MinionCardModel.R
 > {
+
     public get chunk() {
         const result = super.chunk;
         const board = this.route.board;
@@ -86,17 +90,17 @@ export abstract class MinionCardModel<
                 attack: this.child.attack.chunk,
                 health: this.child.health.chunk,
                 action: this.child.action.chunk,
-                sleep: (this.child.sleep.state.actived && Boolean(board)) || undefined,
+                sleep: (this.child.sleep.state.isActived && Boolean(board)) || undefined,
                 races: races.length ? races : undefined,
                 buffs: buffs.length ? buffs : undefined,
-                rush: this.child.rush.state.actived || undefined,
-                taunt: this.child.taunt.state.actived || undefined,
-                charge: this.child.charge.state.actived || undefined,
-                frozen: this.child.frozen.state.actived || undefined,
-                stealth: this.child.stealth.state.actived || undefined,
-                elusive: this.child.elusive.state.actived || undefined,
-                windfury: this.child.windfury.state.actived || undefined,
-                divineShield: this.child.divineShield.state.actived || undefined,
+                rush: this.child.rush.state.isActived || undefined,
+                taunt: this.child.taunt.state.isActived || undefined,
+                charge: this.child.charge.state.isActived || undefined,
+                frozen: this.child.frozen.state.isActived || undefined,
+                stealth: this.child.stealth.state.isActived || undefined,
+                elusive: this.child.elusive.state.isActived || undefined,
+                windfury: this.child.windfury.state.isActived || undefined,
+                divineShield: this.child.divineShield.state.isActived || undefined,
             }
         }
         return {
@@ -127,14 +131,14 @@ export abstract class MinionCardModel<
                 buffs: props.child.buffs ?? [],
                 feats: props.child.feats ?? [],
                 // entries
-                rush: props.child.rush ?? new RushModel({ state: { actived: false }}),
-                taunt: props.child.taunt ?? new TauntModel({ state: { actived: false }}),
-                charge: props.child.charge ?? new ChargeModel({ state: { actived: false }}),
-                frozen: props.child.frozen ?? new FrozenModel({ state: { actived: false }}),
-                stealth: props.child.stealth ?? new StealthModel({ state: { actived: false }}),
-                elusive: props.child.elusive ?? new ElusiveModel({ state: { actived: false }}),
-                windfury: props.child.windfury ?? new WindfuryModel({ state: { actived: false }}),
-                divineShield: props.child.divineShield ?? new DivineShieldModel({ state: { actived: false }}),
+                rush: props.child.rush ?? new RushModel({ state: { isActived: false }}),
+                taunt: props.child.taunt ?? new TauntModel({ state: { isActived: false }}),
+                charge: props.child.charge ?? new ChargeModel({ state: { isActived: false }}),
+                frozen: props.child.frozen ?? new FrozenModel({ state: { isActived: false }}),
+                stealth: props.child.stealth ?? new StealthModel({ state: { isActived: false }}),
+                elusive: props.child.elusive ?? new ElusiveModel({ state: { isActived: false }}),
+                windfury: props.child.windfury ?? new WindfuryModel({ state: { isActived: false }}),
+                divineShield: props.child.divineShield ?? new DivineShieldModel({ state: { isActived: false }}),
                 // hooks
                 battlecry: props.child.battlecry ?? [],
                 overheal: props.child.overheal ?? [],
@@ -147,13 +151,23 @@ export abstract class MinionCardModel<
 
     // transform
     public transform(target: MinionCardModel) {
+        // before
+        const event = new AbortEvent({ target });
+        this.event.toTransform(event);
+        const isValid = event.detail.isValid;
+        if (!isValid) return;
+
+        // execute
+        this.doTransform(target);
+        
+        // after
         DebugUtil.log(`${this.name} Transformed to ${target.name}`);
-        this._transform(target);
         this.event.onTransform(new Event({ target }));
     }
+    
     @TranxUtil.span()
     @DebugUtil.span()
-    private _transform(target: MinionCardModel) {
+    private doTransform(target: MinionCardModel): boolean {
         const board = this.route.board;
         const self: MinionCardModel = this;
         if (board) {
@@ -161,35 +175,38 @@ export abstract class MinionCardModel<
             board.del(self);
             board.add(target, index);
         }
+        return true;
     }
 
 
     // silence
     public silence() {
+        this.doSilence();
+        // after
         DebugUtil.log(`${this.name} Silenced`);
-        this._silence();
         this.event.onSilence(new Event({}));
     }
+
+
     @TranxUtil.span()
-    @DebugUtil.span()
-    private _silence() {
+    private doSilence() {
         // feats
-        this.child.feats.forEach(item => item.disable());
-        this.child.buffs.forEach(item => item.disable());
+        this.child.feats.forEach(item => item.deactive());
+        this.child.buffs.forEach(item => item.deactive());
         // hooks
-        this.child.battlecry.forEach(item => item.disable());
-        this.child.deathrattle.forEach(item => item.disable());
-        this.child.turnStart.forEach(item => item.disable());
-        this.child.turnEnd.forEach(item => item.disable());
+        this.child.battlecry.forEach(item => item.deactive());
+        this.child.deathrattle.forEach(item => item.deactive());
+        this.child.turnStart.forEach(item => item.deactive());
+        this.child.turnEnd.forEach(item => item.deactive());
         // entries
-        this.child.charge.disable();
-        this.child.divineShield.disable();
-        this.child.elusive.disable();
-        this.child.frozen.disable();
-        this.child.rush.disable();
-        this.child.stealth.disable();
-        this.child.taunt.disable();
-        this.child.windfury.disable();
+        this.child.charge.deactive();
+        this.child.divineShield.deactive();
+        this.child.elusive.deactive();
+        this.child.frozen.deactive();
+        this.child.rush.deactive();
+        this.child.stealth.deactive();
+        this.child.taunt.deactive();
+        this.child.windfury.deactive();
     }
 
 
@@ -211,7 +228,50 @@ export abstract class MinionCardModel<
         else if (feat instanceof FeatureModel) child.feats.push(feat);
     }
 
-    public summon(board?: BoardModel, position?: number) {
-        this.child.perform.summon(board, position);
+    
+    // summon
+    public summon(board?: BoardModel, to?: number) {
+        // before
+        const player = this.route.player;
+        if (!board) board = player?.child.board;
+        if (!board) return;
+
+        // precheck board
+        const cards = board.child.cards;
+        if (cards.length >= 7) return;
+        
+        // precheck source
+        const hand = this.route.hand;
+        if (hand && !hand.has(this)) return;
+        const deck = this.route.deck;
+        if (deck && !deck.has(this)) return;
+        const cache = this.route.cache;
+        if (cache && !cache.has(this)) return;
+
+        const event = new AbortEvent({ board, to });
+        this.event.toSummon(event);
+        let isValid = event.detail.isValid;
+        if (!isValid) return;
+
+        // execute
+        this.doSummon(board, to);
+        
+        // after
+        DebugUtil.log(`${this.name} Summoned`);
+        this.event.onSummon(new Event({}));
     }
+
+
+    @TranxUtil.span()
+    public doSummon(board: BoardModel, to?: number) {
+        const hand = this.route.hand;
+        if (hand) hand.del(this);
+
+        const deck = this.route.deck;
+        if (deck) deck.del(this);
+        const cache = this.route.cache;
+        if (cache) cache.del(this);
+        board.add(this, to);
+    }
+
 }

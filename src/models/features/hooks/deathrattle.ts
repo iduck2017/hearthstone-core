@@ -44,7 +44,7 @@ export abstract class DeathrattleModel<
         super({
             uuid: props.uuid,
             state: {
-                actived: true,
+                isActived: true,
                 ...props.state,
             },
             child: { ...props.child },
@@ -54,27 +54,21 @@ export abstract class DeathrattleModel<
 
     @DebugUtil.span()
     public run() {
-        if (!this.toRun()) return;
-        this.doRun();
-        this.onRun();
-    }
-
-    protected toRun(): boolean | undefined {
-        if (!this.status) return;
-
+        if (!this.isValid) return;
+        // toRun
         const event = new AbortEvent({});
         this.event.toRun(event);
-        if (event.detail.aborted) return;
-
+        const isValid = event.detail.isValid;
+        if (!isValid) return false;
+        // run
+        this.doRun();
+        // onRun
         const name = this.state.name;
         const desc = this.state.desc;
         DebugUtil.log(`${name} run: ${desc}`);
-        return true
-    }
-
-    protected onRun() {
         this.event.onRun(new Event({}));
     }
+
 
     protected abstract doRun(): void;
 }

@@ -87,12 +87,12 @@ describe('game', () => {
         expect(card).toBeDefined();
 
         let promise = card?.play();
-        let selector = player.child.controller.current;
+        let selector = player.controller.current;
         expect(selector).toBeDefined();
         expect(selector?.options).toContain(0);
         expect(selector?.options).toContain(1);
         expect(selector?.options.length).toBe(2);
-        player.child.controller.set(0);
+        player.controller.set(0);
         await promise;
         
         // minions
@@ -103,10 +103,10 @@ describe('game', () => {
 
         card = hand.child.cards[0];
         promise = card?.play();
-        selector = player.child.controller.current;
+        selector = player.controller.current;
         expect(selector).toBeDefined();
         expect(selector?.options.length).toBe(3);
-        player.child.controller.set(1);
+        player.controller.set(1);
         await promise;
         // expect(board.refer.order.length).toBe(3);
         expect(board.child.cards[1]).toBe(card);

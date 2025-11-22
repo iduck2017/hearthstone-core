@@ -1,7 +1,7 @@
-import { RoleAttackModel } from "../../features/rules/role-attack";
-import { RoleHealthModel } from "../../features/rules/role-health";
-import { FireBlastModel } from "../skills/fireblast";
-import { HeroModel } from ".";
+import { RoleAttackModel } from "../../../features/rules/role-attack";
+import { RoleHealthModel } from "../../../features/rules/role-health";
+import { FireBlastModel } from "./skill";
+import { HeroModel } from "..";
 import { TemplUtil } from "set-piece";
 
 @TemplUtil.is('mage')

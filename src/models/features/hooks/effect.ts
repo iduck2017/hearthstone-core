@@ -1,24 +1,22 @@
 import { FeatureModel } from "..";
 import { DebugUtil, Event, Model } from "set-piece";
 import { Selector } from "../../../types/selector";
-import { SpellCardModel } from "../../entities/cards/spell";
-import { SpellPerformModel } from "../perform/spell";
-import { PerformModel } from "../perform";
+import { AbortEvent } from "../../../types/events/abort";
 
 export namespace EffectModel {
     export type E = {
+        toRun: AbortEvent
         onRun: Event<{}>;
     };
     export type S = {
         power: number;
-        multiselect: boolean;
-        pending: boolean;
-        async: boolean;
+
+        isMultiselect: boolean;
+        isPending: boolean;
+        isAsync: boolean;
     };
     export type C = {};
-    export type R = {
-        caller?: PerformModel 
-    };
+    export type R = {};
 }
 
 export abstract class EffectModel<
@@ -43,11 +41,11 @@ export abstract class EffectModel<
         super({
             uuid: props.uuid,
             state: {
-                pending: false,
+                isPending: false,
                 power: 0,
-                actived: true,
-                async: false,
-                multiselect: false,
+                isActived: true,
+                isAsync: false,
+                isMultiselect: false,
                 ...props.state 
             },
             child: { ...props.child },
@@ -59,32 +57,32 @@ export abstract class EffectModel<
     }
 
 
-    public run(...params: Array<T | undefined>) {
-        if (!this.toRun()) return;
-        this.doRun(...params);
-        if (!this.state.async) this.onRun();
-    }
+    public async run(params: Array<T | undefined>): Promise<void> {
+        // toRun
+        if (!this.state.isPending) {
+            if (!this.isValid) return;
+            const event = new AbortEvent({});
+            this.event.toRun(event);
+            const isValid = event.detail.isValid;
+            if (!isValid) return;
 
+            this.origin.state.isPending = true;
+        }
+        
+        // run
+        await this.doRun(params);
+        this.origin.state.isPending = false;
 
-    protected toRun(): boolean {
-        if (!this.status) return false;
-
+        // onRun
         const name = this.state.name;
         const desc = this.state.desc;
         DebugUtil.log(`${name} run: ${desc}`);
-        return true;
-    }
-
-    protected onRun() {
-        this.origin.state.pending = false;
-        const caller = this.origin.refer.caller;
-        this.origin.refer.caller = undefined;
-        if (caller) caller.doPlay();
         this.event.onRun(new Event({}));
     }
 
-    protected abstract doRun(...params: Array<T | undefined>): void;
 
-    public abstract prepare(...params: Array<T | undefined>): Selector<T> | undefined;
+    protected abstract doRun(params: Array<T | undefined>): Promise<void>;
+
+    public abstract prepare(params: Array<T | undefined>): Selector<T> | undefined;
 }
 

@@ -21,7 +21,7 @@ export class RushModel extends RoleFeatureModel<
             state: {
                 name: 'Rush',
                 desc: 'Can attack minions immediately.',
-                actived: true,
+                isActived: true,
                 ...props?.state,
             },
             child: { ...props?.child },
@@ -29,13 +29,16 @@ export class RushModel extends RoleFeatureModel<
         });
     }
 
-    public active(): boolean {
-        if (this.state.actived) return false;
+    public active() {
+        // `before`
+        if (this.state.isActived) return false;
         const role = this.route.role;
         if (!role) return false;
+
+        // execute
+        this.origin.state.isActived = true;
+        // after
         DebugUtil.log(`${role.name} gain Rush`);
-        this.origin.state.actived = true;
-        this.event.onEnable(new Event({}));
-        return true;
+        this.event.onActive(new Event({}));
     }
 }

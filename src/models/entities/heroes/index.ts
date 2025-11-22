@@ -1,5 +1,5 @@
 import { Method, Model } from "set-piece";
-import { SkillModel } from "../skills";
+import { SkillModel } from "../skill";
 import { ArmorModel } from "../../features/rules/armor";
 import { DamageModel, FrozenModel, MinionCardModel, OverhealModel, RestoreModel, RoleAttackModel, RoleHealthModel, SleepModel, TurnEndModel, TurnStartModel, WeaponCardModel } from "../../..";
 import { HeroDisposeModel } from "../../features/dispose/hero";
@@ -93,13 +93,13 @@ export abstract class HeroModel<
                 damage: props.child.damage ?? new DamageModel(),
                 restore: props.child.restore ?? new RestoreModel(),
 
-                taunt: props.child.taunt ?? new TauntModel({ state: { actived: false }}),
-                frozen: props.child.frozen ?? new FrozenModel({ state: { actived: false }}),
-                stealth: props.child.stealth ?? new StealthModel({ state: { actived: false }}),
-                elusive: props.child.elusive ?? new ElusiveModel({ state: { actived: false }}),
-                windfury: props.child.windfury ?? new WindfuryModel({ state: { actived: false }}),
-                divineShield: props.child.divineShield ?? new DivineShieldModel({ state: { actived: false }}),
-                poisonous: props.child.poisonous ?? new PoisonousModel({ state: { actived: false }}),
+                taunt: props.child.taunt ?? new TauntModel({ state: { isActived: false }}),
+                frozen: props.child.frozen ?? new FrozenModel({ state: { isActived: false }}),
+                stealth: props.child.stealth ?? new StealthModel({ state: { isActived: false }}),
+                elusive: props.child.elusive ?? new ElusiveModel({ state: { isActived: false }}),
+                windfury: props.child.windfury ?? new WindfuryModel({ state: { isActived: false }}),
+                divineShield: props.child.divineShield ?? new DivineShieldModel({ state: { isActived: false }}),
+                poisonous: props.child.poisonous ?? new PoisonousModel({ state: { isActived: false }}),
 
                 feats: props.child.feats ?? [],
                 buffs: props.child.buffs ?? [],

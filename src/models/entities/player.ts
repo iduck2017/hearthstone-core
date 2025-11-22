@@ -1,15 +1,15 @@
 import { Model } from "set-piece";
 import { GameModel } from "./game";
-import { HandModel } from "./hand";
-import { BoardModel } from "./board";
-import { DeckModel } from "./deck";
-import { GraveyardModel } from "./graveyard";
+import { HandModel } from "./containers/hand";
+import { BoardModel } from "./containers/board";
+import { DeckModel } from "./containers/deck";
+import { GraveyardModel } from "./containers/graveyard";
 import { ManaModel } from "../features/rules/mana";
 import { HeroModel, RoleModel } from "./heroes";
 import { FeatureModel } from "../features";
 import { MageModel } from "./heroes/mage";
-import { CollectionModel } from "./collection";
-import { ControllerModel } from "../common/controller";
+import { CollectionModel } from "./containers/collection";
+import { Controller } from "../../types/controller";
 import { MinionCardModel } from "./cards/minion";
 import { TurnStartModel } from "../features/hooks/turn-start";
 import { TurnEndModel } from "../features/hooks/turn-end";
@@ -36,8 +36,6 @@ export namespace PlayerModel {
         readonly collection: CollectionModel;
         // buff
         readonly feats: FeatureModel[];
-        // controller
-        readonly controller: ControllerModel;
         // hooks
         readonly turnStart: TurnStartModel[];
         readonly turnEnd: TurnEndModel[];
@@ -61,7 +59,7 @@ export class PlayerModel extends Model<
 
     public get refer() {
         const child = this.child;
-        const minions: MinionCardModel[] = child.board.refer.minions.filter(item => !item.child.dispose?.status);
+        const minions: MinionCardModel[] = child.board.refer.minions.filter(item => !item.child.dispose?.isDisposable);
         const roles: RoleModel[] = [child.hero, ...minions];
         const cards: CardModel[] = [
             ...child.hand.child.cards,
@@ -104,14 +102,6 @@ export class PlayerModel extends Model<
         return 'Player';
     }
 
-    public get status(): boolean {
-        const game = this.route.game;
-        if (!game) return false;
-        const turn = game.child.turn;
-        if (turn.refer.current !== this) return false;
-        return true;
-    }
-
     private get opponent(): PlayerModel | undefined {
         const game = this.route.game;
         if (!game) return;
@@ -119,6 +109,9 @@ export class PlayerModel extends Model<
         const playerB = game?.child.playerB;
         return playerA === this ? playerB : playerA;
     }
+
+
+    public readonly controller: Controller;
 
     constructor(props?: PlayerModel['props']) {
         props = props ?? {};
@@ -138,13 +131,13 @@ export class PlayerModel extends Model<
                 board: child.board ?? new BoardModel(),
                 collection: child.collection ?? new CollectionModel(),
                 graveyard: child.graveyard ?? new GraveyardModel(),
-                controller: child.controller ?? new ControllerModel(),
                 turnStart: child.turnStart ?? [],
                 turnEnd: child.turnEnd ?? [],
                 ...child
             },
             refer: { ...props.refer },
         });
+        this.controller = new Controller(this);
     }
 
     public buff(feature: FeatureModel) {

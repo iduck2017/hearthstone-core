@@ -1,8 +1,8 @@
-import { RoleHealthModel } from "../../features/rules/role-health";
-import { RoleAttackModel } from "../../features/rules/role-attack";
-import { PlayerModel } from "../player";
-import { ArmorUpModel } from "../skills/armor-up";
-import { HeroModel } from ".";
+import { RoleHealthModel } from "../../../features/rules/role-health";
+import { RoleAttackModel } from "../../../features/rules/role-attack";
+import { PlayerModel } from "../../player";
+import { ArmorUpModel } from "./skill";
+import { HeroModel } from "..";
 import { TemplUtil } from "set-piece";
 
 @TemplUtil.is('warrior')

@@ -12,12 +12,12 @@ export class WeaponDisposeModel extends DisposeModel {
         }
     }
 
-    public get status(): boolean {
+    public get isDisposable(): boolean {
         const weapon = this.route.weapon;
         if (!weapon) return true;
         const action = weapon.child.action;
         if (action.state.current <= 0) return true;
-        return super.status || false;
+        return super.isDisposable || false;
     }
 
     constructor(props?: WeaponDisposeModel['props']) {
@@ -31,11 +31,17 @@ export class WeaponDisposeModel extends DisposeModel {
     }
 
     protected run() {
+        // before
         const weapon = this.route.weapon;
         if (!weapon) return;
-        DebugUtil.log(`${weapon.name} Break`);
+
+        // execute
         this.doRun();
-        this.onRun();
+        
+        // after
+        DebugUtil.log(`${weapon.name} Break`);
+        const deathrattle = weapon.child.deathrattle;
+        deathrattle.forEach(item => item.run());
     }
 
     @TranxUtil.span()
@@ -48,12 +54,5 @@ export class WeaponDisposeModel extends DisposeModel {
         hero.unequip(weapon);
         const graveyard = player.child.graveyard;
         graveyard.add(weapon);
-    }
-
-    protected onRun() {
-        const weapon = this.route.weapon;
-        if (!weapon) return;
-        const deathrattle = weapon.child.deathrattle;
-        deathrattle.forEach(item => item.run());
     }
 }

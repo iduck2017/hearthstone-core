@@ -40,7 +40,7 @@ export abstract class IRoleBuffModel<
         }
     }
 
-    public get status(): boolean {
+    public get isValid(): boolean {
         return true;
     }
 
@@ -65,7 +65,7 @@ export abstract class IRoleBuffModel<
         super({
             uuid: props.uuid,
             state: {
-                actived: true,
+                isActived: true,
                 ...props.state,
             },
             child: { ...props.child },
@@ -79,7 +79,7 @@ export abstract class IRoleBuffModel<
         return this.route.role?.proxy.child.attack?.decor;
     }
     protected modifyAttack(that: RoleAttackModel, decor: RoleAttackDecor) {
-        if (!this.state.actived) return;
+        if (!this.state.isActived) return;
         decor.add({
             type: OperatorType.ADD,
             offset: this.state.offset[0],
@@ -93,7 +93,7 @@ export abstract class IRoleBuffModel<
         return this.route.role?.proxy.child.health?.decor;
     }
     protected modifyHealth(that: RoleHealthModel, decor: RoleHealthDecor) {
-        if (!this.state.actived) return;
+        if (!this.state.isActived) return;
         decor.add({
             type: OperatorType.ADD,
             offset: this.state.offset[1],

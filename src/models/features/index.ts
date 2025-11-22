@@ -1,15 +1,15 @@
-import { EventUtil, Model, StateUtil } from "set-piece";
+import { Event, EventUtil, Model, StateUtil } from "set-piece";
 import { GameModel, PlayerModel } from "../..";
 
 export namespace FeatureModel {
     export type E = {
-        onEnable: {};
-        onDisable: {};
+        onActive: {};
+        onDeactive: {};
     };
     export type S = {
         name: string;
         desc: string;
-        actived: boolean;
+        isActived: boolean;
     }
     export type C = {};
     export type R = {};
@@ -36,12 +36,12 @@ export abstract class FeatureModel<
     }
 
     public get chunk() {
-        if (!this.state.actived) return undefined;
+        if (!this.state.isActived) return undefined;
         return { desc: this.state.desc }
     }
 
-    public get status(): boolean {
-        if (!this.origin.state.actived) return false;
+    public get isValid(): boolean {
+        if (!this.origin.state.isActived) return false;
         return true;
     }
 
@@ -62,12 +62,18 @@ export abstract class FeatureModel<
     @EventUtil.if()
     @StateUtil.if()
     private check() {
-        return this.status;
+        return this.isValid;
     }
 
-    public disable() {
-        this.origin.state.actived = false;
-        this.reload();
-        this.event.onDisable({});
+    public deactive() {
+        if (!this.origin.state.isActived) return false;
+        this.doDeactive();
+        this.event.onDeactive(new Event({}));
     }
+
+    protected doDeactive() {
+        this.origin.state.isActived = false;
+        this.reload();
+    }
+
 }

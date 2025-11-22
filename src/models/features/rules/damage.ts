@@ -21,16 +21,17 @@ export class DamageModel extends Model<
     @DisposeModel.span()
     public static deal(tasks: DamageEvent[]) {
         tasks.forEach(item => item.detail.source.child.damage.event.toDeal(item));
-        tasks.forEach(item => item.detail.target.child.health.startConsume(item));
+        tasks.forEach(item => item.detail.target.child.health.toConsume(item));
         
-        tasks = tasks.filter(item => !item.detail.aborted);
-        DamageModel._deal(tasks);
-        tasks = tasks.filter(item => item.detail.result > 0 && !item.detail.aborted);
-        tasks.forEach(item => item.detail.target.child.health.endConsume(item));
+        tasks = tasks.filter(item => item.detail.isValid);
+        DamageModel.doDeal(tasks);
+        tasks = tasks.filter(item => item.detail.result > 0 && !item.detail.isValid);
+        tasks.forEach(item => item.detail.target.child.health.onConsume(item));
         tasks.forEach(item => item.detail.source.child.damage.event.onDeal(item));
     }
+
     @TranxUtil.span()
-    private static _deal(tasks: DamageEvent[]) {
+    private static doDeal(tasks: DamageEvent[]) {
         tasks.forEach(item => item.detail.target.child.health.consume(item));
     }
 

@@ -7,7 +7,7 @@ export namespace RoleActionModel {
     export type S = {
         origin: number;
         comsume: number;
-        actived: boolean;
+        isEnabled: boolean;
     };
     export type E = {
         toRun: AbortEvent;
@@ -27,7 +27,7 @@ export class RoleActionModel extends Model<
     public get chunk() {
         return {
             current: this.state.current > 1 ? this.state.current : undefined,
-            actived: this.status,
+            isEnabled: this.status,
         }
     }
 
@@ -59,7 +59,7 @@ export class RoleActionModel extends Model<
     }
 
     public get status(): boolean {
-        if (!this.state.actived) return false;
+        if (!this.state.isEnabled) return false;
         const current = this.state.current;
         if (current <= 0) return false;
 
@@ -84,13 +84,14 @@ export class RoleActionModel extends Model<
         const attack = role.child.attack;
         const frozen = role.child.frozen;
 
-        if (frozen.state.actived) return false;
+        if (frozen.state.isActived) return false;
         if (
-            sleep.state.actived &&
-            !charge?.state.actived &&
-            !rush?.state.actived
+            sleep.state.isActived &&
+            !charge?.state.isActived &&
+            !rush?.state.isActived
         ) return false;
-        if (!attack.status) return false;
+        if (!attack.isValid) return false;
+        
         return true;
     }
 
@@ -100,7 +101,7 @@ export class RoleActionModel extends Model<
             state: {
                 origin: 1,
                 comsume: 0,
-                actived: true,
+                isEnabled: true,
                 ...props?.state,
             },
             child: { ...props?.child },
@@ -126,19 +127,21 @@ export class RoleActionModel extends Model<
         const roleA = this.route.role;
         if (!roleA) return;
         const attack = roleA.child.attack;
-        const selector = attack.selector;
+        const selector = attack.prepare();
         if (!selector) return;
-        const roleB = await player.child.controller.get(selector);
+        const roleB = await player.controller.get(selector);
         if (!roleB) return;
 
         const event = new AbortEvent({})
         this.event.toRun(event)
-        if (event.detail.aborted) return;
+        const isValid = event.detail.isValid;
+        if (!isValid) return;
 
         // mana
         if (!this.consume()) return;
-        // attack
         attack.run(roleB);
+
+        // after
         this.event.onRun(new Event({}));
     }
 

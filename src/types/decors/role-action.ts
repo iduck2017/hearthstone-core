@@ -7,6 +7,6 @@ export class RoleActionDecor extends Decor<RoleActionModel.S> {
     }
     
     public disable() { 
-        this._origin.actived = false 
+        this._origin.isEnabled = false 
     }
 }

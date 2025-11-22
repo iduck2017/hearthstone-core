@@ -81,7 +81,7 @@ export class RoleHealthModel extends Model<
         });
     }
 
-    public startConsume(event: DamageEvent) {
+    public toConsume(event: DamageEvent) {
         this.event.toHurt(event);
     }
 
@@ -112,14 +112,14 @@ export class RoleHealthModel extends Model<
         }
 
         // divine shield
-        if (divineSheild.state.actived) {
+        if (divineSheild.state.isActived) {
             divineSheild.consume(event);
             event.update(0);
             return event;
         }
         // poisonous
         const poisonous = source.child.poisonous;
-        if (poisonous.state.actived && minion) event.supplement({ poisonous: true });
+        if (poisonous.state.isActived && minion) event.supplement({ isPoisonous: true });
 
         this.origin.state.damage += result;
         DebugUtil.log(`${role.name} receive ${result} Damage`);
@@ -127,13 +127,13 @@ export class RoleHealthModel extends Model<
         return event;
     }
 
-    public endConsume(event: DamageEvent) {
+    public onConsume(event: DamageEvent) {
         const role = this.route.role;
         if (!role) return;
-        if (event.detail.aborted) return;
+        if (event.detail.isValid) return;
 
         const minion = this.route.minion;
-        if (event.detail.detail.poisonous && minion) {
+        if (event.detail.detail.isPoisonous && minion) {
             const source = event.detail.source;
             const method = event.detail.method;
             const dispose = minion.child.dispose;
@@ -144,7 +144,7 @@ export class RoleHealthModel extends Model<
     }
 
 
-    public startRestore(event: RestoreEvent) {
+    public toRestore(event: RestoreEvent) {
         this.event.toHeal(event);
     }
 
@@ -165,10 +165,10 @@ export class RoleHealthModel extends Model<
         return event;
     }
 
-    public endRestore(event: RestoreEvent) {
+    public onRestore(event: RestoreEvent) {
         const role = this.route.role;
         if (!role) return;
-        if (event.detail.aborted) return;
+        if (event.detail.isValid) return;
         if (event.detail.result > 0) this.event.onHeal(event);
         if (event.detail.overflow > 0) {
             const overheal = role.child.overheal;
@@ -176,6 +176,7 @@ export class RoleHealthModel extends Model<
         }
     }
     
+
 
     @EventUtil.on(self => self.handleChange)
     private listenChange() {

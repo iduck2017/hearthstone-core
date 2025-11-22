@@ -1,8 +1,7 @@
-import { Event, Method, Model, State, TranxUtil } from "set-piece";
+import { Model, State, TranxUtil } from "set-piece";
 import { SchoolType } from "../../../types/card";
 import { SpellEffectModel } from "../../..";
 import { CardModel } from ".";
-import { SpellCastEvent } from "../../../types/events/spell-cast";
 import { SpellPerformModel } from "../../features/perform/spell";
 
 export namespace SpellCardModel {
@@ -54,5 +53,19 @@ export abstract class SpellCardModel<
             },
             refer: { ...props.refer },
         })
+    }
+
+    @TranxUtil.span()
+    public deploy() {
+        const player = this.route.player;
+        if (!player) return;
+        
+        const hand = player.child.hand;
+        if (!hand) return;
+        hand.del(this);
+        
+        const graveyard = player.child.graveyard;
+        if (!graveyard) return;
+        graveyard.add(this);
     }
 }

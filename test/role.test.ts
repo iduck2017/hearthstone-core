@@ -48,18 +48,18 @@ describe('role', () => {
         expect(cardC.child.health.state.current).toBe(1);
         expect(cardC.child.health.state.damage).toBe(0);
         expect(cardC.child.health.state.maximum).toBe(1);
-        expect(cardC.child.dispose.status).toBe(false);
+        expect(cardC.child.dispose.isDisposable).toBe(false);
     })
 
     test('wisp-attack', async () => {
         const promise = cardC.child.action.run();
-        const selector = playerA.child.controller.current;
+        const selector = playerA.controller.current;
         expect(selector).toBeDefined();
         if (!selector) return;
         expect(selector.options).toContain(heroB);
         expect(selector?.options).toContain(cardD);
         expect(selector?.options.length).toBe(2);
-        playerA.child.controller.set(heroB);
+        playerA.controller.set(heroB);
         await promise;
 
         expect(heroB.child.health.state.current).toBe(29);
@@ -67,7 +67,7 @@ describe('role', () => {
         expect(heroB.child.health.state.maximum).toBe(30);
 
         expect(cardC.child.health.state.current).toBe(1);
-        expect(cardC.child.dispose.status).toBe(false);
+        expect(cardC.child.dispose.isDisposable).toBe(false);
         expect(cardC.child.action.state.current).toBe(0);
     })
 
@@ -75,24 +75,24 @@ describe('role', () => {
         turn.next();
 
         const promise = cardD.child.action.run();
-        const selector = playerB.child.controller.current;
+        const selector = playerB.controller.current;
         expect(selector).toBeDefined();
         if (!selector) return;
         expect(selector.options).toContain(heroA);
         expect(selector?.options).toContain(cardC);
         expect(selector?.options.length).toBe(2);
-        playerB.child.controller.set(cardC);
+        playerB.controller.set(cardC);
         await promise;
         
         expect(cardC.child.health.state.current).toBe(0);
         expect(cardC.child.health.state.damage).toBe(1);
         expect(cardC.child.health.state.maximum).toBe(1);
-        expect(cardC.child.dispose.status).toBe(true);
+        expect(cardC.child.dispose.isDisposable).toBe(true);
 
         expect(cardD.child.health.state.current).toBe(0);
         expect(cardD.child.health.state.damage).toBe(1);
         expect(cardD.child.health.state.maximum).toBe(1);
-        expect(cardD.child.dispose.status).toBe(true);
+        expect(cardD.child.dispose.isDisposable).toBe(true);
         expect(cardD.child.action.state.current).toBe(0);
 
         expect(boardA.child.cards.length).toBe(0);

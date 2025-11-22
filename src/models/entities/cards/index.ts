@@ -1,13 +1,15 @@
-import { DebugUtil, Model, TranxUtil, Event, Method, Route, TemplUtil } from "set-piece";
+import { DebugUtil, Model, TranxUtil, Event, Method, Route, TemplUtil, Emitter } from "set-piece";
 import { CostModel } from "../../features/rules/cost";
 import { ClassType, RarityType } from "../../../types/card";
-import { AppModel, CardFeatureModel, DamageModel, DisposeModel, LibraryUtil, PoisonousModel, RestoreModel, TurnEndModel, TurnStartModel } from "../../..";
+import { AbortEvent, AppModel, CardFeatureModel, DamageModel, DisposeModel, LibraryUtil, PoisonousModel, RestoreModel, TurnEndModel, TurnStartModel } from "../../..";
 import { PlayerModel, GameModel, HandModel, DeckModel, BoardModel, GraveyardModel } from "../../..";
 import { PerformModel } from "../../features/perform";
+import { CacheModel } from "../containers/cache";
 
 export namespace CardModel {
     export type E = {
-        onDraw: Event,
+        toDraw: AbortEvent;
+        onDraw: Event;
     };
     export type S = {
         readonly name: string;
@@ -15,7 +17,7 @@ export namespace CardModel {
         readonly flavorDesc: string;
         readonly class: ClassType;
         readonly rarity: RarityType;
-        readonly collectible: boolean;
+        readonly isCollectible: boolean;
     };
     export type C = {
         readonly cost: CostModel;
@@ -62,7 +64,7 @@ export abstract class CardModel<
                 rarity: this.state.rarity,
                 cost: this.child.cost.state.current,
                 feats: feats.length ? feats : undefined,
-                poisonous: this.child.poisonous?.state.actived || undefined,
+                poisonous: this.child.poisonous?.state.isActived || undefined,
             }
         } 
         return {
@@ -82,17 +84,23 @@ export abstract class CardModel<
         graveyard: GraveyardModel;
         game: GameModel;
         app: AppModel;
+        cache: CacheModel;
     }> {
         const result = super.route;
+        const board = result.items.find(item => item instanceof BoardModel);
+        const hand = result.items.find(item => item instanceof HandModel);
+        const deck = result.items.find(item => item instanceof DeckModel);
+        const cache = result.items.find(item => item instanceof CacheModel);
         return {
             ...result,
-            hand: result.items.find(item => item instanceof HandModel),
             player: result.items.find(item => item instanceof PlayerModel),
-            deck: result.items.find(item => item instanceof DeckModel),
-            board: result.items.find(item => item instanceof BoardModel),
             graveyard: result.items.find(item => item instanceof GraveyardModel),
             game: result.items.find(item => item instanceof GameModel),
             app: result.items.find(item => item instanceof AppModel),
+            board,
+            hand,
+            deck,
+            cache,
         }
     }
 
@@ -103,7 +111,7 @@ export abstract class CardModel<
     public get name(): string { return String(this.state.name); }
 
     constructor(props: CardModel['props'] & {
-        state: S & Pick<CardModel.S, 'desc' | 'name' | 'flavorDesc' | 'class' | 'rarity' | 'collectible'>,
+        state: S & Pick<CardModel.S, 'desc' | 'name' | 'flavorDesc' | 'class' | 'rarity' | 'isCollectible'>,
         child: C & Pick<CardModel.C, 'cost' | 'dispose' | 'feats' | 'perform'>,
         refer: R & CardModel.R,
     }) {
@@ -113,7 +121,7 @@ export abstract class CardModel<
             child: { 
                 damage: props.child.damage ?? new DamageModel(),
                 restore: props.child.restore ?? new RestoreModel(),
-                poisonous: props.child.poisonous ?? new PoisonousModel({ state: { actived: false }}),
+                poisonous: props.child.poisonous ?? new PoisonousModel({ state: { isActived: false }}),
                 turnStart: props.child.turnStart ?? [],
                 turnEnd: props.child.turnEnd ?? [],
                 ...props.child 
@@ -122,33 +130,47 @@ export abstract class CardModel<
         })
     }
 
+    // play
     public async play() {
-        await this.child.perform.play();
+        await this.child.perform.run();
     }
-
 
     // draw
     public draw() {
-        if (!this._draw()) return;
+        // before
+        const deck = this.route.deck;
+        if (!deck) return;
+
+        const event = new AbortEvent({});
+        this.event.toDraw(event);
+        let isValid = event.detail.isValid;
+        if (!isValid) return;
+
+        // execute
+        isValid = this.doDraw();
+        if (!isValid) return;
+        
+        // after
+        DebugUtil.log(`${this.name} Drew`);
         this.event.onDraw(new Event({}));
     }
+
     @TranxUtil.span()
-    protected _draw(): boolean {
+    private doDraw(): boolean {
         const player = this.route.player;
         if (!player) return false;
-        DebugUtil.log(`${this.name} Drew`);
-        
-        // draw from deck
+
         const deck = player.child.deck;
         deck.del(this);
 
-        // draw to hand
         const hand = player.child.hand;
         hand.add(this);
         return true;
     }
 
 
+
+    // clone
     public clone<T extends CardModel>(this: T, original?: boolean): T | undefined {
         const copy = TemplUtil.copy(this, {
             state: original ? {} : { ...this.props.state },
@@ -157,10 +179,10 @@ export abstract class CardModel<
         });
         if (!copy) return;
 
-        // link to root
         const app = this.route.app;
         if (!app) return;
-        app.link(copy);
+        const cache = app.child.cache;
+        cache.add(copy);
         return copy;
     }
 }
