@@ -25,6 +25,7 @@ export class HeroDisposeModel extends DisposeModel {
     }
 
     protected get isActived(): boolean {
+        if (super.isActived) return true;
         const hero = this.route.hero;
         if (!hero) return true;
         if (hero.child.health.state.current <= 0) return true;

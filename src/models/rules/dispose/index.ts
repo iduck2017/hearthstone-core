@@ -97,7 +97,7 @@ export abstract class DisposeModel<
     }
 
     protected get isActived(): boolean {
-        return this.state.isDestroyed;
+        return super.state.isDestroyed;
     }
 
     constructor(props: DisposeModel['props'] & {
@@ -119,13 +119,20 @@ export abstract class DisposeModel<
 
 
     public destroy(source?: CardModel | HeroModel, reason?: Model) {
+        const parent = this.route.parent;
+        if (!parent) return;
+
+        // before
         const event = new AbortEvent({})
         this.event.toDestroy(event);
-        if (event.detail.isValid) return;
-        const parent = this.route.parent;
-        DebugUtil.log(`${parent?.name} Destroyed`);
+        const isValid = event.detail.isValid;
+        if (!isValid) return;
+
+        // execute
         this.origin.state.isDestroyed = true;
         this.check(source, reason);
+        // after
+        DebugUtil.log(`${parent.name} Destroyed`);
     }
 
     @DisposeModel.span()

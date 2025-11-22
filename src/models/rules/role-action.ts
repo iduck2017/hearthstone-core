@@ -27,7 +27,7 @@ export class RoleActionModel extends Model<
     public get chunk() {
         return {
             current: this.state.current > 1 ? this.state.current : undefined,
-            isEnabled: this.isEnabled,
+            isEnabled: this.isReady,
         }
     }
 
@@ -54,66 +54,18 @@ export class RoleActionModel extends Model<
         const state = super.state;
         return {
             ...state,
-            current: state.origin - state.comsume,
+            current: this.current,
+            isReady: this.isReady,
         }
     }
 
-    constructor(props?: RoleActionModel['props']) {
-        super({
-            uuid: props?.uuid,
-            state: {
-                origin: 1,
-                comsume: 0,
-                isEnabled: true,
-                ...props?.state,
-            },
-            child: { ...props?.child },
-            refer: { ...props?.refer },
-        });
+    public get current() {
+        return super.state.origin - super.state.comsume;
     }
 
-    @TranxUtil.span()
-    public reset() {
-        this.origin.state.comsume = 0;
-    }
-
-    public async run() {
-        const game = this.route.game;
-        if (!game) return;
-        const player = this.route.player;
-        if (!player) return;
-
-        let isValid = this.isEnabled;
-        if (!isValid) return;
-        
-        // select
-        const roleA = this.route.role;
-        if (!roleA) return;
-        
-        const attack = roleA.child.attack;
-        const selector = attack.precheck();
-        if (!selector) return;
-
-        const roleB = await player.controller.get(selector);
-        if (!roleB) return;
-
-        const event = new AbortEvent({})
-        this.event.toRun(event)
-        isValid = event.detail.isValid;
-        if (!isValid) return;
-
-        // mana
-        this.consume();
-        attack.run(roleB);
-
-        // after
-        this.event.onRun(new Event({}));
-    }
-
-    
-    public get isEnabled(): boolean {
-        if (!this.state.isEnabled) return false;
-        const current = this.state.current;
+    protected get isReady(): boolean {
+        if (!super.state.isEnabled) return false;
+        const current = this.current;
         if (current <= 0) return false;
 
         const card = this.route.card;
@@ -144,6 +96,60 @@ export class RoleActionModel extends Model<
 
         return true;
     }
+
+    constructor(props?: RoleActionModel['props']) {
+        super({
+            uuid: props?.uuid,
+            state: {
+                origin: 1,
+                comsume: 0,
+                isEnabled: true,
+                ...props?.state,
+            },
+            child: { ...props?.child },
+            refer: { ...props?.refer },
+        });
+    }
+
+    @TranxUtil.span()
+    public reset() {
+        this.origin.state.comsume = 0;
+    }
+
+    public async run() {
+        const game = this.route.game;
+        if (!game) return;
+        const player = this.route.player;
+        if (!player) return;
+
+        let isValid = this.isReady;
+        if (!isValid) return;
+        
+        // select
+        const roleA = this.route.role;
+        if (!roleA) return;
+        
+        const attack = roleA.child.attack;
+        const selector = attack.precheck();
+        if (!selector) return;
+
+        const roleB = await player.controller.get(selector);
+        if (!roleB) return;
+
+        const event = new AbortEvent({})
+        this.event.toRun(event)
+        isValid = event.detail.isValid;
+        if (!isValid) return;
+
+        // mana
+        this.consume();
+        attack.run(roleB);
+
+        // after
+        this.event.onRun(new Event({}));
+    }
+
+    
 
     public consume() {
         this.origin.state.comsume ++;

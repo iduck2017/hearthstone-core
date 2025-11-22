@@ -13,9 +13,11 @@ export class WeaponDisposeModel extends DisposeModel {
     }
 
     protected get isActived(): boolean {
+        if (super.isActived) return true;
         const weapon = this.route.weapon;
         if (!weapon) return true;
-        if (weapon.child.action.state.current <= 0) return true;
+        const action = weapon.child.action;
+        if (action.state.current <= 0) return true;
         return false;
     }
 

@@ -40,7 +40,7 @@ describe('skill', () => {
         expect(playerA.child.mana.state.current).toBe(10);
 
         const promise = heroA.child.skill.use();
-        await CommonUtil.yield();
+        await CommonUtil.sleep();
         const selector = playerA.controller.current;
         expect(selector?.options).toContain(heroB);
         expect(selector?.options).toContain(heroA);

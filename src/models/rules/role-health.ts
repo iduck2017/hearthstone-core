@@ -133,13 +133,17 @@ export class RoleHealthModel extends Model<
     public onConsume(event: DamageEvent) {
         const role = this.route.role;
         if (!role) return;
-        if (event.detail.isValid) return;
+        
+        const isValid = event.detail.isValid;
+        if (!isValid) return;
 
         const minion = this.route.minion;
-        if (event.detail.detail.isPoisonous && minion) {
+        const isPoisonous = event.detail.detail.isPoisonous;
+        if (isPoisonous && minion) {
             const source = event.detail.source;
             const method = event.detail.method;
             const dispose = minion.child.dispose;
+            DebugUtil.log(`${minion.name} Die by Poisonous`);
             dispose.destroy(source, method);
         }
 

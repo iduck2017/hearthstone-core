@@ -13,6 +13,7 @@ export class MinionDisposeModel extends DisposeModel {
     }
 
     protected get isActived(): boolean {
+        if (super.isActived) return true;
         const minion = this.route.minion;
         if (!minion) return true;
         if (minion.child.health.state.current <= 0) return true;
