@@ -1,9 +1,9 @@
 import { Method, Model } from "set-piece";
 import { SkillModel } from "../skill";
-import { ArmorModel } from "../../features/rules/armor";
+import { ArmorModel } from "../../rules/armor";
 import { DamageModel, FrozenModel, MinionCardModel, OverhealModel, RestoreModel, RoleAttackModel, RoleHealthModel, SleepModel, TurnEndModel, TurnStartModel, WeaponCardModel } from "../../..";
-import { HeroDisposeModel } from "../../features/dispose/hero";
-import { RoleActionModel } from "../../features/rules/role-action";
+import { HeroDisposeModel } from "../../rules/dispose/hero";
+import { RoleActionModel } from "../../rules/role-action";
 import { PlayerModel } from "../player";
 import { TauntModel } from "../../..";
 import { StealthModel } from "../../features/entries/stealth";
@@ -11,7 +11,7 @@ import { ElusiveModel } from "../../features/entries/elusive";
 import { WindfuryModel } from "../../features/entries/windfury";
 import { DivineShieldModel } from "../../features/entries/divine-shield";
 import { PoisonousModel } from "../../features/entries/poisonous";
-import { IRoleBuffModel } from "../../features/rules/i-role-buff";
+import { IRoleBuffModel } from "../../rules/i-role-buff";
 import { FeatureModel } from "../../features";
 import { BattlecryModel } from "../../features/hooks/battlecry";
 

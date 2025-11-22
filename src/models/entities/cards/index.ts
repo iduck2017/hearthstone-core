@@ -1,9 +1,9 @@
 import { DebugUtil, Model, TranxUtil, Event, Method, Route, TemplUtil, Emitter } from "set-piece";
-import { CostModel } from "../../features/rules/cost";
+import { CostModel } from "../../rules/cost";
 import { ClassType, RarityType } from "../../../types/card";
 import { AbortEvent, AppModel, CardFeatureModel, DamageModel, DisposeModel, LibraryUtil, PoisonousModel, RestoreModel, TurnEndModel, TurnStartModel } from "../../..";
 import { PlayerModel, GameModel, HandModel, DeckModel, BoardModel, GraveyardModel } from "../../..";
-import { PerformModel } from "../../features/perform";
+import { PerformModel } from "../../rules/perform";
 import { CacheModel } from "../containers/cache";
 
 export namespace CardModel {

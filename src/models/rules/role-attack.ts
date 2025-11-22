@@ -1,9 +1,9 @@
 import { DebugUtil, Decor, Event, Method, Model, StateUtil, TemplUtil } from "set-piece";
-import { DamageEvent, DamageModel, MinionCardModel, GameModel, PlayerModel, HeroModel, Selector } from "../../..";
-import { DamageType } from "../../../types/events/damage";
-import { AbortEvent } from "../../../types/events/abort";
-import { RoleModel } from "../../entities/heroes";
-import { RoleAttackDecor } from "../../../types/decors/role-attack";
+import { DamageEvent, DamageModel, MinionCardModel, GameModel, PlayerModel, HeroModel, Selector } from "../..";
+import { DamageType } from "../../types/events/damage";
+import { AbortEvent } from "../../types/events/abort";
+import { RoleModel } from "../entities/heroes";
+import { RoleAttackDecor } from "../../types/decors/role-attack";
 
 export namespace RoleAttackModel {
     export type E = {
@@ -54,14 +54,14 @@ export class RoleAttackModel extends Model<
         return new RoleAttackDecor(this);
     }
 
-    public get isValid() { 
+    public get status() { 
         // is alive
         const minion = this.route.minion;
         const hero = this.route.hero;
         const entity = minion ?? hero;
         if (!entity) return false;
         const dispose = entity.child.dispose;
-        if (dispose.isDisposable) return false;
+        if (dispose.status) return false;
         // has attack
         if (this.state.current <= 0) return false;
         // need target
@@ -132,7 +132,7 @@ export class RoleAttackModel extends Model<
     public run(roleB: RoleModel) {
         const roleA = this.route.role;
         if (!roleA) return;
-        if (!this.isValid) return;
+        if (!this.status) return;
 
         const attackB = roleB.child.attack;
         const healthB = roleB.child.health;
@@ -149,7 +149,7 @@ export class RoleAttackModel extends Model<
         isValid = eventB.detail.isValid;
         if (!isValid) return;
 
-        if (!this.isValid) return;
+        if (!this.status) return;
         if (healthB.state.current <= 0) return;
 
         // execute

@@ -1,6 +1,6 @@
 import { Event, StateUtil, TemplUtil, TranxUtil } from "set-piece";
-import { RoleActionModel } from "../rules/role-action";
-import { RoleFeatureModel } from "../../features/minion";
+import { RoleActionModel } from "../../rules/role-action";
+import { RoleFeatureModel } from "../role";
 import { RoleActionDecor } from "../../../types/decors/role-action";
 
 export namespace WindfuryModel {
@@ -40,15 +40,12 @@ export class WindfuryModel extends RoleFeatureModel<
         // before
         if (!isAdvanced && this.state.isActived) return false;
         if (isAdvanced && this.state.isAdvanced) return false;
-        // execute
-        this.doActive(isAdvanced);
-        // after
-        this.event.onActive(new Event({}));
+        super.active();
     }
 
     @TranxUtil.span()
-    private doActive(isAdvanced?: boolean) {
-        this.origin.state.isActived = true;
+    protected doActive(isAdvanced?: boolean) {
+        super.doActive();
         this.origin.state.isAdvanced = isAdvanced ?? false;
     }
 

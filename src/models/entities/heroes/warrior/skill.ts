@@ -1,6 +1,6 @@
 import { TemplUtil } from "set-piece";
 import { SkillModel } from "../../skill";
-import { CostModel } from "../../../features/rules/cost";
+import { CostModel } from "../../../rules/cost";
 import { ArmorUpEffectModel } from "./effect";
 
 @TemplUtil.is('armor-up')

@@ -1,6 +1,6 @@
 import { Model, TranxUtil } from "set-piece";
-import { DamageEvent, DamageType } from "../../../types/events/damage";
-import { DisposeModel } from "../dispose";
+import { DamageEvent, DamageType } from "../../types/events/damage";
+import { DisposeModel } from "./dispose";
 
 export namespace DamageModel {
     export type E = {

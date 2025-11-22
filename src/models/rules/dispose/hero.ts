@@ -24,7 +24,7 @@ export class HeroDisposeModel extends DisposeModel {
         });
     }
 
-    public get isDisposable(): boolean {
+    public get status(): boolean {
         const hero = this.route.hero;
         if (!hero) return true;
 
@@ -43,7 +43,7 @@ export class HeroDisposeModel extends DisposeModel {
 
         const opponent = player.refer.opponent;
         const dispose = opponent?.child.hero.child.dispose;
-        if (!dispose?.isDisposable) DebugUtil.log(`${opponent?.name} Win!`);
+        if (!dispose?.status) DebugUtil.log(`${opponent?.name} Win!`);
         app.del();
     }
 }

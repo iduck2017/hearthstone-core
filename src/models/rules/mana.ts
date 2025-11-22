@@ -1,5 +1,5 @@
 import { DebugUtil, Event, Method, Model, TemplUtil, TranxUtil } from "set-piece";
-import { PlayerModel } from "../../entities/player";
+import { PlayerModel } from "../entities/player";
 
 export namespace ManaModel {
     export type E = {

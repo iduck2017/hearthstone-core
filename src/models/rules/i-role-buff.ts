@@ -1,13 +1,13 @@
-import { RoleAttackModel } from "./role-attack";
-import { RoleAttackDecor } from "../../../types/decors/role-attack";
+import { RoleAttackModel } from "../features/rules/role-attack";
+import { RoleAttackDecor } from "../../types/decors/role-attack";
 import { RoleHealthModel } from "./role-health";
-import { RoleHealthDecor } from "../../../types/decors/role-health";
-import { OperatorType } from "../../../types/operator";
+import { RoleHealthDecor } from "../../types/decors/role-health";
+import { OperatorType } from "../../types/operator";
 import { Model, StateUtil, TemplUtil } from "set-piece";
-import { RoleFeatureModel } from "../minion";
-import { FeatureModel } from "..";
-import { HeroModel } from "../../entities/heroes";
-import { MinionCardModel } from "../../entities/cards/minion";
+import { RoleFeatureModel } from "../features/role";
+import { FeatureModel } from "../features";
+import { HeroModel } from "../entities/heroes";
+import { MinionCardModel } from "../entities/cards/minion";
 
 export namespace IRoleBuffModel {
     export type S = {
@@ -40,7 +40,7 @@ export abstract class IRoleBuffModel<
         }
     }
 
-    public get isValid(): boolean {
+    public get status(): boolean {
         return true;
     }
 

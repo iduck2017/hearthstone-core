@@ -65,7 +65,7 @@ export abstract class BattlecryModel<
     public async run(params: Array<T | undefined>) {
         // toRun
         if (!this.state.isPending) {
-            if (!this.isValid) return;
+            if (!this.status) return;
             const event = new AbortEvent({});
             this.event.toRun(event);
             const isValid = event.detail.isValid;

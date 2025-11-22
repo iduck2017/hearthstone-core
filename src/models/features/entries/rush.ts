@@ -1,5 +1,5 @@
 import { DebugUtil, Event, TemplUtil } from "set-piece";
-import { RoleFeatureModel } from "../../features/minion";
+import { RoleFeatureModel } from "../role";
 
 export namespace RushModel {
     export type E = {};

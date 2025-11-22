@@ -1,6 +1,6 @@
 import { Event, TemplUtil } from "set-piece";
 import { FeatureModel } from "../../features";
-import { RoleFeatureModel } from "../../features/minion";
+import { RoleFeatureModel } from "../role";
 
 export namespace ChargeModel {
     export type E = {}

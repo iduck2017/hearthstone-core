@@ -1,6 +1,6 @@
 import { DebugUtil, Event, EventUtil, Method, Model } from "set-piece";
 import { FeatureModel } from "..";
-import { TurnModel } from "../rules/turn";
+import { TurnModel } from "../../rules/turn";
 import { CardFeatureModel } from "../card";
 import { AbortEvent } from "../../../types/events/abort";
 
@@ -44,7 +44,7 @@ export abstract class TurnStartModel<
 
 
     public run() {
-        if (!this.isValid) return;
+        if (!this.status) return;
         // toRun
         const event = new AbortEvent({});
         this.event.toRun(event);

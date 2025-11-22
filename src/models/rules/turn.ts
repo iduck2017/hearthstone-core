@@ -1,6 +1,6 @@
 import { DebugUtil, Event, Method, Model } from "set-piece";
-import { PlayerModel } from "../../entities/player";
-import { GameModel } from "../../entities/game";
+import { PlayerModel } from "../entities/player";
+import { GameModel } from "../entities/game";
 
 export namespace TurnModel {
     export type S = {

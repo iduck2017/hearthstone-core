@@ -1,13 +1,13 @@
 import { DebugUtil, Event, Method, Model } from "set-piece";
 import { PlayerModel } from "./player";
 import { GameModel } from "./game";
-import { CostModel } from "../features/rules/cost";
+import { CostModel } from "../rules/cost";
 import { HeroModel, RoleModel } from "./heroes";
-import { DamageModel } from "../features/rules/damage";
+import { DamageModel } from "../rules/damage";
 import { AbortEvent } from "../../types/events/abort";
 import { EffectModel } from "../features/hooks/effect";
 import { MinionCardModel } from "./cards/minion";
-import { SkillHooksConfig, SkillPerformModel } from "../features/perform/skill";
+import { SkillPerformModel } from "../rules/perform/skill";
 
 
 export namespace SkillModel {

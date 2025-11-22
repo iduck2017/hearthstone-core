@@ -43,8 +43,8 @@ export class SpellPerformModel extends PerformModel<
         }
     }
 
-    public get isValid(): boolean {
-        if (!super.isValid) return false;
+    public get status(): boolean {
+        if (!super.status) return false;
         const spell = this.route.spell;
         if (!spell) return false;
 
@@ -94,7 +94,7 @@ export class SpellPerformModel extends PerformModel<
         if (!card) return;
 
         if (!this.state.isPending) {
-            if (!this.isValid) return;
+            if (!this.status) return;
 
             // prepare
             const config = await this.prepare();
@@ -118,12 +118,14 @@ export class SpellPerformModel extends PerformModel<
                 hand.del(card);
                 return;
             };
+
+            card.deploy();
             this.init(from, config);
         }
 
         // execute
-        const index = this.origin.state.index;
         while (true) {
+            const index = this.origin.state.index;
             const task = this.origin.child.dependencies[index];
             if (!task) break;
 
@@ -131,6 +133,8 @@ export class SpellPerformModel extends PerformModel<
             const params = task.values;
             if (!hook) continue;
             if (!params) continue;
+
+            this.origin.state.index += 1;
             await hook.run(params);
         }
         this.reset();
@@ -163,7 +167,7 @@ export class SpellPerformModel extends PerformModel<
 
     // prepare
     protected async prepare(): Promise<SpellHooksConfig | undefined> {
-        if (!this.isValid) return;
+        if (!this.status) return;
 
         const player = this.route.player;
         if (!player) return;

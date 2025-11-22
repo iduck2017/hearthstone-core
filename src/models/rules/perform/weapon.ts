@@ -70,7 +70,7 @@ export class WeaponPerformModel extends PerformModel<
         if (!card) return;
 
         if (!this.state.isPending) {
-            if (!this.isValid) return;
+            if (!this.status) return;
 
             // prepare
             const config = await this.prepare();
@@ -99,8 +99,8 @@ export class WeaponPerformModel extends PerformModel<
         }
 
         // execute
-        const index = this.origin.state.index;
         while (true) {
+            const index = this.origin.state.index;
             const task = this.origin.child.dependencies[index];
             if (!task) break;
 
@@ -108,6 +108,8 @@ export class WeaponPerformModel extends PerformModel<
             const params = task.values;
             if (!hook) continue;
             if (!params) continue;
+
+            this.origin.state.index += 1;
             await hook.run(params);
         }
         this.reset();
@@ -141,7 +143,7 @@ export class WeaponPerformModel extends PerformModel<
 
     // use
     protected async prepare(): Promise<WeaponHooksConfig | undefined> {
-        if (!this.isValid) return;
+        if (!this.status) return;
 
         const player = this.route.player;
         if (!player) return;

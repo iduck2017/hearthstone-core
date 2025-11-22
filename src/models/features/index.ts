@@ -1,10 +1,11 @@
-import { Event, EventUtil, Model, StateUtil } from "set-piece";
-import { GameModel, PlayerModel } from "../..";
+import { Event, EventUtil, Model, StateUtil, TranxUtil } from "set-piece";
+import { AbortEvent, GameModel, PlayerModel } from "../..";
 
 export namespace FeatureModel {
     export type E = {
-        onActive: {};
-        onDeactive: {};
+        toActive: AbortEvent;
+        onActive: Event;
+        onDeactive: Event;
     };
     export type S = {
         name: string;
@@ -40,7 +41,7 @@ export abstract class FeatureModel<
         return { desc: this.state.desc }
     }
 
-    public get isValid(): boolean {
+    public get status(): boolean {
         if (!this.origin.state.isActived) return false;
         return true;
     }
@@ -62,7 +63,28 @@ export abstract class FeatureModel<
     @EventUtil.if()
     @StateUtil.if()
     private check() {
-        return this.isValid;
+        return this.status;
+    }
+
+
+    public active() {
+        if (this.origin.state.isActived) return false;
+
+        // toActive
+        const event = new AbortEvent({});
+        this.event.toActive(event);
+        const isValid = event.detail.isValid;
+        if (!isValid) return false;
+        // execute
+        this.doActive();
+        // after
+        this.event.onActive(new Event({}));
+    }
+
+    @TranxUtil.span()
+    protected doActive() {
+        this.origin.state.isActived = true;
+        this.reload();
     }
 
     public deactive() {
@@ -71,6 +93,7 @@ export abstract class FeatureModel<
         this.event.onDeactive(new Event({}));
     }
 
+    @TranxUtil.span()
     protected doDeactive() {
         this.origin.state.isActived = false;
         this.reload();

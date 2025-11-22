@@ -1,17 +1,17 @@
 import { DebugUtil, Event, Model, TranxUtil } from "set-piece";
 import { CardModel } from ".";
-import { WeaponAttackModel } from "../../features/rules/weapon-attack";
-import { WeaponActionModel } from "../../features/rules/weapon-action";
-import { WeaponDisposeModel } from "../../features/dispose/weapon";
+import { WeaponAttackModel } from "../../rules/weapon-attack";
+import { WeaponActionModel } from "../../rules/weapon-action";
+import { WeaponDisposeModel } from "../../rules/dispose/weapon";
 import { FeatureModel } from "../../features";
 import { BattlecryModel } from "../../features/hooks/battlecry";
 import { TurnEndModel } from "../../features/hooks/turn-end";
-import { WeaponPerformModel } from "../../features/perform/weapon";
+import { WeaponPerformModel } from "../../rules/perform/weapon";
 import { DeathrattleModel } from "../../features/hooks/deathrattle";
 import { TurnStartModel } from "../../features/hooks/turn-start";
 import { PlayerModel } from "../player";
 import { AbortEvent } from "../../../types/events/abort";
-import { DisposeModel } from "../../features/dispose";
+import { DisposeModel } from "../../rules/dispose";
 
 export namespace WeaponCardModel {
     export type S = {};

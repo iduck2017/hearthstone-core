@@ -31,8 +31,8 @@ export abstract class SecretFeatureModel<
         }
     }
 
-    public get isValid(): boolean {
-        if (!super.isValid) return false;
+    public get status(): boolean {
+        if (!super.status) return false;
         const board = this.route.board;
         if (!board) return false;
         return true;
@@ -49,7 +49,7 @@ export abstract class SecretFeatureModel<
             const instance = {
                 [key](this: SecretFeatureModel, ...args: any[]) {
                     // precheck
-                    if (!this.isValid) return false;
+                    if (!this.status) return false;
                     const player = this.route.player;
                     const game = this.route.game;
                     if (!player) return false;

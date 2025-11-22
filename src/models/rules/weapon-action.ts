@@ -1,5 +1,5 @@
 import { Event, Method, Model, TemplUtil, TranxUtil } from "set-piece";
-import { DisposeModel, GameModel, PlayerModel, WeaponCardModel, CardModel } from "../../..";
+import { DisposeModel, GameModel, PlayerModel, WeaponCardModel, CardModel } from "../..";
 
 export namespace WeaponActionModel {
     export type E = {

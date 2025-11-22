@@ -1,7 +1,7 @@
 import { Decor } from "set-piece";
 import { Operator, OperatorType } from "../operator";
-import { RoleHealthModel } from "../../models/features/rules/role-health";
-import { IRoleBuffModel } from "../../models/features/rules/i-role-buff";
+import { RoleHealthModel } from "../../models/rules/role-health";
+import { IRoleBuffModel } from "../../models/rules/i-role-buff";
 
 export class RoleHealthDecor extends Decor<RoleHealthModel.S> {
     private operations: Operator[] = [];

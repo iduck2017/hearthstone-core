@@ -73,7 +73,7 @@ export abstract class DisposeModel<
     }
     
     public static close() {
-        const tasks = DisposeModel.tasks.filter(item => item.isDisposable);
+        const tasks = DisposeModel.tasks.filter(item => item.status);
         DisposeModel.tasks = [];
         tasks.forEach(item => item.run());
     }
@@ -88,7 +88,7 @@ export abstract class DisposeModel<
         }
     }
     
-    public get isDisposable() {
+    public get status() {
         return Boolean(this.state.isDestroyed);
     }
 

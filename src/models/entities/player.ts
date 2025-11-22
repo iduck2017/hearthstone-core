@@ -4,7 +4,7 @@ import { HandModel } from "./containers/hand";
 import { BoardModel } from "./containers/board";
 import { DeckModel } from "./containers/deck";
 import { GraveyardModel } from "./containers/graveyard";
-import { ManaModel } from "../features/rules/mana";
+import { ManaModel } from "../rules/mana";
 import { HeroModel, RoleModel } from "./heroes";
 import { FeatureModel } from "../features";
 import { MageModel } from "./heroes/mage";
@@ -59,7 +59,7 @@ export class PlayerModel extends Model<
 
     public get refer() {
         const child = this.child;
-        const minions: MinionCardModel[] = child.board.refer.minions.filter(item => !item.child.dispose?.isDisposable);
+        const minions: MinionCardModel[] = child.board.refer.minions.filter(item => !item.child.dispose?.status);
         const roles: RoleModel[] = [child.hero, ...minions];
         const cards: CardModel[] = [
             ...child.hand.child.cards,

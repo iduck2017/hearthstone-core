@@ -15,29 +15,29 @@ export { AnimeUtil } from "./utils/anime";
 export { LibraryUtil } from "./utils/library";
 
 // rules
-export { DisposeModel } from './models/features/dispose'
-export { MinionDisposeModel } from "./models/features/dispose/minion";
-export { HeroDisposeModel } from "./models/features/dispose/hero";
-export { WeaponDisposeModel } from "./models/features/dispose/weapon";
+export { DisposeModel } from './models/rules/dispose'
+export { MinionDisposeModel } from "./models/rules/dispose/minion";
+export { HeroDisposeModel } from "./models/rules/dispose/hero";
+export { WeaponDisposeModel } from "./models/rules/dispose/weapon";
 
-export { RoleAttackModel } from "./models/features/rules/role-attack";
-export { RoleHealthModel } from "./models/features/rules/role-health";
-export { RoleActionModel } from "./models/features/rules/role-action";
+export { RoleAttackModel } from "./models/rules/role-attack";
+export { RoleHealthModel } from "./models/rules/role-health";
+export { RoleActionModel } from "./models/rules/role-action";
 export { RoleAttackDecor } from "./types/decors/role-attack";
 export { RoleHealthDecor } from "./types/decors/role-health";
 export { RoleActionDecor } from "./types/decors/role-action";
 
-export { SleepModel } from './models/features/rules/sleep';
-export { ManaModel } from './models/features/rules/mana';
-export { TurnModel } from "./models/features/rules/turn";
+export { SleepModel } from './models/rules/sleep';
+export { ManaModel } from './models/rules/mana';
+export { TurnModel } from "./models/rules/turn";
 export { CostDecor } from "./types/decors/cost";
-export { CostType, CostModel } from "./models/features/rules/cost";
-export { ArmorModel } from "./models/features/rules/armor";
-export { DamageModel } from "./models/features/rules/damage";
-export { RestoreModel } from "./models/features/rules/restore";
+export { CostType, CostModel } from "./models/rules/cost";
+export { ArmorModel } from "./models/rules/armor";
+export { DamageModel } from "./models/rules/damage";
+export { RestoreModel } from "./models/rules/restore";
 
-export { WeaponAttackModel } from "./models/features/rules/weapon-attack";
-export { WeaponActionModel } from "./models/features/rules/weapon-action";
+export { WeaponAttackModel } from "./models/rules/weapon-attack";
+export { WeaponActionModel } from "./models/rules/weapon-action";
 
 // card
 export { CardModel } from "./models/entities/cards";
@@ -62,26 +62,26 @@ export { TauntModel } from "./models/features/entries/taunt";
 export { StealthModel } from './models/features/entries/stealth';
 export { ElusiveModel } from './models/features/entries/elusive';
 export { WindfuryModel } from "./models/features/entries/windfury";
-export { SpellDamageModel } from "./models/features/rules/spell-damage";
+export { SpellDamageModel } from "./models/rules/spell-damage";
 export { DivineShieldModel } from "./models/features/entries/divine-shield";
 export { PoisonousModel } from "./models/features/entries/poisonous";
 
 // features
 export { FeatureModel } from './models/features'
 export { CardFeatureModel } from './models/features/card';
-export { RoleFeatureModel } from './models/features/minion';
+export { RoleFeatureModel } from './models/features/role';
 export { SecretFeatureModel } from "./models/features/secret";
-export { IRoleBuffModel } from "./models/features/rules/i-role-buff";
-export { RoleBuffModel } from "./models/features/rules/role-buff";
+export { IRoleBuffModel } from "./models/rules/i-role-buff";
+export { RoleBuffModel } from "./models/rules/role-buff";
 
-export { SpellPerformModel } from "./models/features/perform/spell";
-export { WeaponPerformModel } from "./models/features/perform/weapon";
-export { MinionPerformModel } from "./models/features/perform/minion";
+export { SpellPerformModel } from "./models/rules/perform/spell";
+export { WeaponPerformModel } from "./models/rules/perform/weapon";
+export { MinionPerformModel } from "./models/rules/perform/minion";
 
 // hooks
-export { SpellHooksConfig } from "./models/features/perform/spell";
-export { WeaponHooksConfig } from "./models/features/perform/weapon";
-export { MinionHooksConfig } from "./models/features/perform/minion";
+export { SpellHooksConfig } from "./models/rules/perform/spell";
+export { WeaponHooksConfig } from "./models/rules/perform/weapon";
+export { MinionHooksConfig } from "./models/rules/perform/minion";
 
 export { SpellCastEvent } from "./types/events/spell-cast";
 
@@ -106,7 +106,7 @@ export { ArmorUpModel } from "./models/entities/heroes/warrior/skill";
 
 export { OperatorType, Operator } from "./types/operator";
 export { AbortEvent } from "./types/events/abort";
-export { DiscoverModel } from "./models/features/rules/discover";
+export { DiscoverModel } from "./models/rules/discover";
 export { RoleModel } from "./models/entities/heroes";
 
 export { TheCoinModel } from "./models/entities/cards/the-coin";

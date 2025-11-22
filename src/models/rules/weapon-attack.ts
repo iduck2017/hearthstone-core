@@ -1,6 +1,6 @@
 import { Decor, Event, EventUtil, Method, Model, StateUtil } from "set-piece";
-import { GameModel, PlayerModel, HeroModel, RoleAttackModel, TurnModel, BoardModel, WeaponCardModel, DamageEvent, RoleAttackDecor } from "../../..";
-import { OperatorType } from "../../../types/operator";
+import { GameModel, PlayerModel, HeroModel, RoleAttackModel, TurnModel, BoardModel, WeaponCardModel, DamageEvent, RoleAttackDecor } from "../..";
+import { OperatorType } from "../../types/operator";
 
 export namespace WeaponAttackModel {
     export type E = {}

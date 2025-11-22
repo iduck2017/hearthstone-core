@@ -2,7 +2,7 @@ import { HeroModel, RoleModel } from "..";
 import { DamageEvent, DamageType } from "../../../../types/events/damage";
 import { Selector } from "../../../../types/selector";
 import { EffectModel } from "../../../features/hooks/effect";
-import { DamageModel } from "../../../features/rules/damage";
+import { DamageModel } from "../../../rules/damage";
 
 export class FireBlastEffectModel extends EffectModel {
     public get route() {

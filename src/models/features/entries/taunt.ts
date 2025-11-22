@@ -1,6 +1,6 @@
 import { DebugUtil, Event, TemplUtil } from "set-piece";
 import { FeatureModel } from "../../features";
-import { RoleFeatureModel } from "../../features/minion";
+import { RoleFeatureModel } from "../role";
 
 export namespace TauntModel {
     export type E = {};
@@ -29,24 +29,5 @@ export class TauntModel extends RoleFeatureModel<
             child: { ...props.child },
             refer: { ...props.refer },
         })
-    }
-
-    public active() {
-        // before
-        if (this.origin.state.isActived) return;
-        const role = this.route.role;
-        if (!role) return;
-
-        // execute
-        this.origin.state.isActived = true;
-        // after
-        DebugUtil.log(`${role.name} gain Taunt`);
-        this.event.onActive(new Event({}));
-    }
-
-    public deactive() {
-        const role = this.route.role;
-        if (!role) return false;
-        super.deactive();
     }
 }

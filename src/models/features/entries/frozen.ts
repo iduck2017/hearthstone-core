@@ -1,6 +1,6 @@
 import { DebugUtil, Event, TemplUtil } from "set-piece";
 import { FeatureModel } from "../../features";
-import { RoleFeatureModel } from "../../features/minion";
+import { RoleFeatureModel } from "../role";
 
 export namespace FrozenModel {
     export type E = {}
@@ -28,20 +28,6 @@ export class FrozenModel extends RoleFeatureModel<
         });
     }
 
-    public active() {
-        // before
-        if (this.origin.state.isActived) return;
-        const role = this.route.role;
-        if (!role) return;
-
-        // execute
-        this.origin.state.isActived = true;
-
-        // after
-        DebugUtil.log(`${role.name} Frozen`);
-        this.event.onActive(new Event({}));
-    }
-
     public overcome() {
         if (!this.origin.state.isActived) return;
 
@@ -62,5 +48,4 @@ export class FrozenModel extends RoleFeatureModel<
 
         super.deactive();
     }
-
 }

@@ -2,7 +2,7 @@ import { Model, State, TranxUtil } from "set-piece";
 import { SchoolType } from "../../../types/card";
 import { SpellEffectModel } from "../../..";
 import { CardModel } from ".";
-import { SpellPerformModel } from "../../features/perform/spell";
+import { SpellPerformModel } from "../../rules/perform/spell";
 
 export namespace SpellCardModel {
     export type S = {

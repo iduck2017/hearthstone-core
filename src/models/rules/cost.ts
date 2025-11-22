@@ -1,7 +1,7 @@
 import { Model, TemplUtil } from "set-piece";
-import { PlayerModel } from "../../entities/player";
-import { CardModel } from "../../entities/cards";
-import { CostDecor } from "../../../types/decors/cost";
+import { PlayerModel } from "../entities/player";
+import { CardModel } from "../entities/cards";
+import { CostDecor } from "../../types/decors/cost";
 
 export enum CostType {
     MANA = 1,
@@ -46,7 +46,7 @@ export class CostModel extends Model<
         }
     }
 
-    public get isValid() {
+    public get status() {
         const player = this.route.player;
         if (!player) return false;
         if (this.state.type === CostType.MANA) {

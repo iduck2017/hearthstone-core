@@ -43,7 +43,7 @@ export class SkillPerformModel extends PerformModel<
         }
     }
 
-    public get isValid(): boolean {
+    public get status(): boolean {
         // turn check
         const game = this.route.game;
         if (!game) return false;
@@ -59,7 +59,7 @@ export class SkillPerformModel extends PerformModel<
         
         // cost check
         const cost = skill.child.cost;
-        if (!cost.isValid) return false;
+        if (!cost.status) return false;
 
         // At least one valid effect
         const effects = skill.child.effects;
@@ -106,7 +106,7 @@ export class SkillPerformModel extends PerformModel<
         if (!card) return;
 
         if (!this.state.isPending) {
-            if (!this.isValid) return;
+            if (!this.status) return;
 
             // prepare
             const config = await this.prepare();
@@ -166,7 +166,7 @@ export class SkillPerformModel extends PerformModel<
 
     // prepare
     protected async prepare(): Promise<SkillHooksConfig | undefined> {
-        if (!this.isValid) return;
+        if (!this.status) return;
 
         const player = this.route.player;
         if (!player) return;

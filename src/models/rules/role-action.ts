@@ -1,7 +1,7 @@
 import { Decor, Event, Model, TranxUtil } from "set-piece";
-import { PlayerModel, GameModel, CardModel, HeroModel, MinionCardModel } from "../../..";
-import { AbortEvent } from "../../../types/events/abort";
-import { RoleActionDecor } from "../../../types/decors/role-action";
+import { PlayerModel, GameModel, CardModel, HeroModel, MinionCardModel } from "../..";
+import { AbortEvent } from "../../types/events/abort";
+import { RoleActionDecor } from "../../types/decors/role-action";
 
 export namespace RoleActionModel {
     export type S = {
@@ -90,8 +90,8 @@ export class RoleActionModel extends Model<
             !charge?.state.isActived &&
             !rush?.state.isActived
         ) return false;
-        if (!attack.isValid) return false;
-        
+        if (!attack.status) return false;
+
         return true;
     }
 

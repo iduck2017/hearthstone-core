@@ -54,7 +54,7 @@ export abstract class DeathrattleModel<
 
     @DebugUtil.span()
     public run() {
-        if (!this.isValid) return;
+        if (!this.status) return;
         // toRun
         const event = new AbortEvent({});
         this.event.toRun(event);

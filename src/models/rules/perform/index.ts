@@ -50,7 +50,7 @@ export abstract class PerformModel<
         }
     }
 
-    protected get isValid(): boolean {
+    protected get status(): boolean {
         // turn check
         const game = this.route.game;
         if (!game) return false;
@@ -66,7 +66,7 @@ export abstract class PerformModel<
         if (!card) return false;
         // cost check
         const cost = card.child.cost;
-        if (!cost.isValid) return false;
+        if (!cost.status) return false;
         return true;
     }
 

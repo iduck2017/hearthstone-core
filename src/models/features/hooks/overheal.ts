@@ -42,7 +42,7 @@ export abstract class OverhealModel<
     }
 
     public run() {
-        if (!this.isValid) return;
+        if (!this.status) return;
         // toRun
         const event = new AbortEvent({});
         this.event.toRun(event);

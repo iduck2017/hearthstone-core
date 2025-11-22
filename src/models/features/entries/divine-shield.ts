@@ -1,6 +1,6 @@
 import { DebugUtil, Event, TemplUtil, TranxUtil } from "set-piece";
 import { DamageEvent } from "../../../types/events/damage";
-import { RoleFeatureModel } from "../../features/minion";
+import { RoleFeatureModel } from "../role";
 import { AbortEvent } from "../../../types/events/abort";
 
 export namespace DivineShieldModel {
@@ -38,37 +38,11 @@ export class DivineShieldModel extends RoleFeatureModel<
         })
     }
 
-    public active() {
-        // before
-        if (this.origin.state.isActived) return;
-        const role = this.route.role;
-        if (!role) return;
-
-        const event = new AbortEvent({});
-        this.event.toActive(event);
-        let isValid = event.detail.isValid;
-        if (!isValid) return false;
-
-        // execute
-        this.doActive();
-
-        // after
-        DebugUtil.log(`${role.name} gain Divine Shield`);
-        this.event.onRestore(new Event({}));
-    }
-
-    @TranxUtil.span()
-    private doActive() {
-        this.origin.state.isActived = true;
-        this.origin.state.count = 1;
-    }
-
-
     public consume(event: DamageEvent) {
         // before
         const role = this.route.role;
         if (!role) return false;
-        if (!this.isValid) return false;
+        if (!this.status) return false;
         
         // execute
         this.doConsume(event);
@@ -79,13 +53,20 @@ export class DivineShieldModel extends RoleFeatureModel<
         this.event.onConsume(event);
     }
 
-
     protected doConsume(event: DamageEvent) {
         if (this.origin.state.count <= 1) {
             this.origin.state.isActived = false;
         }
         this.origin.state.count =- 1;
     }
+
+
+    @TranxUtil.span()
+    protected doActive() {
+        super.doActive();
+        this.origin.state.count = 1;
+    }
+
 
     @TranxUtil.span()
     protected doDeactive() {

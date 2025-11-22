@@ -12,12 +12,12 @@ export class MinionDisposeModel extends DisposeModel {
         }
     }
 
-    public get isDisposable(): boolean {
+    public get status(): boolean {
         const minion = this.route.minion;
         if (!minion) return true;
         const health = minion.child.health;
         if (health.state.current <= 0) return true;
-        return super.isDisposable || false;
+        return super.status || false;
     }
 
     constructor(props?: MinionDisposeModel['props']) {

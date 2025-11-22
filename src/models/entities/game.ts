@@ -1,6 +1,6 @@
 import { DebugUtil, Event, Model, TemplUtil, TranxUtil } from "set-piece";
 import { PlayerModel } from "./player";
-import { TurnModel } from "../features/rules/turn";
+import { TurnModel } from "../rules/turn";
 import { AppModel, CardModel, MinionCardModel, TheCoinModel } from "../..";
 import { RoleModel } from "./heroes";
 

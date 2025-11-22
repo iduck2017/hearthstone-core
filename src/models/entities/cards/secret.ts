@@ -1,6 +1,6 @@
 import { Event, Model, State, TranxUtil } from "set-piece"
 import { CardModel } from "."
-import { SecretDisposeModel } from "../../features/dispose/secret"
+import { SecretDisposeModel } from "../../rules/dispose/secret"
 import { SpellCardModel } from "./spell"
 import { AbortEvent } from "../../../types/events/abort"
 

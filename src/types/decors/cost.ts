@@ -1,6 +1,6 @@
 import { Decor } from "set-piece";
 import { Operator, OperatorType } from "../operator";
-import { CostModel } from "../../models/features/rules/cost";
+import { CostModel } from "../../models/rules/cost";
 
 export class CostDecor extends Decor<CostModel.S> {
 

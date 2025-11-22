@@ -1,6 +1,6 @@
 import { DebugUtil, Event, TemplUtil } from "set-piece";
 import { FeatureModel } from "../../features";
-import { RoleFeatureModel } from "../../features/minion";
+import { RoleFeatureModel } from "../role";
 
 export namespace StealthModel {
     export type E = {};
@@ -31,16 +31,4 @@ export class StealthModel extends RoleFeatureModel<
         });
     }
 
-    public active() {
-        // before
-        if (this.origin.state.isActived) return;
-        const role = this.route.role;
-        if (!role) return;
-
-        // execute
-        this.origin.state.isActived = true;
-        // after
-        DebugUtil.log(`${role.name} gain Stealth`);
-        this.event.onActive(new Event({}));
-    }
 }

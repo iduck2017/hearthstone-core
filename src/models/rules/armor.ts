@@ -1,5 +1,5 @@
 import { DebugUtil, Event, Model } from "set-piece";
-import { PlayerModel } from "../../entities/player";
+import { PlayerModel } from "../entities/player";
 
 export namespace ArmorModel {
     export type E = {

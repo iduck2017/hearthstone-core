@@ -42,8 +42,8 @@ export class MinionPerformModel extends PerformModel<
         }
     }
     
-    public get isValid(): boolean {
-        if (!super.isValid) return false;
+    public get status(): boolean {
+        if (!super.status) return false;
         const player = this.route.player;
         if (!player) return false;
 
@@ -86,7 +86,7 @@ export class MinionPerformModel extends PerformModel<
         if (!card) return;
 
         if (!this.state.isPending) {
-            if (!this.isValid) return;
+            if (!this.status) return;
 
             // prepare
             const params = await this.prepare();
@@ -119,8 +119,8 @@ export class MinionPerformModel extends PerformModel<
         }
 
         // execute
-        const index = this.origin.state.index;
         while (true) {
+            const index = this.origin.state.index;
             const task = this.origin.child.dependencies[index];
             if (!task) break;
 
@@ -128,6 +128,8 @@ export class MinionPerformModel extends PerformModel<
             const params = task.values;
             if (!hook) continue;
             if (!params) continue;
+
+            this.origin.state.index += 1;
             await hook.run(params);
         }
         this.reset();
