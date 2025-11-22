@@ -6,10 +6,10 @@ import { AppModel } from "../../app";
 import { GameModel } from "../../entities/game";
 import { AbortEvent } from "../../../types/events/abort";
 
-export namespace PerformModel {
+export namespace CardPerformModel {
     export type E = {
-        toRun: AbortEvent;
-        onRun: Event
+        toPlay: AbortEvent;
+        onPlay: Event;
     }
     export type S = {
         isPending: boolean;
@@ -25,18 +25,18 @@ export namespace PerformModel {
     }
 }
 
-export abstract class PerformModel<
-    E extends Partial<PerformModel.E> & Model.E = {},
-    S extends Partial<PerformModel.S> & Model.S = {},
-    C extends Partial<PerformModel.C> & Model.C = {},
-    R extends Partial<PerformModel.R> & Model.R = {}
+export abstract class CardPerformModel<
+    E extends Partial<CardPerformModel.E> & Model.E = {},
+    S extends Partial<CardPerformModel.S> & Model.S = {},
+    C extends Partial<CardPerformModel.C> & Model.C = {},
+    R extends Partial<CardPerformModel.R> & Model.R = {}
 > extends Model<
-    E & PerformModel.E, 
-    S & PerformModel.S, 
-    C & PerformModel.C, 
-    R & PerformModel.R
+    E & CardPerformModel.E, 
+    S & CardPerformModel.S, 
+    C & CardPerformModel.C, 
+    R & CardPerformModel.R
 > {
-    public get route(): Route & PerformModel.P {
+    public get route(): Route & CardPerformModel.P {
         const result = super.route;
         const player: PlayerModel | undefined = result.items.find(item => item instanceof PlayerModel)
         const card: CardModel | undefined = result.items.find(item => item instanceof CardModel)
@@ -50,27 +50,41 @@ export abstract class PerformModel<
         }
     }
 
-    protected get status(): boolean {
-        // turn check
-        const game = this.route.game;
-        if (!game) return false;
+
+    public consume() {
+        const player = this.route.player;
+        if (!player) return;
+        const card = this.route.card;
+        if (!card) return;
+        const mana = player.child.mana;
+        const cost = card.child.cost;
+        if (!cost) return;
+        mana.consume(cost.state.current, card);
+    }
+
+    public get state() {
+        const state = super.state;
+        return {
+            ...state,
+            isReady: this.isReady,
+        }
+    }
+
+
+    protected get isReady(): boolean {
         const player = this.route.player;
         if (!player) return false;
-        const turn = game.child.turn;
-        const current = turn.refer.current;
-        if (current !== player) return false;
-        // hand check
-        const hand = this.route.hand;
-        if (!hand) return false;
+        if (!player.state.isCurrent) return false;
+
         const card = this.route.card;
         if (!card) return false;
         // cost check
         const cost = card.child.cost;
-        if (!cost.status) return false;
+        if (!cost.state.isEnough) return false;
         return true;
     }
 
-    constructor(props: PerformModel['props'] & {
+    constructor(props: CardPerformModel['props'] & {
         uuid: string | undefined;
         state: S;
         child: C;

@@ -1,8 +1,8 @@
 import { DebugUtil, Event, Model } from "set-piece";
-import { CardModel, FeatureModel, MinionCardModel, WeaponCardModel } from "../../..";
+import { CardModel, MinionCardModel, WeaponCardModel } from "../../..";
 import { AbortEvent } from "../../../types/events/abort";
-import { CardFeatureModel } from "../card";
 import { Selector } from "../../../types/selector";
+import { FeatureModel } from "../";
 
 export namespace BattlecryModel {
     export type E = {
@@ -23,7 +23,7 @@ export abstract class BattlecryModel<
     S extends Partial<BattlecryModel.S> & Partial<FeatureModel.S> & Model.S = {},
     C extends Partial<BattlecryModel.C> & Partial<FeatureModel.C> & Model.C = {},
     R extends Partial<BattlecryModel.R> & Partial<FeatureModel.R> & Model.R = {}
-> extends CardFeatureModel<
+> extends FeatureModel<
     E & BattlecryModel.E,
     S & BattlecryModel.S, 
     C & BattlecryModel.C, 
@@ -52,7 +52,7 @@ export abstract class BattlecryModel<
         super({
             uuid: props.uuid,
             state: { 
-                isActived: true,
+                isEnabled: true,
                 isPending: false,
                 isMultiselect: false,
                 ...props.state,
@@ -65,7 +65,7 @@ export abstract class BattlecryModel<
     public async run(params: Array<T | undefined>) {
         // toRun
         if (!this.state.isPending) {
-            if (!this.status) return;
+            if (!this.isActived) return;
             const event = new AbortEvent({});
             this.event.toRun(event);
             const isValid = event.detail.isValid;
@@ -87,7 +87,7 @@ export abstract class BattlecryModel<
 
     protected abstract doRun(params: Array<T | undefined>): Promise<void>;
 
-    public abstract prepare(params: Array<T | undefined>): Selector<T> | undefined;
+    public abstract precheck(params: Array<T | undefined>): Selector<T> | undefined;
 
 }
 

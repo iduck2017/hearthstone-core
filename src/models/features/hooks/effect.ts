@@ -43,7 +43,7 @@ export abstract class EffectModel<
             state: {
                 isPending: false,
                 power: 0,
-                isActived: true,
+                isEnabled: true,
                 isAsync: false,
                 isMultiselect: false,
                 ...props.state 
@@ -60,7 +60,7 @@ export abstract class EffectModel<
     public async run(params: Array<T | undefined>): Promise<void> {
         // toRun
         if (!this.state.isPending) {
-            if (!this.status) return;
+            if (!this.isActived) return;
             const event = new AbortEvent({});
             this.event.toRun(event);
             const isValid = event.detail.isValid;
@@ -83,6 +83,6 @@ export abstract class EffectModel<
 
     protected abstract doRun(params: Array<T | undefined>): Promise<void>;
 
-    public abstract prepare(params: Array<T | undefined>): Selector<T> | undefined;
+    public abstract precheck(params: Array<T | undefined>): Selector<T> | undefined;
 }
 

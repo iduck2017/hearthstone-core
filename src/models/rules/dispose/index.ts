@@ -73,7 +73,7 @@ export abstract class DisposeModel<
     }
     
     public static close() {
-        const tasks = DisposeModel.tasks.filter(item => item.status);
+        const tasks = DisposeModel.tasks.filter(item => item.state.isActived);
         DisposeModel.tasks = [];
         tasks.forEach(item => item.run());
     }
@@ -87,9 +87,17 @@ export abstract class DisposeModel<
             graveyard: result.items.find(item => item instanceof GraveyardModel),
         }
     }
-    
-    public get status() {
-        return Boolean(this.state.isDestroyed);
+
+    public get state() {
+        const result = super.state;
+        return {
+            ...result,
+            isActived: this.isActived,
+        }
+    }
+
+    protected get isActived(): boolean {
+        return this.state.isDestroyed;
     }
 
     constructor(props: DisposeModel['props'] & {

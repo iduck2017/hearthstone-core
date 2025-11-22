@@ -1,6 +1,6 @@
 import { StateUtil, TemplUtil } from "set-piece";
 import { SpellEffectDecor, SpellEffectModel } from "../..";
-import { CardFeatureModel } from "../features/card";
+import { FeatureModel } from "../features";
 
 export namespace SpellDamageModel {
     export type E = {};
@@ -12,7 +12,7 @@ export namespace SpellDamageModel {
 }
 
 @TemplUtil.is('spell-damage')
-export class SpellDamageModel extends CardFeatureModel<
+export class SpellDamageModel extends FeatureModel<
     SpellDamageModel.E,
     SpellDamageModel.S,
     SpellDamageModel.C,
@@ -25,7 +25,7 @@ export class SpellDamageModel extends CardFeatureModel<
                 offset: 0,
                 name: 'Spell Damage',
                 desc: 'Your spell cards deal extra damage.',
-                isActived: true,
+                isEnabled: true,
                 ...props?.state,
             },
             child: { ...props?.child },
@@ -39,7 +39,7 @@ export class SpellDamageModel extends CardFeatureModel<
     }
     protected modifyDamage(that: SpellEffectModel, decor: SpellEffectDecor) {
         if (!this.route.player) return;
-        if (!this.state.isActived) return;
+        if (!this.state.isEnabled) return;
         decor.add(this.state.offset);
     }
 }

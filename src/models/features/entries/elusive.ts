@@ -22,7 +22,7 @@ export class ElusiveModel extends RoleFeatureModel<
             state: {
                 name: 'Elusive',
                 desc: 'Can\'t be targeted by spells or Hero Powers.',
-                isActived: true,
+                isEnabled: true,
                 ...props?.state,
             },
             child: { ...props?.child },

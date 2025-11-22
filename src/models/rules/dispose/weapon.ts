@@ -12,12 +12,11 @@ export class WeaponDisposeModel extends DisposeModel {
         }
     }
 
-    public get status(): boolean {
+    protected get isActived(): boolean {
         const weapon = this.route.weapon;
         if (!weapon) return true;
-        const action = weapon.child.action;
-        if (action.state.current <= 0) return true;
-        return super.status || false;
+        if (weapon.child.action.state.current <= 0) return true;
+        return false;
     }
 
     constructor(props?: WeaponDisposeModel['props']) {

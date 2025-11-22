@@ -36,14 +36,18 @@ export class WeaponAttackModel extends Model<
         }
     }
 
-    public get status() {
+    public get state() {
+        const result = super.state;
+        return {
+            ...result,
+            isReady: this.isReady,
+        }
+    }
+
+    protected get isReady() {
         const player = this.route.player;
         if (!player) return false
-        const game = this.route.game;
-        if (!game) return false;
-        const turn = game.child.turn;
-        const current = turn.refer.current;
-        if (current === player) return true;
+        if (!player.state.isCurrent) return false;
         return false;
     }
 
@@ -82,7 +86,7 @@ export class WeaponAttackModel extends Model<
         return this.route.player?.proxy.child.hero.child.attack.decor;
     }
     private modifyAttack(that: RoleAttackModel, decor: RoleAttackDecor) {
-        if (!this.status) return;
+        if (!this.isReady) return;
         if (!this.route.board) return;
         decor.add({
             type: OperatorType.ADD,

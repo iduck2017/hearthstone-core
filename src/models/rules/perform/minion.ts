@@ -4,7 +4,7 @@ import { DependencyModel } from "../../common/dependency";
 import { MinionCardModel } from "../../entities/cards/minion";
 import { AbortEvent } from "../../../types/events/abort";
 import { Selector } from "../../../types/selector";
-import { PerformModel } from ".";
+import { CardPerformModel } from "./card";
 import { AppModel } from "../../app";
 
 export type MinionHooksConfig = {
@@ -22,12 +22,12 @@ export namespace MinionPerformModel {
         index: number;
     }
     export type C = {
-        dependencies: DependencyModel<BattlecryModel>[]
+        battlecry: DependencyModel<BattlecryModel>[]
     }
     export type R = {}
 }
 
-export class MinionPerformModel extends PerformModel<
+export class MinionPerformModel extends CardPerformModel<
     MinionPerformModel.E,
     MinionPerformModel.S,
     MinionPerformModel.C,
@@ -42,11 +42,12 @@ export class MinionPerformModel extends PerformModel<
         }
     }
     
-    public get status(): boolean {
-        if (!super.status) return false;
+    protected get isReady(): boolean {
+        if (!super.isReady) return false;
         const player = this.route.player;
         if (!player) return false;
 
+        // board check
         const board = player.child.board;
         if (!board) return false;
         if (board.child.cards.length >= 7) return false;
@@ -63,21 +64,9 @@ export class MinionPerformModel extends PerformModel<
                 index: 0,
                 ...props.state 
             },
-            child: { dependencies: [], ...props.child },
+            child: { battlecry: [], ...props.child },
             refer: { ...props.refer },
         });
-    }
-
-    
-    public consume() {
-        const player = this.route.player;
-        if (!player) return;
-        const card = this.route.card;
-        if (!card) return;
-        const mana = player.child.mana;
-        const cost = card.child.cost;
-        if (!cost) return;
-        mana.consume(cost.state.current, card);
     }
 
     // play
@@ -86,7 +75,7 @@ export class MinionPerformModel extends PerformModel<
         if (!card) return;
 
         if (!this.state.isPending) {
-            if (!this.status) return;
+            if (!this.isReady) return;
 
             // prepare
             const params = await this.prepare();
@@ -102,7 +91,7 @@ export class MinionPerformModel extends PerformModel<
             if (from === -1) return;
 
             let event = new AbortEvent({});
-            this.event.toRun(event);
+            this.event.toPlay(event);
             let isValid = event.detail.isValid;
 
             // execute
@@ -121,7 +110,7 @@ export class MinionPerformModel extends PerformModel<
         // execute
         while (true) {
             const index = this.origin.state.index;
-            const task = this.origin.child.dependencies[index];
+            const task = this.origin.child.battlecry[index];
             if (!task) break;
 
             const hook = task.refer.key;
@@ -136,7 +125,7 @@ export class MinionPerformModel extends PerformModel<
 
         // after
         DebugUtil.log(`${card.name} Played`);
-        this.event.onRun(new Event({}));
+        this.event.onPlay(new Event({}));
     }
 
 
@@ -149,7 +138,7 @@ export class MinionPerformModel extends PerformModel<
         this.origin.state.index = 0;
         config.battlecry.forEach((params, item) => {
             const map = DependencyModel.new(params, item);
-            this.origin.child.dependencies?.push(map);
+            this.origin.child.battlecry?.push(map);
         })
     }
 
@@ -159,7 +148,7 @@ export class MinionPerformModel extends PerformModel<
         this.origin.state.from = 0;
         this.origin.state.to = 0;
         this.origin.state.index = 0;
-        this.origin.child.dependencies = [];
+        this.origin.child.battlecry = [];
     }
 
     // prepare
@@ -184,7 +173,7 @@ export class MinionPerformModel extends PerformModel<
         for (const item of battlecry) {
             const params: Array<Model | undefined> = []
             while (true) {
-                const selector = item.prepare(params);
+                const selector = item.precheck(params);
                 if (!selector) break;
                 if (!selector.options.length) params.push(undefined);
                 else {

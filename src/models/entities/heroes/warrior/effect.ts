@@ -20,7 +20,7 @@ export class ArmorUpEffectModel extends EffectModel {
         armor.gain(2);
     }
 
-    public prepare() {
+    public precheck() {
         return undefined;
     }
 }

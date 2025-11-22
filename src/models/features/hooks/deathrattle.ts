@@ -1,7 +1,7 @@
 import { DebugUtil, Event, Method, Model } from "set-piece";
 import { AbortEvent } from "../../../types/events/abort";
-import { FeatureModel, CardModel, MinionCardModel } from "../../..";
-import { CardFeatureModel } from "../card";
+import { CardModel, MinionCardModel } from "../../..";
+import { FeatureModel } from "../";
 
 export namespace DeathrattleModel {
     export type E = {
@@ -18,7 +18,7 @@ export abstract class DeathrattleModel<
     S extends Partial<DeathrattleModel.S> & Model.S = {},
     C extends Partial<DeathrattleModel.C> & Model.C = {},
     R extends Partial<DeathrattleModel.R> & Model.R = {},
-> extends CardFeatureModel<
+> extends FeatureModel<
     E & DeathrattleModel.E, 
     S & DeathrattleModel.S, 
     C & DeathrattleModel.C, 
@@ -44,7 +44,7 @@ export abstract class DeathrattleModel<
         super({
             uuid: props.uuid,
             state: {
-                isActived: true,
+                isEnabled: true,
                 ...props.state,
             },
             child: { ...props.child },
@@ -54,7 +54,7 @@ export abstract class DeathrattleModel<
 
     @DebugUtil.span()
     public run() {
-        if (!this.status) return;
+        if (!this.isActived) return;
         // toRun
         const event = new AbortEvent({});
         this.event.toRun(event);

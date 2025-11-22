@@ -27,7 +27,7 @@ export class RoleActionModel extends Model<
     public get chunk() {
         return {
             current: this.state.current > 1 ? this.state.current : undefined,
-            isEnabled: this.status,
+            isEnabled: this.isEnabled,
         }
     }
 
@@ -58,43 +58,6 @@ export class RoleActionModel extends Model<
         }
     }
 
-    public get status(): boolean {
-        if (!this.state.isEnabled) return false;
-        const current = this.state.current;
-        if (current <= 0) return false;
-
-        const card = this.route.card;
-        if (card && !card.route.board) return false;
-
-        const game = this.route.game;
-        if (!game) return false;
-
-        const turn = game.child.turn;
-        const player = this.route.player;
-        if (turn.refer.current !== player) return false;
-
-        const role = this.route.role;
-        if (!role) return false;
-
-        const minion = this.route.minion;
-        const rush = minion ? minion.child.rush : undefined;
-        const charge = minion ? minion.child.charge : undefined;
-
-        const sleep = role.child.sleep;
-        const attack = role.child.attack;
-        const frozen = role.child.frozen;
-
-        if (frozen.state.isActived) return false;
-        if (
-            sleep.state.isActived &&
-            !charge?.state.isActived &&
-            !rush?.state.isActived
-        ) return false;
-        if (!attack.status) return false;
-
-        return true;
-    }
-
     constructor(props?: RoleActionModel['props']) {
         super({
             uuid: props?.uuid,
@@ -115,39 +78,74 @@ export class RoleActionModel extends Model<
     }
 
     public async run() {
-        if (!this.status) return;
-
         const game = this.route.game;
         if (!game) return;
-
         const player = this.route.player;
         if (!player) return;
+
+        let isValid = this.isEnabled;
+        if (!isValid) return;
         
         // select
         const roleA = this.route.role;
         if (!roleA) return;
+        
         const attack = roleA.child.attack;
-        const selector = attack.prepare();
+        const selector = attack.precheck();
         if (!selector) return;
+
         const roleB = await player.controller.get(selector);
         if (!roleB) return;
 
         const event = new AbortEvent({})
         this.event.toRun(event)
-        const isValid = event.detail.isValid;
+        isValid = event.detail.isValid;
         if (!isValid) return;
 
         // mana
-        if (!this.consume()) return;
+        this.consume();
         attack.run(roleB);
 
         // after
         this.event.onRun(new Event({}));
     }
 
-    public consume() {
-        if (!this.status) return false;
-        this.origin.state.comsume ++;
+    
+    public get isEnabled(): boolean {
+        if (!this.state.isEnabled) return false;
+        const current = this.state.current;
+        if (current <= 0) return false;
+
+        const card = this.route.card;
+        if (card && !card.route.board) return false;
+
+        const player = this.route.player;
+        if (!player) return false;
+        if (!player.state.isCurrent) return false;
+
+        const role = this.route.role;
+        if (!role) return false;
+
+        const minion = this.route.minion;
+        const rush = minion ? minion.child.rush : undefined;
+        const charge = minion ? minion.child.charge : undefined;
+
+        const sleep = role.child.sleep;
+        const attack = role.child.attack;
+        const frozen = role.child.frozen;
+
+        if (frozen.state.isEnabled) return false;
+        if (
+            sleep.state.isActived &&
+            !charge?.state.isEnabled &&
+            !rush?.state.isEnabled
+        ) return false;
+        if (!attack.state.isReady) return false;
+
         return true;
+    }
+
+    public consume() {
+        this.origin.state.comsume ++;
     }
 }

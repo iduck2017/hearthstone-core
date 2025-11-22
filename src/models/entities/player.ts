@@ -57,24 +57,74 @@ export class PlayerModel extends Model<
         }
     }
 
-    public get refer() {
-        const child = this.child;
-        const minions: MinionCardModel[] = child.board.refer.minions.filter(item => !item.child.dispose?.status);
-        const roles: RoleModel[] = [child.hero, ...minions];
-        const cards: CardModel[] = [
-            ...child.hand.child.cards,
-            ...child.deck.child.cards,
-            ...child.board.child.cards,
-            ...child.board.child.secrets
-        ]
-        if (child.hero.child.weapon) cards.push(child.hero.child.weapon);
+    public get refer(): PlayerModel.R & {
+        readonly opponent?: PlayerModel;
+        readonly minions: MinionCardModel[];
+        readonly roles: RoleModel[];
+        readonly cards: CardModel[];
+    } {
         return { 
             ...super.refer, 
+            cards: this.cards,
+            roles: this.roles,
+            minions: this.minions,
             opponent: this.opponent, 
-            roles,
-            minions,
-            cards,
         }
+    }
+
+    protected get cards(): CardModel[] {
+        const hand = this.child.hand;
+        const deck = this.child.deck;
+        const board = this.child.board;
+        const cards: CardModel[] = [
+            ...hand.child.cards, 
+            ...deck.child.cards, 
+            ...board.child.cards, 
+            ...board.child.secrets,
+        ];
+        const weapon = this.child.hero.child.weapon;
+        if (weapon) cards.push(weapon);
+        return cards;
+    }
+
+    protected get roles(): RoleModel[] {
+        const minions = this.minions;
+        const hero = this.child.hero;
+        const roles: RoleModel[] = [hero, ...minions];
+        return roles;
+    }
+
+    protected get minions(): MinionCardModel[] {
+        const child = this.child;
+        const minions: MinionCardModel[] = child.board.refer.minions.filter(item => (
+            !item.child.dispose?.state.isActived
+        ));
+        return minions;
+    }
+
+
+    protected get opponent(): PlayerModel | undefined {
+        const game = this.route.game;
+        const playerA = game?.child.playerA;
+        const playerB = game?.child.playerB;
+        const opponent = playerA === this ? playerB : playerA;
+        return opponent;
+    }
+
+
+    public get state() {
+        const result = super.state;
+        return {
+            ...result,
+            isCurrent: this.isCurrent,
+        }
+    }
+
+    protected get isCurrent(): boolean {
+        const game = this.route.game;
+        const turn = game?.child.turn;
+        const isCurrent = turn?.refer.current === this;
+        return isCurrent;
     }
 
     public get chunk() {
@@ -101,15 +151,6 @@ export class PlayerModel extends Model<
         if (playerB === this) return 'Player B';
         return 'Player';
     }
-
-    private get opponent(): PlayerModel | undefined {
-        const game = this.route.game;
-        if (!game) return;
-        const playerA = game?.child.playerA;
-        const playerB = game?.child.playerB;
-        return playerA === this ? playerB : playerA;
-    }
-
 
     public readonly controller: Controller;
 

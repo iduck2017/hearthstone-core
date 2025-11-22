@@ -46,15 +46,20 @@ export class CostModel extends Model<
         }
     }
 
-    public get status() {
-        const player = this.route.player;
-        if (!player) return false;
-        if (this.state.type === CostType.MANA) {
-            const mana = player.child.mana;
-            if (mana.state.current < this.state.current) return false;
-            return true;
+    public get state() {
+        const result = super.state;
+        return {
+            ...result,
+            isEnough: this.isEnough,
         }
-        return false;
+    }
+
+    protected get isEnough(): boolean {
+        const player = this.route.player;
+        const mana = player?.child.mana;
+        if (!mana) return false;
+        if (mana.state.current < super.state.current) return false;
+        return true;
     }
 
     constructor(props?: CostModel['props']) {

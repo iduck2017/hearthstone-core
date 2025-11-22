@@ -68,7 +68,6 @@ export { PoisonousModel } from "./models/features/entries/poisonous";
 
 // features
 export { FeatureModel } from './models/features'
-export { CardFeatureModel } from './models/features/card';
 export { RoleFeatureModel } from './models/features/role';
 export { SecretFeatureModel } from "./models/features/secret";
 export { IRoleBuffModel } from "./models/rules/i-role-buff";
@@ -111,6 +110,7 @@ export { RoleModel } from "./models/entities/heroes";
 
 export { TheCoinModel } from "./models/entities/cards/the-coin";
 
+export { CommonUtil } from "./utils/common";
 
 // start end run
 // event entity

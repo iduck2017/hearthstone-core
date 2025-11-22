@@ -9,10 +9,10 @@ import { RoleModel } from "../entities/heroes";
 
 export namespace RoleHealthModel {
     export type E = {
-        toHurt: DamageEvent;
-        onHurt: DamageEvent;
-        toHeal: RestoreEvent;
-        onHeal: RestoreEvent;
+        toConsume: DamageEvent;
+        onConsume: DamageEvent;
+        toRestore: RestoreEvent;
+        onRestore: RestoreEvent;
     };
     export type S = {
         origin: number;
@@ -57,9 +57,12 @@ export class RoleHealthModel extends Model<
     public get state() {
         const state = super.state;
         const baseline = Math.max(state.memory, state.maximum);
+        const current = Math.min(baseline - state.damage, state.maximum);
+        const isAlive = current > 0;
         return {
             ...state,
-            current: Math.min(baseline - state.damage, state.maximum),
+            current,
+            isAlive,
         }
     }
 
@@ -82,7 +85,7 @@ export class RoleHealthModel extends Model<
     }
 
     public toConsume(event: DamageEvent) {
-        this.event.toHurt(event);
+        this.event.toConsume(event);
     }
 
     @TranxUtil.span()
@@ -112,14 +115,14 @@ export class RoleHealthModel extends Model<
         }
 
         // divine shield
-        if (divineSheild.state.isActived) {
+        if (divineSheild.state.isEnabled) {
             divineSheild.consume(event);
             event.update(0);
             return event;
         }
         // poisonous
         const poisonous = source.child.poisonous;
-        if (poisonous.state.isActived && minion) event.supplement({ isPoisonous: true });
+        if (poisonous.state.isEnabled && minion) event.supplement({ isPoisonous: true });
 
         this.origin.state.damage += result;
         DebugUtil.log(`${role.name} receive ${result} Damage`);
@@ -140,12 +143,12 @@ export class RoleHealthModel extends Model<
             dispose.destroy(source, method);
         }
 
-        return this.event.onHurt(event);
+        return this.event.onConsume(event);
     }
 
 
     public toRestore(event: RestoreEvent) {
-        this.event.toHeal(event);
+        this.event.toRestore(event);
     }
 
     public restore(event: RestoreEvent): RestoreEvent {
@@ -169,7 +172,7 @@ export class RoleHealthModel extends Model<
         const role = this.route.role;
         if (!role) return;
         if (event.detail.isValid) return;
-        if (event.detail.result > 0) this.event.onHeal(event);
+        if (event.detail.result > 0) this.event.onRestore(event);
         if (event.detail.overflow > 0) {
             const overheal = role.child.overheal;
             overheal.forEach(item => item.run());

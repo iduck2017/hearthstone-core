@@ -22,7 +22,7 @@ export class PoisonousModel extends RoleFeatureModel<
         super({
             uuid: props?.uuid,
             state: { 
-                isActived: true,
+                isEnabled: true,
                 name: 'Poisonous',
                 desc: 'Destroy any miniondamaged by this.',
                 ...props?.state 

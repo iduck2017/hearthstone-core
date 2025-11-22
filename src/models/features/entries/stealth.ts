@@ -23,7 +23,7 @@ export class StealthModel extends RoleFeatureModel<
             state: {
                 name: 'Stealth',
                 desc: 'Can not be attacked or targeted until it attacks.',
-                isActived: true,
+                isEnabled: true,
                 ...props.state,
             },
             child: { ...props.child },

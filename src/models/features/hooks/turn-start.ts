@@ -1,7 +1,5 @@
-import { DebugUtil, Event, EventUtil, Method, Model } from "set-piece";
+import { DebugUtil, Event, Model } from "set-piece";
 import { FeatureModel } from "..";
-import { TurnModel } from "../../rules/turn";
-import { CardFeatureModel } from "../card";
 import { AbortEvent } from "../../../types/events/abort";
 
 export namespace TurnStartModel {
@@ -19,7 +17,7 @@ export abstract class TurnStartModel<
     S extends Partial<TurnStartModel.S> & Model.S = {},
     C extends Partial<TurnStartModel.C> & Model.C = {},
     R extends Partial<TurnStartModel.R> & Model.R = {},
-> extends CardFeatureModel<
+> extends FeatureModel<
     E & TurnStartModel.E,
     S & TurnStartModel.S,
     C & TurnStartModel.C,
@@ -34,7 +32,7 @@ export abstract class TurnStartModel<
         super({
             uuid: props.uuid,
             state: {
-                isActived: true,
+                isEnabled: true,
                 ...props.state,
             },
             child: { ...props.child },
@@ -44,21 +42,23 @@ export abstract class TurnStartModel<
 
 
     public run() {
-        if (!this.status) return;
         // toRun
-        const event = new AbortEvent({});
-        this.event.toRun(event);
-        const isValid = event.detail.isValid;
-        if (!isValid) return;
-        // run
         const player = this.route.player;
         if (!player) return;
         const game = this.route.game;
         if (!game) return;
-        const turn = game.child.turn;
-        const current = turn.refer.current;
-        const isCurrent = current === player;
+
+        if (!this.isActived) return;
+
+        const event = new AbortEvent({});
+        this.event.toRun(event);
+        const isValid = event.detail.isValid;
+        if (!isValid) return;
+
+        // run
+        const isCurrent = player.state.isCurrent;
         this.doRun(isCurrent);
+
         // onRun
         const name = this.state.name;
         const desc = this.state.desc;

@@ -2,10 +2,12 @@ import { DebugUtil, Event, Model, Route, TranxUtil } from "set-piece";
 import { EffectModel } from "../../features/hooks/effect";
 import { DependencyModel } from "../../common/dependency";
 import { SkillModel } from "../../entities/skill";
-import { PerformModel } from ".";
+import { CardPerformModel } from "./card";
 import { AbortEvent } from "../../../types/events/abort";
 import { MinionCardModel } from "../../entities/cards/minion";
 import { HeroModel, RoleModel } from "../../entities/heroes";
+import { PlayerModel } from "../../entities/player";
+import { GameModel } from "../../entities/game";
 
 export type SkillHooksConfig = {
     effects: Map<EffectModel, Model[]>
@@ -13,67 +15,77 @@ export type SkillHooksConfig = {
 
 export namespace SkillPerformModel {
     export type E = {
-        toRun: AbortEvent;
-        onRun: Event;
+        toUse: AbortEvent;
+        onUse: Event;
     }
     export type S = {
+        isPending: boolean;
         index: number;
     }
     export type C = {
-        dependencies: DependencyModel<EffectModel>[]
+        effects: DependencyModel<EffectModel>[]
     }
     export type R = {}
     export type P = {
         skill: SkillModel | undefined;
+        hero: HeroModel | undefined;
+        game: GameModel | undefined;
+        player: PlayerModel | undefined;
     }
 }
 
-export class SkillPerformModel extends PerformModel<
+export class SkillPerformModel extends Model<
     SkillPerformModel.E,
     SkillPerformModel.S,
     SkillPerformModel.C,
     SkillPerformModel.R
 > {
-    public get route(): Route & SkillPerformModel.P & PerformModel.P {
+    public get route(): Route & SkillPerformModel.P {
         const result = super.route;
         const skill: SkillModel | undefined = result.items.find(item => item instanceof SkillModel)
         return {
             ...result,
             skill,
+            hero: result.items.find(item => item instanceof HeroModel),
+            game: result.items.find(item => item instanceof GameModel),
+            player: result.items.find(item => item instanceof PlayerModel),
         }
     }
 
-    public get status(): boolean {
-        // turn check
-        const game = this.route.game;
-        if (!game) return false;
+
+    public get state() {
+        const state = super.state;
+        return {
+            ...state,
+            isReady: this.isReady,
+        }
+    }
+
+    protected get isReady(): boolean {
         const player = this.route.player;
         if (!player) return false;
-        const turn = game.child.turn;
-        const current = turn.refer.current;
-        if (current !== player) return false;
+        if (!player.state.isCurrent) return false;
 
-        // skill check
         const skill = this.route.skill;
         if (!skill) return false;
-        
-        // cost check
         const cost = skill.child.cost;
-        if (!cost.status) return false;
-
+        if (!cost.state.isEnough) return false;
+        
         // At least one valid effect
         const effects = skill.child.effects;
         for (const item of effects) {
             // At least one valid target (If need)
             while (true) {
-                const selector = item.prepare([]);
+                const selector = item.precheck([]);
                 if (!selector) break;
                 if (!selector.options.length) return false;
                 if (!item.state.isMultiselect) break;
             }
         }
+
         return true;
     }
+
 
     constructor(props?: SkillPerformModel['props']) {
         props = props ?? {}
@@ -81,9 +93,10 @@ export class SkillPerformModel extends PerformModel<
             uuid: props.uuid,
             state: { 
                 index: 0,
+                isPending: false,
                 ...props.state 
             },
-            child: { dependencies: [], ...props.child },
+            child: { effects: [], ...props.child },
             refer: { ...props.refer },
         });
     }
@@ -102,11 +115,11 @@ export class SkillPerformModel extends PerformModel<
 
     // play
     public async run(): Promise<void> {
-        const card = this.route.skill;
-        if (!card) return;
+        const skill = this.route.skill;
+        if (!skill) return;
 
         if (!this.state.isPending) {
-            if (!this.status) return;
+            if (!this.isReady) return;
 
             // prepare
             const config = await this.prepare();
@@ -114,7 +127,7 @@ export class SkillPerformModel extends PerformModel<
 
             // before
             let event = new AbortEvent({});
-            this.event.toRun(event);
+            this.event.toUse(event);
             let isValid = event.detail.isValid;
 
             // execute
@@ -126,7 +139,7 @@ export class SkillPerformModel extends PerformModel<
         // execute
         while (true) {
             const index = this.origin.state.index;
-            const task = this.origin.child.dependencies[index];
+            const task = this.origin.child.effects[index];
             if (!task) break;
 
             const hook = task.refer.key;
@@ -141,8 +154,8 @@ export class SkillPerformModel extends PerformModel<
         this.reset();
 
         // after
-        DebugUtil.log(`${card.name} Used`);
-        this.event.onRun(new Event({}));
+        DebugUtil.log(`${skill.name} Used`);
+        this.event.onUse(new Event({}));
     }
 
 
@@ -153,7 +166,7 @@ export class SkillPerformModel extends PerformModel<
         this.origin.state.index = 0;
         config.effects.forEach((params, item) => {
             const map = DependencyModel.new(params, item);
-            this.origin.child.dependencies?.push(map);
+            this.origin.child.effects?.push(map);
         })
     }
 
@@ -161,12 +174,12 @@ export class SkillPerformModel extends PerformModel<
     protected reset() {
         this.origin.state.isPending = false;
         this.origin.state.index = 0;
-        this.origin.child.dependencies = [];
+        this.origin.child.effects = [];
     }
 
     // prepare
     protected async prepare(): Promise<SkillHooksConfig | undefined> {
-        if (!this.status) return;
+        if (!this.isReady) return;
 
         const player = this.route.player;
         if (!player) return;
@@ -182,7 +195,7 @@ export class SkillPerformModel extends PerformModel<
         for (const item of effects) {
             const params: any[] = []
             while (true) {
-                const selector = item.prepare(params);
+                const selector = item.precheck(params);
                 if (!selector) break;
 
                 // exclude elusive
@@ -190,7 +203,7 @@ export class SkillPerformModel extends PerformModel<
                     if (item instanceof MinionCardModel || item instanceof HeroModel) {
                         const _item: RoleModel = item;
                         const elusive = _item.child.elusive;
-                        if (elusive.state.isActived) return false;
+                        if (elusive.state.isEnabled) return false;
                     }
                     return true;
                 })

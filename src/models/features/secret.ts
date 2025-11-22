@@ -1,27 +1,14 @@
 import { Method, Model } from "set-piece";
 import { FeatureModel } from ".";
-import { BoardModel } from "../entities/containers/board";
-import { CardFeatureModel } from "./card";
 import { SecretCardModel } from "../entities/cards/secret";
 
-export namespace SecretFeatureModel {
-    export type E = {};
-    export type S = {};
-    export type C = {};
-    export type R = {};
-}
 
 export abstract class SecretFeatureModel<
-    E extends Partial<SecretFeatureModel.E> & Model.E = {},
-    S extends Partial<SecretFeatureModel.S> & Model.S = {},
-    C extends Partial<SecretFeatureModel.C> & Model.C = {},
-    R extends Partial<SecretFeatureModel.R> & Model.R = {},
-> extends CardFeatureModel<
-    E & SecretFeatureModel.E,
-    S & SecretFeatureModel.S,
-    C & SecretFeatureModel.C,
-    R & SecretFeatureModel.R
-> {
+    E extends Partial<FeatureModel.E> & Model.E = {},
+    S extends Partial<FeatureModel.S> & Model.S = {},
+    C extends Partial<FeatureModel.C> & Model.C = {},
+    R extends Partial<FeatureModel.R> & Model.R = {},
+> extends FeatureModel<E, S, C, R> {
     public get route() {
         const result = super.route;
         const secret: SecretCardModel | undefined = result.items.find(item => item instanceof SecretCardModel)
@@ -31,12 +18,17 @@ export abstract class SecretFeatureModel<
         }
     }
 
-    public get status(): boolean {
-        if (!super.status) return false;
+    protected get isActived(): boolean {
+        if (!super.isActived) return false;
         const board = this.route.board;
         if (!board) return false;
+        
+        const player = this.route.player;
+        if (!player) return false;
+        if (!player.state.isCurrent) return false;
         return true;
     }
+
 
     public static span() {
         return function(
@@ -49,13 +41,8 @@ export abstract class SecretFeatureModel<
             const instance = {
                 [key](this: SecretFeatureModel, ...args: any[]) {
                     // precheck
-                    if (!this.status) return false;
-                    const player = this.route.player;
-                    const game = this.route.game;
-                    if (!player) return false;
-                    if (!game) return false;
-                    const turn = game.child.turn;
-                    if (turn.refer.current === player) return false;
+                    if (!this.isActived) return false;
+
                     const result = handler.call(this, ...args);
                     if (!result) return false;
                     // dispose
@@ -79,7 +66,7 @@ export abstract class SecretFeatureModel<
         super({
             uuid: props.uuid,
             state: { 
-                isActived: true,
+                isEnabled: true,
                 ...props.state 
             },
             child: { ...props.child },

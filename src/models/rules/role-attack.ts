@@ -54,23 +54,32 @@ export class RoleAttackModel extends Model<
         return new RoleAttackDecor(this);
     }
 
-    public get status() { 
+    public get state() {
+        const result = super.state;
+        return {
+            ...result,
+            isReady: this.isReady,
+        }
+    }
+
+    protected get isReady() { 
         // is alive
         const minion = this.route.minion;
         const hero = this.route.hero;
         const entity = minion ?? hero;
         if (!entity) return false;
+        
         const dispose = entity.child.dispose;
-        if (dispose.status) return false;
+        if (dispose.state.isActived) return false;
+
         // has attack
-        if (this.state.current <= 0) return false;
+        if (super.state.current <= 0) return false;
+
         // need target
-        const selector = this.prepare();
+        const selector = this.precheck();
         if (!selector?.options.length) return false;
         return true;
     }
-
-    
 
     constructor(props?: RoleAttackModel['props']) {
         props = props ?? {};
@@ -87,7 +96,7 @@ export class RoleAttackModel extends Model<
     }
 
     
-    public prepare(): Selector<RoleModel> | undefined {
+    public precheck(): Selector<RoleModel> | undefined {
         const game = this.route.game;
         if (!game) return;
 
@@ -107,7 +116,7 @@ export class RoleAttackModel extends Model<
         let options: RoleModel[] = board.refer.minions;
 
         // include hero
-        if (!sleep.state.isActived || charge?.state.isActived) {
+        if (!sleep.state.isActived || charge?.state.isEnabled) {
             options.push(opponent.child.hero);
         }
 
@@ -115,14 +124,14 @@ export class RoleAttackModel extends Model<
         const tauntOptions = options.filter(item => {
             const taunt = item.child.taunt;
             const stealth = item.child.stealth;
-            return taunt.state.isActived && !stealth.state.isActived;
+            return taunt.state.isEnabled && !stealth.state.isEnabled;
         });
         if (tauntOptions.length) options = tauntOptions;
 
         // exclude stealth
         options = options.filter(item => {
             const stealth = item.child.stealth;
-            return !stealth.state.isActived;
+            return !stealth.state.isEnabled;
         })
         return new Selector(options, {});
     }
@@ -132,7 +141,7 @@ export class RoleAttackModel extends Model<
     public run(roleB: RoleModel) {
         const roleA = this.route.role;
         if (!roleA) return;
-        if (!this.status) return;
+        if (!this.isReady) return;
 
         const attackB = roleB.child.attack;
         const healthB = roleB.child.health;
@@ -149,7 +158,7 @@ export class RoleAttackModel extends Model<
         isValid = eventB.detail.isValid;
         if (!isValid) return;
 
-        if (!this.status) return;
+        if (!this.isReady) return;
         if (healthB.state.current <= 0) return;
 
         // execute
@@ -181,7 +190,7 @@ export class RoleAttackModel extends Model<
         }
         // stealth
         const stealth = roleA.child.stealth;
-        stealth.deactive();
+        stealth.disable();
 
         DebugUtil.log(`${roleA.name} Attack ${roleB.name}`);
         this.event.onRun(new Event({ target: roleB })); 

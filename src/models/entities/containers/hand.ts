@@ -31,11 +31,7 @@ export class HandModel extends Model<
     public get chunk() {
         const player = this.route.player;  
         if (!player) return;
-        const game = this.route.game;
-        if (!game) return;
-        const turn = game.child.turn;
-        const current = turn.refer.current;
-        const isCurrent = current === player;
+        const isCurrent = player.state.isCurrent;
         return {
             cards: isCurrent ? this.child.cards.map(item => item.chunk) : undefined,
             size: this.child.cards.length,

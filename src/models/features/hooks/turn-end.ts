@@ -1,7 +1,7 @@
 import { DebugUtil, Event, EventUtil, Method, Model  } from "set-piece";
 import { TurnModel } from "../../rules/turn";
-import { FeatureModel, CardModel, AbortEvent } from "../../..";
-import { CardFeatureModel } from "../card";
+import { CardModel, AbortEvent } from "../../..";
+import { FeatureModel } from "../";
 
 export namespace TurnEndModel {
     export type E = {
@@ -18,7 +18,7 @@ export abstract class TurnEndModel<
     S extends Partial<TurnEndModel.S> & Model.S = {},
     C extends Partial<TurnEndModel.C> & Model.C = {},
     R extends Partial<TurnEndModel.R> & Model.R = {},
-> extends CardFeatureModel<
+> extends FeatureModel<
     E & TurnEndModel.E,
     S & TurnEndModel.S,
     C & TurnEndModel.C,
@@ -42,7 +42,7 @@ export abstract class TurnEndModel<
         super({
             uuid: props.uuid,
             state: {
-                isActived: true,
+                isEnabled: true,
                 ...props.state,
             },
             child: { ...props.child },
@@ -52,21 +52,19 @@ export abstract class TurnEndModel<
 
 
     public run() {
-        if (!this.status) return;
+        if (!this.isActived) return;
         // toRun
         const event = new AbortEvent({});
         this.event.toRun(event);
         const isValid = event.detail.isValid;
         if (!isValid) return;
+
         // run
         const player = this.route.player;
         if (!player) return;
-        const game = this.route.game;
-        if (!game) return;
-        const turn = game.child.turn;
-        const current = turn.refer.current;
-        const isCurrent = current === player;
+        const isCurrent = player.state.isCurrent;
         this.doRun(isCurrent);
+
         // onRun
         const name = this.state.name;
         const desc = this.state.desc;

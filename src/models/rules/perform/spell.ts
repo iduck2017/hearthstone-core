@@ -2,7 +2,7 @@ import { DebugUtil, Event, Model, Route, TranxUtil } from "set-piece"
 import { SpellEffectModel } from "../../features/hooks/spell-effect"
 import { DependencyModel } from "../../common/dependency"
 import { SpellCardModel } from "../../entities/cards/spell"
-import { PerformModel } from "."
+import { CardPerformModel } from "./card"
 import { SpellCastEvent } from "../../../types/events/spell-cast"
 import { MinionCardModel } from "../../entities/cards/minion"
 import { HeroModel, RoleModel } from "../../entities/heroes"
@@ -28,13 +28,13 @@ export namespace SpellPerformModel {
 }
 
 
-export class SpellPerformModel extends PerformModel<
+export class SpellPerformModel extends CardPerformModel<
     SpellPerformModel.E,
     SpellPerformModel.S,
     SpellPerformModel.C,
     SpellPerformModel.R
 > {
-    public get route(): Route & SpellPerformModel.P & PerformModel.P {
+    public get route(): Route & SpellPerformModel.P & CardPerformModel.P {
         const result = super.route;
         const spell: SpellCardModel | undefined = result.items.find(item => item instanceof SpellCardModel)
         return {
@@ -43,17 +43,17 @@ export class SpellPerformModel extends PerformModel<
         }
     }
 
-    public get status(): boolean {
-        if (!super.status) return false;
+    protected get isReady(): boolean {
+        if (!super.isReady) return false;
+
         const spell = this.route.spell;
         if (!spell) return false;
-
         // At least one valid effect
         const effects = spell.child.effects;
         for (const item of effects) {
             // At least one valid target (If need)
             while (true) {
-                const selector = item.prepare([]);
+                const selector = item.precheck([]);
                 if (!selector) break;
                 if (!selector.options.length) return false;
                 if (!item.state.isMultiselect) break;
@@ -77,24 +77,13 @@ export class SpellPerformModel extends PerformModel<
     }
 
     
-    public consume() {
-        const player = this.route.player;
-        if (!player) return;
-        const card = this.route.card;
-        if (!card) return;
-        const mana = player.child.mana;
-        const cost = card.child.cost;
-        if (!cost) return;
-        mana.consume(cost.state.current, card);
-    }
-
     // play
     public async run(): Promise<void> {
         const card = this.route.spell;
         if (!card) return;
 
         if (!this.state.isPending) {
-            if (!this.status) return;
+            if (!this.isReady) return;
 
             // prepare
             const config = await this.prepare();
@@ -108,7 +97,7 @@ export class SpellPerformModel extends PerformModel<
             if (from === -1) return;
 
             let event = new AbortEvent({});
-            this.event.toRun(event);
+            this.event.toPlay(event);
             let isValid = event.detail.isValid;
 
             // execute
@@ -141,7 +130,7 @@ export class SpellPerformModel extends PerformModel<
 
         // after
         DebugUtil.log(`${card.name} Played`);
-        this.event.onRun(new Event({}));
+        this.event.onPlay(new Event({}));
     }
 
     // lifecycle
@@ -167,7 +156,7 @@ export class SpellPerformModel extends PerformModel<
 
     // prepare
     protected async prepare(): Promise<SpellHooksConfig | undefined> {
-        if (!this.status) return;
+        if (!this.isReady) return;
 
         const player = this.route.player;
         if (!player) return;
@@ -182,7 +171,7 @@ export class SpellPerformModel extends PerformModel<
         for (const item of effects) {
             const params: any[] = []
             while (true) {
-                const selector = item.prepare(params);
+                const selector = item.precheck(params);
                 if (!selector) break;
 
                 // exclude elusive
@@ -190,7 +179,7 @@ export class SpellPerformModel extends PerformModel<
                     if (item instanceof MinionCardModel || item instanceof HeroModel) {
                         const _item: RoleModel = item;
                         const elusive = _item.child.elusive;
-                        if (elusive.state.isActived) return false;
+                        if (elusive.state.isEnabled) return false;
                     }
                     return true;
                 })

@@ -1,7 +1,6 @@
 import { DebugUtil, Event, Method, Model } from "set-piece";
-import { FeatureModel } from "../../..";
+import { FeatureModel } from "../";
 import { AbortEvent } from "../../../types/events/abort";
-import { CardFeatureModel } from "../card";
 
 export namespace OverhealModel {
     export type E = {
@@ -18,7 +17,7 @@ export abstract class OverhealModel<
     S extends Partial<OverhealModel.S> & Model.S = {},
     C extends Partial<OverhealModel.C> & Model.C = {},
     R extends Partial<OverhealModel.R> & Model.R = {},
-> extends CardFeatureModel<
+> extends FeatureModel<
     E & OverhealModel.E,
     S & OverhealModel.S,
     C & OverhealModel.C,
@@ -33,7 +32,7 @@ export abstract class OverhealModel<
         super({
             uuid: props.uuid,
             state: {
-                isActived: true,
+                isEnabled: true,
                 ...props.state,
             },
             child: { ...props.child },
@@ -42,7 +41,7 @@ export abstract class OverhealModel<
     }
 
     public run() {
-        if (!this.status) return;
+        if (!this.isActived) return;
         // toRun
         const event = new AbortEvent({});
         this.event.toRun(event);

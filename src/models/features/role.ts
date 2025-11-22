@@ -1,7 +1,6 @@
 import { Model } from "set-piece";
 import { FeatureModel } from ".";
 import { CardModel } from "../entities/cards";
-import { CardFeatureModel } from "./card";
 import { BoardModel, CollectionModel, DeckModel, GraveyardModel, HandModel, HeroModel, MinionCardModel } from "../..";
 
 export abstract class RoleFeatureModel<
@@ -9,12 +8,12 @@ export abstract class RoleFeatureModel<
     S extends Partial<FeatureModel.S> & Model.S = {},
     C extends Partial<FeatureModel.C> & Model.C = {},
     R extends Partial<FeatureModel.R> & Model.R = {},
-> extends CardFeatureModel<E, S, C, R> {
+> extends FeatureModel<E, S, C, R> {
 
-    public get status(): boolean {
-        if (!super.status) return false;
-        if (!this.route.minion) return false;
-        if (!this.route.board) return false;
+    protected get isActived(): boolean {
+        if (!super.isActived) return false;
+        const board = this.route.board;
+        if (!board) return false;
         return true;
     }
 
@@ -26,11 +25,6 @@ export abstract class RoleFeatureModel<
         return {
             ...result,
             card,
-            board: result.items.find(item => item instanceof BoardModel),
-            hand: result.items.find(item => item instanceof HandModel),
-            deck: result.items.find(item => item instanceof DeckModel),
-            graveyard: result.items.find(item => item instanceof GraveyardModel),
-            collection: result.items.find(item => item instanceof CollectionModel),
             hero,
             minion,
             role: hero ?? minion,

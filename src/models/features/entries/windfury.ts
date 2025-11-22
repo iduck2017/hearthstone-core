@@ -28,7 +28,7 @@ export class WindfuryModel extends RoleFeatureModel<
                 name: 'Windfury',
                 desc: 'Can attack twice each turn.',
                 isAdvanced: false,
-                isActived: true,
+                isEnabled: true,
                 ...props.state,
             },
             child: { ...props.child },
@@ -36,22 +36,22 @@ export class WindfuryModel extends RoleFeatureModel<
         });
     }
 
-    public active(isAdvanced?: boolean) {
+    public enable(isAdvanced?: boolean) {
         // before
-        if (!isAdvanced && this.state.isActived) return false;
+        if (!isAdvanced && this.state.isEnabled) return false;
         if (isAdvanced && this.state.isAdvanced) return false;
-        super.active();
+        super.enable();
     }
 
     @TranxUtil.span()
-    protected doActive(isAdvanced?: boolean) {
-        super.doActive();
+    protected doEnable(isAdvanced?: boolean) {
+        super.doEnable();
         this.origin.state.isAdvanced = isAdvanced ?? false;
     }
 
     @TranxUtil.span()
-    protected doDeactive() {
-        super.doDeactive();
+    protected doDisable() {
+        super.doDisable();
         this.origin.state.isAdvanced = false;
     }
 
@@ -61,7 +61,7 @@ export class WindfuryModel extends RoleFeatureModel<
         return this.route.role?.proxy.child.action?.decor;
     }
     protected modifyAction(that: RoleActionModel, decor: RoleActionDecor) {
-        if (!this.state.isActived) return;
+        if (!this.state.isEnabled) return;
         decor.add(this.state.isAdvanced ? 3 : 1);
     }
 }

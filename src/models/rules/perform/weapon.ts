@@ -2,7 +2,7 @@ import { DebugUtil, Event, Model, TranxUtil } from "set-piece";
 import { BattlecryModel } from "../../features/hooks/battlecry";
 import { DependencyModel } from "../../common/dependency";
 import { AbortEvent } from "../../../types/events/abort";
-import { PerformModel } from ".";
+import { CardPerformModel } from "./card";
 import { WeaponCardModel } from "../../entities/cards/weapon";
 
 export type WeaponHooksConfig = {
@@ -23,7 +23,7 @@ export namespace WeaponPerformModel {
     }
 }
 
-export class WeaponPerformModel extends PerformModel<
+export class WeaponPerformModel extends CardPerformModel<
     WeaponPerformModel.E,
     WeaponPerformModel.S,
     WeaponPerformModel.C,
@@ -53,24 +53,13 @@ export class WeaponPerformModel extends PerformModel<
         });
     }
 
-    public consume() {
-        const player = this.route.player;
-        if (!player) return;
-        const card = this.route.card;
-        if (!card) return;
-        const mana = player.child.mana;
-        const cost = card.child.cost;
-        if (!cost) return;
-        mana.consume(cost.state.current, card);
-    }
-
     // play
     public async run(): Promise<void> {
         const card = this.route.weapon;
         if (!card) return;
 
         if (!this.state.isPending) {
-            if (!this.status) return;
+            if (!this.isReady) return;
 
             // prepare
             const config = await this.prepare();
@@ -84,7 +73,7 @@ export class WeaponPerformModel extends PerformModel<
             if (from === -1) return;
 
             let event = new AbortEvent({});
-            this.event.toRun(event);
+            this.event.toPlay(event);
             let isValid = event.detail.isValid;
 
             // execute
@@ -116,7 +105,7 @@ export class WeaponPerformModel extends PerformModel<
 
         // after
         DebugUtil.log(`${card.name} Played`);
-        this.event.onRun(new Event({}));
+        this.event.onPlay(new Event({}));
     }
 
 
@@ -143,7 +132,7 @@ export class WeaponPerformModel extends PerformModel<
 
     // use
     protected async prepare(): Promise<WeaponHooksConfig | undefined> {
-        if (!this.status) return;
+        if (!this.isReady) return;
 
         const player = this.route.player;
         if (!player) return;
@@ -159,7 +148,7 @@ export class WeaponPerformModel extends PerformModel<
         for (const item of battlecry) {
             const params: any[] = []
             while (true) {
-                const selector = item.prepare(params);
+                const selector = item.precheck(params);
                 if (!selector) break;
                 if (!selector.options.length) params.push(undefined);
                 else {

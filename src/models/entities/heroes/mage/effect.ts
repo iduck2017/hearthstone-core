@@ -43,7 +43,7 @@ export class FireBlastEffectModel extends EffectModel {
         ])
     }
 
-    public prepare() {
+    public precheck() {
         const game = this.route.game;
         if (!game) return;
         const roles = game.refer.roles;

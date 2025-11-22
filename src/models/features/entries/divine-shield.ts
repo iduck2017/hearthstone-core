@@ -29,8 +29,8 @@ export class DivineShieldModel extends RoleFeatureModel<
             state: {
                 name: 'Divine Shield',
                 desc: 'The first time you take damage, ignore it.',
-                isActived: true,
-                count: props?.state?.isActived ? 1 : 0,
+                isEnabled: true,
+                count: props?.state?.isEnabled ? 1 : 0,
                 ...props?.state,
             },
             child: { ...props?.child },
@@ -42,7 +42,7 @@ export class DivineShieldModel extends RoleFeatureModel<
         // before
         const role = this.route.role;
         if (!role) return false;
-        if (!this.status) return false;
+        if (!this.isActived) return false;
         
         // execute
         this.doConsume(event);
@@ -55,22 +55,22 @@ export class DivineShieldModel extends RoleFeatureModel<
 
     protected doConsume(event: DamageEvent) {
         if (this.origin.state.count <= 1) {
-            this.origin.state.isActived = false;
+            this.origin.state.isEnabled = false;
         }
         this.origin.state.count =- 1;
     }
 
 
     @TranxUtil.span()
-    protected doActive() {
-        super.doActive();
+    protected doEnable() {
+        super.doEnable();
         this.origin.state.count = 1;
     }
 
 
     @TranxUtil.span()
-    protected doDeactive() {
-        super.doDeactive();
+    protected doDisable() {
+        super.doDisable();
         this.origin.state.count = 0;
     }
 }

@@ -24,7 +24,6 @@ import { TurnEndModel } from "../../features/hooks/turn-end";
 import { DeathrattleModel } from "../../features/hooks/deathrattle";
 import { OverhealModel } from "../../features/hooks/overheal";
 import { FeatureModel } from "../../features";
-import { CardFeatureModel } from "../../features/card";
 import { TurnStartModel } from "../../features/hooks/turn-start";
 
 export namespace MinionCardModel {
@@ -93,14 +92,14 @@ export abstract class MinionCardModel<
                 sleep: (this.child.sleep.state.isActived && Boolean(board)) || undefined,
                 races: races.length ? races : undefined,
                 buffs: buffs.length ? buffs : undefined,
-                rush: this.child.rush.state.isActived || undefined,
-                taunt: this.child.taunt.state.isActived || undefined,
-                charge: this.child.charge.state.isActived || undefined,
-                frozen: this.child.frozen.state.isActived || undefined,
-                stealth: this.child.stealth.state.isActived || undefined,
-                elusive: this.child.elusive.state.isActived || undefined,
-                windfury: this.child.windfury.state.isActived || undefined,
-                divineShield: this.child.divineShield.state.isActived || undefined,
+                rush: this.child.rush.state.isEnabled || undefined,
+                taunt: this.child.taunt.state.isEnabled || undefined,
+                charge: this.child.charge.state.isEnabled || undefined,
+                frozen: this.child.frozen.state.isEnabled || undefined,
+                stealth: this.child.stealth.state.isEnabled || undefined,
+                elusive: this.child.elusive.state.isEnabled || undefined,
+                windfury: this.child.windfury.state.isEnabled || undefined,
+                divineShield: this.child.divineShield.state.isEnabled || undefined,
             }
         }
         return {
@@ -131,14 +130,14 @@ export abstract class MinionCardModel<
                 buffs: props.child.buffs ?? [],
                 feats: props.child.feats ?? [],
                 // entries
-                rush: props.child.rush ?? new RushModel({ state: { isActived: false }}),
-                taunt: props.child.taunt ?? new TauntModel({ state: { isActived: false }}),
-                charge: props.child.charge ?? new ChargeModel({ state: { isActived: false }}),
-                frozen: props.child.frozen ?? new FrozenModel({ state: { isActived: false }}),
-                stealth: props.child.stealth ?? new StealthModel({ state: { isActived: false }}),
-                elusive: props.child.elusive ?? new ElusiveModel({ state: { isActived: false }}),
-                windfury: props.child.windfury ?? new WindfuryModel({ state: { isActived: false }}),
-                divineShield: props.child.divineShield ?? new DivineShieldModel({ state: { isActived: false }}),
+                rush: props.child.rush ?? new RushModel({ state: { isEnabled: false }}),
+                taunt: props.child.taunt ?? new TauntModel({ state: { isEnabled: false }}),
+                charge: props.child.charge ?? new ChargeModel({ state: { isEnabled: false }}),
+                frozen: props.child.frozen ?? new FrozenModel({ state: { isEnabled: false }}),
+                stealth: props.child.stealth ?? new StealthModel({ state: { isEnabled: false }}),
+                elusive: props.child.elusive ?? new ElusiveModel({ state: { isEnabled: false }}),
+                windfury: props.child.windfury ?? new WindfuryModel({ state: { isEnabled: false }}),
+                divineShield: props.child.divineShield ?? new DivineShieldModel({ state: { isEnabled: false }}),
                 // hooks
                 battlecry: props.child.battlecry ?? [],
                 overheal: props.child.overheal ?? [],
@@ -191,22 +190,22 @@ export abstract class MinionCardModel<
     @TranxUtil.span()
     private doSilence() {
         // feats
-        this.child.feats.forEach(item => item.deactive());
-        this.child.buffs.forEach(item => item.deactive());
+        this.child.feats.forEach(item => item.disable());
+        this.child.buffs.forEach(item => item.disable());
         // hooks
-        this.child.battlecry.forEach(item => item.deactive());
-        this.child.deathrattle.forEach(item => item.deactive());
-        this.child.turnStart.forEach(item => item.deactive());
-        this.child.turnEnd.forEach(item => item.deactive());
+        this.child.battlecry.forEach(item => item.disable());
+        this.child.deathrattle.forEach(item => item.disable());
+        this.child.turnStart.forEach(item => item.disable());
+        this.child.turnEnd.forEach(item => item.disable());
         // entries
-        this.child.charge.deactive();
-        this.child.divineShield.deactive();
-        this.child.elusive.deactive();
-        this.child.frozen.deactive();
-        this.child.rush.deactive();
-        this.child.stealth.deactive();
-        this.child.taunt.deactive();
-        this.child.windfury.deactive();
+        this.child.charge.disable();
+        this.child.divineShield.disable();
+        this.child.elusive.disable();
+        this.child.frozen.disable();
+        this.child.rush.disable();
+        this.child.stealth.disable();
+        this.child.taunt.disable();
+        this.child.windfury.disable();
     }
 
 
@@ -216,8 +215,8 @@ export abstract class MinionCardModel<
     public buff(feat: TurnStartModel): void;
     public buff(feat: TurnEndModel): void;
     public buff(feat: OverhealModel): void;
-    public buff(feat: CardFeatureModel): void;
-    public buff(feat: CardFeatureModel): void {
+    public buff(feat: FeatureModel): void;
+    public buff(feat: FeatureModel): void {
         const child = this.origin.child;
         if (feat instanceof IRoleBuffModel) child.buffs.push(feat);
         else if (feat instanceof BattlecryModel) child.battlecry.push(feat);

@@ -1,9 +1,9 @@
 import { DebugUtil, Model, TranxUtil, Event, Method, Route, TemplUtil, Emitter } from "set-piece";
 import { CostModel } from "../../rules/cost";
 import { ClassType, RarityType } from "../../../types/card";
-import { AbortEvent, AppModel, CardFeatureModel, DamageModel, DisposeModel, LibraryUtil, PoisonousModel, RestoreModel, TurnEndModel, TurnStartModel } from "../../..";
+import { AbortEvent, AppModel, DamageModel, DisposeModel, FeatureModel, LibraryUtil, PoisonousModel, RestoreModel, TurnEndModel, TurnStartModel } from "../../..";
 import { PlayerModel, GameModel, HandModel, DeckModel, BoardModel, GraveyardModel } from "../../..";
-import { PerformModel } from "../../rules/perform";
+import { CardPerformModel } from "../../rules/perform/card";
 import { CacheModel } from "../containers/cache";
 
 export namespace CardModel {
@@ -24,12 +24,12 @@ export namespace CardModel {
         readonly damage: DamageModel
         readonly restore: RestoreModel
 
-        readonly perform: PerformModel;
+        readonly perform: CardPerformModel;
         readonly dispose?: DisposeModel;
         // entries
         readonly poisonous: PoisonousModel;
         // feats
-        readonly feats: CardFeatureModel[];
+        readonly feats: FeatureModel[];
         // hooks
         readonly turnStart: TurnStartModel[];
         readonly turnEnd: TurnEndModel[];
@@ -64,7 +64,7 @@ export abstract class CardModel<
                 rarity: this.state.rarity,
                 cost: this.child.cost.state.current,
                 feats: feats.length ? feats : undefined,
-                poisonous: this.child.poisonous?.state.isActived || undefined,
+                poisonous: this.child.poisonous?.state.isEnabled || undefined,
             }
         } 
         return {
@@ -104,10 +104,6 @@ export abstract class CardModel<
         }
     }
 
-    public get status(): boolean {
-        return true;
-    }
-
     public get name(): string { return String(this.state.name); }
 
     constructor(props: CardModel['props'] & {
@@ -121,7 +117,7 @@ export abstract class CardModel<
             child: { 
                 damage: props.child.damage ?? new DamageModel(),
                 restore: props.child.restore ?? new RestoreModel(),
-                poisonous: props.child.poisonous ?? new PoisonousModel({ state: { isActived: false }}),
+                poisonous: props.child.poisonous ?? new PoisonousModel({ state: { isEnabled: false }}),
                 turnStart: props.child.turnStart ?? [],
                 turnEnd: props.child.turnEnd ?? [],
                 ...props.child 

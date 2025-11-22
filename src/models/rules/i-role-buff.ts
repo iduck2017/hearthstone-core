@@ -40,10 +40,6 @@ export abstract class IRoleBuffModel<
         }
     }
 
-    public get status(): boolean {
-        return true;
-    }
-
     public get route() {
         const result = super.route;
         const hero: HeroModel | undefined = result.items.find(item => item instanceof HeroModel);
@@ -65,7 +61,7 @@ export abstract class IRoleBuffModel<
         super({
             uuid: props.uuid,
             state: {
-                isActived: true,
+                isEnabled: true,
                 ...props.state,
             },
             child: { ...props.child },
@@ -79,7 +75,7 @@ export abstract class IRoleBuffModel<
         return this.route.role?.proxy.child.attack?.decor;
     }
     protected modifyAttack(that: RoleAttackModel, decor: RoleAttackDecor) {
-        if (!this.state.isActived) return;
+        if (!this.state.isEnabled) return;
         decor.add({
             type: OperatorType.ADD,
             offset: this.state.offset[0],
@@ -93,7 +89,7 @@ export abstract class IRoleBuffModel<
         return this.route.role?.proxy.child.health?.decor;
     }
     protected modifyHealth(that: RoleHealthModel, decor: RoleHealthDecor) {
-        if (!this.state.isActived) return;
+        if (!this.state.isEnabled) return;
         decor.add({
             type: OperatorType.ADD,
             offset: this.state.offset[1],

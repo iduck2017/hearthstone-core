@@ -18,7 +18,7 @@ export class TheCoinEffectModel extends SpellEffectModel<never> {
         });
     }
 
-    public prepare() { return undefined; }
+    public precheck() { return undefined; }
 
     protected async doRun() {
         const player = this.route.player;

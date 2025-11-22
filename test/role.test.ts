@@ -48,7 +48,7 @@ describe('role', () => {
         expect(cardC.child.health.state.current).toBe(1);
         expect(cardC.child.health.state.damage).toBe(0);
         expect(cardC.child.health.state.maximum).toBe(1);
-        expect(cardC.child.dispose.status).toBe(false);
+        expect(cardC.child.dispose.state.isActived).toBe(false);
     })
 
     test('wisp-attack', async () => {
@@ -67,7 +67,7 @@ describe('role', () => {
         expect(heroB.child.health.state.maximum).toBe(30);
 
         expect(cardC.child.health.state.current).toBe(1);
-        expect(cardC.child.dispose.status).toBe(false);
+        expect(cardC.child.dispose.state.isActived).toBe(false);
         expect(cardC.child.action.state.current).toBe(0);
     })
 
@@ -87,12 +87,12 @@ describe('role', () => {
         expect(cardC.child.health.state.current).toBe(0);
         expect(cardC.child.health.state.damage).toBe(1);
         expect(cardC.child.health.state.maximum).toBe(1);
-        expect(cardC.child.dispose.status).toBe(true);
+        expect(cardC.child.dispose.state.isActived).toBe(true);
 
         expect(cardD.child.health.state.current).toBe(0);
         expect(cardD.child.health.state.damage).toBe(1);
         expect(cardD.child.health.state.maximum).toBe(1);
-        expect(cardD.child.dispose.status).toBe(true);
+        expect(cardD.child.dispose.state.isActived).toBe(true);
         expect(cardD.child.action.state.current).toBe(0);
 
         expect(boardA.child.cards.length).toBe(0);

@@ -20,7 +20,7 @@ export class FrozenModel extends RoleFeatureModel<
             state: {
                 name: 'Frozen',
                 desc: 'Frozen charactoers lose their next attack.',
-                isActived: true,
+                isEnabled: true,
                 ...props?.state,
             },
             child: { ...props?.child },
@@ -29,7 +29,7 @@ export class FrozenModel extends RoleFeatureModel<
     }
 
     public overcome() {
-        if (!this.origin.state.isActived) return;
+        if (!this.origin.state.isEnabled) return;
 
         // condition check
         const role = this.route.role;
@@ -38,7 +38,7 @@ export class FrozenModel extends RoleFeatureModel<
         if (!role.child.action.state.isEnabled) return;
         if (role.child.sleep.state.isActived) return;
 
-        this.deactive();
+        this.disable();
     }
 
     protected onDeactive() {
@@ -46,6 +46,6 @@ export class FrozenModel extends RoleFeatureModel<
         if (!role) return false;
         DebugUtil.log(`${role.name} Unfrozen`);
 
-        super.deactive();
+        super.disable();
     }
 }

@@ -23,7 +23,7 @@ export class TauntModel extends RoleFeatureModel<
             state: {
                 name: 'Taunt',
                 desc: 'Enemies must attack this minion.',
-                isActived: true,
+                isEnabled: true,
                 ...props.state,
             },
             child: { ...props.child },
