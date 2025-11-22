@@ -29,7 +29,7 @@ export class CacheModel extends Model<
 
     public add(item: Model) {
         const child = this.origin.child;
-        child.items.push()
+        child.items.push(item);
     }
 
     public del(item: Model) {

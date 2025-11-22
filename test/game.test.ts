@@ -67,12 +67,12 @@ describe('game', () => {
     test('draw-card', async () => {
         expect(deck.child.cards.length).toBe(2);
         expect(hand.child.cards.length).toBe(0);
-        let card = deck.draw();
+        let card = hand.draw();
         expect(card).toBeDefined();
         expect(deck.child.cards.length).toBe(1);
         expect(hand.child.cards.length).toBe(1);
 
-        card = deck.draw();
+        card = hand.draw();
         expect(deck.child.cards.length).toBe(0);
         expect(hand.child.cards.length).toBe(2);
     })
@@ -108,8 +108,6 @@ describe('game', () => {
         expect(selector?.options.length).toBe(3);
         player.controller.set(1);
         await promise;
-        // expect(board.refer.order.length).toBe(3);
         expect(board.child.cards[1]).toBe(card);
-        // expect(board.refer.order[1]).toBe(card);
     })
 })

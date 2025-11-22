@@ -1,11 +1,14 @@
-import { Model } from "set-piece";
-import { GameModel, PlayerModel } from "../../..";
+import { DebugUtil, Event, Model, TranxUtil } from "set-piece";
+import { AbortEvent, GameModel, PlayerModel } from "../../..";
 import { MinionCardModel } from "../cards/minion";
 import { CardModel } from "../cards";
 import { SecretCardModel } from "../../..";
 
 export namespace BoardModel {
-    export type E = {};
+    export type E = {
+        toSummon: AbortEvent<{ minion: MinionCardModel }>;
+        onSummon: Event<{ minion: MinionCardModel }>;
+    };
     export type S = {};
     export type C = {
         readonly cards: CardModel[]
@@ -26,6 +29,14 @@ export class BoardModel extends Model<
             ...result,
             player: result.items.find(item => item instanceof PlayerModel),
             game: result.items.find(item => item instanceof GameModel),
+        }
+    }
+
+    public get state() {
+        const result = super.state;
+        return {
+            ...result,
+            isOverflow: this.child.cards.length >= 7,
         }
     }
 
@@ -60,6 +71,42 @@ export class BoardModel extends Model<
             },
             refer: { ...props.refer },
         })
+    }
+
+    public summon(minion: MinionCardModel, to?: number): void {
+        if (this.state.isOverflow) return;
+
+        const hand = minion.route.hand;
+        if (hand && !hand.has(minion)) return;
+        const deck = minion.route.deck;
+        if (deck && !deck.has(minion)) return;
+        const cache = minion.route.cache;
+        if (cache && !cache.has(minion)) return;
+
+        const event = new AbortEvent({ minion });
+        this.event.toSummon(event);
+        let isValid = event.detail.isValid;
+        if (!isValid) return;
+
+        const length = this.child.cards.length;
+        if (to === undefined) to = length;
+        if (to < 0) to = length;
+
+        this.doSummon(minion, to);
+
+        DebugUtil.log(`${minion.name} Summoned`);
+        this.event.onSummon(new Event({ minion }));
+    }
+
+    @TranxUtil.span()
+    protected doSummon(minion: MinionCardModel, to: number): void {
+        const hand = minion.route.hand;
+        if (hand) hand.del(minion);
+        const deck = minion.route.deck;
+        if (deck) deck.del(minion);
+        const cache = minion.route.cache;
+        if (cache) cache.del(minion);
+        this.add(minion, to);
     }
 
 

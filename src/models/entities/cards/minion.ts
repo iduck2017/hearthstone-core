@@ -11,7 +11,6 @@ import { RoleAttackModel } from "../../rules/role-attack";
 import { RoleActionModel } from "../../rules/role-action";
 import { MinionPerformModel } from "../../rules/perform/minion";
 import { IRoleBuffModel } from "../../rules/i-role-buff";
-import { RoleFeatureModel } from "../../features/role";
 import { RushModel } from "../../features/entries/rush";
 import { TauntModel } from "../../features/entries/taunt";
 import { ChargeModel } from "../../features/entries/charge";
@@ -34,8 +33,6 @@ export namespace MinionCardModel {
         readonly toTransform: AbortEvent<{ target: MinionCardModel }>;
         readonly onTransform: Event<{ target: MinionCardModel }>;
         readonly onSilence: Event;
-        readonly toSummon: AbortEvent<{ board: BoardModel; to?: number }>;
-        readonly onSummon: Event;
     };
     export type C = {
         readonly perform: MinionPerformModel;
@@ -227,50 +224,13 @@ export abstract class MinionCardModel<
         else if (feat instanceof FeatureModel) child.feats.push(feat);
     }
 
-    
     // summon
     public summon(board?: BoardModel, to?: number) {
-        // before
-        const player = this.route.player;
-        if (!board) board = player?.child.board;
-        if (!board) return;
-
-        // precheck board
-        const cards = board.child.cards;
-        if (cards.length >= 7) return;
-        
-        // precheck source
-        const hand = this.route.hand;
-        if (hand && !hand.has(this)) return;
-        const deck = this.route.deck;
-        if (deck && !deck.has(this)) return;
-        const cache = this.route.cache;
-        if (cache && !cache.has(this)) return;
-
-        const event = new AbortEvent({ board, to });
-        this.event.toSummon(event);
-        let isValid = event.detail.isValid;
-        if (!isValid) return;
-
-        // execute
-        this.doSummon(board, to);
-        
-        // after
-        DebugUtil.log(`${this.name} Summoned`);
-        this.event.onSummon(new Event({}));
+        if (!board) {
+            const player = this.route.player;
+            if (!player) return;
+            board = player.child.board;
+        }
+        board.summon(this, to);
     }
-
-
-    @TranxUtil.span()
-    public doSummon(board: BoardModel, to?: number) {
-        const hand = this.route.hand;
-        if (hand) hand.del(this);
-
-        const deck = this.route.deck;
-        if (deck) deck.del(this);
-        const cache = this.route.cache;
-        if (cache) cache.del(this);
-        board.add(this, to);
-    }
-
 }

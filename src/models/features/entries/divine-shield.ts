@@ -7,7 +7,6 @@ export namespace DivineShieldModel {
     export type E = {
         toActive: AbortEvent
         onConsume: DamageEvent
-        onRestore: Event
     }
     export type S = {
         count: number

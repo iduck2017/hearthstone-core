@@ -1,10 +1,15 @@
-import { Model, TemplUtil, TranxUtil } from "set-piece";
+import { DebugUtil, Event, Model, TemplUtil, TranxUtil } from "set-piece";
 import { PlayerModel } from "../player";
 import { GameModel } from "../game";
-import { CardModel } from "../../..";
+import { AbortEvent, CardModel } from "../../..";
 
 export namespace HandModel {
-    export type E = {}
+    export type E = {
+        toDraw: AbortEvent<{ card: CardModel }>;
+        onDraw: Event<{ card: CardModel }>; 
+        toGain: AbortEvent<{ card: CardModel }>;
+        onGain: Event<{ card: CardModel }>;
+    }
     export type S = {}
     export type C = {   
         cards: CardModel[]
@@ -25,6 +30,15 @@ export class HandModel extends Model<
             ...result,
             player: result.items.find(item => item instanceof PlayerModel),
             game: result.items.find(item => item instanceof GameModel),
+        }
+    }
+
+
+    public get state() {
+        return {
+            ...super.state,
+            isEmpty: this.child.cards.length === 0,
+            isOverflow: this.child.cards.length >= 10,
         }
     }
 
@@ -72,4 +86,63 @@ export class HandModel extends Model<
         const cards = this.origin.child.cards;
         return cards.includes(card);
     }
+
+    public draw(card?: CardModel) {
+        if (this.state.isOverflow) return;
+
+        const player = this.route.player;
+        if (!player) return;
+        const deck = player.child.deck;
+
+        if (!card) card = deck.child.cards[0];
+        if (!card) return;
+        if (!card.route.deck) return;
+
+        const event = new AbortEvent({ card });
+        this.event.toDraw(event);
+        let isValid = event.detail.isValid;
+        if (!isValid) return;
+
+        isValid = Boolean(this.gain(card));
+        if (!isValid) return;
+
+        DebugUtil.log(`${card.name} Drew`);
+        this.event.onDraw(new Event({ card }));
+        return card;
+    }
+
+    public gain(card: CardModel) {
+        if (this.state.isOverflow) return;
+
+        const hand = card.route.hand;
+        if (hand && !hand.has(card)) return;
+        const deck = card.route.deck;
+        if (deck && !deck.has(card)) return;
+        const cache = card.route.cache;
+        if (cache && !cache.has(card)) return;
+
+        const event = new AbortEvent({ card });
+        this.event.toGain(event);
+        let isValid = event.detail.isValid;
+        if (!isValid) return;
+
+        this.doGain(card);
+
+        DebugUtil.log(`${card.name} Gained`);
+        this.event.onGain(new Event({ card }));
+
+        return card;
+    }
+
+    @TranxUtil.span()
+    protected doGain(card: CardModel) {
+        const hand = card.route.hand;
+        if (hand) hand.del(card);
+        const deck = card.route.deck;
+        if (deck) deck.del(card);
+        const cache = card.route.cache;
+        if (cache) cache.del(card);
+        this.add(card);
+    }
+
 }

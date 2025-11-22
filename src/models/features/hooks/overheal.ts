@@ -48,7 +48,7 @@ export abstract class OverhealModel<
         const isValid = event.detail.isValid;
         if (!isValid) return false;
         // run
-        this.run();
+        this.doRun();
         // onRun
         const name = this.state.name;
         const desc = this.state.desc;

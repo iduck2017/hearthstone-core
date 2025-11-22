@@ -8,8 +8,6 @@ import { CacheModel } from "../containers/cache";
 
 export namespace CardModel {
     export type E = {
-        toDraw: AbortEvent;
-        onDraw: Event;
     };
     export type S = {
         readonly name: string;
@@ -133,40 +131,13 @@ export abstract class CardModel<
 
     // draw
     public draw() {
-        // before
-        const deck = this.route.deck;
-        if (!deck) return;
-
-        const event = new AbortEvent({});
-        this.event.toDraw(event);
-        let isValid = event.detail.isValid;
-        if (!isValid) return;
-
-        // execute
-        isValid = this.doDraw();
-        if (!isValid) return;
-        
-        // after
-        DebugUtil.log(`${this.name} Drew`);
-        this.event.onDraw(new Event({}));
-    }
-
-    @TranxUtil.span()
-    private doDraw(): boolean {
         const player = this.route.player;
-        if (!player) return false;
-
-        const deck = player.child.deck;
-        deck.del(this);
-
-        const hand = player.child.hand;
-        hand.add(this);
-        return true;
+        if (!player) return;
+        player.child.hand.draw(this);
     }
-
-
 
     // clone
+    @TranxUtil.span()
     public clone<T extends CardModel>(this: T, original?: boolean): T | undefined {
         const copy = TemplUtil.copy(this, {
             state: original ? {} : { ...this.props.state },
@@ -179,6 +150,8 @@ export abstract class CardModel<
         if (!app) return;
         const cache = app.child.cache;
         cache.add(copy);
+
+        DebugUtil.log(`${copy.name} Cloned`);
         return copy;
     }
 }

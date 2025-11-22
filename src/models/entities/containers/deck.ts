@@ -1,5 +1,5 @@
-import { DebugUtil, Model } from "set-piece";
-import { CardModel } from "../../..";
+import { DebugUtil, Event, Model } from "set-piece";
+import { AbortEvent, CardModel } from "../../..";
 
 export namespace DeckModel {
     export type E = {}
@@ -20,6 +20,7 @@ export class DeckModel extends Model<
         return { size: this.child.cards.length }
     }
 
+
     constructor(props?: DeckModel['props']) {
         props = props ?? {};
         super({
@@ -33,12 +34,6 @@ export class DeckModel extends Model<
         })
     }
 
-    public draw() {
-        const card = this.child.cards[0];
-        if (!card) return;
-        card.draw();
-        return card;
-    }
 
     public add(item: CardModel, index?: number): void {
         const items = this.origin.child.cards;

@@ -59,10 +59,12 @@ export class RoleHealthModel extends Model<
         const baseline = Math.max(state.memory, state.maximum);
         const current = Math.min(baseline - state.damage, state.maximum);
         const isAlive = current > 0;
+        const isInjured = current < state.maximum;
         return {
             ...state,
             current,
             isAlive,
+            isInjured,
         }
     }
 
@@ -133,7 +135,7 @@ export class RoleHealthModel extends Model<
     public onConsume(event: DamageEvent) {
         const role = this.route.role;
         if (!role) return;
-        
+
         const isValid = event.detail.isValid;
         if (!isValid) return;
 
@@ -175,7 +177,9 @@ export class RoleHealthModel extends Model<
     public onRestore(event: RestoreEvent) {
         const role = this.route.role;
         if (!role) return;
-        if (event.detail.isValid) return;
+
+        const isValid = event.detail.isValid;
+        if (!isValid) return;
         if (event.detail.result > 0) this.event.onRestore(event);
         if (event.detail.overflow > 0) {
             const overheal = role.child.overheal;

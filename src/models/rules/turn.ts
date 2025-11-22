@@ -85,7 +85,7 @@ export class TurnModel extends Model<
         allies.forEach(item => item.child.sleep.disable())
         // draw card
         if (!game?.state.debug?.isDrawDisabled) {
-            player.child.deck.draw();
+            player.child.hand.draw();
         }
         this.event.onStart(new Event({}));
     }
@@ -117,7 +117,6 @@ export class TurnModel extends Model<
         roles.forEach(item => {
             item.child.frozen.overcome();
         });
-        
         this.event.onEnd(new Event({}));
     }
 
