@@ -1,7 +1,7 @@
-import { Method, Model } from "set-piece";
+import { DebugUtil, Event, Method, Model, TranxUtil } from "set-piece";
 import { SkillModel } from "../skill";
 import { ArmorModel } from "../../rules/armor";
-import { DamageModel, FrozenModel, MinionCardModel, OverhealModel, RestoreModel, RoleAttackModel, RoleHealthModel, SleepModel, TurnEndModel, TurnStartModel, WeaponCardModel } from "../../..";
+import { AbortEvent, DamageModel, FrozenModel, MinionCardModel, OverhealModel, RestoreModel, RoleAttackModel, RoleHealthModel, SleepModel, TurnEndModel, TurnStartModel, WeaponCardModel } from "../../..";
 import { HeroDisposeModel } from "../../rules/dispose/hero";
 import { RoleActionModel } from "../../rules/role-action";
 import { PlayerModel } from "../player";
@@ -11,14 +11,18 @@ import { ElusiveModel } from "../../features/entries/elusive";
 import { WindfuryModel } from "../../features/entries/windfury";
 import { DivineShieldModel } from "../../features/entries/divine-shield";
 import { PoisonousModel } from "../../features/entries/poisonous";
-import { IRoleBuffModel } from "../../rules/i-role-buff";
+import { IRoleBuffModel } from "../../features/i-role-buff";
 import { FeatureModel } from "../../features";
 import { BattlecryModel } from "../../features/hooks/battlecry";
+import { DisposeModel } from "../../rules/dispose";
 
 export type RoleModel = HeroModel | MinionCardModel;
 
 export namespace HeroModel {
-    export type E = {};
+    export type E = {
+        toEquip: AbortEvent<{ weapon: WeaponCardModel }>;
+        onEquip: Event<{ weapon: WeaponCardModel }>;
+    };
     export type S = {};
     export type C = {
         readonly armor: ArmorModel;
@@ -121,13 +125,43 @@ export abstract class HeroModel<
         else if (feat instanceof FeatureModel) child.feats.push(feat);
     }
 
+    @DisposeModel.span()
     public equip(weapon: WeaponCardModel) {
-        const child = this.origin.child;
-        if (child.weapon) {
-            child.weapon.child.dispose.destroy();
-        }
-        child.weapon = weapon;
+        const event = new AbortEvent({ weapon });
+        this.event.toEquip(event);
+        const isValid = event.detail.isValid;
+        if (!isValid) return;
+
+        const prev = this.origin.child.weapon;
+        if (prev) prev.child.dispose.destroy();
+        this.doEquip(weapon);
+
+        DebugUtil.log(`${weapon.name} Equipped`);
+        this.event.onEquip(new Event({ weapon }));
     }
+
+    @TranxUtil.span()
+    private doEquip(next: WeaponCardModel) {
+        const player = this.route.player;
+        if (!player) return;
+        const graveyard = player.child.graveyard;
+
+        const child = this.origin.child;
+        const prev = child.weapon;
+        if (prev) {
+            child.weapon = undefined;
+            graveyard.add(prev);
+        }
+
+        const hand = next.route.hand;
+        if (hand) hand.del(next);
+        const deck = next.route.deck;
+        if (deck) deck.del(next);
+        const cache = next.route.cache;
+        if (cache) cache.del(next);
+        child.weapon = next;
+    }
+
 
     public unequip(weapon: WeaponCardModel) {
         if (this.origin.child.weapon !== weapon) return;

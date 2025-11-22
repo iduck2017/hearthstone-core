@@ -10,7 +10,7 @@ import { RoleHealthModel } from "../../rules/role-health";
 import { RoleAttackModel } from "../../rules/role-attack";
 import { RoleActionModel } from "../../rules/role-action";
 import { MinionPerformModel } from "../../rules/perform/minion";
-import { IRoleBuffModel } from "../../rules/i-role-buff";
+import { IRoleBuffModel } from "../../features/i-role-buff";
 import { RushModel } from "../../features/entries/rush";
 import { TauntModel } from "../../features/entries/taunt";
 import { ChargeModel } from "../../features/entries/charge";

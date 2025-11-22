@@ -70,8 +70,8 @@ export { PoisonousModel } from "./models/features/entries/poisonous";
 export { FeatureModel } from './models/features'
 export { RoleFeatureModel } from './models/features/role';
 export { SecretFeatureModel } from "./models/features/secret";
-export { IRoleBuffModel } from "./models/rules/i-role-buff";
-export { RoleBuffModel } from "./models/rules/role-buff";
+export { IRoleBuffModel } from "./models/features/i-role-buff";
+export { RoleBuffModel } from "./models/features/role-buff";
 
 export { SpellPerformModel } from "./models/rules/perform/spell";
 export { WeaponPerformModel } from "./models/rules/perform/weapon";

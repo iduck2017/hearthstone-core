@@ -1,12 +1,12 @@
-import { RoleAttackModel } from "./role-attack";
+import { RoleAttackModel } from "../rules/role-attack";
 import { RoleAttackDecor } from "../../types/decors/role-attack";
-import { RoleHealthModel } from "./role-health";
+import { RoleHealthModel } from "../rules/role-health";
 import { RoleHealthDecor } from "../../types/decors/role-health";
 import { OperatorType } from "../../types/operator";
 import { Model, StateUtil, TemplUtil } from "set-piece";
 import { RoleFeatureModel } from "../features/role";
 import { FeatureModel } from "../features";
-import { HeroModel } from "../entities/heroes";
+import { HeroModel } from "../..";
 import { MinionCardModel } from "../entities/cards/minion";
 
 export namespace IRoleBuffModel {

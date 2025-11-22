@@ -101,34 +101,12 @@ export abstract class WeaponCardModel<
     }
 
     // equip
-    @DisposeModel.span()
     public equip(player?: PlayerModel, index?: number) {
         if (!player) player = this.route.player;
         if (!player) return;
 
-        // before
-        const event = new AbortEvent({ player });
-        this.event.toEquip(event);
-        const isValid = event.detail.isValid;
-        if (!isValid) return;
-
-        // execute
         const hero = player.child.hero;
-        const prev = hero.child.weapon;
-        if (prev) prev.child.dispose.destroy();
-        this.doEquip(player);
-        
-        // after
-        DebugUtil.log(`${this.name} Equipped`);
-        this.event.onEquip(new Event({}));
-    }
-
-    @TranxUtil.span()
-    private doEquip(player: PlayerModel) {
-        const hand = player.child.hand;
-        if (hand) hand.del(this);
-        const hero = player.child.hero;
+        if (!hero) return;
         hero.equip(this);
     }
-    
 }
