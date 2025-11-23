@@ -121,12 +121,13 @@ export class RoleAttackModel extends Model<
         }
 
         // consider taunt
-        const tauntOptions = options.filter(item => {
-            const taunt = item.child.taunt;
-            const stealth = item.child.stealth;
-            return taunt.state.isEnabled && !stealth.state.isEnabled;
-        });
-        if (tauntOptions.length) options = tauntOptions;
+        if (options.find(item => item.child.taunt.state.isActived)) {
+            options = options.filter(item => {
+                const taunt = item.child.taunt;
+                const stealth = item.child.stealth;
+                return taunt.state.isEnabled && !stealth.state.isEnabled;
+            });
+        }
 
         // exclude stealth
         options = options.filter(item => {

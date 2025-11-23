@@ -10,7 +10,6 @@ import { RoleHealthModel } from "../../rules/role-health";
 import { RoleAttackModel } from "../../rules/role-attack";
 import { RoleActionModel } from "../../rules/role-action";
 import { MinionPerformModel } from "../../rules/perform/minion";
-import { IRoleBuffModel } from "../../features/role-buff";
 import { RushModel } from "../../features/entries/rush";
 import { TauntModel } from "../../features/entries/taunt";
 import { ChargeModel } from "../../features/entries/charge";
@@ -200,7 +199,6 @@ export abstract class MinionCardModel<
     }
 
 
-    public buff(feat: IRoleBuffModel): void;
     public buff(feat: BattlecryModel): void;
     public buff(feat: DeathrattleModel): void;
     public buff(feat: TurnStartModel): void;

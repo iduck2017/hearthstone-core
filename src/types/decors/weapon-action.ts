@@ -1,7 +1,6 @@
 import { Decor } from "set-piece";
 import { Operator, OperatorType } from "../operator";
 import { WeaponActionModel } from "../../models/rules/weapon-action";
-import { IWeaponBuffModel } from "../../models/features/weapon-buff";
 
 /**
  * WeaponActionDecor - Decorator pattern for calculating weapon durability (action) with multiple operations
@@ -43,60 +42,60 @@ export class WeaponActionDecor extends Decor<WeaponActionModel.S> {
      * 
      * @returns The final durability state with maximum value calculated from all operations
      */
-    public get result() {
-        // Start with the original durability state
-        const result = { ...this._origin };
+    // public get result() {
+    //     // Start with the original durability state
+    //     const result = { ...this._origin };
         
-        // Phase 1: Apply buff operations (from IWeaponBuffModel)
-        // Buffs are permanent modifications that should be applied first
-        // They are sorted by UUID to ensure deterministic execution order
-        // This is important for game consistency and reproducibility
-        this.operations
-            // Filter to only include operations from buff sources
-            .filter(item => item.reason instanceof IWeaponBuffModel)
-            // Sort by UUID to ensure deterministic order when multiple buffs are present
-            // This guarantees that the same set of buffs always produces the same result
-            .sort((a, b) => a.reason.uuid.localeCompare(b.reason.uuid))
-            // Execute each buff operation
-            .forEach(item => {
-                if (item.type === OperatorType.ADD) {
-                    // ADD operation: increment/decrement the maximum durability by offset
-                    result.maximum += item.offset;
-                }
-                if (item.type === OperatorType.SET) {
-                    // SET operation: directly assign the offset as the new maximum durability
-                    // This overrides any previous calculations
-                    result.maximum = item.offset;
-                }
-            })
+    //     // Phase 1: Apply buff operations (from IWeaponBuffModel)
+    //     // Buffs are permanent modifications that should be applied first
+    //     // They are sorted by UUID to ensure deterministic execution order
+    //     // This is important for game consistency and reproducibility
+    //     this.operations
+    //         // Filter to only include operations from buff sources
+    //         .filter(item => item.reason instanceof IWeaponBuffModel)
+    //         // Sort by UUID to ensure deterministic order when multiple buffs are present
+    //         // This guarantees that the same set of buffs always produces the same result
+    //         .sort((a, b) => a.reason.uuid.localeCompare(b.reason.uuid))
+    //         // Execute each buff operation
+    //         .forEach(item => {
+    //             if (item.type === OperatorType.ADD) {
+    //                 // ADD operation: increment/decrement the maximum durability by offset
+    //                 result.maximum += item.offset;
+    //             }
+    //             if (item.type === OperatorType.SET) {
+    //                 // SET operation: directly assign the offset as the new maximum durability
+    //                 // This overrides any previous calculations
+    //                 result.maximum = item.offset;
+    //             }
+    //         })
         
-        // Phase 2: Apply non-buff operations
-        // These are temporary effects, conditional modifiers, or other non-permanent changes
-        // They are applied after buffs to ensure they can modify the buffed value
-        this.operations
-            // Filter to exclude buff operations (only include non-buff operations)
-            .filter(item => !(item.reason instanceof IWeaponBuffModel))
-            // Execute each non-buff operation
-            // Note: No sorting is applied here - operations are executed in their original order
-            .forEach(item => {
-                if (item.type === OperatorType.ADD) {
-                    // ADD operation: increment/decrement the maximum durability by offset
-                    result.maximum += item.offset;
-                }
-                if (item.type === OperatorType.SET) {
-                    // SET operation: directly assign the offset as the new maximum durability
-                    // This overrides any previous calculations (including buffs)
-                    result.maximum = item.offset;
-                }
-            })
+    //     // Phase 2: Apply non-buff operations
+    //     // These are temporary effects, conditional modifiers, or other non-permanent changes
+    //     // They are applied after buffs to ensure they can modify the buffed value
+    //     this.operations
+    //         // Filter to exclude buff operations (only include non-buff operations)
+    //         .filter(item => !(item.reason instanceof IWeaponBuffModel))
+    //         // Execute each non-buff operation
+    //         // Note: No sorting is applied here - operations are executed in their original order
+    //         .forEach(item => {
+    //             if (item.type === OperatorType.ADD) {
+    //                 // ADD operation: increment/decrement the maximum durability by offset
+    //                 result.maximum += item.offset;
+    //             }
+    //             if (item.type === OperatorType.SET) {
+    //                 // SET operation: directly assign the offset as the new maximum durability
+    //                 // This overrides any previous calculations (including buffs)
+    //                 result.maximum = item.offset;
+    //             }
+    //         })
         
-        // Final safety check: ensure maximum durability is never negative
-        // This is a game rule: durability values cannot be negative
-        // If the result is 0 or negative, it is clamped to 0
-        if (result.maximum <= 0) result.maximum = 0;
+    //     // Final safety check: ensure maximum durability is never negative
+    //     // This is a game rule: durability values cannot be negative
+    //     // If the result is 0 or negative, it is clamped to 0
+    //     if (result.maximum <= 0) result.maximum = 0;
         
-        return result;
-    }
+    //     return result;
+    // }
     
     /**
      * Adds a durability modification operation to the collection

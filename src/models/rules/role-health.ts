@@ -1,11 +1,8 @@
-import { DebugUtil, Decor, Event, EventUtil, Frame, Method, Model, StateUtil, TemplUtil, TranxUtil } from "set-piece";
-import { MinionCardModel, GameModel, PlayerModel, CardModel, HeroModel, IRoleBuffModel, AbortEvent } from "../..";
+import { DebugUtil, Event, EventUtil, Frame, Model, TemplUtil, TranxUtil } from "set-piece";
+import { MinionCardModel, HeroModel } from "../..";
 import { DamageEvent } from "../../types/events/damage";
 import { RestoreEvent } from "../../types/events/restore";
-import { OperatorType } from "../../types/operator";
-import { Operator } from "../../types/operator";
 import { RoleHealthDecor } from "../../types/decors/role-health";
-import { RoleModel } from "../entities/heroes";
 
 export namespace RoleHealthModel {
     export type E = {

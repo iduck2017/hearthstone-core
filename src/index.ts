@@ -72,12 +72,18 @@ export { PoisonousModel } from "./models/features/entries/poisonous";
 export { FeatureModel } from './models/features'
 export { RoleFeatureModel } from './models/features/role';
 export { SecretFeatureModel } from "./models/features/secret";
-export { IRoleBuffModel, RoleBuffModel } from "./models/features/role-buff";
-export { IWeaponBuffModel, WeaponBuffModel } from "./models/features/weapon-buff";
 
 export { SpellPerformModel } from "./models/rules/perform/spell";
 export { WeaponPerformModel } from "./models/rules/perform/weapon";
 export { MinionPerformModel } from "./models/rules/perform/minion";
+
+export { BuffModel } from "./models/features/buffs";
+export { RoleAttackBuffModel } from "./models/features/buffs/role-attack";
+export { RoleHealthBuffModel } from "./models/features/buffs/role-health";
+export { WeaponAttackBuffModel } from "./models/features/buffs/weapon-attack";
+export { WeaponActionkBuffModel } from "./models/features/buffs/weapon-action";
+
+export { BaseFeatureModel } from "./models/features/base";
 
 // hooks
 export { SpellHooksConfig } from "./models/rules/perform/spell";

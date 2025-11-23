@@ -2,7 +2,7 @@ import { Decor } from "set-piece";
 import { OperatorType } from "../operator";
 import { RoleAttackModel } from "../../models/rules/role-attack";
 import { Operator } from "../operator";
-import { IRoleBuffModel } from "../../models/features/role-buff";
+import { RoleAttackBuffModel } from "../../models/features/buffs/role-attack";
 
 /**
  * RoleAttackDecor - Decorator pattern for calculating role attack with multiple operations
@@ -54,7 +54,7 @@ export class RoleAttackDecor extends Decor<RoleAttackModel.S> {
         // This is important for game consistency and reproducibility
         this.operations
             // Filter to only include operations from buff sources
-            .filter(item => item.reason instanceof IRoleBuffModel)
+            .filter(item => item.reason instanceof RoleAttackBuffModel)
             // Sort by UUID to ensure deterministic order when multiple buffs are present
             // This guarantees that the same set of buffs always produces the same result
             .sort((a, b) => a.reason.uuid.localeCompare(b.reason.uuid))
@@ -76,7 +76,7 @@ export class RoleAttackDecor extends Decor<RoleAttackModel.S> {
         // They are applied after buffs to ensure they can modify the buffed value
         this.operations
             // Filter to exclude buff operations (only include non-buff operations)
-            .filter(item => !(item.reason instanceof IRoleBuffModel))
+            .filter(item => !(item.reason instanceof RoleAttackBuffModel))
             // Execute each non-buff operation
             // Note: No sorting is applied here - operations are executed in their original order
             .forEach(item => {

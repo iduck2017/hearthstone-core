@@ -1,5 +1,5 @@
 import { Event, EventUtil, Model, StateUtil, TranxUtil } from "set-piece";
-import { AbortEvent, GameModel, HeroModel, MinionCardModel, PlayerModel } from "../..";
+import { AbortEvent, BuffModel, GameModel, HeroModel, MinionCardModel, PlayerModel, SpellCardModel, WeaponCardModel } from "../..";
 import { CardModel } from "../entities/cards";
 import { BoardModel, CollectionModel, DeckModel, GraveyardModel, HandModel } from "../..";
 
@@ -14,11 +14,13 @@ export namespace FeatureModel {
         desc: string;
         isEnabled: boolean;
     }
-    export type C = {};
+    export type C = {
+        buffs: BuffModel[];
+    };
     export type R = {};
 }
 
-export abstract class FeatureModel<
+export class FeatureModel<
     E extends Partial<FeatureModel.E> & Model.E = {},
     S extends Partial<FeatureModel.S> & Model.S = {},
     C extends Partial<FeatureModel.C> & Model.C = {},
@@ -34,6 +36,8 @@ export abstract class FeatureModel<
         const card: CardModel | undefined = result.items.find(item => item instanceof CardModel);
         const hero: HeroModel | undefined = result.items.find(item => item instanceof HeroModel);
         const minion: MinionCardModel | undefined = result.items.find(item => item instanceof MinionCardModel);
+        const weapon: WeaponCardModel | undefined = result.items.find(item => item instanceof WeaponCardModel);
+        const spell: SpellCardModel | undefined = result.items.find(item => item instanceof SpellCardModel);
         const role = minion ?? hero;
         return {
             ...result,
@@ -46,7 +50,9 @@ export abstract class FeatureModel<
             player: result.items.find(item => item instanceof PlayerModel),
             game: result.items.find(item => item instanceof GameModel),
             hero,
-            role
+            role,
+            weapon,
+            spell,
         }
     }
 
@@ -76,7 +82,10 @@ export abstract class FeatureModel<
         super({
             uuid: props.uuid,
             state: { ...props.state },
-            child: { ...props.child },
+            child: { 
+                buffs: props.child.buffs ?? [],
+                ...props.child,
+            },
             refer: { ...props.refer }
         })
     }
@@ -110,6 +119,7 @@ export abstract class FeatureModel<
     public disable() {
         if (!this.origin.state.isEnabled) return false;
         this.doDisable();
+        this.child.buffs.forEach(buff => buff.disable());
         this.event.onDeactive(new Event({}));
     }
 
@@ -118,5 +128,4 @@ export abstract class FeatureModel<
         this.origin.state.isEnabled = false;
         this.reload();
     }
-
 }

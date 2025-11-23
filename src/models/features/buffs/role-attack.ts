@@ -1,35 +1,28 @@
 import { FeatureModel } from "..";
-import { BuffAggregationModel } from "./aggregation";
 import { StateUtil } from "set-piece";
 import { RoleAttackModel } from "../../rules/role-attack";
 import { OperatorType } from "../../../types/operator";
 import { RoleAttackDecor } from "../../../types/decors/role-attack";
+import { BuffModel } from ".";
 
 export namespace RoleAttackBuffModel {
+    export type S = {};
     export type E = {};
-    export type S = {
-        offset: number;
-    };
     export type C = {};
     export type R = {};
 }
 
-export class RoleAttackBuffModel extends FeatureModel<
+export class RoleAttackBuffModel extends BuffModel<
     RoleAttackBuffModel.E,
     RoleAttackBuffModel.S,
     RoleAttackBuffModel.C,
     RoleAttackBuffModel.R
 > {
-    constructor(props: RoleAttackBuffModel['props']) {
+    constructor(props?: RoleAttackBuffModel['props']) {
+        props = props ?? {}
         super({
             uuid: props.uuid,
-            state: { 
-                offset: 0,
-                name: 'Role Attack Buff',
-                desc: "",
-                isEnabled: true,
-                ...props.state 
-            },
+            state: { ...props.state },
             child: { ...props.child },
             refer: { ...props.refer },
         })

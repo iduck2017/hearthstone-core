@@ -2,7 +2,6 @@ import { Decor } from "set-piece";
 import { OperatorType } from "../operator";
 import { WeaponAttackModel } from "../../models/rules/weapon-attack";
 import { Operator } from "../operator";
-import { IWeaponBuffModel } from "../../models/features/weapon-buff";
 
 /**
  * WeaponAttackDecor - Decorator pattern for calculating weapon attack with multiple operations
@@ -44,60 +43,60 @@ export class WeaponAttackDecor extends Decor<WeaponAttackModel.S> {
      * 
      * @returns The final attack state with current value calculated from all operations
      */
-    public get result() {
-        // Start with the original attack state
-        const result = { ...this._origin };
+    // public get result() {
+    //     // Start with the original attack state
+    //     const result = { ...this._origin };
         
-        // Phase 1: Apply buff operations (from IWeaponBuffModel)
-        // Buffs are permanent modifications that should be applied first
-        // They are sorted by UUID to ensure deterministic execution order
-        // This is important for game consistency and reproducibility
-        this.operations
-            // Filter to only include operations from buff sources
-            .filter(item => item.reason instanceof IWeaponBuffModel)
-            // Sort by UUID to ensure deterministic order when multiple buffs are present
-            // This guarantees that the same set of buffs always produces the same result
-            .sort((a, b) => a.reason.uuid.localeCompare(b.reason.uuid))
-            // Execute each buff operation
-            .forEach(item => {
-                if (item.type === OperatorType.ADD) {
-                    // ADD operation: increment/decrement the current attack by offset
-                    result.current += item.offset;
-                }
-                if (item.type === OperatorType.SET) {
-                    // SET operation: directly assign the offset as the new attack value
-                    // This overrides any previous calculations
-                    result.current = item.offset;
-                }
-            })
+    //     // Phase 1: Apply buff operations (from IWeaponBuffModel)
+    //     // Buffs are permanent modifications that should be applied first
+    //     // They are sorted by UUID to ensure deterministic execution order
+    //     // This is important for game consistency and reproducibility
+    //     this.operations
+    //         // Filter to only include operations from buff sources
+    //         .filter(item => item.reason instanceof IWeaponBuffModel)
+    //         // Sort by UUID to ensure deterministic order when multiple buffs are present
+    //         // This guarantees that the same set of buffs always produces the same result
+    //         .sort((a, b) => a.reason.uuid.localeCompare(b.reason.uuid))
+    //         // Execute each buff operation
+    //         .forEach(item => {
+    //             if (item.type === OperatorType.ADD) {
+    //                 // ADD operation: increment/decrement the current attack by offset
+    //                 result.current += item.offset;
+    //             }
+    //             if (item.type === OperatorType.SET) {
+    //                 // SET operation: directly assign the offset as the new attack value
+    //                 // This overrides any previous calculations
+    //                 result.current = item.offset;
+    //             }
+    //         })
         
-        // Phase 2: Apply non-buff operations
-        // These are temporary effects, conditional modifiers, or other non-permanent changes
-        // They are applied after buffs to ensure they can modify the buffed value
-        this.operations
-            // Filter to exclude buff operations (only include non-buff operations)
-            .filter(item => !(item.reason instanceof IWeaponBuffModel))
-            // Execute each non-buff operation
-            // Note: No sorting is applied here - operations are executed in their original order
-            .forEach(item => {
-                if (item.type === OperatorType.ADD) {
-                    // ADD operation: increment/decrement the current attack by offset
-                    result.current += item.offset;
-                }
-                if (item.type === OperatorType.SET) {
-                    // SET operation: directly assign the offset as the new attack value
-                    // This overrides any previous calculations (including buffs)
-                    result.current = item.offset;
-                }
-            })
+    //     // Phase 2: Apply non-buff operations
+    //     // These are temporary effects, conditional modifiers, or other non-permanent changes
+    //     // They are applied after buffs to ensure they can modify the buffed value
+    //     this.operations
+    //         // Filter to exclude buff operations (only include non-buff operations)
+    //         .filter(item => !(item.reason instanceof IWeaponBuffModel))
+    //         // Execute each non-buff operation
+    //         // Note: No sorting is applied here - operations are executed in their original order
+    //         .forEach(item => {
+    //             if (item.type === OperatorType.ADD) {
+    //                 // ADD operation: increment/decrement the current attack by offset
+    //                 result.current += item.offset;
+    //             }
+    //             if (item.type === OperatorType.SET) {
+    //                 // SET operation: directly assign the offset as the new attack value
+    //                 // This overrides any previous calculations (including buffs)
+    //                 result.current = item.offset;
+    //             }
+    //         })
         
-        // Final safety check: ensure attack is never negative
-        // This is a game rule: attack values cannot be negative
-        // If the result is 0 or negative, it is clamped to 0
-        if (result.current <= 0) result.current = 0;
+    //     // Final safety check: ensure attack is never negative
+    //     // This is a game rule: attack values cannot be negative
+    //     // If the result is 0 or negative, it is clamped to 0
+    //     if (result.current <= 0) result.current = 0;
         
-        return result;
-    }
+    //     return result;
+    // }
     
     /**
      * Adds an attack modification operation to the collection

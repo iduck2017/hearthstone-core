@@ -11,7 +11,6 @@ import { ElusiveModel } from "../../features/entries/elusive";
 import { WindfuryModel } from "../../features/entries/windfury";
 import { DivineShieldModel } from "../../features/entries/divine-shield";
 import { PoisonousModel } from "../../features/entries/poisonous";
-import { IRoleBuffModel } from "../../features/role-buff";
 import { FeatureModel } from "../../features";
 import { BattlecryModel } from "../../features/hooks/battlecry";
 import { DisposeModel } from "../../rules/dispose";
@@ -111,11 +110,11 @@ export abstract class HeroModel<
         })
     }
 
-    public buff(feat: IRoleBuffModel): void
     public buff(feat: BattlecryModel): void
     public buff(feat: OverhealModel): void
     public buff(feat: TurnStartModel): void
     public buff(feat: TurnEndModel): void
+    public buff(feat: FeatureModel): void
     public buff(feat: FeatureModel): void {
         const child = this.origin.child;
         if (feat instanceof OverhealModel) child.overheal.push(feat);
