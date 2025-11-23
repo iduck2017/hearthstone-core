@@ -1,6 +1,7 @@
 import { Decor, Event, EventUtil, Method, Model, StateUtil } from "set-piece";
 import { GameModel, PlayerModel, HeroModel, RoleAttackModel, TurnModel, BoardModel, WeaponCardModel, DamageEvent, RoleAttackDecor } from "../..";
 import { OperatorType } from "../../types/operator";
+import { WeaponAttackDecor } from "../../types/decors/weapon-attack";
 
 export namespace WeaponAttackModel {
     export type E = {}
@@ -23,6 +24,10 @@ export class WeaponAttackModel extends Model<
             current: this.state.current,
             origin: this.state.origin,
         }
+    }
+
+    public get decor(): WeaponAttackDecor {
+        return new WeaponAttackDecor(this);
     }
 
     public get route() {

@@ -28,7 +28,7 @@ export class FrozenModel extends RoleFeatureModel<
         });
     }
 
-    public overcome() {
+    public reset() {
         if (!this.origin.state.isEnabled) return;
 
         // condition check

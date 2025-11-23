@@ -10,7 +10,7 @@ import { RoleHealthModel } from "../../rules/role-health";
 import { RoleAttackModel } from "../../rules/role-attack";
 import { RoleActionModel } from "../../rules/role-action";
 import { MinionPerformModel } from "../../rules/perform/minion";
-import { IRoleBuffModel } from "../../features/i-role-buff";
+import { IRoleBuffModel } from "../../features/role-buff";
 import { RushModel } from "../../features/entries/rush";
 import { TauntModel } from "../../features/entries/taunt";
 import { ChargeModel } from "../../features/entries/charge";
@@ -42,8 +42,6 @@ export namespace MinionCardModel {
         readonly health: RoleHealthModel;
         readonly attack: RoleAttackModel;
         readonly action: RoleActionModel;
-        // feats
-        readonly buffs: IRoleBuffModel[];
         // entries
         readonly rush: RushModel;
         readonly taunt: TauntModel;
@@ -79,7 +77,6 @@ export abstract class MinionCardModel<
         const board = this.route.board;
         const hand = this.route.hand;
         const races = this.state.races;
-        const buffs = this.child.buffs.map(item => item.chunk);
         if (board || hand) {
             return {
                 ...result,
@@ -88,7 +85,6 @@ export abstract class MinionCardModel<
                 action: this.child.action.chunk,
                 sleep: (this.child.sleep.state.isActived && Boolean(board)) || undefined,
                 races: races.length ? races : undefined,
-                buffs: buffs.length ? buffs : undefined,
                 rush: this.child.rush.state.isEnabled || undefined,
                 taunt: this.child.taunt.state.isEnabled || undefined,
                 charge: this.child.charge.state.isEnabled || undefined,
@@ -124,7 +120,6 @@ export abstract class MinionCardModel<
                 action: props.child.action ?? new RoleActionModel(),
                 dispose: props.child.dispose ?? new MinionDisposeModel(),
                 // feats
-                buffs: props.child.buffs ?? [],
                 feats: props.child.feats ?? [],
                 // entries
                 rush: props.child.rush ?? new RushModel({ state: { isEnabled: false }}),
@@ -188,7 +183,6 @@ export abstract class MinionCardModel<
     private doSilence() {
         // feats
         this.child.feats.forEach(item => item.disable());
-        this.child.buffs.forEach(item => item.disable());
         // hooks
         this.child.battlecry.forEach(item => item.disable());
         this.child.deathrattle.forEach(item => item.disable());
@@ -215,13 +209,12 @@ export abstract class MinionCardModel<
     public buff(feat: FeatureModel): void;
     public buff(feat: FeatureModel): void {
         const child = this.origin.child;
-        if (feat instanceof IRoleBuffModel) child.buffs.push(feat);
-        else if (feat instanceof BattlecryModel) child.battlecry.push(feat);
+        if (feat instanceof BattlecryModel) child.battlecry.push(feat);
         else if (feat instanceof DeathrattleModel) child.deathrattle.push(feat);
         else if (feat instanceof TurnStartModel) child.turnStart.push(feat);
         else if (feat instanceof TurnEndModel) child.turnEnd.push(feat);
         else if (feat instanceof OverhealModel) child.overheal.push(feat);
-        else if (feat instanceof FeatureModel) child.feats.push(feat);
+        else child.feats.push(feat);
     }
 
     // summon

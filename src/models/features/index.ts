@@ -1,5 +1,5 @@
 import { Event, EventUtil, Model, StateUtil, TranxUtil } from "set-piece";
-import { AbortEvent, GameModel, PlayerModel } from "../..";
+import { AbortEvent, GameModel, HeroModel, MinionCardModel, PlayerModel } from "../..";
 import { CardModel } from "../entities/cards";
 import { BoardModel, CollectionModel, DeckModel, GraveyardModel, HandModel } from "../..";
 
@@ -32,6 +32,9 @@ export abstract class FeatureModel<
     public get route() {
         const result = super.route;
         const card: CardModel | undefined = result.items.find(item => item instanceof CardModel);
+        const hero: HeroModel | undefined = result.items.find(item => item instanceof HeroModel);
+        const minion: MinionCardModel | undefined = result.items.find(item => item instanceof MinionCardModel);
+        const role = minion ?? hero;
         return {
             ...result,
             card,
@@ -42,6 +45,8 @@ export abstract class FeatureModel<
             collection: result.items.find(item => item instanceof CollectionModel),
             player: result.items.find(item => item instanceof PlayerModel),
             game: result.items.find(item => item instanceof GameModel),
+            hero,
+            role
         }
     }
 

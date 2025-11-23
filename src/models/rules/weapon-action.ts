@@ -1,5 +1,5 @@
 import { Event, Method, Model, TemplUtil, TranxUtil } from "set-piece";
-import { DisposeModel, GameModel, PlayerModel, WeaponCardModel, CardModel } from "../..";
+import { DisposeModel, GameModel, PlayerModel, WeaponCardModel, CardModel, WeaponActionDecor } from "../..";
 
 export namespace WeaponActionModel {
     export type E = {
@@ -28,6 +28,10 @@ export class WeaponActionModel extends Model<
             origin: this.state.origin,
             maximum: this.state.maximum,
         }
+    }
+
+    public get decor(): WeaponActionDecor {
+        return new WeaponActionDecor(this);
     }
 
     public get route() {

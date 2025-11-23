@@ -11,7 +11,7 @@ import { ElusiveModel } from "../../features/entries/elusive";
 import { WindfuryModel } from "../../features/entries/windfury";
 import { DivineShieldModel } from "../../features/entries/divine-shield";
 import { PoisonousModel } from "../../features/entries/poisonous";
-import { IRoleBuffModel } from "../../features/i-role-buff";
+import { IRoleBuffModel } from "../../features/role-buff";
 import { FeatureModel } from "../../features";
 import { BattlecryModel } from "../../features/hooks/battlecry";
 import { DisposeModel } from "../../rules/dispose";
@@ -44,7 +44,6 @@ export namespace HeroModel {
         readonly divineShield: DivineShieldModel;
         readonly poisonous: PoisonousModel;
         // feats
-        readonly buffs: IRoleBuffModel[];
         readonly feats: FeatureModel[];
         // hooks
         readonly overheal: OverhealModel[];
@@ -106,7 +105,6 @@ export abstract class HeroModel<
                 poisonous: props.child.poisonous ?? new PoisonousModel({ state: { isEnabled: false }}),
 
                 feats: props.child.feats ?? [],
-                buffs: props.child.buffs ?? [],
                 ...props.child,
             },
             refer: { ...props.refer }
@@ -120,9 +118,8 @@ export abstract class HeroModel<
     public buff(feat: TurnEndModel): void
     public buff(feat: FeatureModel): void {
         const child = this.origin.child;
-        if (feat instanceof IRoleBuffModel) child.buffs.push(feat);
-        else if (feat instanceof OverhealModel) child.overheal.push(feat);
-        else if (feat instanceof FeatureModel) child.feats.push(feat);
+        if (feat instanceof OverhealModel) child.overheal.push(feat);
+        else child.feats.push(feat);
     }
 
     @DisposeModel.span()

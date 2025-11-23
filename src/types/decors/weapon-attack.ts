@@ -1,17 +1,17 @@
 import { Decor } from "set-piece";
 import { OperatorType } from "../operator";
-import { RoleAttackModel } from "../../models/rules/role-attack";
+import { WeaponAttackModel } from "../../models/rules/weapon-attack";
 import { Operator } from "../operator";
-import { IRoleBuffModel } from "../../models/features/role-buff";
+import { IWeaponBuffModel } from "../../models/features/weapon-buff";
 
 /**
- * RoleAttackDecor - Decorator pattern for calculating role attack with multiple operations
+ * WeaponAttackDecor - Decorator pattern for calculating weapon attack with multiple operations
  * 
  * This decorator applies a series of attack modification operations (ADD/SET) in a specific order
- * to calculate the final attack value of a role (hero or minion). The execution follows a two-phase approach:
+ * to calculate the final attack value of a weapon. The execution follows a two-phase approach:
  * 
  * Execution Order:
- * 1. Buff operations (from IRoleBuffModel) - executed first, sorted by UUID for determinism
+ * 1. Buff operations (from IWeaponBuffModel) - executed first, sorted by UUID for determinism
  * 2. Non-buff operations - executed after buff operations
  * 3. Final safety check - ensure attack is never negative
  * 
@@ -21,11 +21,11 @@ import { IRoleBuffModel } from "../../models/features/role-buff";
  * - Non-buff operations (temporary effects, etc.) are applied after buffs
  * - This separation ensures permanent buffs are applied before temporary modifications
  */
-export class RoleAttackDecor extends Decor<RoleAttackModel.S> {
+export class WeaponAttackDecor extends Decor<WeaponAttackModel.S> {
     /**
      * Collection of all attack modification operations to be applied
      * Each operation can be ADD (increment/decrement) or SET (direct assignment)
-     * Operations may come from buffs (IRoleBuffModel) or other sources
+     * Operations may come from buffs (IWeaponBuffModel) or other sources
      */
     private operations: Operator[] = [];
 
@@ -33,7 +33,7 @@ export class RoleAttackDecor extends Decor<RoleAttackModel.S> {
      * Calculates the final attack by applying all operations in the correct order
      * 
      * The calculation process:
-     * 1. Apply buff operations first (from IRoleBuffModel), sorted by UUID for determinism
+     * 1. Apply buff operations first (from IWeaponBuffModel), sorted by UUID for determinism
      * 2. Apply non-buff operations after buffs
      * 3. Ensure final attack is never negative
      * 
@@ -48,13 +48,13 @@ export class RoleAttackDecor extends Decor<RoleAttackModel.S> {
         // Start with the original attack state
         const result = { ...this._origin };
         
-        // Phase 1: Apply buff operations (from IRoleBuffModel)
+        // Phase 1: Apply buff operations (from IWeaponBuffModel)
         // Buffs are permanent modifications that should be applied first
         // They are sorted by UUID to ensure deterministic execution order
         // This is important for game consistency and reproducibility
         this.operations
             // Filter to only include operations from buff sources
-            .filter(item => item.reason instanceof IRoleBuffModel)
+            .filter(item => item.reason instanceof IWeaponBuffModel)
             // Sort by UUID to ensure deterministic order when multiple buffs are present
             // This guarantees that the same set of buffs always produces the same result
             .sort((a, b) => a.reason.uuid.localeCompare(b.reason.uuid))
@@ -76,7 +76,7 @@ export class RoleAttackDecor extends Decor<RoleAttackModel.S> {
         // They are applied after buffs to ensure they can modify the buffed value
         this.operations
             // Filter to exclude buff operations (only include non-buff operations)
-            .filter(item => !(item.reason instanceof IRoleBuffModel))
+            .filter(item => !(item.reason instanceof IWeaponBuffModel))
             // Execute each non-buff operation
             // Note: No sorting is applied here - operations are executed in their original order
             .forEach(item => {
@@ -109,3 +109,4 @@ export class RoleAttackDecor extends Decor<RoleAttackModel.S> {
         this.operations.push(operation);
     }
 }
+

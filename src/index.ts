@@ -38,6 +38,8 @@ export { RestoreModel } from "./models/rules/restore";
 
 export { WeaponAttackModel } from "./models/rules/weapon-attack";
 export { WeaponActionModel } from "./models/rules/weapon-action";
+export { WeaponAttackDecor } from "./types/decors/weapon-attack";
+export { WeaponActionDecor } from "./types/decors/weapon-action";
 
 // card
 export { CardModel } from "./models/entities/cards";
@@ -70,8 +72,8 @@ export { PoisonousModel } from "./models/features/entries/poisonous";
 export { FeatureModel } from './models/features'
 export { RoleFeatureModel } from './models/features/role';
 export { SecretFeatureModel } from "./models/features/secret";
-export { IRoleBuffModel } from "./models/features/i-role-buff";
-export { RoleBuffModel } from "./models/features/role-buff";
+export { IRoleBuffModel, RoleBuffModel } from "./models/features/role-buff";
+export { IWeaponBuffModel, WeaponBuffModel } from "./models/features/weapon-buff";
 
 export { SpellPerformModel } from "./models/rules/perform/spell";
 export { WeaponPerformModel } from "./models/rules/perform/weapon";

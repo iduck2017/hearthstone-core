@@ -115,7 +115,7 @@ export class TurnModel extends Model<
 
         const roles = player.refer.roles;
         roles.forEach(item => {
-            item.child.frozen.overcome();
+            item.child.frozen.reset();
         });
         this.event.onEnd(new Event({}));
     }

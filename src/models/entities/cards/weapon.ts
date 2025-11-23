@@ -97,7 +97,7 @@ export abstract class WeaponCardModel<
         else if (feat instanceof TurnStartModel) child.turnStart.push(feat);
         else if (feat instanceof TurnEndModel) child.turnEnd.push(feat);
         else if (feat instanceof DeathrattleModel) child.deathrattle.push(feat);
-        else if (feat instanceof FeatureModel) child.feats.push(feat);
+        else child.feats.push(feat);
     }
 
     // equip
