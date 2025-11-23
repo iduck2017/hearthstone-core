@@ -55,6 +55,17 @@ export class SpellPerformModel extends CardPerformModel<
             while (true) {
                 const selector = item.precheck([]);
                 if (!selector) break;
+                // exclude 
+                selector.exclude((item) => {
+                    if (item instanceof MinionCardModel || item instanceof HeroModel) {
+                        const _item: RoleModel = item;
+                        const elusive = _item.child.elusive;
+                        const stealth = _item.child.stealth;
+                        if (stealth.state.isEnabled) return false;
+                        if (elusive.state.isEnabled) return false;
+                    }
+                    return true;
+                })
                 if (!selector.options.length) return false;
                 if (!item.state.isMultiselect) break;
             }
@@ -179,6 +190,8 @@ export class SpellPerformModel extends CardPerformModel<
                     if (item instanceof MinionCardModel || item instanceof HeroModel) {
                         const _item: RoleModel = item;
                         const elusive = _item.child.elusive;
+                        const stealth = _item.child.stealth;
+                        if (stealth.state.isEnabled) return false;
                         if (elusive.state.isEnabled) return false;
                     }
                     return true;

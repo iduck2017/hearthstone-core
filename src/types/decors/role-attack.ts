@@ -2,7 +2,7 @@ import { Decor } from "set-piece";
 import { OperatorType } from "../operator";
 import { RoleAttackModel } from "../../models/rules/role-attack";
 import { Operator } from "../operator";
-import { IRoleBuffModel } from "../../models/rules/i-role-buff";
+import { IRoleBuffModel } from "../../models/features/i-role-buff";
 
 export class RoleAttackDecor extends Decor<RoleAttackModel.S> {
     private operations: Operator[] = [];

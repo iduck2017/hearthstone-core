@@ -89,17 +89,32 @@ export abstract class CardModel<
         const hand = result.items.find(item => item instanceof HandModel);
         const deck = result.items.find(item => item instanceof DeckModel);
         const cache = result.items.find(item => item instanceof CacheModel);
+        const graveyard = result.items.find(item => item instanceof GraveyardModel);
         return {
             ...result,
             player: result.items.find(item => item instanceof PlayerModel),
-            graveyard: result.items.find(item => item instanceof GraveyardModel),
             game: result.items.find(item => item instanceof GameModel),
             app: result.items.find(item => item instanceof AppModel),
+            graveyard,
             board,
             hand,
             deck,
             cache,
         }
+    }
+
+    protected get container(): BoardModel | HandModel | DeckModel | CacheModel | GraveyardModel | undefined {
+        const board = this.route.board;
+        const hand = this.route.hand;
+        const deck = this.route.deck;
+        const cache = this.route.cache;
+        const graveyard = this.route.graveyard;
+        if (board) return board;
+        if (hand) return hand;
+        if (deck) return deck;
+        if (graveyard) return graveyard;
+        if (cache) return cache;
+        return undefined;
     }
 
     public get name(): string { return String(this.state.name); }
