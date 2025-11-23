@@ -1,4 +1,4 @@
-import { Decor, Event, EventUtil, Method, Model, StateUtil } from "set-piece";
+import { Decor, Event, EventUtil, Frame, Method, Model, StateUtil } from "set-piece";
 import { GameModel, PlayerModel, HeroModel, RoleAttackModel, TurnModel, BoardModel, WeaponCardModel, DamageEvent, RoleAttackDecor } from "../..";
 import { OperatorType } from "../../types/operator";
 import { WeaponAttackDecor } from "../../types/decors/weapon-attack";
@@ -74,20 +74,16 @@ export class WeaponAttackModel extends Model<
         });
     }
 
-
-    // @todo use function call
-    @EventUtil.on(self => self.handlTurn)
-    public listenTurnStart() {
-        return this.route.game?.proxy.child.turn.event?.onStart;
+    @EventUtil.on(self => self.handleChange)
+    private listenChange() {
+        const attack: WeaponAttackModel = this;
+        return attack.proxy.event?.onChange;
     }
-    @EventUtil.on(self => self.handlTurn)
-    private listenTurnEnd() {
-        return this.route.game?.proxy.child.turn.event?.onEnd;
+    public handleChange(that: WeaponAttackModel, event: Event<Frame<WeaponAttackModel>>) {
+        if (event.detail.state.current !== that.state.current) {
+            this.reload();
+        }
     }
-    private handlTurn(that: TurnModel, event: Event) {
-        this.reload()
-    }
-    
 
     @StateUtil.on(self => self.modifyAttack)
     private listenAttack() {
@@ -95,7 +91,6 @@ export class WeaponAttackModel extends Model<
     }
     private modifyAttack(that: RoleAttackModel, decor: RoleAttackDecor) {
         if (!this.isReady) return;
-        if (!this.route.hero) return;
         decor.add({
             type: OperatorType.ADD,
             offset: this.state.current,

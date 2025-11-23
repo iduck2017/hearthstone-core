@@ -62,22 +62,29 @@ export class TurnModel extends Model<
         const game = this.route.game;
         if (!game) return;
 
+        const playerA = game.child.playerA;
+        const playerB = game.child.playerB;
+        const heroA = playerA.child.hero;
+        const heroB = playerB.child.hero;
+        heroA.child.weapon?.reload();
+        heroB.child.weapon?.reload();
+
         const allies = player.refer.roles;
         const opponent = player.refer.opponent;
         if (!opponent) return;
-        const entites = [
+        const entities = [
             ...game.refer.cards,
-            // player and hero
-            player,
-            player.child.hero,
-            opponent,
-            opponent.child.hero,
+            heroA.child.weapon,
+            heroB.child.weapon,
+            playerA,
+            playerB,
+            heroA,
+            heroB,
         ]
-        entites.forEach(entity => {
-            entity.child.turnStart.forEach(item => item.run())
+        entities.forEach(item => {
+            item?.child.turnStart.forEach(item => item.run())
         })
         
-
         // reset mana
         player.child.mana.reset();
         // reset actions
@@ -99,18 +106,23 @@ export class TurnModel extends Model<
 
         const game = this.route.game;
         if (!game) return;
-        const opponent = player.refer.opponent;
-        if (!opponent) return;
-        const entites = [
+
+        const playerA = game.child.playerA;
+        const playerB = game.child.playerB;
+        const heroA = playerA.child.hero;
+        const heroB = playerB.child.hero;
+
+        const entities = [
             ...game.refer.cards,
-            // player and hero
-            player,
-            player.child.hero,
-            opponent,
-            opponent.child.hero,
+            heroA.child.weapon,
+            heroB.child.weapon,
+            playerA,
+            playerB,
+            heroA,
+            heroB,
         ]
-        entites.forEach(entity => {
-            entity.child.turnEnd.forEach(item => item.run())
+        entities.forEach(item => {
+            item?.child.turnEnd.forEach(item => item.run())
         })
 
         const roles = player.refer.roles;
