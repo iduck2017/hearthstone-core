@@ -37,7 +37,9 @@ export class DamageEvent extends AbortEvent<{
         })
     }
 
-    public update(value: number) { this.origin.result = value; }
+    public update(value: number) { 
+        this.origin.result = value; 
+    }
 
     public supplement(options: {
         isPoisonous?: boolean;

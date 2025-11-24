@@ -1,20 +1,13 @@
-import { Decor, Model } from "set-piece";
+import { Model } from "set-piece";
 import { FeatureModel, CardModel, SpellCardModel } from "../../..";
 import { EffectModel } from "./effect";
+import { SpellEffectDecor } from "../../../types/decors/spell-effect";
 
 export namespace SpellEffectModel {
     export type E = {};
-    export type S = { damage: number[] };
+    export type S = { offset: number };
     export type C = {};
     export type R = {};
-}
-
-export class SpellEffectDecor<S extends Model.S = {}> extends Decor<
-    SpellEffectModel['origin']['state'] & S
-> {
-    public add(value: number) {
-        this._origin.damage = this._origin.damage.map(item => item + value);
-    }
 }
 
 export abstract class SpellEffectModel<
@@ -31,15 +24,11 @@ export abstract class SpellEffectModel<
 >{
     public get decor(): SpellEffectDecor<S> { return new SpellEffectDecor(this); }
 
-
     public get state() {
         const result = super.state;
-        const damage = result.damage;
+        const damage = result.offset;
         let desc = result.desc;
-        damage.forEach((item, index) => {
-            const regexp = new RegExp(`{{spellDamage\\[${index}\\]}}`, 'g');
-            desc = desc.replace(regexp, item.toString());
-        })
+        // @TODO
         return { ...result, desc }
     }
 
@@ -54,15 +43,17 @@ export abstract class SpellEffectModel<
         }
     }
 
-
     constructor(props: SpellEffectModel['props'] & {
         child: C;
-        state: S & SpellEffectModel.S & Pick<FeatureModel.S, 'desc' | 'name'>;
+        state: S & Pick<FeatureModel.S, 'desc' | 'name'>;
         refer: R;
     }) {
         super({
             uuid: props.uuid,
-            state: { ...props.state },
+            state: {
+                offset: 0,
+                ...props.state,
+            },
             child: { ...props.child },
             refer: { 
                 callers: [],

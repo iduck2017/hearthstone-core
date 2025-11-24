@@ -153,10 +153,10 @@ export abstract class CardModel<
 
     // clone
     @TranxUtil.span()
-    public clone<T extends CardModel>(this: T, original?: boolean): T | undefined {
+    public clone<T extends CardModel>(this: T, isProto?: boolean): T | undefined {
         const copy = TemplUtil.copy(this, {
-            state: original ? {} : { ...this.props.state },
-            child: original ? {} : { ...this.props.child },
+            state: isProto ? {} : { ...this.props.state },
+            child: isProto ? {} : { ...this.props.child },
             refer: { ...this.props.refer, creator: this },
         });
         if (!copy) return;

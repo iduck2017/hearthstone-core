@@ -10,7 +10,6 @@ export class TheCoinEffectModel extends SpellEffectModel<never> {
             state: {
                 name: "The Coin's effect",
                 desc: "Gain 1 Mana Crystal this turn only.",
-                damage: [0],
                 ...props.state
             },
             child: { ...props.child },

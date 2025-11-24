@@ -35,11 +35,16 @@ export class SpellDamageModel extends FeatureModel<
 
     @StateUtil.on(self => self.modifyDamage)
     protected listenDamage() {
-        return this.route.player?.proxy.any(SpellEffectModel).decor;
+        const player = this.route.player;
+        if (!player) return;
+        const effect = player.proxy.any(SpellEffectModel);
+        if (!effect) return;
+        return effect.decor;
     }
     protected modifyDamage(that: SpellEffectModel, decor: SpellEffectDecor) {
-        if (!this.route.player) return;
         if (!this.state.isEnabled) return;
         decor.add(this.state.offset);
     }
+
+    
 }

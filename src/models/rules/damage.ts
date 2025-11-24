@@ -1,6 +1,8 @@
 import { Model, TranxUtil } from "set-piece";
 import { DamageEvent, DamageType } from "../../types/events/damage";
 import { DisposeModel } from "./dispose";
+import { SpellCardModel } from "../entities/cards/spell";
+import { SpellEffectModel } from "../features/hooks/spell-effect";
 
 export namespace DamageModel {
     export type E = {
@@ -20,6 +22,16 @@ export class DamageModel extends Model<
 > {
     @DisposeModel.span()
     public static deal(tasks: DamageEvent[]) {
+        // spell damage
+        tasks.forEach(item => {
+            const method = item.detail.method;
+            if (method instanceof SpellEffectModel) {
+                const effect: SpellEffectModel = method;
+                const offset = effect.state.offset;
+                item.update(item.detail.result + offset);
+            }
+        })
+
         tasks.forEach(item => item.detail.source.child.damage.event.toDeal(item));
         tasks.forEach(item => item.detail.target.child.health.toConsume(item));
         
@@ -44,5 +56,4 @@ export class DamageModel extends Model<
             refer: { ...props?.refer },
         })
     }
-
 }

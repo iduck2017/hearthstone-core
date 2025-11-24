@@ -23,9 +23,12 @@ export { WeaponDisposeModel } from "./models/rules/dispose/weapon";
 export { RoleAttackModel } from "./models/rules/role-attack";
 export { RoleHealthModel } from "./models/rules/role-health";
 export { RoleActionModel } from "./models/rules/role-action";
+
+// decor
 export { RoleAttackDecor } from "./types/decors/role-attack";
 export { RoleHealthDecor } from "./types/decors/role-health";
 export { RoleActionDecor } from "./types/decors/role-action";
+export { SpellEffectDecor } from "./types/decors/spell-effect";
 
 export { SleepModel } from './models/rules/sleep';
 export { ManaModel } from './models/rules/mana';
@@ -99,7 +102,7 @@ export { BattlecryModel } from "./models/features/hooks/battlecry";
 export { DeathrattleModel } from "./models/features/hooks/deathrattle";
 export { TurnEndModel } from "./models/features/hooks/turn-end";
 export { TurnStartModel } from "./models/features/hooks/turn-start";
-export { SpellEffectModel, SpellEffectDecor } from './models/features/hooks/spell-effect';
+export { SpellEffectModel } from './models/features/hooks/spell-effect';
 
 // heroes
 export { HeroModel } from "./models/entities/heroes";
