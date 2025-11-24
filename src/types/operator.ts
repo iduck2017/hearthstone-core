@@ -5,7 +5,7 @@ export type Operator = {
     minimum?: number;
     type: OperatorType;
     offset: number;
-    reason: Model;
+    method: Model;
 }
 
 export enum OperatorType {

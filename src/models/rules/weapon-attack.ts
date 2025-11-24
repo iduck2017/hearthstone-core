@@ -94,7 +94,7 @@ export class WeaponAttackModel extends Model<
         decor.add({
             type: OperatorType.ADD,
             offset: this.state.current,
-            reason: this,
+            method: this,
         });
     }
 }

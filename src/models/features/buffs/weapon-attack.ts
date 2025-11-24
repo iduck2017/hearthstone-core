@@ -38,7 +38,7 @@ export class WeaponAttackBuffModel extends BuffModel<
         decor.add({
             type: OperatorType.ADD,
             offset: this.state.offset,
-            reason: this,
+            method: this,
         });
     }
 }

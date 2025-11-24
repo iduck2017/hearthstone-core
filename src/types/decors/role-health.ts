@@ -12,8 +12,8 @@ export class RoleHealthDecor extends Decor<RoleHealthModel.S> {
         
         // Apply buffs first (sorted by UUID for determinism)
         this.operations
-            .filter(item => item.reason instanceof RoleHealthBuffModel)
-            .sort((a, b) => a.reason.uuid.localeCompare(b.reason.uuid))
+            .filter(item => item.method instanceof RoleHealthBuffModel)
+            .sort((a, b) => a.method.uuid.localeCompare(b.method.uuid))
             .forEach(item => {
                 if (item.type === OperatorType.ADD) result.maximum += item.offset;
                 if (item.type === OperatorType.SET) result.maximum = item.offset;
@@ -21,7 +21,7 @@ export class RoleHealthDecor extends Decor<RoleHealthModel.S> {
         
         // Apply other operations
         this.operations
-            .filter(item => !(item.reason instanceof RoleHealthBuffModel))
+            .filter(item => !(item.method instanceof RoleHealthBuffModel))
             .forEach(item => {
                 if (item.type === OperatorType.ADD) result.maximum += item.offset;
                 if (item.type === OperatorType.SET) result.maximum = item.offset;

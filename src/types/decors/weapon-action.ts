@@ -12,8 +12,8 @@ export class WeaponActionDecor extends Decor<WeaponActionModel.S> {
         
         // Apply buffs first (sorted by UUID for determinism)
         this.operations
-            .filter(item => item.reason instanceof WeaponActionkBuffModel)
-            .sort((a, b) => a.reason.uuid.localeCompare(b.reason.uuid))
+            .filter(item => item.method instanceof WeaponActionkBuffModel)
+            .sort((a, b) => a.method.uuid.localeCompare(b.method.uuid))
             .forEach(item => {
                 if (item.type === OperatorType.ADD) result.maximum += item.offset;
                 if (item.type === OperatorType.SET) result.maximum = item.offset;
@@ -21,7 +21,7 @@ export class WeaponActionDecor extends Decor<WeaponActionModel.S> {
         
         // Apply other operations
         this.operations
-            .filter(item => !(item.reason instanceof WeaponActionkBuffModel))
+            .filter(item => !(item.method instanceof WeaponActionkBuffModel))
             .forEach(item => {
                 if (item.type === OperatorType.ADD) result.maximum += item.offset;
                 if (item.type === OperatorType.SET) result.maximum = item.offset;

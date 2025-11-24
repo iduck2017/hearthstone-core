@@ -13,8 +13,8 @@ export class WeaponAttackDecor extends Decor<WeaponAttackModel.S> {
         
         // Apply buffs first (sorted by UUID for determinism)
         this.operations
-            .filter(item => item.reason instanceof WeaponAttackBuffModel)
-            .sort((a, b) => a.reason.uuid.localeCompare(b.reason.uuid))
+            .filter(item => item.method instanceof WeaponAttackBuffModel)
+            .sort((a, b) => a.method.uuid.localeCompare(b.method.uuid))
             .forEach(item => {
                 if (item.type === OperatorType.ADD) result.current += item.offset;
                 if (item.type === OperatorType.SET) result.current = item.offset;
@@ -22,7 +22,7 @@ export class WeaponAttackDecor extends Decor<WeaponAttackModel.S> {
         
         // Apply other operations
         this.operations
-            .filter(item => !(item.reason instanceof WeaponAttackBuffModel))
+            .filter(item => !(item.method instanceof WeaponAttackBuffModel))
             .forEach(item => {
                 if (item.type === OperatorType.ADD) result.current += item.offset;
                 if (item.type === OperatorType.SET) result.current = item.offset;

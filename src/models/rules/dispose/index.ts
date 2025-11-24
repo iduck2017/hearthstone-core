@@ -13,7 +13,7 @@ export namespace DisposeModel {
     }
     export type C = {}
     export type R = {
-        reason?: Model;
+        method?: Model;
         source?: CardModel | HeroModel;
     }
 }
@@ -118,7 +118,7 @@ export abstract class DisposeModel<
     }
 
 
-    public destroy(source?: CardModel | HeroModel, reason?: Model) {
+    public destroy(source?: CardModel | HeroModel, method?: Model) {
         const parent = this.route.parent;
         if (!parent) return;
 
@@ -130,15 +130,15 @@ export abstract class DisposeModel<
 
         // execute
         this.origin.state.isDestroyed = true;
-        this.check(source, reason);
+        this.check(source, method);
         // after
         DebugUtil.log(`${parent.name} Destroyed`);
     }
 
     @DisposeModel.span()
     @TranxUtil.span()
-    public check(source?: CardModel | HeroModel, reason?: Model) {
-        this.origin.refer.reason = reason;
+    public check(source?: CardModel | HeroModel, method?: Model) {
+        this.origin.refer.method = method;
         this.origin.refer.source = source;
         DisposeModel.add(this);
     }

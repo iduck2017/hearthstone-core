@@ -13,8 +13,8 @@ export class RoleAttackDecor extends Decor<RoleAttackModel.S> {
         
         // Apply buffs first (sorted by UUID for determinism)
         this.operations
-            .filter(item => item.reason instanceof RoleAttackBuffModel)
-            .sort((a, b) => a.reason.uuid.localeCompare(b.reason.uuid))
+            .filter(item => item.method instanceof RoleAttackBuffModel)
+            .sort((a, b) => a.method.uuid.localeCompare(b.method.uuid))
             .forEach(item => {
                 if (item.type === OperatorType.ADD) result.current += item.offset;
                 if (item.type === OperatorType.SET) result.current = item.offset;
@@ -22,7 +22,7 @@ export class RoleAttackDecor extends Decor<RoleAttackModel.S> {
         
         // Apply other operations
         this.operations
-            .filter(item => !(item.reason instanceof RoleAttackBuffModel))
+            .filter(item => !(item.method instanceof RoleAttackBuffModel))
             .forEach(item => {
                 if (item.type === OperatorType.ADD) result.current += item.offset;
                 if (item.type === OperatorType.SET) result.current = item.offset;

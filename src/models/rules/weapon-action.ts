@@ -1,8 +1,9 @@
 import { Event, Method, Model, TemplUtil, TranxUtil } from "set-piece";
-import { DisposeModel, GameModel, PlayerModel, WeaponCardModel, CardModel, WeaponActionDecor } from "../..";
+import { DisposeModel, GameModel, PlayerModel, WeaponCardModel, WeaponActionDecor, AbortEvent } from "../..";
 
 export namespace WeaponActionModel {
     export type E = {
+        toConsume: AbortEvent;
         onConsume: Event;
     };
     export type S = {
@@ -42,6 +43,8 @@ export class WeaponActionModel extends Model<
         return {
             ...result,
             weapon,
+            game,
+            player,
         }
     }
 

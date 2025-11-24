@@ -3,7 +3,7 @@ import { PlayerModel } from "../entities/player";
 
 export namespace ManaModel {
     export type E = {
-        onConsume: Event<{ value: number; reason?: Model }>;
+        onConsume: Event<{ value: number; method?: Model }>;
         onRestore: Event<{ value: number }>;
     };
     export type S = {
