@@ -63,13 +63,13 @@ export class ManaModel extends Model<
         this.origin.state.current = this.origin.state.origin;
     }
 
-    public consume(value: number, reason?: Model) {
+    public consume(value: number, method?: Model) {
         if (value > this.origin.state.current) value= this.origin.state.current;
         const player = this.route.player;
         if (!player) return;
         DebugUtil.log(`${player.name} use ${value} mana`);
         this.origin.state.current -= value;
-        this.event.onConsume(new Event({ value, reason }));
+        this.event.onConsume(new Event({ value, method }));
     }
 
     public restore(value: number) {

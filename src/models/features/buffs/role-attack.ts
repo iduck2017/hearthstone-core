@@ -36,7 +36,7 @@ export class RoleAttackBuffModel extends BuffModel<
     protected modifyAttack(that: RoleAttackModel, decor: RoleAttackDecor) {
         if (!this.state.isEnabled) return;
         decor.add({
-            type: OperatorType.ADD,
+            type: this.state.type,
             offset: this.state.offset,
             method: this,
         });

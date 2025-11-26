@@ -3,7 +3,7 @@ import { DisposeModel, GameModel, PlayerModel, WeaponCardModel, WeaponActionDeco
 
 export namespace WeaponActionModel {
     export type E = {
-        toConsume: AbortEvent;
+        toConsume: AbortEvent<{ method?: Model }>;
         onConsume: Event;
     };
     export type S = {
@@ -77,12 +77,18 @@ export class WeaponActionModel extends Model<
     }
 
     @DisposeModel.span()
-    @TranxUtil.span()
-    public consume() {
+    public consume(method?: Model) {
+        const event = new AbortEvent({ method });
+        this.event.toConsume(event);
+        const isValid = event.detail.isValid;
+        if (!isValid) return;
+
         this.origin.state.consume += 1;
         const weapon = this.route.weapon;
         if (!weapon) return;
         const dispose = weapon.child.dispose;
         dispose.check();
+
+        this.event.onConsume(new Event({ method }));
     }
 }
