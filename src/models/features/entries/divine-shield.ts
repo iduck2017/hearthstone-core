@@ -6,7 +6,8 @@ import { AbortEvent } from "../../../types/events/abort";
 export namespace DivineShieldModel {
     export type E = {
         toActive: AbortEvent
-        onConsume: DamageEvent
+        onBlock: Event
+        toBlock: AbortEvent
     }
     export type S = {
         count: number
@@ -22,6 +23,30 @@ export class DivineShieldModel extends RoleFeatureModel<
     DivineShieldModel.C,
     DivineShieldModel.R
 > {
+    public static block(events: DamageEvent[]) {
+        events = events?.filter(item => {
+            const target = item.detail.target;
+            const entry = target.child.divineShield;
+            const isValid = entry.toBlock()
+            return isValid;
+        }) ?? [];
+        DivineShieldModel.doBlock(events);
+        events.forEach(item => {
+            const target = item.detail.target;
+            const entry = target.child.divineShield;
+            entry.onBlock();
+        })        
+    }
+
+    @TranxUtil.span()
+    protected static doBlock(options: DamageEvent[]) {
+        options.forEach(item => {
+            const target = item.detail.target;
+            const entry = target.child.divineShield;
+            entry.doBlock(item);
+        })
+    }
+
     constructor(props?: DivineShieldModel['props']) {
         super({
             uuid: props?.uuid,
@@ -37,26 +62,37 @@ export class DivineShieldModel extends RoleFeatureModel<
         })
     }
 
-    public consume(event: DamageEvent) {
-        // before
-        const role = this.route.role;
-        if (!role) return false;
-        if (!this.isActived) return false;
-        
-        // execute
-        this.doConsume(event);
-        event.supplement({ isBlock: true });
-
-        // after
-        DebugUtil.log(`${role.name} lost Divine Shield`);
-        this.event.onConsume(event);
+    public block(event: DamageEvent) {
+        const isValid = this.toBlock();
+        if (!isValid) return;
+        this.doBlock(event);
+        this.onBlock();
     }
 
-    protected doConsume(event: DamageEvent) {
+    protected toBlock(): boolean {
+        if (!this.isActived) return false;
+        const event = new AbortEvent({});
+        this.event.toBlock(event);
+        const isValid = event.detail.isValid;
+        if (!isValid) return false;
+        return true;
+    }
+
+    @TranxUtil.span()
+    protected doBlock(event: DamageEvent) {
+        event.update(0);
+        event.abort();
         if (this.origin.state.count <= 1) {
             this.origin.state.isEnabled = false;
         }
         this.origin.state.count =- 1;
+    }
+
+    protected onBlock() {
+        const role = this.route.role;
+        if (!role) return;
+        DebugUtil.log(`${role.name} lost Divine Shield`);
+        this.event.onBlock(new Event({}));
     }
 
 
@@ -65,7 +101,6 @@ export class DivineShieldModel extends RoleFeatureModel<
         super.doEnable();
         this.origin.state.count = 1;
     }
-
 
     @TranxUtil.span()
     protected doDisable() {

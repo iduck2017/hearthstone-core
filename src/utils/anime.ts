@@ -1,4 +1,3 @@
-
 export class AnimeUtil {
     private static _current: number = 0
     public static get current() { 
@@ -12,7 +11,6 @@ export class AnimeUtil {
     public static clear() { 
         AnimeUtil._current = 0; 
     }
-
 
     private constructor() {}
 }

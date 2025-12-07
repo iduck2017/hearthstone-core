@@ -1,8 +1,9 @@
 import { Model, TranxUtil } from "set-piece";
-import { DamageEvent, DamageType } from "../../types/events/damage";
+import { DamageEvent } from "../../types/events/damage";
 import { DisposeModel } from "./dispose";
-import { SpellCardModel } from "../entities/cards/spell";
 import { SpellEffectModel } from "../features/hooks/spell-effect";
+import { DivineShieldModel } from "../features/entries/divine-shield";
+import { AbortEvent } from "../../types/events/abort";
 
 export namespace DamageModel {
     export type E = {
@@ -31,21 +32,31 @@ export class DamageModel extends Model<
                 item.update(item.detail.result + offset);
             }
         })
-
-        tasks.forEach(item => item.detail.source.child.damage.event.toDeal(item));
-        tasks.forEach(item => item.detail.target.child.health.toConsume(item));
-        
+        tasks.forEach(item => {
+            const source = item.detail.source;
+            const damage = source.child.damage;
+            const isValid = damage.toDeal(item);
+            return isValid
+        });
+        tasks = tasks.filter(item => {
+            const target = item.detail.target;
+            const health = target.child.health
+            const isValid = health.toConsume(item)
+            return isValid;
+        })
+        // divine sheild
+        tasks = tasks.filter(item => item.detail.isValid);
+        DivineShieldModel.block(tasks);
         tasks = tasks.filter(item => item.detail.isValid);
         DamageModel.doDeal(tasks);
         tasks = tasks.filter(item => item.detail.result > 0 && item.detail.isValid);
-
         tasks.forEach(item => item.detail.target.child.health.onConsume(item));
         tasks.forEach(item => item.detail.source.child.damage.event.onDeal(item));
     }
 
     @TranxUtil.span()
     private static doDeal(tasks: DamageEvent[]) {
-        tasks.forEach(item => item.detail.target.child.health.consume(item));
+        tasks.forEach(item => item.detail.target.child.health.doComsume(item));
     }
 
     constructor(props?: DamageModel['props']) {
@@ -55,5 +66,12 @@ export class DamageModel extends Model<
             child: { ...props?.child },
             refer: { ...props?.refer },
         })
+    }
+
+    protected toDeal(event: DamageEvent): boolean {
+        this.event.toDeal(event)
+        const isValid = event.detail.isValid;
+        if (!isValid) return false;
+        return true
     }
 }

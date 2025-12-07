@@ -5,9 +5,10 @@ import { BoardModel, CollectionModel, DeckModel, GraveyardModel, HandModel } fro
 
 export namespace FeatureModel {
     export type E = {
-        toActive: AbortEvent;
-        onActive: Event;
-        onDeactive: Event;
+        toEnable: AbortEvent;
+        onEnable: Event;
+        toDisable: Event;
+        onDisable: Event;
     };
     export type S = {
         name: string;
@@ -97,17 +98,12 @@ export class FeatureModel<
     }
 
     public enable() {
-        if (this.origin.state.isEnabled) return false;
-
-        // toActive
-        const event = new AbortEvent({});
-        this.event.toActive(event);
-        const isValid = event.detail.isValid;
-        if (!isValid) return false;
+        const isValid = this.toEnable()
+        if (!isValid) return;
         // execute
         this.doEnable();
         // after
-        this.event.onActive(new Event({}));
+        this.event.onEnable(new Event({}));
     }
 
     @TranxUtil.span()
@@ -116,11 +112,27 @@ export class FeatureModel<
         this.reload();
     }
 
+    protected toEnable(): boolean {
+        // already enabled
+        const state = this.origin.state;
+        if (state.isEnabled) return false;
+        // abort event
+        const event = new AbortEvent({})
+        this.event.toEnable(event);
+        const isValid = event.detail.isValid;
+        if (!isValid) return false;
+        return true;
+    }
+
+    protected onEnable() {
+
+    }
+
     public disable() {
         if (!this.origin.state.isEnabled) return false;
         this.doDisable();
         this.child.buffs.forEach(buff => buff.disable());
-        this.event.onDeactive(new Event({}));
+        this.event.onDisable(new Event({}));
     }
 
     @TranxUtil.span()

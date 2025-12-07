@@ -39,6 +39,6 @@ export class RushModel extends RoleFeatureModel<
         this.origin.state.isEnabled = true;
         // after
         DebugUtil.log(`${role.name} gain Rush`);
-        this.event.onActive(new Event({}));
+        this.event.onEnable(new Event({}));
     }
 }

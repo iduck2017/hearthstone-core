@@ -1,6 +1,7 @@
-import { DebugUtil, Event, TemplUtil } from "set-piece";
+import { DebugUtil, Event, TemplUtil, TranxUtil } from "set-piece";
 import { FeatureModel } from "../../features";
 import { RoleFeatureModel } from "../role";
+import { RoleModel } from "../../entities/heroes";
 
 export namespace FrozenModel {
     export type E = {}
@@ -14,6 +15,27 @@ export class FrozenModel extends RoleFeatureModel<
     FrozenModel.S,
     FrozenModel.C
 > {
+    public static enable(targets: RoleModel[]) {
+        targets = targets.filter(item => {
+            const entry = item.child.frozen;
+            const isValid = entry.toEnable()
+            return isValid
+        })
+        this.doEnable(targets)
+        targets.forEach(item => {
+            const entry = item.child.frozen;
+            entry.onEnable();
+        })
+    }
+
+    @TranxUtil.then()
+    private static doEnable(target: RoleModel[]) {
+        target.forEach(item => {
+            const entry = item.child.frozen;
+            entry.doEnable();
+        })
+    }
+
     constructor(props?: FrozenModel['props']) {
         super({
             uuid: props?.uuid,

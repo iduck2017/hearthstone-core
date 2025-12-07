@@ -13,6 +13,7 @@ export namespace RoleHealthModel {
     };
     export type S = {
         origin: number;
+        minimum?: number;
         maximum: number;
         memory: number;
         damage: number;
@@ -83,18 +84,20 @@ export class RoleHealthModel extends Model<
         });
     }
 
-    public toConsume(event: DamageEvent) {
+    public toConsume(event: DamageEvent): boolean {
         this.event.toConsume(event);
+        const isValid = event.detail.isValid;
+        if (!isValid) return false;
+        return true
     }
 
     @TranxUtil.span()
-    public consume(event: DamageEvent): DamageEvent {
+    public doComsume(event: DamageEvent): DamageEvent {
+
         const role = this.route.role;
         if (!role) return event;
 
-        const divineSheild = role.child.divineShield;
         const source = event.detail.source;
-
         const hero = this.route.hero;
         const minion = this.route.minion;
         const dispose = role.child.dispose;
@@ -104,7 +107,7 @@ export class RoleHealthModel extends Model<
             event.update(0)
             return event;
         }
-
+        /** @todo move outside */
         // armor
         if (hero) {
             const armor = hero.child.armor;
@@ -113,17 +116,21 @@ export class RoleHealthModel extends Model<
             event.update(result);
         }
 
-        // divine shield
-        if (divineSheild.state.isEnabled) {
-            divineSheild.consume(event);
-            event.update(0);
-            return event;
-        }
+
+        /** @todo move outside */
         // poisonous
         const poisonous = source.child.poisonous;
         if (poisonous.state.isEnabled && minion) event.supplement({ isPoisonous: true });
 
+        // minium
+        const current = this.state.current;
+        if (this.state.minimum !== undefined) {
+            result = Math.min(result, current - this.state.minimum);
+            event.update(result);
+        }
         this.origin.state.damage += result;
+
+
         DebugUtil.log(`${role.name} receive ${result} Damage`);
         dispose.check(event.detail.source);
         return event;

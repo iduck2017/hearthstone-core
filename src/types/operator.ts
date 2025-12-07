@@ -6,6 +6,7 @@ export type Operator = {
     type: OperatorType;
     offset: number;
     method: Model;
+    key?: string;
 }
 
 export enum OperatorType {
