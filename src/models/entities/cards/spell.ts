@@ -1,4 +1,4 @@
-import { Model, State, TranxUtil } from "set-piece";
+import { Model, State, TranxService } from "set-piece";
 import { SchoolType } from "../../../types/card";
 import { SpellEffectModel } from "../../..";
 import { CardModel } from ".";
@@ -16,7 +16,7 @@ export namespace SpellCardModel {
     export type R = {};
 }
 
-@TranxUtil.span(true)
+@TranxService.span(true)
 export abstract class SpellCardModel<
     E extends Partial<SpellCardModel.E & CardModel.E> & Model.E = {},
     S extends Partial<SpellCardModel.S & CardModel.S> & Model.S = {},
@@ -55,7 +55,7 @@ export abstract class SpellCardModel<
         })
     }
 
-    @TranxUtil.span()
+    @TranxService.span()
     public deploy() {
         const player = this.route.player;
         if (!player) return;

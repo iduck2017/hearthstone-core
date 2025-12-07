@@ -1,4 +1,4 @@
-import { StateUtil } from "set-piece";
+import { StatePlugin } from "set-piece";
 import { WeaponAttackModel } from "../../rules/weapon-attack";
 import { WeaponAttackDecor } from "../../../types/decors/weapon-attack";
 import { OperatorType } from "../../../types/operator";
@@ -28,7 +28,7 @@ export class WeaponAttackBuffModel extends BuffModel<
     }
 
     
-    @StateUtil.on(self => self.modifyAttack)
+    @StatePlugin.on(self => self.modifyAttack)
     private listenAttack() {
         const weapon = this.route.weapon;
         return weapon?.proxy.child.attack?.decor;

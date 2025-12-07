@@ -1,4 +1,4 @@
-import { DebugUtil, Event, Method, Model } from "set-piece";
+import { DebugService, Event, Method, Model } from "set-piece";
 import { PlayerModel } from "../entities/player";
 import { GameModel } from "../entities/game";
 
@@ -52,12 +52,12 @@ export class TurnModel extends Model<
         this.start();
     }
 
-    @DebugUtil.span()
+    @DebugService.span()
     private start() {
         const player = this.refer.current;
         const board = player?.child.board;
         if (!board) return;
-        DebugUtil.log(`${player.name} Turn Start`);
+        DebugService.log(`${player.name} Turn Start`);
         
         const game = this.route.game;
         if (!game) return;
@@ -97,12 +97,12 @@ export class TurnModel extends Model<
         this.event.onStart(new Event({}));
     }
     
-    @DebugUtil.span()
+    @DebugService.span()
     private end() {
         const player = this.refer.current;
         const board = player?.child.board;
         if (!board) return;
-        DebugUtil.log(`${player.name} Turn End`);
+        DebugService.log(`${player.name} Turn End`);
 
         const game = this.route.game;
         if (!game) return;

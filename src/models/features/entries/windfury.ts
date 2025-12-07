@@ -1,4 +1,4 @@
-import { Event, StateUtil, TemplUtil, TranxUtil } from "set-piece";
+import { Event, StatePlugin, ChunkService, TranxService } from "set-piece";
 import { RoleActionModel } from "../../rules/role-action";
 import { RoleFeatureModel } from "../role";
 import { RoleActionDecor } from "../../../types/decors/role-action";
@@ -12,7 +12,7 @@ export namespace WindfuryModel {
     export type R = {};
 }
 
-@TemplUtil.is('windfury')
+@ChunkService.is('windfury')
 export class WindfuryModel extends RoleFeatureModel<
     WindfuryModel.E,
     WindfuryModel.S,
@@ -43,20 +43,20 @@ export class WindfuryModel extends RoleFeatureModel<
         super.enable();
     }
 
-    @TranxUtil.span()
+    @TranxService.span()
     protected doEnable(isAdvanced?: boolean) {
         super.doEnable();
         this.origin.state.isAdvanced = isAdvanced ?? false;
     }
 
-    @TranxUtil.span()
+    @TranxService.span()
     protected doDisable() {
         super.doDisable();
         this.origin.state.isAdvanced = false;
     }
 
     
-    @StateUtil.on(self => self.modifyAction)
+    @StatePlugin.on(self => self.modifyAction)
     protected listenAction() { 
         return this.route.role?.proxy.child.action?.decor;
     }

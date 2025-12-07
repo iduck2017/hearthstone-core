@@ -1,4 +1,4 @@
-import { DebugUtil, Event, Method, Model } from "set-piece";
+import { DebugService, Event, Method, Model } from "set-piece";
 import { PlayerModel } from "./player";
 import { GameModel } from "./game";
 import { CostModel } from "../rules/cost";

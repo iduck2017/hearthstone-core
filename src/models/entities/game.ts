@@ -1,4 +1,4 @@
-import { DebugUtil, Event, Model, TemplUtil, TranxUtil } from "set-piece";
+import { DebugService, Event, Model, ChunkService, TranxService } from "set-piece";
 import { PlayerModel } from "./player";
 import { TurnModel } from "../rules/turn";
 import { AppModel, CardModel, MinionCardModel, TheCoinModel } from "../..";
@@ -22,7 +22,7 @@ export namespace GameModel {
 }
 
 
-@TemplUtil.is('game')
+@ChunkService.is('game')
 export class GameModel extends Model<
     GameModel.E, 
     GameModel.S, 
@@ -87,12 +87,12 @@ export class GameModel extends Model<
 
 
     public start() {
-        DebugUtil.log('Game Start');
+        DebugService.log('Game Start');
         this.doStart();
         this.onStart();
     }
     
-    @TranxUtil.span()
+    @TranxService.span()
     private doStart() {
         const playerA = this.child.playerA;
         const handA = playerA.child.hand;

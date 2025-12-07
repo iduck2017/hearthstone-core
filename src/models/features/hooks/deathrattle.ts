@@ -1,4 +1,4 @@
-import { DebugUtil, Event, Method, Model } from "set-piece";
+import { DebugService, Event, Method, Model } from "set-piece";
 import { AbortEvent } from "../../../types/events/abort";
 import { CardModel, MinionCardModel } from "../../..";
 import { FeatureModel } from "../";
@@ -52,7 +52,7 @@ export abstract class DeathrattleModel<
         });
     }
 
-    @DebugUtil.span()
+    @DebugService.span()
     public run() {
         if (!this.isActived) return;
         // toRun
@@ -65,7 +65,7 @@ export abstract class DeathrattleModel<
         // onRun
         const name = this.state.name;
         const desc = this.state.desc;
-        DebugUtil.log(`${name} run: ${desc}`);
+        DebugService.log(`${name} run: ${desc}`);
         this.event.onRun(new Event({}));
     }
 

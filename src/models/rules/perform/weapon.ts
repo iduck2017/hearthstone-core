@@ -1,4 +1,4 @@
-import { DebugUtil, Event, Model, TranxUtil } from "set-piece";
+import { DebugService, Event, Model, TranxService } from "set-piece";
 import { BattlecryModel } from "../../features/hooks/battlecry";
 import { DependencyModel } from "../../common/dependency";
 import { AbortEvent } from "../../../types/events/abort";
@@ -104,12 +104,12 @@ export class WeaponPerformModel extends CardPerformModel<
         this.reset();
 
         // after
-        DebugUtil.log(`${card.name} Played`);
+        DebugService.log(`${card.name} Played`);
         this.event.onPlay(new Event({}));
     }
 
 
-    @TranxUtil.span()
+    @TranxService.span()
     protected reset() {
         this.origin.state.isPending = false;
         this.origin.state.from = 0;
@@ -119,7 +119,7 @@ export class WeaponPerformModel extends CardPerformModel<
     }
 
     // lifecycle
-    @TranxUtil.span()
+    @TranxService.span()
     protected init(from: number, config: WeaponHooksConfig) {
         this.origin.state.from = from;
         this.origin.state.isPending = true;

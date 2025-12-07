@@ -1,4 +1,4 @@
-import { DebugUtil, Event, TemplUtil } from "set-piece";
+import { DebugService, Event, ChunkService } from "set-piece";
 import { FeatureModel } from "../../features";
 import { RoleFeatureModel } from "../role";
 
@@ -9,7 +9,7 @@ export namespace StealthModel {
     export type R = {};
 }
 
-@TemplUtil.is('stealth')
+@ChunkService.is('stealth')
 export class StealthModel extends RoleFeatureModel<
     StealthModel.E,
     StealthModel.S,

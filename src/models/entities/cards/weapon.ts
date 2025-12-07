@@ -1,4 +1,4 @@
-import { DebugUtil, Event, Model, TranxUtil } from "set-piece";
+import { DebugService, Event, Model, TranxService } from "set-piece";
 import { CardModel } from ".";
 import { WeaponAttackModel } from "../../rules/weapon-attack";
 import { WeaponActionModel } from "../../rules/weapon-action";
@@ -33,7 +33,7 @@ export namespace WeaponCardModel {
     export type R = {};
 }
 
-@TranxUtil.span(true)
+@TranxService.span(true)
 export abstract class WeaponCardModel<
     E extends Partial<WeaponCardModel.E & CardModel.E> & Model.E = {},
     S extends Partial<WeaponCardModel.S & CardModel.S> & Model.S = {},

@@ -1,4 +1,4 @@
-import { DebugUtil,  Model, TranxUtil } from "set-piece";
+import { DebugService,  Model, TranxService } from "set-piece";
 import { DisposeModel } from ".";
 import { MinionCardModel, PlayerModel, WeaponCardModel } from "../../..";
 import { SecretCardModel } from "../../entities/cards/secret";
@@ -23,7 +23,7 @@ export class SecretDisposeModel extends DisposeModel {
         });
     }
 
-    @TranxUtil.span()
+    @TranxService.span()
     protected run() {
         const secret = this.route.secret;
         if (!secret) return;

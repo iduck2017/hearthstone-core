@@ -1,4 +1,4 @@
-import { DebugUtil, Event, TemplUtil, TranxUtil } from "set-piece";
+import { DebugService, Event, ChunkService, TranxService } from "set-piece";
 import { DamageEvent } from "../../../types/events/damage";
 import { RoleFeatureModel } from "../role";
 import { AbortEvent } from "../../../types/events/abort";
@@ -16,7 +16,7 @@ export namespace DivineShieldModel {
     export type R = {}
 }
 
-@TemplUtil.is('divine-shield')
+@ChunkService.is('divine-shield')
 export class DivineShieldModel extends RoleFeatureModel<
     DivineShieldModel.E,
     DivineShieldModel.S,
@@ -38,7 +38,7 @@ export class DivineShieldModel extends RoleFeatureModel<
         })        
     }
 
-    @TranxUtil.span()
+    @TranxService.span()
     protected static doBlock(options: DamageEvent[]) {
         options.forEach(item => {
             const target = item.detail.target;
@@ -78,7 +78,7 @@ export class DivineShieldModel extends RoleFeatureModel<
         return true;
     }
 
-    @TranxUtil.span()
+    @TranxService.span()
     protected doBlock(event: DamageEvent) {
         event.update(0);
         event.abort();
@@ -91,18 +91,18 @@ export class DivineShieldModel extends RoleFeatureModel<
     protected onBlock() {
         const role = this.route.role;
         if (!role) return;
-        DebugUtil.log(`${role.name} lost Divine Shield`);
+        DebugService.log(`${role.name} lost Divine Shield`);
         this.event.onBlock(new Event({}));
     }
 
 
-    @TranxUtil.span()
+    @TranxService.span()
     protected doEnable() {
         super.doEnable();
         this.origin.state.count = 1;
     }
 
-    @TranxUtil.span()
+    @TranxService.span()
     protected doDisable() {
         super.doDisable();
         this.origin.state.count = 0;

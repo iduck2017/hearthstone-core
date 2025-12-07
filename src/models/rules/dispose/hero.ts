@@ -1,4 +1,4 @@
-import { DebugUtil, Model } from "set-piece";
+import { DebugService, Model } from "set-piece";
 import { DisposeModel } from ".";
 import { AppModel, CardModel, HeroModel, PlayerModel } from "../../..";
 
@@ -38,14 +38,14 @@ export class HeroDisposeModel extends DisposeModel {
         
         const player = this.route.player;
         if (!player) return;
-        DebugUtil.log(`${player.name} Die`);
+        DebugService.log(`${player.name} Die`);
 
         app.del();
         const opponent = player.refer.opponent;
         if (!opponent) return;
         const dispose = opponent.child.hero.child.dispose;
-        if (dispose.state.isActived) DebugUtil.log('Tie!');
-        else DebugUtil.log(`${opponent.name} Win!`);
+        if (dispose.state.isActived) DebugService.log('Tie!');
+        else DebugService.log(`${opponent.name} Win!`);
         
     }
 }

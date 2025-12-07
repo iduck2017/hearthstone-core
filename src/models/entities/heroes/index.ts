@@ -1,4 +1,4 @@
-import { DebugUtil, Event, Method, Model, TranxUtil } from "set-piece";
+import { DebugService, Event, Method, Model, TranxService } from "set-piece";
 import { SkillModel } from "../skill";
 import { ArmorModel } from "../../rules/armor";
 import { AbortEvent, DamageModel, FrozenModel, MinionCardModel, OverhealModel, RestoreModel, RoleAttackModel, RoleHealthModel, SleepModel, TurnEndModel, TurnStartModel, WeaponCardModel } from "../../..";
@@ -132,11 +132,11 @@ export abstract class HeroModel<
         if (prev) prev.child.dispose.destroy();
         this.doEquip(weapon);
 
-        DebugUtil.log(`${weapon.name} Equipped`);
+        DebugService.log(`${weapon.name} Equipped`);
         this.event.onEquip(new Event({ weapon }));
     }
 
-    @TranxUtil.span()
+    @TranxService.span()
     private doEquip(next: WeaponCardModel) {
         const player = this.route.player;
         if (!player) return;

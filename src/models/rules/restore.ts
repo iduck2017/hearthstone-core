@@ -1,4 +1,4 @@
-import { Model, TranxUtil } from "set-piece";
+import { Model, TranxService } from "set-piece";
 import { RestoreEvent } from "../../types/events/restore";
 import { CardModel, MinionCardModel, PlayerModel } from "../..";
 
@@ -32,7 +32,7 @@ export class RestoreModel extends Model<
         tasks.forEach(item => item.detail.source.child.restore.event.onDeal(item));
     }
 
-    @TranxUtil.span()
+    @TranxService.span()
     private static _deal(tasks: RestoreEvent[]) {
         return tasks.map(item => item.detail.target.child.health.restore(item));
     }

@@ -1,4 +1,4 @@
-import { DebugUtil, Event, Method, Model, State, TranxUtil } from "set-piece";
+import { DebugService, Event, Method, Model, State, TranxService } from "set-piece";
 import { AbortEvent, BoardModel, CardModel, GraveyardModel, HeroModel, PlayerModel } from '../../..'
 
 export namespace DisposeModel {
@@ -132,11 +132,11 @@ export abstract class DisposeModel<
         this.origin.state.isDestroyed = true;
         this.check(source, method);
         // after
-        DebugUtil.log(`${parent.name} Destroyed`);
+        DebugService.log(`${parent.name} Destroyed`);
     }
 
     @DisposeModel.span()
-    @TranxUtil.span()
+    @TranxService.span()
     public check(source?: CardModel | HeroModel, method?: Model) {
         this.origin.refer.method = method;
         this.origin.refer.source = source;

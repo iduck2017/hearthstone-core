@@ -1,4 +1,4 @@
-import { Event, EventUtil, Model, StateUtil, TranxUtil } from "set-piece";
+import { Event, EventPlugin, Model, StatePlugin, TranxService } from "set-piece";
 import { AbortEvent, BuffModel, GameModel, HeroModel, MinionCardModel, PlayerModel, SpellCardModel, WeaponCardModel } from "../..";
 import { CardModel } from "../entities/cards";
 import { BoardModel, CollectionModel, DeckModel, GraveyardModel, HandModel } from "../..";
@@ -91,8 +91,8 @@ export class FeatureModel<
         })
     }
 
-    @EventUtil.if()
-    @StateUtil.if()
+    @EventPlugin.if()
+    @StatePlugin.if()
     private check() {
         return this.isActived;
     }
@@ -106,7 +106,7 @@ export class FeatureModel<
         this.event.onEnable(new Event({}));
     }
 
-    @TranxUtil.span()
+    @TranxService.span()
     protected doEnable() {
         this.origin.state.isEnabled = true;
         this.reload();
@@ -135,7 +135,7 @@ export class FeatureModel<
         this.event.onDisable(new Event({}));
     }
 
-    @TranxUtil.span()
+    @TranxService.span()
     protected doDisable() {
         this.origin.state.isEnabled = false;
         this.reload();

@@ -1,4 +1,4 @@
-import { Model, TemplUtil } from "set-piece";
+import { Model, ChunkService } from "set-piece";
 import { GameModel } from "./entities/game";
 import { CollectionModel } from "./entities/containers/collection";
 import { CacheModel } from "./entities/containers/cache";
@@ -16,7 +16,7 @@ export namespace AppModel {
     };
 }
 
-@TemplUtil.is('app')
+@ChunkService.is('app')
 export class AppModel extends Model<
     AppModel.E, 
     AppModel.S, 

@@ -1,4 +1,4 @@
-import { DebugUtil, Event, TemplUtil, TranxUtil } from "set-piece";
+import { DebugService, Event, ChunkService, TranxService } from "set-piece";
 import { FeatureModel } from "../../features";
 import { RoleFeatureModel } from "../role";
 import { RoleModel } from "../../entities/heroes";
@@ -9,7 +9,7 @@ export namespace FrozenModel {
     export type C = {}
 }
 
-@TemplUtil.is('frozen')
+@ChunkService.is('frozen')
 export class FrozenModel extends RoleFeatureModel<
     FrozenModel.E,
     FrozenModel.S,
@@ -28,7 +28,7 @@ export class FrozenModel extends RoleFeatureModel<
         })
     }
 
-    @TranxUtil.then()
+    @TranxService.then()
     private static doEnable(target: RoleModel[]) {
         target.forEach(item => {
             const entry = item.child.frozen;
@@ -66,7 +66,7 @@ export class FrozenModel extends RoleFeatureModel<
     protected onDeactive() {
         const role = this.route.role;
         if (!role) return false;
-        DebugUtil.log(`${role.name} Unfrozen`);
+        DebugService.log(`${role.name} Unfrozen`);
 
         super.disable();
     }

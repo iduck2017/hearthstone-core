@@ -1,4 +1,4 @@
-import { Event, Method, State, TranxUtil, Model, DebugUtil, TemplUtil, Emitter } from "set-piece";
+import { Event, Method, State, TranxService, Model, DebugService, ChunkService, Emitter } from "set-piece";
 import { RaceType } from "../../../types/card";
 import { MinionDisposeModel } from "../../rules/dispose/minion";
 import { CardModel } from ".";
@@ -58,7 +58,7 @@ export namespace MinionCardModel {
     export type R = {};
 }
 
-@TranxUtil.span(true)
+@TranxService.span(true)
 export abstract class MinionCardModel<
     E extends Partial<MinionCardModel.E & CardModel.E> & Model.E = {},
     S extends Partial<MinionCardModel.S & CardModel.S> & Model.S = {},
@@ -151,12 +151,12 @@ export abstract class MinionCardModel<
         this.doTransform(target);
         
         // after
-        DebugUtil.log(`${this.name} Transformed to ${target.name}`);
+        DebugService.log(`${this.name} Transformed to ${target.name}`);
         this.event.onTransform(new Event({ target }));
     }
     
-    @TranxUtil.span()
-    @DebugUtil.span()
+    @TranxService.span()
+    @DebugService.span()
     private doTransform(target: MinionCardModel): boolean {
         const board = this.route.board;
         const self: MinionCardModel = this;
@@ -173,12 +173,12 @@ export abstract class MinionCardModel<
     public silence() {
         this.doSilence();
         // after
-        DebugUtil.log(`${this.name} Silenced`);
+        DebugService.log(`${this.name} Silenced`);
         this.event.onSilence(new Event({}));
     }
 
 
-    @TranxUtil.span()
+    @TranxService.span()
     private doSilence() {
         // feats
         this.child.feats.forEach(item => item.disable());

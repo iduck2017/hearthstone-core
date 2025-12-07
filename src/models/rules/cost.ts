@@ -1,4 +1,4 @@
-import { Model, TemplUtil } from "set-piece";
+import { Model, ChunkService } from "set-piece";
 import { PlayerModel } from "../entities/player";
 import { CardModel } from "../entities/cards";
 import { CostDecor } from "../../types/decors/cost";
@@ -20,7 +20,7 @@ export namespace CostModel {
 }
 
 
-@TemplUtil.is('cost')
+@ChunkService.is('cost')
 export class CostModel extends Model<
     CostModel.E, 
     CostModel.S, 

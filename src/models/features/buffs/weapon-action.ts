@@ -1,5 +1,5 @@
 import { FeatureModel } from "..";
-import { StateUtil } from "set-piece";
+import { StatePlugin } from "set-piece";
 import { OperatorType } from "../../../types/operator";
 import { WeaponActionModel } from "../../rules/weapon-action";
 import { WeaponActionDecor } from "../../../types/decors/weapon-action";
@@ -28,7 +28,7 @@ export class WeaponActionkBuffModel extends BuffModel<
         })
     }
 
-    @StateUtil.on(self => self.modifyAction)
+    @StatePlugin.on(self => self.modifyAction)
     private listenAction() {
         const weapon = this.route.weapon;
         return weapon?.proxy.child.action?.decor;

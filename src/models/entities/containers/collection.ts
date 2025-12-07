@@ -1,4 +1,4 @@
-import { Model, TemplUtil } from "set-piece";
+import { Model, ChunkService } from "set-piece";
 import { CardModel, DeckModel } from "../../..";
 
 export namespace CollectionModel {
@@ -56,7 +56,7 @@ export class CollectionModel extends Model<
 
     public apply(): DeckModel {
         const cards = this.child.cards
-            .map(item => TemplUtil.copy(item))
+            .map(item => ChunkService.copy(item))
             .filter(item => item !== undefined)
             .sort(Math.random);
 

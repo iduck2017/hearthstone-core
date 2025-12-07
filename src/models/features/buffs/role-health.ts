@@ -1,5 +1,5 @@
 import { FeatureModel } from "..";
-import { StateUtil } from "set-piece";
+import { StatePlugin } from "set-piece";
 import { RoleHealthModel } from "../../rules/role-health";
 import { RoleHealthDecor } from "../../../types/decors/role-health";
 import { OperatorType } from "../../../types/operator";
@@ -28,7 +28,7 @@ export class RoleHealthBuffModel extends BuffModel<
         })
     }
     
-    @StateUtil.on(self => self.modifyHealth)
+    @StatePlugin.on(self => self.modifyHealth)
     private listenHealth() {
         const role = this.route.role;
         return role?.proxy.child.health?.decor;

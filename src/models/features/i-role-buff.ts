@@ -3,7 +3,7 @@ import { RoleAttackDecor } from "../../types/decors/role-attack";
 import { RoleHealthModel } from "../rules/role-health";
 import { RoleHealthDecor } from "../../types/decors/role-health";
 import { OperatorType } from "../../types/operator";
-import { Model, StateUtil, TemplUtil } from "set-piece";
+import { Model, StatePlugin, ChunkService } from "set-piece";
 import { RoleFeatureModel } from "../features/role";
 import { FeatureModel } from "../features";
 import { HeroModel } from "../..";
@@ -70,7 +70,7 @@ export abstract class IRoleBuffModel<
     }
 
 
-    @StateUtil.on(self => self.modifyAttack)
+    @StatePlugin.on(self => self.modifyAttack)
     private listenAttack() {
         return this.route.role?.proxy.child.attack?.decor;
     }
@@ -84,7 +84,7 @@ export abstract class IRoleBuffModel<
     }
 
 
-    @StateUtil.on(self => self.modifyHealth)
+    @StatePlugin.on(self => self.modifyHealth)
     private listenHealth() {
         return this.route.role?.proxy.child.health?.decor;
     }

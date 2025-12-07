@@ -1,4 +1,4 @@
-import { DebugUtil, Event, Model, TranxUtil } from "set-piece";
+import { DebugService, Event, Model, TranxService } from "set-piece";
 import { BattlecryModel } from "../../features/hooks/battlecry";
 import { DependencyModel } from "../../common/dependency";
 import { MinionCardModel } from "../../entities/cards/minion";
@@ -124,13 +124,13 @@ export class MinionPerformModel extends CardPerformModel<
         this.reset();
 
         // after
-        DebugUtil.log(`${card.name} Played`);
+        DebugService.log(`${card.name} Played`);
         this.event.onPlay(new Event({}));
     }
 
 
     // lifecycle
-    @TranxUtil.span()
+    @TranxService.span()
     protected init(from: number, to: number, config: MinionHooksConfig) {
         this.origin.state.from = from;
         this.origin.state.isPending = true;
@@ -142,7 +142,7 @@ export class MinionPerformModel extends CardPerformModel<
         })
     }
 
-    @TranxUtil.span()
+    @TranxService.span()
     protected reset() {
         this.origin.state.isPending = false;
         this.origin.state.from = 0;

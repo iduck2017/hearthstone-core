@@ -1,9 +1,9 @@
-import { TemplUtil } from "set-piece";
+import { ChunkService } from "set-piece";
 import { SkillModel } from "../../skill";
 import { CostModel } from "../../../rules/cost";
 import { ArmorUpEffectModel } from "./effect";
 
-@TemplUtil.is('armor-up')
+@ChunkService.is('armor-up')
 export class ArmorUpModel extends SkillModel {
     constructor(props?: ArmorUpModel['props']) {
         super({

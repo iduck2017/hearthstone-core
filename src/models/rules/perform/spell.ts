@@ -1,4 +1,4 @@
-import { DebugUtil, Event, Model, Route, TranxUtil } from "set-piece"
+import { DebugService, Event, Model, Route, TranxService } from "set-piece"
 import { SpellEffectModel } from "../../features/hooks/spell-effect"
 import { DependencyModel } from "../../common/dependency"
 import { SpellCardModel } from "../../entities/cards/spell"
@@ -140,12 +140,12 @@ export class SpellPerformModel extends CardPerformModel<
         this.reset();
 
         // after
-        DebugUtil.log(`${card.name} Played`);
+        DebugService.log(`${card.name} Played`);
         this.event.onPlay(new Event({}));
     }
 
     // lifecycle
-    @TranxUtil.span()
+    @TranxService.span()
     protected init(from: number, config: SpellHooksConfig) {
         this.origin.state.from = from;
         this.origin.state.isPending = true;
@@ -156,7 +156,7 @@ export class SpellPerformModel extends CardPerformModel<
         })
     }
 
-    @TranxUtil.span()
+    @TranxService.span()
     protected reset() {
         this.origin.state.isPending = false;
         this.origin.state.from = 0;

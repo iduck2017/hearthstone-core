@@ -1,4 +1,4 @@
-import { DebugUtil, Event, Model, Route, TranxUtil } from "set-piece";
+import { DebugService, Event, Model, Route, TranxService } from "set-piece";
 import { EffectModel } from "../../features/hooks/effect";
 import { DependencyModel } from "../../common/dependency";
 import { SkillModel } from "../../entities/skill";
@@ -165,13 +165,13 @@ export class SkillPerformModel extends Model<
         this.reset();
 
         // after
-        DebugUtil.log(`${skill.name} Used`);
+        DebugService.log(`${skill.name} Used`);
         this.event.onUse(new Event({}));
     }
 
 
     // lifecycle
-    @TranxUtil.span()
+    @TranxService.span()
     protected init(config: SkillHooksConfig) {
         this.origin.state.isPending = true;
         this.origin.state.index = 0;
@@ -181,7 +181,7 @@ export class SkillPerformModel extends Model<
         })
     }
 
-    @TranxUtil.span()
+    @TranxService.span()
     protected reset() {
         this.origin.state.isPending = false;
         this.origin.state.index = 0;

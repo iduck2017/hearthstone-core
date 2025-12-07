@@ -1,4 +1,4 @@
-import { DebugUtil, Event, Model } from "set-piece";
+import { DebugService, Event, Model } from "set-piece";
 import { PlayerModel } from "../entities/player";
 
 export namespace ArmorModel {
@@ -45,7 +45,7 @@ export class ArmorModel extends Model<
 
         const result = this.add(value);
 
-        DebugUtil.log(`${player?.name} restore ${value} Armor`);
+        DebugService.log(`${player?.name} restore ${value} Armor`);
         this.event.onRestore(new Event({ value: result }));
         return result;
     }
@@ -70,7 +70,7 @@ export class ArmorModel extends Model<
         // execute
         const result = this.del(value);
         // event
-        DebugUtil.log(`${player.name} lost ${value} Armor`);
+        DebugService.log(`${player.name} lost ${value} Armor`);
         this.event.onConsume(new Event({ value: result }));
         return result;
     }

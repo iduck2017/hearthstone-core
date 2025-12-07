@@ -1,4 +1,4 @@
-import { Event, TemplUtil } from "set-piece";
+import { Event, ChunkService } from "set-piece";
 import { FeatureModel } from "../../features";
 import { RoleFeatureModel } from "../role";
 
@@ -9,7 +9,7 @@ export namespace ChargeModel {
     export type R = {}
 }
 
-@TemplUtil.is('charge')
+@ChunkService.is('charge')
 export class ChargeModel extends RoleFeatureModel<
     ChargeModel.E,
     ChargeModel.S,

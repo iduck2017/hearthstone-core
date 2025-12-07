@@ -1,9 +1,9 @@
 import { SkillModel } from "../../skill";
 import { CostModel } from "../../../rules/cost";
-import { TemplUtil } from "set-piece";
+import { ChunkService } from "set-piece";
 import { FireBlastEffectModel } from "./effect";
 
-@TemplUtil.is('fireblast')
+@ChunkService.is('fireblast')
 export class FireBlastModel extends SkillModel {
     constructor(props?: FireBlastModel['props']) {
         super({

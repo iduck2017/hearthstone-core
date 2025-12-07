@@ -1,4 +1,4 @@
-import { DebugUtil, Event, EventUtil, Method, Model  } from "set-piece";
+import { DebugService, Event, EventPlugin, Method, Model  } from "set-piece";
 import { TurnModel } from "../../rules/turn";
 import { CardModel, AbortEvent } from "../../..";
 import { FeatureModel } from "../";
@@ -75,7 +75,7 @@ export abstract class TurnEndModel<
         // onRun
         const name = this.state.name;
         const desc = this.state.desc;
-        DebugUtil.log(`${name} run: ${desc}`);
+        DebugService.log(`${name} run: ${desc}`);
         this.event.onRun(new Event({}));
     }
 

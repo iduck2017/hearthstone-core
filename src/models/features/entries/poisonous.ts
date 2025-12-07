@@ -1,4 +1,4 @@
-import { DebugUtil, Event, TemplUtil } from "set-piece"
+import { DebugService, Event, ChunkService } from "set-piece"
 import { FeatureModel } from "../../features"
 import { RoleFeatureModel } from "../role"
 
@@ -11,7 +11,7 @@ export namespace PoisonousModel {
     export type R = {}
 }
 
-@TemplUtil.is('poisonous')
+@ChunkService.is('poisonous')
 export class PoisonousModel extends RoleFeatureModel<
     PoisonousModel.E,
     PoisonousModel.S,

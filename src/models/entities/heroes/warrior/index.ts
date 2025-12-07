@@ -3,9 +3,9 @@ import { RoleAttackModel } from "../../../rules/role-attack";
 import { PlayerModel } from "../../player";
 import { ArmorUpModel } from "./skill";
 import { HeroModel } from "..";
-import { TemplUtil } from "set-piece";
+import { ChunkService } from "set-piece";
 
-@TemplUtil.is('warrior')
+@ChunkService.is('warrior')
 export class WarriorModel extends HeroModel {
     constructor(props?: WarriorModel['props']) {
         props = props ?? {};

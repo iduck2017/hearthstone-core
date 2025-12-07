@@ -1,4 +1,4 @@
-import { DebugUtil, Event, Model, TemplUtil, TranxUtil } from "set-piece";
+import { DebugService, Event, Model, ChunkService, TranxService } from "set-piece";
 import { PlayerModel } from "../player";
 import { GameModel } from "../game";
 import { AbortEvent, CardModel } from "../../..";
@@ -17,7 +17,7 @@ export namespace HandModel {
     export type R = {}
 }
 
-@TemplUtil.is('hand')
+@ChunkService.is('hand')
 export class HandModel extends Model<
     HandModel.E,
     HandModel.S,
@@ -65,7 +65,7 @@ export class HandModel extends Model<
         })
     }
    
-    @TranxUtil.span()
+    @TranxService.span()
     public add(card: CardModel, position?: number) {
         const child = this.origin.child;
         if (position === -1) position = child.cards.length;
@@ -74,7 +74,7 @@ export class HandModel extends Model<
     }
 
     
-    @TranxUtil.span()
+    @TranxService.span()
     public del(card: CardModel) {
         const cards = this.origin.child.cards;
         const index = cards.indexOf(card);
@@ -106,7 +106,7 @@ export class HandModel extends Model<
         isValid = Boolean(this.gain(card));
         if (!isValid) return;
 
-        DebugUtil.log(`${card.name} Drew`);
+        DebugService.log(`${card.name} Drew`);
         this.event.onDraw(new Event({ card }));
         return card;
     }
@@ -128,13 +128,13 @@ export class HandModel extends Model<
 
         this.doGain(card);
 
-        DebugUtil.log(`${card.name} Gained`);
+        DebugService.log(`${card.name} Gained`);
         this.event.onGain(new Event({ card }));
 
         return card;
     }
 
-    @TranxUtil.span()
+    @TranxService.span()
     protected doGain(card: CardModel) {
         const hand = card.route.hand;
         if (hand) hand.del(card);

@@ -1,4 +1,4 @@
-import { DebugUtil, Event, TemplUtil } from "set-piece";
+import { DebugService, Event, ChunkService } from "set-piece";
 import { RoleFeatureModel } from "../role";
 
 export namespace RushModel {
@@ -8,7 +8,7 @@ export namespace RushModel {
     export type R = {};
 }
 
-@TemplUtil.is('rush')
+@ChunkService.is('rush')
 export class RushModel extends RoleFeatureModel<
     RushModel.E,
     RushModel.S,
@@ -38,7 +38,7 @@ export class RushModel extends RoleFeatureModel<
         // execute
         this.origin.state.isEnabled = true;
         // after
-        DebugUtil.log(`${role.name} gain Rush`);
+        DebugService.log(`${role.name} gain Rush`);
         this.event.onEnable(new Event({}));
     }
 }

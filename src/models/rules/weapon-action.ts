@@ -1,4 +1,4 @@
-import { Event, Method, Model, TemplUtil, TranxUtil } from "set-piece";
+import { Event, Method, Model, ChunkService, TranxService } from "set-piece";
 import { DisposeModel, GameModel, PlayerModel, WeaponCardModel, WeaponActionDecor, AbortEvent } from "../..";
 
 export namespace WeaponActionModel {
@@ -16,7 +16,7 @@ export namespace WeaponActionModel {
     export type R = {};
 }
 
-@TemplUtil.is('weapon-action')
+@ChunkService.is('weapon-action')
 export class WeaponActionModel extends Model<
     WeaponActionModel.E,
     WeaponActionModel.S,

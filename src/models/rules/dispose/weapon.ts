@@ -1,4 +1,4 @@
-import { DebugUtil, Model, TranxUtil } from "set-piece";
+import { DebugService, Model, TranxService } from "set-piece";
 import { DisposeModel } from ".";
 import { WeaponCardModel } from "../../..";
 
@@ -40,12 +40,12 @@ export class WeaponDisposeModel extends DisposeModel {
         this.doRun();
         
         // after
-        DebugUtil.log(`${weapon.name} Break`);
+        DebugService.log(`${weapon.name} Break`);
         const deathrattle = weapon.child.deathrattle;
         deathrattle.forEach(item => item.run());
     }
 
-    @TranxUtil.span()
+    @TranxService.span()
     protected doRun() {
         const weapon = this.route.weapon;
         if (!weapon) return;

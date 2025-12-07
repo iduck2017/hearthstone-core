@@ -1,4 +1,4 @@
-import { DebugUtil, Event, Model } from "set-piece";
+import { DebugService, Event, Model } from "set-piece";
 import { AbortEvent, CardModel } from "../../..";
 
 export namespace DeckModel {

@@ -1,4 +1,4 @@
-import { DebugUtil, Event, Model } from "set-piece";
+import { DebugService, Event, Model } from "set-piece";
 import { FeatureModel } from "..";
 import { AbortEvent } from "../../../types/events/abort";
 
@@ -71,7 +71,7 @@ export abstract class TurnStartModel<
         // onRun
         const name = this.state.name;
         const desc = this.state.desc;
-        DebugUtil.log(`${name} run: ${desc}`);
+        DebugService.log(`${name} run: ${desc}`);
         this.event.onRun(new Event({}));
     }
 

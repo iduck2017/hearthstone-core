@@ -1,4 +1,4 @@
-import { Model, TranxUtil } from "set-piece";
+import { Model, TranxService } from "set-piece";
 import { DamageEvent } from "../../types/events/damage";
 import { DisposeModel } from "./dispose";
 import { SpellEffectModel } from "../features/hooks/spell-effect";
@@ -54,7 +54,7 @@ export class DamageModel extends Model<
         tasks.forEach(item => item.detail.source.child.damage.event.onDeal(item));
     }
 
-    @TranxUtil.span()
+    @TranxService.span()
     private static doDeal(tasks: DamageEvent[]) {
         tasks.forEach(item => item.detail.target.child.health.doComsume(item));
     }

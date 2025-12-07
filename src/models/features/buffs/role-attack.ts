@@ -1,5 +1,5 @@
 import { FeatureModel } from "..";
-import { StateUtil } from "set-piece";
+import { StatePlugin } from "set-piece";
 import { RoleAttackModel } from "../../rules/role-attack";
 import { OperatorType } from "../../../types/operator";
 import { RoleAttackDecor } from "../../../types/decors/role-attack";
@@ -28,7 +28,7 @@ export class RoleAttackBuffModel extends BuffModel<
         })
     }
     
-    @StateUtil.on(self => self.modifyAttack)
+    @StatePlugin.on(self => self.modifyAttack)
     private listenAttack() {
         const role = this.route.role;
         return role?.proxy.child.attack?.decor;

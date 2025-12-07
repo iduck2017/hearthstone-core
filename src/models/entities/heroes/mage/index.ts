@@ -2,9 +2,9 @@ import { RoleAttackModel } from "../../../rules/role-attack";
 import { RoleHealthModel } from "../../../rules/role-health";
 import { FireBlastModel } from "./skill";
 import { HeroModel } from "..";
-import { TemplUtil } from "set-piece";
+import { ChunkService } from "set-piece";
 
-@TemplUtil.is('mage')
+@ChunkService.is('mage')
 export class MageModel extends HeroModel {
     constructor(props?: MageModel['props']) {
         props = props ?? {};

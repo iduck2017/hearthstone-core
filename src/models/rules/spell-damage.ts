@@ -1,4 +1,4 @@
-import { StateUtil, TemplUtil } from "set-piece";
+import { StatePlugin, ChunkService } from "set-piece";
 import { SpellEffectDecor, SpellEffectModel } from "../..";
 import { FeatureModel } from "../features";
 
@@ -11,7 +11,7 @@ export namespace SpellDamageModel {
     export type R = {};
 }
 
-@TemplUtil.is('spell-damage')
+@ChunkService.is('spell-damage')
 export class SpellDamageModel extends FeatureModel<
     SpellDamageModel.E,
     SpellDamageModel.S,
@@ -33,7 +33,7 @@ export class SpellDamageModel extends FeatureModel<
         });
     }
 
-    @StateUtil.on(self => self.modifyDamage)
+    @StatePlugin.on(self => self.modifyDamage)
     protected listenDamage() {
         const player = this.route.player;
         if (!player) return;

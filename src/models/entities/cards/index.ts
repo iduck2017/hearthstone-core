@@ -1,4 +1,4 @@
-import { DebugUtil, Model, TranxUtil, Event, Method, Route, TemplUtil, Emitter } from "set-piece";
+import { DebugService, Model, TranxService, Event, Method, Route, ChunkService, Emitter } from "set-piece";
 import { CostModel } from "../../rules/cost";
 import { ClassType, RarityType } from "../../../types/card";
 import { AbortEvent, AppModel, DamageModel, DisposeModel, FeatureModel, LibraryUtil, PoisonousModel, RestoreModel, TurnEndModel, TurnStartModel } from "../../..";
@@ -38,7 +38,7 @@ export namespace CardModel {
 }
 
 
-@TranxUtil.span(true)
+@TranxService.span(true)
 export abstract class CardModel<
     E extends Partial<CardModel.E> & Model.E = {},
     S extends Partial<CardModel.S> & Model.S = {},
@@ -152,9 +152,9 @@ export abstract class CardModel<
     }
 
     // clone
-    @TranxUtil.span()
+    @TranxService.span()
     public clone<T extends CardModel>(this: T, isProto?: boolean): T | undefined {
-        const copy = TemplUtil.copy(this, {
+        const copy = ChunkService.copy(this, {
             state: isProto ? {} : { ...this.props.state },
             child: isProto ? {} : { ...this.props.child },
             refer: { ...this.props.refer, creator: this },
@@ -166,7 +166,7 @@ export abstract class CardModel<
         const cache = app.child.cache;
         cache.add(copy);
 
-        DebugUtil.log(`${copy.name} Cloned`);
+        DebugService.log(`${copy.name} Cloned`);
         return copy;
     }
 }

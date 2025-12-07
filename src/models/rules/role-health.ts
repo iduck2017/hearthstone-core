@@ -1,4 +1,4 @@
-import { DebugUtil, Event, EventUtil, Frame, Model, TemplUtil, TranxUtil } from "set-piece";
+import { DebugService, Event, EventPlugin, Frame, Model, ChunkService, TranxService } from "set-piece";
 import { MinionCardModel, HeroModel } from "../..";
 import { DamageEvent } from "../../types/events/damage";
 import { RestoreEvent } from "../../types/events/restore";
@@ -23,7 +23,7 @@ export namespace RoleHealthModel {
 }
 
 
-@TemplUtil.is('role-health')
+@ChunkService.is('role-health')
 export class RoleHealthModel extends Model<
     RoleHealthModel.E,
     RoleHealthModel.S,
@@ -91,7 +91,7 @@ export class RoleHealthModel extends Model<
         return true
     }
 
-    @TranxUtil.span()
+    @TranxService.span()
     public doComsume(event: DamageEvent): DamageEvent {
 
         const role = this.route.role;
@@ -131,7 +131,7 @@ export class RoleHealthModel extends Model<
         this.origin.state.damage += result;
 
 
-        DebugUtil.log(`${role.name} receive ${result} Damage`);
+        DebugService.log(`${role.name} receive ${result} Damage`);
         dispose.check(event.detail.source);
         return event;
     }
@@ -149,7 +149,7 @@ export class RoleHealthModel extends Model<
             const source = event.detail.source;
             const method = event.detail.method;
             const dispose = minion.child.dispose;
-            DebugUtil.log(`${minion.name} Die by Poisonous`);
+            DebugService.log(`${minion.name} Die by Poisonous`);
             dispose.destroy(source, method);
         }
 
@@ -172,7 +172,7 @@ export class RoleHealthModel extends Model<
         const damage = this.origin.state.damage;
         const restore = Math.min(damage, result);
         const overflow = Math.max(0, result - damage);
-        if (restore > 0) DebugUtil.log(`${role.name} restore ${restore} Health`);
+        if (restore > 0) DebugService.log(`${role.name} restore ${restore} Health`);
         this.origin.state.damage -= restore;
         event.update(restore, overflow);
         return event;
@@ -193,12 +193,12 @@ export class RoleHealthModel extends Model<
     
 
 
-    @EventUtil.on(self => self.handleChange)
+    @EventPlugin.on(self => self.handleChange)
     private listenChange() {
         const self: RoleHealthModel = this;
         return self.proxy.event?.onChange;
     }
-    @TranxUtil.span()
+    @TranxService.span()
     private handleChange(that: this, event: Event<Frame<RoleHealthModel>>) {
         const { memory, maximum, damage } = that.state;
         const offset = memory - maximum;

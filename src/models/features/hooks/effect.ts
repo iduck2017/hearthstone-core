@@ -1,5 +1,5 @@
 import { FeatureModel } from "..";
-import { DebugUtil, Event, Model } from "set-piece";
+import { DebugService, Event, Model } from "set-piece";
 import { Selector } from "../../../types/selector";
 import { AbortEvent } from "../../../types/events/abort";
 
@@ -76,7 +76,7 @@ export abstract class EffectModel<
         // onRun
         const name = this.state.name;
         const desc = this.state.desc;
-        DebugUtil.log(`${name} run: ${desc}`);
+        DebugService.log(`${name} run: ${desc}`);
         this.event.onRun(new Event({}));
     }
 

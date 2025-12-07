@@ -1,6 +1,6 @@
 import { MinionCardModel } from "../models/entities/cards/minion";
 import { CardModel } from "../models/entities/cards";
-import { TemplUtil } from "set-piece";
+import { ChunkService } from "set-piece";
 
 export class LibraryUtil {
 
@@ -13,7 +13,7 @@ export class LibraryUtil {
         return function (type: new () => CardModel) {
             const prototype = new type();
             LibraryUtil._cards.push(prototype);
-            TemplUtil.is(code)(type);
+            ChunkService.is(code)(type);
         }
     }
 }

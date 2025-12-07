@@ -1,4 +1,4 @@
-import { Decor, Event, Model, TranxUtil } from "set-piece";
+import { Decor, Event, Model, TranxService } from "set-piece";
 import { PlayerModel, GameModel, CardModel, HeroModel, MinionCardModel } from "../..";
 import { AbortEvent } from "../../types/events/abort";
 import { RoleActionDecor } from "../../types/decors/role-action";
@@ -112,7 +112,7 @@ export class RoleActionModel extends Model<
         });
     }
 
-    @TranxUtil.span()
+    @TranxService.span()
     public reset() {
         this.origin.state.comsume = 0;
     }

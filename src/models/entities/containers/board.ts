@@ -1,4 +1,4 @@
-import { DebugUtil, Event, Model, TranxUtil } from "set-piece";
+import { DebugService, Event, Model, TranxService } from "set-piece";
 import { AbortEvent, GameModel, PlayerModel } from "../../..";
 import { MinionCardModel } from "../cards/minion";
 import { CardModel } from "../cards";
@@ -94,11 +94,11 @@ export class BoardModel extends Model<
 
         this.doSummon(minion, to);
 
-        DebugUtil.log(`${minion.name} Summoned`);
+        DebugService.log(`${minion.name} Summoned`);
         this.event.onSummon(new Event({ minion }));
     }
 
-    @TranxUtil.span()
+    @TranxService.span()
     protected doSummon(minion: MinionCardModel, to: number): void {
         const hand = minion.route.hand;
         if (hand) hand.del(minion);

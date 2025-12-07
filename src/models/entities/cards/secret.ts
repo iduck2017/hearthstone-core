@@ -1,4 +1,4 @@
-import { Event, Model, State, TranxUtil } from "set-piece"
+import { Event, Model, State, TranxService } from "set-piece"
 import { CardModel } from "."
 import { SecretDisposeModel } from "../../rules/dispose/secret"
 import { SpellCardModel } from "./spell"
@@ -59,7 +59,7 @@ export abstract class SecretCardModel<
     }
 
 
-    @TranxUtil.span()
+    @TranxService.span()
     private doDeploy(): boolean {
         const player = this.route.player;
         if (!player) return false;

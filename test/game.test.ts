@@ -1,6 +1,6 @@
 import { BoardModel, DeckModel, GameModel, HandModel, MageModel, PlayerModel, AnimeUtil, AppModel, LibraryUtil, TheCoinModel, HeroModel, RoleHealthModel, RoleActionDecor, RoleActionModel } from "../src";
 import { WispModel } from "./wisp";
-import { DebugUtil } from "set-piece";
+import { DebugService } from "set-piece";
 import { boot } from "./boot";
 
 describe('game', () => {

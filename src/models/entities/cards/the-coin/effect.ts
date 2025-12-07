@@ -1,7 +1,7 @@
-import { TemplUtil } from "set-piece";
+import { ChunkService } from "set-piece";
 import { SpellEffectModel } from "../../../features/hooks/spell-effect";
 
-@TemplUtil.is('the-coin-effect')
+@ChunkService.is('the-coin-effect')
 export class TheCoinEffectModel extends SpellEffectModel<never> {
     constructor(props?: TheCoinEffectModel['props']) {
         props = props ?? {};

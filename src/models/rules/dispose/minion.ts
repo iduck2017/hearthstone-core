@@ -1,4 +1,4 @@
-import { DebugUtil, Model, TranxUtil } from "set-piece";
+import { DebugService, Model, TranxService } from "set-piece";
 import { DisposeModel } from ".";
 import { MinionCardModel } from "../../..";
 
@@ -30,7 +30,7 @@ export class MinionDisposeModel extends DisposeModel {
         });
     }
 
-    @DebugUtil.span()
+    @DebugService.span()
     protected run() {
         const minion = this.route.minion;
         if (!minion) return;
@@ -38,12 +38,12 @@ export class MinionDisposeModel extends DisposeModel {
         // execute
         this.doRun();
         // after
-        DebugUtil.log(`${minion.name} Die`);
+        DebugService.log(`${minion.name} Die`);
         const deathrattle = minion.child.deathrattle;
         deathrattle.forEach(item => item.run());
     }
 
-    @TranxUtil.span()
+    @TranxService.span()
     private doRun() {
         const player = this.route.player;
         if (!player) return;

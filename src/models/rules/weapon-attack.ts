@@ -1,4 +1,4 @@
-import { Decor, Event, EventUtil, Frame, Method, Model, StateUtil } from "set-piece";
+import { Decor, Event, EventPlugin, Frame, Method, Model, StatePlugin } from "set-piece";
 import { GameModel, PlayerModel, HeroModel, RoleAttackModel, TurnModel, BoardModel, WeaponCardModel, DamageEvent, RoleAttackDecor } from "../..";
 import { OperatorType } from "../../types/operator";
 import { WeaponAttackDecor } from "../../types/decors/weapon-attack";
@@ -74,7 +74,7 @@ export class WeaponAttackModel extends Model<
         });
     }
 
-    @EventUtil.on(self => self.handleChange)
+    @EventPlugin.on(self => self.handleChange)
     private listenChange() {
         const attack: WeaponAttackModel = this;
         return attack.proxy.event?.onChange;
@@ -85,7 +85,7 @@ export class WeaponAttackModel extends Model<
         }
     }
 
-    @StateUtil.on(self => self.modifyAttack)
+    @StatePlugin.on(self => self.modifyAttack)
     private listenAttack() {
         return this.route.player?.proxy.child.hero.child.attack.decor;
     }

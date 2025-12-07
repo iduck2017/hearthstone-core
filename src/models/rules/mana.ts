@@ -1,4 +1,4 @@
-import { DebugUtil, Event, Method, Model, TemplUtil, TranxUtil } from "set-piece";
+import { DebugService, Event, Method, Model, ChunkService, TranxService } from "set-piece";
 import { PlayerModel } from "../entities/player";
 
 export namespace ManaModel {
@@ -15,7 +15,7 @@ export namespace ManaModel {
     export type R = {};
 }
 
-@TemplUtil.is('mana')
+@ChunkService.is('mana')
 export class ManaModel extends Model<
     ManaModel.E,
     ManaModel.S,
@@ -52,14 +52,14 @@ export class ManaModel extends Model<
         })
     }
 
-    @TranxUtil.span()
+    @TranxService.span()
     public reset() {
         const player = this.route.player;
         if (!player) return;
         if (this.origin.state.origin < this.origin.state.maximum) {
             this.origin.state.origin += 1;
         }
-        DebugUtil.log(`${player.name} reset mana to ${this.origin.state.origin}`);
+        DebugService.log(`${player.name} reset mana to ${this.origin.state.origin}`);
         this.origin.state.current = this.origin.state.origin;
     }
 
@@ -67,7 +67,7 @@ export class ManaModel extends Model<
         if (value > this.origin.state.current) value= this.origin.state.current;
         const player = this.route.player;
         if (!player) return;
-        DebugUtil.log(`${player.name} use ${value} mana`);
+        DebugService.log(`${player.name} use ${value} mana`);
         this.origin.state.current -= value;
         this.event.onConsume(new Event({ value, method }));
     }
@@ -76,7 +76,7 @@ export class ManaModel extends Model<
         this.origin.state.current += value;
         const player = this.route.player;
         if (!player) return;
-        DebugUtil.log(`${player.name} restore ${value} mana`);
+        DebugService.log(`${player.name} restore ${value} mana`);
         this.event.onRestore(new Event({ value }));
     }
 }

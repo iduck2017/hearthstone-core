@@ -1,4 +1,4 @@
-import { DebugUtil, Decor, Event, Method, Model, StateUtil, TemplUtil } from "set-piece";
+import { DebugService, Decor, Event, Method, Model, StatePlugin, ChunkService } from "set-piece";
 import { DamageEvent, DamageModel, MinionCardModel, GameModel, PlayerModel, HeroModel, Selector } from "../..";
 import { DamageType } from "../../types/events/damage";
 import { AbortEvent } from "../../types/events/abort";
@@ -22,7 +22,7 @@ export namespace RoleAttackModel {
 
 
 
-@TemplUtil.is('role-attack')
+@ChunkService.is('role-attack')
 export class RoleAttackModel extends Model<
     RoleAttackModel.E,
     RoleAttackModel.S,
@@ -138,7 +138,7 @@ export class RoleAttackModel extends Model<
     }
 
 
-    @DebugUtil.span()
+    @DebugService.span()
     public run(roleB: RoleModel) {
         const roleA = this.route.role;
         if (!roleA) return;
@@ -193,7 +193,7 @@ export class RoleAttackModel extends Model<
         const stealth = roleA.child.stealth;
         stealth.disable();
 
-        DebugUtil.log(`${roleA.name} Attack ${roleB.name}`);
+        DebugService.log(`${roleA.name} Attack ${roleB.name}`);
         this.event.onRun(new Event({ target: roleB })); 
     }
 
