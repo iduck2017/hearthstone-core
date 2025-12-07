@@ -1,5 +1,5 @@
 import { DebugService, Event, Method, Model } from "set-piece";
-import { AbortEvent } from "../../../types/events/abort";
+import { AbortEvent } from "../../../utils/events/abort";
 import { CardModel, MinionCardModel } from "../../..";
 import { FeatureModel } from "../";
 

@@ -4,7 +4,7 @@ import { GameModel } from "./game";
 import { CostModel } from "../rules/cost";
 import { HeroModel, RoleModel } from "./heroes";
 import { DamageModel } from "../rules/damage";
-import { AbortEvent } from "../../types/events/abort";
+import { AbortEvent } from "../../utils/events/abort";
 import { EffectModel } from "../features/hooks/effect";
 import { MinionCardModel } from "./cards/minion";
 import { SkillPerformModel } from "../rules/perform/skill";

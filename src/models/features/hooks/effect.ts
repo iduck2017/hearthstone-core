@@ -1,7 +1,7 @@
 import { FeatureModel } from "..";
 import { DebugService, Event, Model } from "set-piece";
-import { Selector } from "../../../types/selector";
-import { AbortEvent } from "../../../types/events/abort";
+import { Selector } from "../../../utils/selector";
+import { AbortEvent } from "../../../utils/events/abort";
 
 export namespace EffectModel {
     export type E = {

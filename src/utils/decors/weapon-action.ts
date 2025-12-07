@@ -1,5 +1,5 @@
 import { Decor } from "set-piece";
-import { Operator, OperatorType } from "../operator";
+import { Operator, OperatorType } from "../../types/operator";
 import { WeaponActionModel } from "../../models/rules/weapon-action";
 import { WeaponActionkBuffModel } from "../../models/features/buffs/weapon-action";
 

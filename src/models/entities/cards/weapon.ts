@@ -10,7 +10,7 @@ import { WeaponPerformModel } from "../../rules/perform/weapon";
 import { DeathrattleModel } from "../../features/hooks/deathrattle";
 import { TurnStartModel } from "../../features/hooks/turn-start";
 import { PlayerModel } from "../player";
-import { AbortEvent } from "../../../types/events/abort";
+import { AbortEvent } from "../../../utils/events/abort";
 import { DisposeModel } from "../../rules/dispose";
 
 export namespace WeaponCardModel {

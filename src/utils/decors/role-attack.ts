@@ -1,7 +1,7 @@
 import { Decor } from "set-piece";
-import { OperatorType } from "../operator";
+import { OperatorType } from "../../types/operator";
 import { RoleAttackModel } from "../../models/rules/role-attack";
-import { Operator } from "../operator";
+import { Operator } from "../../types/operator";
 import { RoleAttackBuffModel } from "../../models/features/buffs/role-attack";
 
 // Role attack decorator: applies buffs first (sorted by UUID), then other operations

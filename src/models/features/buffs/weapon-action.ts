@@ -2,7 +2,7 @@ import { FeatureModel } from "..";
 import { StatePlugin } from "set-piece";
 import { OperatorType } from "../../../types/operator";
 import { WeaponActionModel } from "../../rules/weapon-action";
-import { WeaponActionDecor } from "../../../types/decors/weapon-action";
+import { WeaponActionDecor } from "../../../utils/decors/weapon-action";
 import { BuffModel } from ".";
 
 export namespace WeaponActionkBuffModel {

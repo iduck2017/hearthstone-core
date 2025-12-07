@@ -3,10 +3,10 @@ import { SpellEffectModel } from "../../features/hooks/spell-effect"
 import { DependencyModel } from "../../common/dependency"
 import { SpellCardModel } from "../../entities/cards/spell"
 import { CardPerformModel } from "./card"
-import { SpellCastEvent } from "../../../types/events/spell-cast"
+import { SpellCastEvent } from "../../../utils/events/spell-cast"
 import { MinionCardModel } from "../../entities/cards/minion"
 import { HeroModel, RoleModel } from "../../entities/heroes"
-import { AbortEvent } from "../../../types/events/abort"
+import { AbortEvent } from "../../../utils/events/abort"
 
 export type SpellHooksConfig = {
     effects: Map<SpellEffectModel, Model[]>

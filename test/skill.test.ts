@@ -1,7 +1,7 @@
 import { BoardModel, GameModel, MageModel, ManaModel, PlayerModel, AnimeUtil, WarriorModel } from "../src";
 import { WispModel } from "./wisp";
 import { boot } from "./boot";
-import { CommonUtil } from "../src/utils/common";
+import { CommonService } from "../src/services/common";
 
 describe('skill', () => {
     const game = boot(new GameModel({
@@ -40,7 +40,7 @@ describe('skill', () => {
         expect(playerA.child.mana.state.current).toBe(10);
 
         const promise = heroA.child.skill.use();
-        await CommonUtil.sleep();
+        await CommonService.sleep();
         const selector = playerA.controller.current;
         expect(selector?.options).toContain(heroB);
         expect(selector?.options).toContain(heroA);

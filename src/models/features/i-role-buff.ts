@@ -1,7 +1,7 @@
 import { RoleAttackModel } from "../rules/role-attack";
-import { RoleAttackDecor } from "../../types/decors/role-attack";
+import { RoleAttackDecor } from "../../utils/decors/role-attack";
 import { RoleHealthModel } from "../rules/role-health";
-import { RoleHealthDecor } from "../../types/decors/role-health";
+import { RoleHealthDecor } from "../../utils/decors/role-health";
 import { OperatorType } from "../../types/operator";
 import { Model, StatePlugin, ChunkService } from "set-piece";
 import { RoleFeatureModel } from "../features/role";

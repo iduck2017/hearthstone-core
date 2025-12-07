@@ -1,7 +1,7 @@
 import { Decor } from "set-piece";
-import { OperatorType } from "../operator";
+import { OperatorType } from "../../types/operator";
 import { WeaponAttackModel } from "../../models/rules/weapon-attack";
-import { Operator } from "../operator";
+import { Operator } from "../../types/operator";
 import { WeaponAttackBuffModel } from "../../models/features/buffs/weapon-attack";
 
 // Weapon attack decorator: applies buffs first (sorted by UUID), then other operations

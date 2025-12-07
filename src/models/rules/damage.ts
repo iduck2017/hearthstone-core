@@ -1,9 +1,9 @@
 import { Model, TranxService } from "set-piece";
-import { DamageEvent } from "../../types/events/damage";
+import { DamageEvent } from "../../utils/events/damage";
 import { DisposeModel } from "./dispose";
 import { SpellEffectModel } from "../features/hooks/spell-effect";
 import { DivineShieldModel } from "../features/entries/divine-shield";
-import { AbortEvent } from "../../types/events/abort";
+import { AbortEvent } from "../../utils/events/abort";
 
 export namespace DamageModel {
     export type E = {

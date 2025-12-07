@@ -1,6 +1,6 @@
 import { HeroModel, RoleModel } from "..";
-import { DamageEvent, DamageType } from "../../../../types/events/damage";
-import { Selector } from "../../../../types/selector";
+import { DamageEvent, DamageType } from "../../../../utils/events/damage";
+import { Selector } from "../../../../utils/selector";
 import { EffectModel } from "../../../features/hooks/effect";
 import { DamageModel } from "../../../rules/damage";
 

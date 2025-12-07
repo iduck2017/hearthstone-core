@@ -3,7 +3,7 @@ import { EffectModel } from "../../features/hooks/effect";
 import { DependencyModel } from "../../common/dependency";
 import { SkillModel } from "../../entities/skill";
 import { CardPerformModel } from "./card";
-import { AbortEvent } from "../../../types/events/abort";
+import { AbortEvent } from "../../../utils/events/abort";
 import { MinionCardModel } from "../../entities/cards/minion";
 import { HeroModel, RoleModel } from "../../entities/heroes";
 import { PlayerModel } from "../../entities/player";

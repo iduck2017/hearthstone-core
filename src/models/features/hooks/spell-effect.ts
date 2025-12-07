@@ -1,7 +1,7 @@
 import { Model } from "set-piece";
 import { FeatureModel, CardModel, SpellCardModel } from "../../..";
 import { EffectModel } from "./effect";
-import { SpellEffectDecor } from "../../../types/decors/spell-effect";
+import { SpellEffectDecor } from "../../../utils/decors/spell-effect";
 
 export namespace SpellEffectModel {
     export type E = {};

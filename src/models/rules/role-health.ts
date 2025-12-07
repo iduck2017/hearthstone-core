@@ -1,8 +1,8 @@
 import { DebugService, Event, EventPlugin, Frame, Model, ChunkService, TranxService } from "set-piece";
 import { MinionCardModel, HeroModel } from "../..";
-import { DamageEvent } from "../../types/events/damage";
-import { RestoreEvent } from "../../types/events/restore";
-import { RoleHealthDecor } from "../../types/decors/role-health";
+import { DamageEvent } from "../../utils/events/damage";
+import { RestoreEvent } from "../../utils/events/restore";
+import { RoleHealthDecor } from "../../utils/decors/role-health";
 
 export namespace RoleHealthModel {
     export type E = {

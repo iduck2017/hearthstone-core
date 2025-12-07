@@ -2,7 +2,7 @@ import { Event, Method, State, TranxService, Model, DebugService, ChunkService, 
 import { RaceType } from "../../../types/card";
 import { MinionDisposeModel } from "../../rules/dispose/minion";
 import { CardModel } from ".";
-import { AbortEvent } from "../../../types/events/abort";
+import { AbortEvent } from "../../../utils/events/abort";
 import { BattlecryModel } from "../../features/hooks/battlecry";
 import { BoardModel } from "../containers/board";
 import { SleepModel } from "../../rules/sleep";

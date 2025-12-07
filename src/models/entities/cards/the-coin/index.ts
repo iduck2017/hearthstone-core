@@ -1,10 +1,10 @@
 import { ClassType, RarityType, SchoolType } from "../../../../types/card";
 import { TheCoinEffectModel } from "./effect";
-import { LibraryUtil } from "../../../../utils/library";
+import { LibraryService } from "../../../../services/library";
 import { CostModel } from "../../../..";
 import { SpellCardModel } from "../spell";
 
-@LibraryUtil.is('the-coin')
+@LibraryService.is('the-coin')
 export class TheCoinModel extends SpellCardModel {
     constructor(props?: TheCoinModel['props']) {
         props = props ?? {};

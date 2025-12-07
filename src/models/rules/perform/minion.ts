@@ -2,8 +2,8 @@ import { DebugService, Event, Model, TranxService } from "set-piece";
 import { BattlecryModel } from "../../features/hooks/battlecry";
 import { DependencyModel } from "../../common/dependency";
 import { MinionCardModel } from "../../entities/cards/minion";
-import { AbortEvent } from "../../../types/events/abort";
-import { Selector } from "../../../types/selector";
+import { AbortEvent } from "../../../utils/events/abort";
+import { Selector } from "../../../utils/selector";
 import { CardPerformModel } from "./card";
 import { AppModel } from "../../app";
 

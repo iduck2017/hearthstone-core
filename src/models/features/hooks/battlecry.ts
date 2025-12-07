@@ -1,7 +1,7 @@
 import { DebugService, Event, Model } from "set-piece";
 import { CardModel, MinionCardModel, WeaponCardModel } from "../../..";
-import { AbortEvent } from "../../../types/events/abort";
-import { Selector } from "../../../types/selector";
+import { AbortEvent } from "../../../utils/events/abort";
+import { Selector } from "../../../utils/selector";
 import { FeatureModel } from "../";
 
 export namespace BattlecryModel {

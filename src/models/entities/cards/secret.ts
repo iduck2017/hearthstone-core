@@ -2,7 +2,7 @@ import { Event, Model, State, TranxService } from "set-piece"
 import { CardModel } from "."
 import { SecretDisposeModel } from "../../rules/dispose/secret"
 import { SpellCardModel } from "./spell"
-import { AbortEvent } from "../../../types/events/abort"
+import { AbortEvent } from "../../../utils/events/abort"
 
 export namespace SecretCardModel {
     export type E = {

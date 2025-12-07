@@ -1,7 +1,7 @@
 import { Decor, Event, EventPlugin, Frame, Method, Model, StatePlugin } from "set-piece";
 import { GameModel, PlayerModel, HeroModel, RoleAttackModel, TurnModel, BoardModel, WeaponCardModel, DamageEvent, RoleAttackDecor } from "../..";
 import { OperatorType } from "../../types/operator";
-import { WeaponAttackDecor } from "../../types/decors/weapon-attack";
+import { WeaponAttackDecor } from "../../utils/decors/weapon-attack";
 
 export namespace WeaponAttackModel {
     export type E = {}

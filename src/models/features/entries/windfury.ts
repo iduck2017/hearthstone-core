@@ -1,7 +1,7 @@
 import { Event, StatePlugin, ChunkService, TranxService } from "set-piece";
 import { RoleActionModel } from "../../rules/role-action";
 import { RoleFeatureModel } from "../role";
-import { RoleActionDecor } from "../../../types/decors/role-action";
+import { RoleActionDecor } from "../../../utils/decors/role-action";
 
 export namespace WindfuryModel {
     export type E = {};

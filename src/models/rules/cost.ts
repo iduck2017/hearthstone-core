@@ -1,7 +1,7 @@
 import { Model, ChunkService } from "set-piece";
 import { PlayerModel } from "../entities/player";
 import { CardModel } from "../entities/cards";
-import { CostDecor } from "../../types/decors/cost";
+import { CostDecor } from "../../utils/decors/cost";
 
 export enum CostType {
     MANA = 1,

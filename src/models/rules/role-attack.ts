@@ -1,9 +1,9 @@
 import { DebugService, Decor, Event, Method, Model, StatePlugin, ChunkService } from "set-piece";
 import { DamageEvent, DamageModel, MinionCardModel, GameModel, PlayerModel, HeroModel, Selector } from "../..";
-import { DamageType } from "../../types/events/damage";
-import { AbortEvent } from "../../types/events/abort";
+import { DamageType } from "../../utils/events/damage";
+import { AbortEvent } from "../../utils/events/abort";
 import { RoleModel } from "../entities/heroes";
-import { RoleAttackDecor } from "../../types/decors/role-attack";
+import { RoleAttackDecor } from "../../utils/decors/role-attack";
 
 export namespace RoleAttackModel {
     export type E = {

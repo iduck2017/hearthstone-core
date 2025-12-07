@@ -1,6 +1,6 @@
 import { StatePlugin } from "set-piece";
 import { WeaponAttackModel } from "../../rules/weapon-attack";
-import { WeaponAttackDecor } from "../../../types/decors/weapon-attack";
+import { WeaponAttackDecor } from "../../../utils/decors/weapon-attack";
 import { OperatorType } from "../../../types/operator";
 import { BuffModel } from ".";
 

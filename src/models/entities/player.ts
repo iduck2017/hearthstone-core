@@ -9,7 +9,7 @@ import { HeroModel, RoleModel } from "./heroes";
 import { FeatureModel } from "../features";
 import { MageModel } from "./heroes/mage";
 import { CollectionModel } from "./containers/collection";
-import { Controller } from "../../types/controller";
+import { Controller } from "../../utils/controller";
 import { MinionCardModel } from "./cards/minion";
 import { TurnStartModel } from "../features/hooks/turn-start";
 import { TurnEndModel } from "../features/hooks/turn-end";

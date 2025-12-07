@@ -1,7 +1,7 @@
 import { DebugService, Event, ChunkService, TranxService } from "set-piece";
-import { DamageEvent } from "../../../types/events/damage";
+import { DamageEvent } from "../../../utils/events/damage";
 import { RoleFeatureModel } from "../role";
-import { AbortEvent } from "../../../types/events/abort";
+import { AbortEvent } from "../../../utils/events/abort";
 
 export namespace DivineShieldModel {
     export type E = {

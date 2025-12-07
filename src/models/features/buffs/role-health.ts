@@ -1,7 +1,7 @@
 import { FeatureModel } from "..";
 import { StatePlugin } from "set-piece";
 import { RoleHealthModel } from "../../rules/role-health";
-import { RoleHealthDecor } from "../../../types/decors/role-health";
+import { RoleHealthDecor } from "../../../utils/decors/role-health";
 import { OperatorType } from "../../../types/operator";
 import { BuffModel } from ".";
 

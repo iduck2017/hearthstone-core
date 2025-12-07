@@ -1,5 +1,5 @@
 import { Decor } from "set-piece";
-import { Operator, OperatorType } from "../operator";
+import { Operator, OperatorType } from "../../types/operator";
 import { CostModel } from "../../models/rules/cost";
 
 // Cost decorator: sorts operations (SET before ADD), applies constraints at the end

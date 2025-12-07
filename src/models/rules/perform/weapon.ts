@@ -1,7 +1,7 @@
 import { DebugService, Event, Model, TranxService } from "set-piece";
 import { BattlecryModel } from "../../features/hooks/battlecry";
 import { DependencyModel } from "../../common/dependency";
-import { AbortEvent } from "../../../types/events/abort";
+import { AbortEvent } from "../../../utils/events/abort";
 import { CardPerformModel } from "./card";
 import { WeaponCardModel } from "../../entities/cards/weapon";
 

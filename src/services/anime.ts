@@ -1,15 +1,15 @@
-export class AnimeUtil {
+export class AnimeService {
     private static _current: number = 0
     public static get current() { 
-        return AnimeUtil._current; 
+        return AnimeService._current; 
     }
 
     public static add(value: number) { 
-        AnimeUtil._current += value;
+        AnimeService._current += value;
     }
 
     public static clear() { 
-        AnimeUtil._current = 0; 
+        AnimeService._current = 0; 
     }
 
     private constructor() {}

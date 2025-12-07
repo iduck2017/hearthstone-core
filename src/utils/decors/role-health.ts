@@ -1,5 +1,5 @@
 import { Decor } from "set-piece";
-import { Operator, OperatorType } from "../operator";
+import { Operator, OperatorType } from "../../types/operator";
 import { RoleHealthModel } from "../../models/rules/role-health";
 import { RoleHealthBuffModel } from "../../models/features/buffs/role-health";
 

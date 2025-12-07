@@ -1,7 +1,7 @@
 import { Decor, Event, Model, TranxService } from "set-piece";
 import { PlayerModel, GameModel, CardModel, HeroModel, MinionCardModel } from "../..";
-import { AbortEvent } from "../../types/events/abort";
-import { RoleActionDecor } from "../../types/decors/role-action";
+import { AbortEvent } from "../../utils/events/abort";
+import { RoleActionDecor } from "../../utils/decors/role-action";
 
 export namespace RoleActionModel {
     export type S = {

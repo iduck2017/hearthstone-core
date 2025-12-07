@@ -1,6 +1,6 @@
 import { DebugService, Event, Model } from "set-piece";
 import { FeatureModel } from "..";
-import { AbortEvent } from "../../../types/events/abort";
+import { AbortEvent } from "../../../utils/events/abort";
 
 export namespace TurnStartModel {
     export type E = {

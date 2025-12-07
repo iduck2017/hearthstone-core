@@ -2,7 +2,7 @@ import { FeatureModel } from "..";
 import { StatePlugin } from "set-piece";
 import { RoleAttackModel } from "../../rules/role-attack";
 import { OperatorType } from "../../../types/operator";
-import { RoleAttackDecor } from "../../../types/decors/role-attack";
+import { RoleAttackDecor } from "../../../utils/decors/role-attack";
 import { BuffModel } from ".";
 
 export namespace RoleAttackBuffModel {

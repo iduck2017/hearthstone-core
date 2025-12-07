@@ -4,7 +4,7 @@ import { HandModel } from "../../entities/containers/hand";
 import { CardModel } from "../../entities/cards";
 import { AppModel } from "../../app";
 import { GameModel } from "../../entities/game";
-import { AbortEvent } from "../../../types/events/abort";
+import { AbortEvent } from "../../../utils/events/abort";
 
 export namespace CardPerformModel {
     export type E = {
