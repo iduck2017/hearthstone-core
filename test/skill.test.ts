@@ -1,4 +1,4 @@
-import { BoardModel, GameModel, MageModel, ManaModel, PlayerModel, AnimeUtil, WarriorModel } from "../src";
+import { BoardModel, GameModel, MageModel, ManaModel, PlayerModel, WarriorModel } from "../src";
 import { WispModel } from "./wisp";
 import { boot } from "./boot";
 import { CommonService } from "../src/services/common";

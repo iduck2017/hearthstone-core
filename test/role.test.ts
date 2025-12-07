@@ -1,4 +1,4 @@
-import { BoardModel, DeckModel, GameModel, HandModel, MageModel, PlayerModel, AnimeUtil } from "../src";
+import { BoardModel, DeckModel, GameModel, HandModel, MageModel, PlayerModel } from "../src";
 import { boot } from "./boot";
 import { WispModel } from "./wisp";
 
