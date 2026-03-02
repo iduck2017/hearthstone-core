@@ -1,26 +1,8 @@
 import { Method } from "set-piece";
-import { PlayerModel } from "../entities/player";
 
-export class Selector<T = any> {
-    private _options: T[];
-    public get options(): Readonly<T[]> { 
-        return [...this._options];
-    }
-    public filterOptions(handler: (item: T) => boolean) {
-        this._options = this._options.filter(handler);
-        return this;
-    }
-
-    public hint?: string;
-    constructor(
-        options: T[],
-        config?: {
-            hint?: string;
-        }
-    ) {
-        this._options = options;
-        this.hint = config?.hint;
-    }
+export interface Selector<T = any> {
+    readonly options: Readonly<T[]>;
+    readonly hint?: string;
 }
 
 export class Controller {

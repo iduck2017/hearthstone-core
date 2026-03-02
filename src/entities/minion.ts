@@ -108,7 +108,9 @@ export abstract class MinionModel extends CardModel {
         this.consumeMana();
         const board = player.board;
         const positions = new Array(board.cards.length + 1).fill(0).map((_, index) => index);
-        const position = await player.controller.fetchTarget(new Selector(positions))
+        const position = await player.controller.fetchTarget({
+            options: positions,
+        })
         this.summon(board, position);
     }
 }

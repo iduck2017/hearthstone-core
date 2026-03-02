@@ -1,9 +1,10 @@
 import { asChildList, asDependency, asState, Model, useEffect, useMemory, useRange } from "set-piece";
 import { MinionModel } from "../entities/minion";
 
-export type AttackBuff = {
-    name: string;
-    value: number;
+export interface AttackBuff {
+    readonly name: string;
+    readonly value: number;
+    readonly id: string;
 }
 
 export class AttackModel extends Model {

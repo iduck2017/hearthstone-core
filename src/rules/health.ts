@@ -1,14 +1,12 @@
 import { asDependency, asRoute, asState, Model, useEffect, useMemory, useRange } from "set-piece";
 import { MinionModel } from "../entities/minion";
 
-export type HealthBuff = {
-    name: string;
-    value: number;
+export interface HealthBuff {
+    readonly name: string;
+    readonly value: number;
+    readonly id: string;
 }
 
-export type DamageInfo = {
-    value: number;
-}
 
 export class HealthModel extends Model {
 
@@ -55,7 +53,6 @@ export class HealthModel extends Model {
     constructor(props?: {
         origin?: number;
         buffs?: HealthBuff[];
-        damages?: DamageInfo[];
         current?: number;
     }) {
         super();

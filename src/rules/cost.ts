@@ -1,9 +1,10 @@
 import { asDependency, asRoute, asState, Model, useMemory } from "set-piece";
 import { CardModel } from "../entities/card";
 
-export type CostBuff = {
-    name: string;
-    value: number;
+export interface CostBuff {
+    readonly name: string;
+    readonly value: number;
+    readonly id: string;
 }
 
 export class CostModel extends Model {
