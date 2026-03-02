@@ -2,6 +2,7 @@
   "compilerOptions": {
     "noImplicitAny": true,
     "module": "ESNext",
+    "outDir": "./dist/esm",
     "lib": ["ES2018", "DOM"],
     "target": "ESNext",
     "jsx": "react",
@@ -12,14 +13,10 @@
     "moduleResolution": "node",
     "strict": true,
     "experimentalDecorators": true,
+    "useDefineForClassFields": false,
     "strictFunctionTypes": true,
     "noUncheckedIndexedAccess": true
   },
-  "include": [
-    "src/**/*",
-    "test/**/*"
-  ],
-  "exclude": [
-    "dist/**/*"
-  ]
+  "include": ["src/**/*", "test/**/*"],
+  "exclude": ["dist/**/*"]
 }

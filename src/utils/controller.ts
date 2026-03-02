@@ -1,24 +1,38 @@
 import { Method } from "set-piece";
-import { PlayerModel } from "../models/entities/player";
-import { Selector } from "./selector";
+import { PlayerModel } from "../entities/player";
 
-export class Controller {
-    public readonly player: PlayerModel;
-
-    private resolvers: Method[];
-
-    private selectors: Selector[];
-    public get current() {
-        return this.selectors[0];
+export class Selector<T = any> {
+    private _options: T[];
+    public get options(): Readonly<T[]> { 
+        return [...this._options];
+    }
+    public filterOptions(handler: (item: T) => boolean) {
+        this._options = this._options.filter(handler);
+        return this;
     }
 
-    constructor(player: PlayerModel) {
-        this.player = player;
+    public hint?: string;
+    constructor(
+        options: T[],
+        config?: {
+            hint?: string;
+        }
+    ) {
+        this._options = options;
+        this.hint = config?.hint;
+    }
+}
+
+export class Controller {
+    private resolvers: Method<any>[];
+    private selectors: Selector[];
+
+    constructor() {
         this.resolvers = [];
         this.selectors = [];
     }
 
-    public get<T>(selector: Selector<T>): Promise<T | undefined> {
+    public fetchTarget<T>(selector: Selector<T>): Promise<T | undefined> {
         if (!selector.options.length) return Promise.resolve(undefined);
         return new Promise<T | undefined>((resolve) => {
             this.selectors.push(selector);
@@ -26,11 +40,17 @@ export class Controller {
         });
     }
 
-    public set<T>(target: T | undefined) {
+    public selectTarget<T>(target: T | undefined) {
         const selector = this.selectors.shift();
         const resolver = this.resolvers.shift();
-        if (!selector) return;
-        if (!resolver) return;
+        if (!selector) {
+            console.log('Selector not found');
+            return;
+        }
+        if (!resolver) {
+            console.log('Resolver not found');
+            return;
+        }
         if (!selector.options.includes(target)) resolver(undefined);
         else resolver(target);
     }
