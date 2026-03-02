@@ -20,7 +20,6 @@ export class DeckModel extends Model<
         return { size: this.child.cards.length }
     }
 
-
     constructor(props?: DeckModel['props']) {
         props = props ?? {};
         super({
@@ -33,7 +32,6 @@ export class DeckModel extends Model<
             refer: { ...props.refer }
         })
     }
-
 
     public add(item: CardModel, index?: number): void {
         const items = this.origin.child.cards;

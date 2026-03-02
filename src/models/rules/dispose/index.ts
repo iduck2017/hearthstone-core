@@ -36,6 +36,12 @@ export abstract class DisposeModel<
 
     private static tasks: Array<DisposeModel> = [];
 
+
+    public static destroy(targets: DisposeModel[]) {
+        
+    }
+
+
     protected static add(target: DisposeModel) {
         if (DisposeModel.tasks.includes(target)) return;
         DisposeModel.tasks.push(target);
