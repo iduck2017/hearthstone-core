@@ -1,4 +1,4 @@
-import { asChild, asRoute, asState, asTransaction } from "set-piece";
+import { asChild, asRoute, asState, asTransaction, Model } from "set-piece";
 import { AttackModel } from "../rules/attack";
 import { CardModel } from "./card";
 import { HealthModel } from "../rules/health";
@@ -116,16 +116,20 @@ export abstract class MinionModel extends CardModel {
         const position = await player.controller.fetchTarget({
             options: positions,
         })
-        const targetMap: Map<BattlecryModel<any>, any>= new Map();
+        const paramMap: Map<BattlecryModel, Model | undefined>= new Map();
         for (const hook of this.battlecries) {
             const selector = hook.selector;
-            const target = await player.controller.fetchTarget(selector);
-            targetMap.set(hook, target);
+            if (!selector) {
+                paramMap.set(hook, undefined);
+            } else {
+                const target = await player.controller.fetchTarget(selector);
+                paramMap.set(hook, target);
+            }
         }
         return {
             board,
             position,
-            targetMap,
+            paramMap,
         }
     }
     public async play() {

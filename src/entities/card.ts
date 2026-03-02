@@ -45,7 +45,7 @@ export abstract class CardModel extends Model {
     private _cost: CostModel;
 
     @asChildList()
-    private _battlecries: BattlecryModel<any>[] = [];
+    private _battlecries: BattlecryModel[] = [];
     public get battlecries() {
         return [...this._battlecries];
     }

@@ -3,7 +3,9 @@ import { BoardModel } from "../entities/board";
 import { PlayerModel } from "../entities/player";
 import { Selector } from "../utils/controller";
 
-export abstract class BattlecryModel<T> extends Model {
+export abstract class BattlecryModel<
+    T extends Model = Model,
+> extends Model {
     @asRoute(() => BoardModel)
     private _board?: BoardModel;
     public get board() {
@@ -18,7 +20,7 @@ export abstract class BattlecryModel<T> extends Model {
 
     public abstract execute(): void;
 
-    public abstract selector: Selector<T>;
+    public abstract selector: Selector<T> | undefined;
 
     public async run(target: T | undefined) {}
 }
