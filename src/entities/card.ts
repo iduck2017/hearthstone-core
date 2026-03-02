@@ -6,21 +6,34 @@ import { DeckModel } from "./deck";
 import { BattlecryModel } from "../hooks/battlecry";
 import { CostModel } from "../rules/cost";
 import { GameModel } from "./game";
+import { DeathrattleModel } from "../hooks/deathrattle";
 
 export abstract class CardModel extends Model {
     abstract isDisposable: boolean;
     
     @asRoute(() => BoardModel)
-    protected _board?: BoardModel;
+    private _board?: BoardModel;
+    public get board() {
+        return this._board;
+    }
 
     @asRoute(() => HandModel)
-    protected _hand?: HandModel;
+    private _hand?: HandModel;
+    public get hand() {
+        return this._hand;
+    }
 
     @asRoute(() => DeckModel)
-    protected _deck?: DeckModel;
+    private _deck?: DeckModel;
+    public get deck() {
+        return this._deck;
+    }
 
     @asRoute(() => GameModel)
-    protected _game?: GameModel;
+    private _game?: GameModel;
+    public get game() {
+        return this._game;
+    }
     
     @asRoute(() => PlayerModel)
     private _player?: PlayerModel;
@@ -32,7 +45,17 @@ export abstract class CardModel extends Model {
     private _cost: CostModel;
 
     @asChildList()
-    private _battlecries?: BattlecryModel[];
+    private _battlecries: BattlecryModel<any>[] = [];
+    public get battlecries() {
+        return [...this._battlecries];
+    }
+
+    @asChildList()
+    private _deathrattles: DeathrattleModel[] = [];
+    public get deathrattles() {
+        return [...this._deathrattles];
+    }
+
 
     public get isPlayable() {
         if (!this._hand) return false;
@@ -56,7 +79,7 @@ export abstract class CardModel extends Model {
 
     constructor(props?: {
         cost?: CostModel;
-        battlecries?: BattlecryModel[];
+        battlecries?: BattlecryModel<any>[];
     }) {
         super();
         this._cost = props?.cost ?? new CostModel();

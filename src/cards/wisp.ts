@@ -1,6 +1,6 @@
 import { AttackModel } from "../rules/attack";
 import { HealthModel } from "../rules/health";
-import { MinionModel } from "./minion";
+import { MinionModel } from "../entities/minion";
 import { CostModel } from "../rules/cost";
 
 export class WispModel extends MinionModel {

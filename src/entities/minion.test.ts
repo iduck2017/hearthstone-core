@@ -3,7 +3,7 @@ import { BoardModel } from "./board";
 import { DeckModel } from "./deck";
 import { GameModel } from "./game";
 import { PlayerModel } from "./player";
-import { WispModel } from "./wisp";
+import { WispModel } from "../cards/wisp";
 
 describe('attack', () => {
     const app = new AppModel();

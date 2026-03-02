@@ -1,13 +1,13 @@
 import { Method } from "set-piece";
 
-export interface Selector<T = any> {
+export interface Selector<T> {
     readonly options: Readonly<T[]>;
     readonly hint?: string;
 }
 
 export class Controller {
     private resolvers: Method<any>[];
-    private selectors: Selector[];
+    private selectors: Selector<any>[];
 
     constructor() {
         this.resolvers = [];
