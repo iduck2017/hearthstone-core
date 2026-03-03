@@ -6,25 +6,29 @@ export interface Selector<T> {
 }
 
 export class Controller {
-    private resolvers: Method<any>[];
-    private selectors: Selector<any>[];
+    private _resolvers: Method<any>[];
+
+    private _selectors: Selector<any>[];
+    public get selector() {
+        return this._selectors[0];
+    }
 
     constructor() {
-        this.resolvers = [];
-        this.selectors = [];
+        this._resolvers = [];
+        this._selectors = [];
     }
 
     public fetchTarget<T>(selector: Selector<T>): Promise<T | undefined> {
         if (!selector.options.length) return Promise.resolve(undefined);
         return new Promise<T | undefined>((resolve) => {
-            this.selectors.push(selector);
-            this.resolvers.push(resolve);
+            this._selectors.push(selector);
+            this._resolvers.push(resolve);
         });
     }
 
     public selectTarget<T>(target: T | undefined) {
-        const selector = this.selectors.shift();
-        const resolver = this.resolvers.shift();
+        const selector = this._selectors.shift();
+        const resolver = this._resolvers.shift();
         if (!selector) {
             console.log('Selector not found');
             return;

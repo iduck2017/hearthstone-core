@@ -8,9 +8,18 @@ import { CostModel } from "../rules/cost";
 import { GameModel } from "./game";
 import { DeathrattleModel } from "../hooks/deathrattle";
 
+export interface CardProps {
+    cost: CostModel;
+    battlecries?: BattlecryModel[];
+}
+
 export abstract class CardModel extends Model {
-    abstract isDisposable: boolean;
-    
+    constructor(props: CardProps) {
+        super();
+        this._cost = props?.cost ?? new CostModel();
+        this._battlecries = props?.battlecries ?? [];
+    }
+
     @asRoute(() => BoardModel)
     private _board?: BoardModel;
     public get board() {
@@ -43,6 +52,11 @@ export abstract class CardModel extends Model {
 
     @asChild()
     private _cost: CostModel;
+    protected consumeMana() {
+        if (!this._player) return;
+        const cost = this._cost.current;
+        this._player.mana.consume(cost);
+    }
 
     @asChildList()
     private _battlecries: BattlecryModel[] = [];
@@ -72,23 +86,13 @@ export abstract class CardModel extends Model {
         return true;
     }
     
-
+    abstract isDisposable: boolean;
     public abstract dispose(): void;
+    public handleDisposed(): void {
+        this._deathrattles.forEach(hook => hook.run())
+    }
 
     public abstract play(): Promise<void>;
 
-    constructor(props?: {
-        cost?: CostModel;
-        battlecries?: BattlecryModel<any>[];
-    }) {
-        super();
-        this._cost = props?.cost ?? new CostModel();
-        this._battlecries = props?.battlecries ?? [];
-    }
 
-    protected consumeMana() {
-        if (!this._player) return;
-        const cost = this._cost.current;
-        this._player.mana.consume(cost);
-    }
 }

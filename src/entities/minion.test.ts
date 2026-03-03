@@ -4,6 +4,7 @@ import { DeckModel } from "./deck";
 import { GameModel } from "./game";
 import { PlayerModel } from "./player";
 import { WispModel } from "../cards/wisp";
+import { MageModel } from "../heroes/mage";
 
 describe('attack', () => {
     const app = new AppModel();
@@ -12,11 +13,13 @@ describe('attack', () => {
     const game = new GameModel({
         players: [
             new PlayerModel({
+                hero: new MageModel(),
                 board: new BoardModel({
                     cards: [wispA],
                 }),
             }),
             new PlayerModel({
+                hero: new MageModel(),  
                 board: new BoardModel({
                     cards: [wispB],
                 }),
@@ -57,7 +60,6 @@ describe('attack', () => {
 
     })
 
-
     it('check-graveyard', () => {
         expect(wispA.isDisposable).toBe(true);
         expect(wispB.isDisposable).toBe(true);
@@ -66,6 +68,5 @@ describe('attack', () => {
         expect(graveyardA.cards.length).toBe(1);
         expect(graveyardB.cards.length).toBe(1);
     })
-
     
 });

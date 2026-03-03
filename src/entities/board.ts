@@ -8,6 +8,10 @@ export class BoardModel extends Model {
     public get cards() {
         return [...this._cards];
     }
+    public get minions(): MinionModel[] {
+        return this._cards.filter((card) => card instanceof MinionModel)
+    }
+
     public delCard(card?: CardModel) {
         if (!card) return;
         const index = this._cards.indexOf(card);

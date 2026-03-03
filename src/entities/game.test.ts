@@ -4,17 +4,20 @@ import { DeckModel } from "./deck";
 import { GameModel } from "./game";
 import { PlayerModel } from "./player";
 import { WispModel } from "../cards/wisp";
+import { MageModel } from "../heroes/mage";
 
 describe('game', () => {
     const app = new AppModel();
     const game = new GameModel({
         players: [
             new PlayerModel({
+                hero: new MageModel(),
                 deck: new DeckModel({
                     cards: new Array(30).fill(0).map(() => new WispModel()),
-                })
+                }),
             }),
             new PlayerModel({
+                hero: new MageModel(),
                 deck: new DeckModel({
                     cards: new Array(30).fill(0).map(() => new WispModel()),
                 })

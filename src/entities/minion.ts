@@ -1,6 +1,6 @@
 import { asChild, asRoute, asState, asTransaction, Model } from "set-piece";
 import { AttackModel } from "../rules/attack";
-import { CardModel } from "./card";
+import { CardModel, CardProps } from "./card";
 import { HealthModel } from "../rules/health";
 import { BoardModel } from "./board";
 import { PlayerModel } from "./player";
@@ -8,6 +8,12 @@ import { registerDisposer, useCardDisposer } from "../utils/dispose";
 import { Selector } from "../utils/controller";
 import { CostModel } from "../rules/cost";
 import { BattlecryModel } from "../hooks/battlecry";
+import { MinionLauncherModel, MinionLaunchProps, TargetsRegistry } from "../rules/minion-launcher";
+
+export interface MinionProps extends CardProps {
+    attack: AttackModel;
+    health: HealthModel;
+}
 
 export abstract class MinionModel extends CardModel {
 
@@ -27,16 +33,14 @@ export abstract class MinionModel extends CardModel {
         return this._health;
     }
 
-    constructor(props?: {
-        attack?: AttackModel;
-        cost?: CostModel;
-        health?: HealthModel;
-    }) {
+    @asChild()
+    private _launcher?: MinionLauncherModel
+    
+    constructor(props: MinionProps) {
         super(props);
-        this._attack = props?.attack ?? new AttackModel();
-        this._health = props?.health ?? new HealthModel();
+        this._attack = props.attack;
+        this._health = props.health;
     }
-
 
     /** Attack and receiveAttacl */
     @useCardDisposer()
@@ -54,6 +58,7 @@ export abstract class MinionModel extends CardModel {
             value: selfAttack,
         })
     }
+
     @useCardDisposer()
     public receiveDamage(options: {
         value: number;
@@ -90,6 +95,7 @@ export abstract class MinionModel extends CardModel {
         if (this._isDestroyed) return true;
         return false; 
     }
+
     @asTransaction()
     public dispose() {
         if (!this.isDisposable) return;
@@ -105,36 +111,51 @@ export abstract class MinionModel extends CardModel {
 
     /** Play: from hand to board */
     /** Just user intention */
-    public async preparePlay() {
+    public async preparePlay(): Promise<MinionLaunchProps | undefined> {
         const player = this.player;
-        if (!player) {
-            console.error('Player not found');
-            return;
-        }
+        if (!player) return;
+        
         const board = player.board;
         const positions = new Array(board.cards.length + 1).fill(0).map((_, index) => index);
-        const position = await player.controller.fetchTarget({
+        const boardIndex = await player.controller.fetchTarget({
             options: positions,
         })
-        const paramMap: Map<BattlecryModel, Model | undefined>= new Map();
+        if (boardIndex === undefined) return;
+        const hand = player.hand;
+        const handIndex = hand.cards.indexOf(this);
+        if (handIndex === -1) return;
+        
+        const targetsRegistry: TargetsRegistry = []
         for (const hook of this.battlecries) {
-            const selector = hook.selector;
-            if (!selector) {
-                paramMap.set(hook, undefined);
-            } else {
-                const target = await player.controller.fetchTarget(selector);
-                paramMap.set(hook, target);
-            }
+            const params = await hook.fetchParams();
+            targetsRegistry.push({ hook, params })
         }
         return {
-            board,
-            position,
-            paramMap,
+            handIndex,
+            boardIndex,
+            targetsRegistry,
         }
     }
+    
     public async play() {
-        const { board, position } = await this.preparePlay() ?? {};
+        const player = this.player;
+        if (!player) return;
+
+        /** Prepare */
+        const options = await this.preparePlay();
+        if (!options) return;
+
+        const board = player.board;
         this.consumeMana();
-        this.summon(board, position);
+        this.summon(board, options.boardIndex);
+        
+        /** Launch */
+        this._launcher = new MinionLauncherModel(options);
+        while (true) {
+            const isFinished = await this._launcher.next();
+            if (isFinished) break;
+        }
+        this._launcher = undefined;
     }
+
 }

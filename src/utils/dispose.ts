@@ -1,4 +1,4 @@
-import { Model } from "set-piece";
+import { Model, runTransaction } from "set-piece";
 import { CardModel } from "../entities/card";
 
 let isPending = false;
@@ -24,7 +24,10 @@ export function useCardDisposer() {
             isPending = true;
             const result = method.call(this, ...args);
             isPending = false;
-            disposerRegistry.forEach(card => card.dispose())
+            runTransaction(() => {
+                disposerRegistry.forEach(card => card.dispose())
+            })
+            disposerRegistry.forEach(card => card.handleDisposed())
             return result;
         }
     }

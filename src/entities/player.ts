@@ -1,15 +1,27 @@
-import { asChild, asTransaction, Model } from "set-piece";
+import { asChild, asRoute, asTransaction, Model } from "set-piece";
 import { BoardModel } from "./board";
 import { HandModel } from "./hand";
 import { DeckModel } from "./deck";
 import { GraveyardModel } from "./graveyard";
 import { ManaModel } from "../rules/mana";
 import { Controller } from "../utils/controller";
+import { GameModel } from "./game";
+import { HeroModel } from "./hero";
 
 export class PlayerModel extends Model {
     private _controller: Controller
     public get controller() {
         return this._controller;
+    }
+
+    @asRoute(() => GameModel)
+    private _game?: GameModel;
+    public get opponent(): PlayerModel | undefined {
+        const game = this._game;
+        if (!game) return;
+        if (this === game.players[0]) return game.players[1];
+        if (this === game.players[1]) return game.players[0];
+        return;
     }
 
     @asChild()
@@ -37,12 +49,19 @@ export class PlayerModel extends Model {
     }
 
     @asChild()
+    private _hero: HeroModel;
+    public get hero() {
+        return this._hero;
+    }
+
+    @asChild()
     private _graveyard: GraveyardModel;
     public get graveyard() {
         return this._graveyard;
     }
 
-    constructor(props?: {
+    constructor(props: {
+        hero: HeroModel;
         board?: BoardModel;
         hand?: HandModel;
         deck?: DeckModel;
@@ -55,6 +74,7 @@ export class PlayerModel extends Model {
         this._deck = props?.deck ?? new DeckModel();
         this._graveyard = props?.graveyard ?? new GraveyardModel();
         this._mana = props?.mana ?? new ManaModel();
+        this._hero = props.hero;
         this._controller = new Controller();
     }
 
