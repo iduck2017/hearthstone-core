@@ -1,74 +1,55 @@
-import { asChild, asRoute, asState, asTransaction, Model } from "set-piece";
-import { AttackModel } from "../rules/attack";
-import { CardModel, CardProps } from "./card";
-import { HealthModel } from "../rules/health";
+import { asChild, asTransaction, Model } from "set-piece";
+import { CardModel, CardProps } from "../cards";
 import { BoardModel } from "./board";
-import { PlayerModel } from "./player";
-import { registerDisposer, useCardDisposer } from "../utils/dispose";
-import { Selector } from "../utils/controller";
+import { HooksLauncherModel, HookRegistry } from "../rules/hooks-launcher";
 import { CostModel } from "../rules/cost";
+import { RoleAttackModel } from "../rules/role-attack";
+import { RoleHealthModel } from "../rules/role-health";
+import { RoleModel } from "./role";
+import { TauntModel } from "../rules/taunt";
+import { DivineShieldModel } from "../rules/divine-shield";
+import { ChargeModel } from "../rules/charge";
+import { MinionDisposerModel } from "../rules/disposers/minion-disposer";
+import { DeathrattleModel } from "../hooks/deathrattle";
 import { BattlecryModel } from "../hooks/battlecry";
-import { MinionLauncherModel, MinionLaunchProps, TargetsRegistry } from "../rules/minion-launcher";
-
-export interface MinionProps extends CardProps {
-    attack: AttackModel;
-    health: HealthModel;
-}
 
 export abstract class MinionModel extends CardModel {
-
-    public get source() {
-        return this.board ?? this.hand ?? this.deck;
-    }
-
-    @asChild()
-    private _attack: AttackModel;
-    public get attack() {
-        return this._attack;
-    }
-
-    @asChild()
-    private _health: HealthModel;
-    public get health() {
-        return this._health;
-    }
-
-    @asChild()
-    private _launcher?: MinionLauncherModel
-    
-    constructor(props: MinionProps) {
+    constructor(props: {
+        cost: CostModel;
+        attack: RoleAttackModel;
+        health: RoleHealthModel;
+        taunt?: TauntModel;
+        divineShield?: DivineShieldModel;
+        charge?: ChargeModel;
+        deathrattles?: DeathrattleModel[];
+        battlecries?: BattlecryModel[];
+    }) {
         super(props);
-        this._attack = props.attack;
-        this._health = props.health;
+        this._role = new RoleModel({
+            taunt: props.taunt,
+            divineShield: props.divineShield,
+            charge: props.charge,
+            attack: props.attack,
+            health: props.health,
+        });
+        this._disposer = new MinionDisposerModel();
     }
 
-    /** Attack and receiveAttacl */
-    @useCardDisposer()
-    @asTransaction()
-    public attackMinion(options: {
-        target: MinionModel;
-    }) {
-        const { target } = options;
-        const selfAttack = this._attack.current;
-        const targetAttack = target.attack.current;
-        this.receiveDamage({
-            value: targetAttack,
-        })
-        target.receiveDamage({
-            value: selfAttack,
-        })
+    @asChild()
+    private _role: RoleModel;
+    public get role() {
+        return this._role;
     }
 
-    @useCardDisposer()
-    public receiveDamage(options: {
-        value: number;
-    }) {
-        registerDisposer(this);
-        console.log('Receive damage', options.value);
-        this.health.loseCurrent(options.value);
+    @asChild()
+    protected _disposer: MinionDisposerModel;
+    public get disposer() {
+        return this._disposer;
     }
 
-
+    @asChild()
+    private _launcher?: HooksLauncherModel
+    
     /** Summon: from anwhere to board */
     @asTransaction()
     public summon(board?: BoardModel, position?: number) {
@@ -78,40 +59,24 @@ export abstract class MinionModel extends CardModel {
             return;
         }        
         position = position ?? board.cards.length;
-        this.source?.delCard(this);
+        this.container?.removeCard(this);
         board.summonMinion(this, position);
+        this.finishSummon();
     }
 
-
-    /** Dispose: from anwhere to graveyard */
-    @asState()
-    private _isDestroyed: boolean = false;
-    public destroy() {
-        this._isDestroyed = true;
-    }
-    
-    public get isDisposable() {
-        if (this._health.current <= 0) return true;
-        if (this._isDestroyed) return true;
-        return false; 
-    }
-
-    @asTransaction()
-    public dispose() {
-        if (!this.isDisposable) return;
-        
-        const player = this.player;
-        if (!player) {
-            console.error('Player not found');
-            return;
+    public finishSummon() {
+        if (this._role.charge.isActive) {
+            this._role.action.reset();
         }
-        this.source?.delCard(this);
-        player.graveyard.disposeCard(this);
     }
 
     /** Play: from hand to board */
     /** Just user intention */
-    public async preparePlay(): Promise<MinionLaunchProps | undefined> {
+    public async preparePlay(): Promise<{
+        handIndex: number;
+        boardIndex: number;
+        hookRegistry: HookRegistry;
+    } | undefined> {
         const player = this.player;
         if (!player) return;
         
@@ -125,18 +90,18 @@ export abstract class MinionModel extends CardModel {
         const handIndex = hand.cards.indexOf(this);
         if (handIndex === -1) return;
         
-        const targetsRegistry: TargetsRegistry = []
+        const hookRegistry: HookRegistry = []
         for (const hook of this.battlecries) {
-            const params = await hook.fetchParams();
-            targetsRegistry.push({ hook, params })
+            const params = await hook.getTargets();
+            hookRegistry.push({ hook, params })
         }
         return {
             handIndex,
             boardIndex,
-            targetsRegistry,
+            hookRegistry,
         }
     }
-    
+
     public async play() {
         const player = this.player;
         if (!player) return;
@@ -150,7 +115,9 @@ export abstract class MinionModel extends CardModel {
         this.summon(board, options.boardIndex);
         
         /** Launch */
-        this._launcher = new MinionLauncherModel(options);
+        this._launcher = new HooksLauncherModel({
+            registry: options.hookRegistry,
+        });
         while (true) {
             const isFinished = await this._launcher.next();
             if (isFinished) break;

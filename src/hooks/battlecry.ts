@@ -32,18 +32,18 @@ export abstract class BattlecryModel<T extends Model = Model> extends Model {
     
     /** Target selector */
     public abstract getSelector(params: Array<T | undefined>): Selector<T> | undefined 
-    public async fetchParams(): Promise<Array<T | undefined>> {
+    public async getTargets(): Promise<Array<T | undefined>> {
         if (!this.player) return [];
         
-        const params: Array<T | undefined> = [];
+        const targets: Array<T | undefined> = [];
         while (true) {
-            const selector = this.getSelector(params);
+            const selector = this.getSelector(targets);
             if (!selector) break;
             const target = await this.player.controller.fetchTarget(selector);
-            params.push(target);
+            targets.push(target);
             if (!this.isMultiSelect) break;
         }
-        return params;
+        return targets;
     }
 
     protected abstract _run(params: Array<T | undefined>): Promise<void>;

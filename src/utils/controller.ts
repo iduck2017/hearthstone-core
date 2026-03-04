@@ -37,7 +37,10 @@ export class Controller {
             console.log('Resolver not found');
             return;
         }
-        if (!selector.options.includes(target)) resolver(undefined);
+        if (!selector.options.includes(target)) {
+            console.error('Target not found', target);
+            resolver(undefined);
+        }
         else resolver(target);
     }
 }

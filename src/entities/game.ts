@@ -1,18 +1,43 @@
-import { asChildList, asState, Model } from "set-piece";
+import { asChild, asChildList, asState, Model } from "set-piece";
 import { PlayerModel } from "./player";
-
+import { MageModel } from "../heroes/mage";
 
 
 export class GameModel extends Model {
-    @asChildList()
-    private _players: [PlayerModel, PlayerModel];
-    public get players(): [PlayerModel, PlayerModel] {
-        return [...this._players];
+
+    constructor(props?: {
+        playerA?: PlayerModel;
+        playerB?: PlayerModel;
+    }) {
+        super();
+        this._playerA = props?.playerA ?? new PlayerModel({
+            hero: new MageModel(),
+        });
+        this._playerB = props?.playerB ?? new PlayerModel({
+            hero: new MageModel(),
+        });
     }
+
+    @asChild()
+    private _playerA: PlayerModel;
+    public get playerA() {
+        return this._playerA;
+    }
+
+    @asChild()
+    private _playerB: PlayerModel;
+    public get playerB() {
+        return this._playerB;
+    }
+
     public get currentPlayer() {
-        return this._players[this._turn % 2 ? 0 : 1];
+        if (this._turn % 2) {
+            return this._playerA;
+        }
+        return this._playerB;
     }
     
+
     @asState()
     private _isStarted: boolean = false;
     public get isStarted() {
@@ -26,12 +51,18 @@ export class GameModel extends Model {
         this._turn += 1;
         this.startTurn();
     }
+
     private endTurn() {
     }
+    
     private startTurn() {
         const currentPlayer = this.currentPlayer;
         currentPlayer.mana.addMaximum(1);
         currentPlayer.mana.reset();
+        const minions = currentPlayer.board.minions;
+        minions.forEach(minion => {
+            minion.role.action.reset();
+        });
     }
 
     public start() {
@@ -40,20 +71,9 @@ export class GameModel extends Model {
             return;
         }
         this._isStarted = true;
-        this._players.forEach((player) => {
-            const isFirstPlayer = player === this._players[0];
-            player.gainInitialCards(isFirstPlayer);
-        });
+        this._playerA.gainInitialCards(true);
+        this._playerB.gainInitialCards(false);
         this.nextTurn();
     }
 
-    constructor(props?: {
-        players?: [PlayerModel, PlayerModel];
-    }) {
-        super();
-        this._players = props?.players ?? [
-            new PlayerModel(),
-            new PlayerModel(),
-        ];
-    }
 }

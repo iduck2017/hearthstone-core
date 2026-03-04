@@ -1,12 +1,8 @@
 import { asTransaction } from "set-piece";
 import { CostModel } from "../rules/cost";
-import { CardModel } from "./card";
+import { CardModel } from "../cards";
 
-export class SpellModel extends CardModel {
-    public get source() {
-        return this.hand ?? this.deck;
-    }
-
+export abstract class SpellModel extends CardModel {
     constructor(props?: {
         cost?: CostModel;
     }) {
@@ -15,22 +11,6 @@ export class SpellModel extends CardModel {
                 origin: 0,
             }),
         });
-    }
-
-    public get isDisposable() {
-        return true;
-    }
-    @asTransaction()
-    public dispose(): void {
-        if (!this.isDisposable) return;
-        
-        const player = this.player;
-        if (!player) {
-            console.error('Player not found');
-            return;
-        }
-        this.source?.delCard(this);
-        player.graveyard.disposeCard(this);
     }
 
     public async play(): Promise<void> {}

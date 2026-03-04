@@ -1,7 +1,8 @@
 import { BattlecryModel } from "../../hooks/battlecry";
 import { Selector } from "../../utils/controller";
 import { MinionModel } from "../../entities/minion";
-import { HeroModel, RoleModel } from "../../entities/hero";
+import { HeroModel } from "../../entities/hero";
+import { RoleModel } from "../../entities/role";
 
 export class ElvenArcherBattlecryModel extends BattlecryModel<RoleModel> {
 
@@ -10,9 +11,8 @@ export class ElvenArcherBattlecryModel extends BattlecryModel<RoleModel> {
         const opponent = player?.opponent;
         if (!opponent) return;
         const board = opponent.board;
-        return {
-            options: [...board.minions, opponent.hero],
-        }
+        const options = [...board.minions, opponent.hero].map(item => item.role);
+        return { options }
     }
 
     protected async _run(params: Array<RoleModel | undefined>): Promise<void> {

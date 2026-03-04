@@ -1,14 +1,13 @@
 import { asDependency, asRoute, asState, Model, useEffect, useMemory, useRange } from "set-piece";
 import { MinionModel } from "../entities/minion";
 
-export interface HealthBuff {
+export interface RoleHealthDecor {
     readonly name: string;
     readonly value: number;
-    readonly id: string;
+    readonly id?: string;
 }
 
-
-export class HealthModel extends Model {
+export class RoleHealthModel extends Model {
 
     @asRoute(() => MinionModel)
     private _minion?: MinionModel;
@@ -23,17 +22,18 @@ export class HealthModel extends Model {
 
     @asState()
     @asDependency(true)
-    private _buffs: HealthBuff[];
+    private _buffs: RoleHealthDecor[];
 
     @asState()
     private _current: number;
     public get current() {
         return this._current;
     }
-    public loseCurrent(value: number) {
+    public consume(value: number) {
         this._current -= value;
     }
-    public restoreCurrent(value: number) {
+
+    public restore(value: number) {
         this._current += value;
         if (this._current > this.maximum) {
             this._current = this.maximum;
@@ -50,9 +50,10 @@ export class HealthModel extends Model {
         return result;
     }
 
+    
     constructor(props?: {
         origin?: number;
-        buffs?: HealthBuff[];
+        buffs?: RoleHealthDecor[];
         current?: number;
     }) {
         super();

@@ -1,16 +1,19 @@
 import { asChild, asChildList, asRoute, Model } from "set-piece";
-import { PlayerModel } from "./player";
-import { BoardModel } from "./board";
-import { HandModel } from "./hand";
-import { DeckModel } from "./deck";
+import { PlayerModel } from "../entities/player";
+import { BoardModel } from "../entities/board";
+import { HandModel } from "../entities/hand";
+import { DeckModel } from "../entities/deck";
 import { BattlecryModel } from "../hooks/battlecry";
 import { CostModel } from "../rules/cost";
-import { GameModel } from "./game";
+import { GameModel } from "../entities/game";
 import { DeathrattleModel } from "../hooks/deathrattle";
+import { GraveyardModel } from "../entities/graveyard";
+import { DisposerModel } from "../rules/disposers";
 
 export interface CardProps {
     cost: CostModel;
     battlecries?: BattlecryModel[];
+    deathrattles?: DeathrattleModel[];
 }
 
 export abstract class CardModel extends Model {
@@ -18,24 +21,26 @@ export abstract class CardModel extends Model {
         super();
         this._cost = props?.cost ?? new CostModel();
         this._battlecries = props?.battlecries ?? [];
+        this._deathrattles = props?.deathrattles ?? [];
     }
 
     @asRoute(() => BoardModel)
     private _board?: BoardModel;
-    public get board() {
-        return this._board;
-    }
 
     @asRoute(() => HandModel)
     private _hand?: HandModel;
-    public get hand() {
-        return this._hand;
-    }
 
     @asRoute(() => DeckModel)
     private _deck?: DeckModel;
-    public get deck() {
-        return this._deck;
+
+    @asRoute(() => GraveyardModel)
+    private _graveyard?: GraveyardModel;
+
+    public get container() {
+        return this._board ?? 
+            this._hand ?? 
+            this._deck ?? 
+            this._graveyard; 
     }
 
     @asRoute(() => GameModel)
@@ -59,17 +64,22 @@ export abstract class CardModel extends Model {
     }
 
     @asChildList()
-    private _battlecries: BattlecryModel[] = [];
+    private _battlecries: BattlecryModel[];
     public get battlecries() {
         return [...this._battlecries];
     }
 
     @asChildList()
-    private _deathrattles: DeathrattleModel[] = [];
+    private _deathrattles: DeathrattleModel[];
     public get deathrattles() {
         return [...this._deathrattles];
     }
 
+    @asChild()
+    protected abstract _disposer: DisposerModel;
+    public get disposer() {
+        return this._disposer;
+    }
 
     public get isPlayable() {
         if (!this._hand) return false;
@@ -85,14 +95,6 @@ export abstract class CardModel extends Model {
 
         return true;
     }
-    
-    abstract isDisposable: boolean;
-    public abstract dispose(): void;
-    public handleDisposed(): void {
-        this._deathrattles.forEach(hook => hook.run())
-    }
-
     public abstract play(): Promise<void>;
-
 
 }

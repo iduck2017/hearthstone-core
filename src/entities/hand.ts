@@ -1,5 +1,5 @@
 import { asChildList, asRoute, asTransaction, Model } from "set-piece";
-import { CardModel } from "./card";
+import { CardModel } from "../cards";
 import { PlayerModel } from "./player";
 
 export class HandModel extends Model {
@@ -13,16 +13,16 @@ export class HandModel extends Model {
     }
 
 
-    public delCard(card?: CardModel) {
+    public removeCard(card?: CardModel) {
         if (!card) return;
         const index = this._cards.indexOf(card);
-        if (index !== -1) {
-            this._cards.splice(index, 1);
-        }
+        if (index === -1) return;
+        this._cards.splice(index, 1);
     }
+
     @asTransaction()
-    public delCards(cards: CardModel[]) {
-        cards.forEach(card => this.delCard(card));
+    public removeCards(cards: CardModel[]) {
+        cards.forEach(card => this.removeCard(card));
     }
 
     public addCard(card?: CardModel) {
@@ -47,7 +47,7 @@ export class HandModel extends Model {
         const card = deck?.cards[0];
         if (!card) return;
 
-        deck.delCard(card);
+        deck.removeCard(card);
         this.addCard(card);
     }
 }

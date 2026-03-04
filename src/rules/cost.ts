@@ -1,5 +1,5 @@
 import { asDependency, asRoute, asState, Model, useMemory } from "set-piece";
-import { CardModel } from "../entities/card";
+import { CardModel } from "../cards";
 
 export interface CostBuff {
     readonly name: string;

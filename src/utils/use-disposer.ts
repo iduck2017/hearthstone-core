@@ -1,15 +1,15 @@
-import { Model, runTransaction } from "set-piece";
-import { CardModel } from "../entities/card";
+import { runTransaction } from "set-piece";
+import { DisposerModel } from "../rules/disposers";
 
 let isPending = false;
+const disposerRegistry: DisposerModel[] = [];
 
-const disposerRegistry: CardModel[] = [];
-export function registerDisposer(minion: CardModel) {
-    console.log('Register death', minion);
-    disposerRegistry.push(minion);
+export function registerDisposer(disposer: DisposerModel) {
+    console.log('Register death', disposer);
+    disposerRegistry.push(disposer);
 }
 
-export function useCardDisposer() { 
+export function useDisposer() { 
     return function(
         prototype: object,
         key: string,
@@ -24,10 +24,12 @@ export function useCardDisposer() {
             isPending = true;
             const result = method.call(this, ...args);
             isPending = false;
+            const prevDisposerRegistry = [...disposerRegistry];
+            disposerRegistry.length = 0;
             runTransaction(() => {
-                disposerRegistry.forEach(card => card.dispose())
+                prevDisposerRegistry.forEach(item => item.run())
             })
-            disposerRegistry.forEach(card => card.handleDisposed())
+            prevDisposerRegistry.forEach(item => item.finishRun())
             return result;
         }
     }

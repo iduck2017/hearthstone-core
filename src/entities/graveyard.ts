@@ -1,5 +1,5 @@
 import { asChildList, asTransaction, Model } from "set-piece";
-import { CardModel } from "./card";
+import { CardModel } from "../cards";
 
 export class GraveyardModel extends Model {
     @asChildList()
@@ -14,7 +14,15 @@ export class GraveyardModel extends Model {
         super();
         this._cards = props?.cards ?? [];
     }
-    
+
+    public removeCard(card?: CardModel) {
+        if (!card) return;
+        const index = this._cards.indexOf(card);
+        if (index !== -1) {
+            this._cards.splice(index, 1);
+        }
+    }
+
     public disposeCard(card?: CardModel) {
         if (!card) return;
         this._cards.push(card);

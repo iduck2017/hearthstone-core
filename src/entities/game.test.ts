@@ -9,23 +9,21 @@ import { MageModel } from "../heroes/mage";
 describe('game', () => {
     const app = new AppModel();
     const game = new GameModel({
-        players: [
-            new PlayerModel({
-                hero: new MageModel(),
-                deck: new DeckModel({
-                    cards: new Array(30).fill(0).map(() => new WispModel()),
-                }),
+        playerA: new PlayerModel({
+            hero: new MageModel(),
+            deck: new DeckModel({
+                cards: new Array(30).fill(0).map(() => new WispModel()),
             }),
-            new PlayerModel({
-                hero: new MageModel(),
-                deck: new DeckModel({
-                    cards: new Array(30).fill(0).map(() => new WispModel()),
-                })
+        }),
+        playerB: new PlayerModel({
+            hero: new MageModel(),
+            deck: new DeckModel({
+                cards: new Array(30).fill(0).map(() => new WispModel()),
             }),
-        ],
+        }),
     });
-    const playerA = game.players[0];
-    const playerB = game.players[1];
+    const playerA = game.playerA;
+    const playerB = game.playerB;
 
     it('check-initial-state', () => {
         expect(app.game).toBeUndefined();
@@ -33,7 +31,8 @@ describe('game', () => {
         app.setGame(game);
         expect(app.game).toBe(game);
         expect(game.parent).toBe(app);
-        expect(game.players.length).toBe(2);
+        expect(game.playerA).toBeDefined();
+        expect(game.playerB).toBeDefined();
         expect(game.isStarted).toBe(false);
 
         expect(playerA.deck.cards.length).toBe(30);

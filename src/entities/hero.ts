@@ -1,42 +1,42 @@
-import { asChild, Model } from "set-piece";
-import { HealthModel } from "../rules/health";
-import { AttackModel } from "../rules/attack";
-import { MinionModel } from "./minion";
-import { registerDisposer, useCardDisposer } from "../utils/dispose";
-
-export type RoleModel = HeroModel | MinionModel;
+import { asChild, asState, Model } from "set-piece";
+import { RoleHealthModel } from "../rules/role-health";
+import { RoleAttackModel } from "../rules/role-attack";
+import { RoleModel, RoleProps } from "./role";
+import { DeathrattleModel } from "../hooks/deathrattle";
+import { TauntModel } from "../rules/taunt";
+import { DisposerModel } from "../rules/disposers";
+import { HeroDisposerModel } from "../rules/disposers/hero-disposer";
 
 export abstract class HeroModel extends Model {
-
-    @asChild()
-    private _health: HealthModel;
-    public get health() {
-        return this._health;
-    }
-
-    @asChild()
-    private _attack: AttackModel;
-    public get attack() {
-        return this._attack;
-    }
-
-    constructor(props?: {
-        attack?: AttackModel,
-        health?: HealthModel,
+    constructor(props: {
+        taunt?: TauntModel;
+        health?: RoleHealthModel;
+        attack?: RoleAttackModel;
     }) {
         super();
-        this._attack = props?.attack ?? new AttackModel({ origin: 0 });
-        this._health = props?.health ?? new HealthModel({ origin: 30 });
+        this._role = new RoleModel({
+            taunt: props.taunt,
+            attack: props.attack ?? new RoleAttackModel({ origin: 0 }),
+            health: props.health ?? new RoleHealthModel({ origin: 30 }),
+        });
+        this._disposer = new HeroDisposerModel();
     }
 
+    private _deathrattles: DeathrattleModel[] = [];
+    public get deathrattles() {
+        return this._deathrattles;
+    }
 
-    @useCardDisposer()
-    public receiveDamage(options: {
-        value: number;
-    }) {
-        // registerDisposer(this);
-        console.log('Receive damage', options.value);
-        this.health.loseCurrent(options.value);
+    @asChild()
+    private _role: RoleModel;
+    public get role() {
+        return this._role;
+    }
+
+    @asChild()
+    private _disposer: HeroDisposerModel;
+    public get disposer() {
+        return this._disposer;
     }
 
 }

@@ -19,8 +19,8 @@ export class PlayerModel extends Model {
     public get opponent(): PlayerModel | undefined {
         const game = this._game;
         if (!game) return;
-        if (this === game.players[0]) return game.players[1];
-        if (this === game.players[1]) return game.players[0];
+        if (this === game.playerA) return game.playerB;
+        if (this === game.playerB) return game.playerA;
         return;
     }
 
@@ -69,12 +69,12 @@ export class PlayerModel extends Model {
         mana?: ManaModel;
     }) {
         super();
+        this._hero = props.hero;
         this._board = props?.board ?? new BoardModel();
         this._hand = props?.hand ?? new HandModel();
         this._deck = props?.deck ?? new DeckModel();
         this._graveyard = props?.graveyard ?? new GraveyardModel();
         this._mana = props?.mana ?? new ManaModel();
-        this._hero = props.hero;
         this._controller = new Controller();
     }
 
@@ -82,7 +82,7 @@ export class PlayerModel extends Model {
     gainInitialCards(isFirstPlayer: boolean) {
         const count = isFirstPlayer ? 3 : 4;
         const cards = this.deck.cards.slice(0, count);
-        this._deck.delCards(cards);
+        this._deck.removeCards(cards);
         this._hand.addCards(cards);
     }
 }

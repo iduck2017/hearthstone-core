@@ -5,68 +5,70 @@ import { GameModel } from "./game";
 import { PlayerModel } from "./player";
 import { WispModel } from "../cards/wisp";
 import { MageModel } from "../heroes/mage";
+import { sleep } from "../utils/sleep";
 
 describe('attack', () => {
     const app = new AppModel();
     const wispA = new WispModel();
     const wispB = new WispModel();
     const game = new GameModel({
-        players: [
-            new PlayerModel({
-                hero: new MageModel(),
-                board: new BoardModel({
-                    cards: [wispA],
-                }),
+        playerA: new PlayerModel({
+            hero: new MageModel(),
+            board: new BoardModel({
+                cards: [wispA],
             }),
-            new PlayerModel({
-                hero: new MageModel(),  
-                board: new BoardModel({
-                    cards: [wispB],
-                }),
+        }),
+        playerB: new PlayerModel({
+            hero: new MageModel(),  
+            board: new BoardModel({
+                cards: [wispB],
             }),
-        ],  
+        }),
     });
     app.setGame(game);
     game.start();
-
-    const boardA = game.players[0].board;
-    const boardB = game.players[1].board;
-    const graveyardA = game.players[0].graveyard;
-    const graveyardB = game.players[1].graveyard;
+    const playerA = game.playerA;
+    const playerB = game.playerB;
 
     it('check-board', () => {
-        expect(boardA.cards.length).toBe(1);
-        expect(boardB.cards.length).toBe(1);
+        expect(playerA.board.cards.length).toBe(1);
+        expect(playerB.board.cards.length).toBe(1);
     })
 
     it('check-wisp', () => {
-        expect(wispA.health.current).toBe(1);
-        expect(wispB.health.current).toBe(1);
-        expect(wispA.health.maximum).toBe(1);
-        expect(wispB.health.maximum).toBe(1);
+        expect(wispA.role.health.current).toBe(1);
+        expect(wispB.role.health.current).toBe(1);
+        expect(wispA.role.health.maximum).toBe(1);
+        expect(wispB.role.health.maximum).toBe(1);
 
-        expect(wispA.attack.current).toBe(1);
-        expect(wispB.attack.current).toBe(1);
+        expect(wispA.role.attack.current).toBe(1);
+        expect(wispB.role.attack.current).toBe(1);
+
+        expect(wispA.role.action.current).toBe(1);
+        expect(wispB.role.action.current).toBe(0);
     })
 
-    it('wisp-attack-wisp', () => {
-        wispA.attackMinion({
-            target: wispB,
-        });
-        expect(wispA.health.maximum).toBe(1);
-        expect(wispB.health.maximum).toBe(1);
-        expect(wispA.health.current).toBe(0);
-        expect(wispB.health.current).toBe(0);
-
+    it('wisp-attack-wisp', async () => {
+        wispA.role.attackRole();
+        await sleep();
+        const options = playerA.controller.selector?.options;
+        expect(options).toContain(wispB.role);
+        expect(options).not.toContain(wispA.role);
+        playerA.controller.selectTarget(wispB.role);
+        await sleep();
+        expect(wispA.role.health.maximum).toBe(1);
+        expect(wispB.role.health.maximum).toBe(1);
+        expect(wispA.role.health.current).toBe(0);
+        expect(wispB.role.health.current).toBe(0);
     })
 
     it('check-graveyard', () => {
-        expect(wispA.isDisposable).toBe(true);
-        expect(wispB.isDisposable).toBe(true);
-        expect(boardA.cards.length).toBe(0);
-        expect(boardB.cards.length).toBe(0);
-        expect(graveyardA.cards.length).toBe(1);
-        expect(graveyardB.cards.length).toBe(1);
+        expect(wispA.disposer.isActived).toBe(true);
+        expect(wispB.disposer.isActived).toBe(true);
+        expect(playerA.board.cards.length).toBe(0);
+        expect(playerB.board.cards.length).toBe(0);
+        expect(playerA.graveyard.cards.length).toBe(1);
+        expect(playerB.graveyard.cards.length).toBe(1);
     })
-    
+
 });

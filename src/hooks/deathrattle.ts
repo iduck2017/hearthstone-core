@@ -3,19 +3,15 @@ import { BoardModel } from "../entities/board";
 import { PlayerModel } from "../entities/player";
 
 export abstract class DeathrattleModel extends Model {
-    @asRoute(() => BoardModel)
-    private _board?: BoardModel;
-    public get board() {
-        return this._board;
-    }
 
     @asRoute(() => PlayerModel)
     private _player?: PlayerModel;
-    public get player() {
+    protected get player() {
         return this._player;
     }
 
-    public abstract execute(): void;
-
-    public abstract run(): void;
+    protected abstract _run(): void;
+    public run() {
+        this._run();
+    }
 }
