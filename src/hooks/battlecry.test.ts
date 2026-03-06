@@ -25,12 +25,15 @@ describe('battlecry', () => {
             }),
         }),
     });
+    
     const playerA = game.playerA;
     const playerB = game.playerB;
     const wisp = playerB.board.minions[0];
     const elvenArcher = playerA.hand.cards[0];
+
     if (!wisp) throw new Error('Wisp not found');
     if (!elvenArcher) throw new Error('Elven Archer not found');
+    
     app.setGame(game);
     game.start();
 

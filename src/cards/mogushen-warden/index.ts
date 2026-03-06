@@ -9,7 +9,7 @@ export class MogushenWardenModel extends MinionModel {
         super({
             attack: new RoleAttackModel({ origin: 1 }),
             health: new RoleHealthModel({ origin: 7 }),
-            taunt: new TauntModel({ isActive: true }),
+            taunt: new TauntModel({ isActived: true }),
             cost: new CostModel({ origin: 4 }),
         });
     }

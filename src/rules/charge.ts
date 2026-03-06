@@ -2,15 +2,23 @@ import { asState, Model } from "set-piece";
 
 export class ChargeModel extends Model {
     constructor(props?: {
-        isActive?: boolean;
+        isActived?: boolean;
     }) {
         super();
-        this._isActive = props?.isActive ?? false;
+        this._isActived = props?.isActived ?? false;
     }
 
     @asState()
-    private _isActive: boolean;
-    public get isActive() {
-        return this._isActive;
+    private _isActived: boolean;
+    public get isActived() {
+        return this._isActived;
+    }
+
+    public active() {
+        this._isActived = true;
+    }
+
+    public deactivate() {
+        this._isActived = false;
     }
 }

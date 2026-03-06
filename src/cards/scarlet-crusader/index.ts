@@ -9,7 +9,7 @@ export class ScarletCrusaderModel extends MinionModel {
         super({
             attack: new RoleAttackModel({ origin: 3 }),
             health: new RoleHealthModel({ origin: 1 }),
-            divineShield: new DivineShieldModel({ isActive: true }),
+            divineShield: new DivineShieldModel({ isActived: true }),
             cost: new CostModel({ origin: 3 }),
         });
     }

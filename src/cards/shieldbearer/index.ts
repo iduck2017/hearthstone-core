@@ -9,7 +9,7 @@ export class ShieldbearerModel extends MinionModel {
         super({
             attack: new RoleAttackModel({ origin: 0 }),
             health: new RoleHealthModel({ origin: 4 }),
-            taunt: new TauntModel({ isActive: true }),
+            taunt: new TauntModel({ isActived: true }),
             cost: new CostModel({ origin: 1 }),
         });
     }

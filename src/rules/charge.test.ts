@@ -55,8 +55,8 @@ describe('charge', () => {
     game.start();
 
     it('check-initial-state', () => {
-        expect(boar.role.charge.isActive).toBe(true);
-        expect(wisp.role.charge.isActive).toBe(false);
+        expect(boar.role.charge.isActived).toBe(true);
+        expect(wisp.role.charge.isActived).toBe(false);
         expect(playerA.hand.cards).toContain(boar);
         expect(playerA.hand.cards).toContain(wisp);
         expect(playerA.mana.current).toBe(1);

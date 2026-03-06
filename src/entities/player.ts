@@ -9,6 +9,25 @@ import { GameModel } from "./game";
 import { HeroModel } from "./hero";
 
 export class PlayerModel extends Model {
+    constructor(props: {
+        hero: HeroModel;
+        board?: BoardModel;
+        hand?: HandModel;
+        deck?: DeckModel;
+        graveyard?: GraveyardModel;
+        mana?: ManaModel;
+    }) {
+        super();
+        this._hero = props.hero;
+        this._board = props?.board ?? new BoardModel();
+        this._hand = props?.hand ?? new HandModel();
+        this._deck = props?.deck ?? new DeckModel();
+        this._graveyard = props?.graveyard ?? new GraveyardModel();
+        this._mana = props?.mana ?? new ManaModel();
+        this._controller = new Controller();
+    }
+
+    
     private _controller: Controller
     public get controller() {
         return this._controller;
@@ -58,24 +77,6 @@ export class PlayerModel extends Model {
     private _graveyard: GraveyardModel;
     public get graveyard() {
         return this._graveyard;
-    }
-
-    constructor(props: {
-        hero: HeroModel;
-        board?: BoardModel;
-        hand?: HandModel;
-        deck?: DeckModel;
-        graveyard?: GraveyardModel;
-        mana?: ManaModel;
-    }) {
-        super();
-        this._hero = props.hero;
-        this._board = props?.board ?? new BoardModel();
-        this._hand = props?.hand ?? new HandModel();
-        this._deck = props?.deck ?? new DeckModel();
-        this._graveyard = props?.graveyard ?? new GraveyardModel();
-        this._mana = props?.mana ?? new ManaModel();
-        this._controller = new Controller();
     }
 
     @asTransaction()

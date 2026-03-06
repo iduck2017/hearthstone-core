@@ -9,7 +9,7 @@ export class SenjinShieldmastaModel extends MinionModel {
         super({
             attack: new RoleAttackModel({ origin: 3 }),
             health: new RoleHealthModel({ origin: 5 }),
-            taunt: new TauntModel({ isActive: true }),
+            taunt: new TauntModel({ isActived: true }),
             cost: new CostModel({ origin: 4 }),
         });
     }

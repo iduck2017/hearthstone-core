@@ -20,12 +20,12 @@ export class CostModel extends Model {
 
     @asState()
     @asDependency(true)
-    private _buffs: CostBuff[] = [];
+    private _decors: CostBuff[] = [];
 
     @useMemory()
     public get current() {
         let result = this._origin;
-        this._buffs.forEach(buff => {
+        this._decors.forEach(buff => {
             result += buff.value;
         });
         return result;
@@ -33,10 +33,10 @@ export class CostModel extends Model {
 
     constructor(props?: {
         origin?: number;
-        buffs?: CostBuff[];
+        decors?: CostBuff[];
     }) {
         super();
         this._origin = props?.origin ?? 1;
-        this._buffs = props?.buffs ?? [];
+        this._decors = props?.decors ?? [];
     }
 }           

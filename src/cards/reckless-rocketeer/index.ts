@@ -9,7 +9,7 @@ export class RecklessRocketeerModel extends MinionModel {
         super({
             attack: new RoleAttackModel({ origin: 5 }),
             health: new RoleHealthModel({ origin: 2 }),
-            charge: new ChargeModel({ isActive: true }),
+            charge: new ChargeModel({ isActived: true }),
             cost: new CostModel({ origin: 6 }),
         });
     }

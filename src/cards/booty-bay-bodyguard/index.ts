@@ -9,7 +9,7 @@ export class BootyBayBodyguardModel extends MinionModel {
         super({
             attack: new RoleAttackModel({ origin: 5 }),
             health: new RoleHealthModel({ origin: 4 }),
-            taunt: new TauntModel({ isActive: true }),
+            taunt: new TauntModel({ isActived: true }),
             cost: new CostModel({ origin: 5 }),
         });
     }

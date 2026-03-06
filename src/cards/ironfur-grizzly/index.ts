@@ -9,7 +9,7 @@ export class IronfurGrizzlyModel extends MinionModel {
         super({
             attack: new RoleAttackModel({ origin: 3 }),
             health: new RoleHealthModel({ origin: 3 }),
-            taunt: new TauntModel({ isActive: true }),
+            taunt: new TauntModel({ isActived: true }),
             cost: new CostModel({ origin: 3 }),
         });
     }

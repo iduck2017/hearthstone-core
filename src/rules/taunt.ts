@@ -1,37 +1,24 @@
-import { asDependency, asState, Model } from "set-piece";
-
-export interface TauntDecor {
-    value: boolean;
-    id?: string;
-}
+import { asState, Model } from "set-piece";
 
 export class TauntModel extends Model {
     constructor(props?: {
-        isActive?: boolean;
+        isActived?: boolean;
     }) {
         super();
-        this._decors = [{
-            value: props?.isActive ?? false,
-        }]
+        this._isActived = props?.isActived ?? false;
     }
 
     @asState()
-    @asDependency(true)
-    private _decors: TauntDecor[] = [];
-
+    private _isActived: boolean;
     public get isActived() {
-        const length = this._decors.length;
-        return this._decors[length - 1]?.value ?? false;
+        return this._isActived;
     }
 
-    public active(id: string) {
-        this._decors.push({
-            value: true,
-            id,
-        });
+    public active() {
+        this._isActived = true;
     }
 
-    public reset() {
-        this._decors.length = 0;
+    public deactive() {
+        this._isActived = false;
     }
 }

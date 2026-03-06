@@ -23,8 +23,10 @@ describe('Deathrattle', () => {
             }),
         }),
     });
+    
     app.setGame(game);
     game.start();
+
     const playerA = game.playerA;
     const playerB = game.playerB;
     const leperGnome = playerA.board.minions[0];

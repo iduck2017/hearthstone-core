@@ -1,9 +1,11 @@
-import { asChild, asRoute, asTransaction, Model } from "set-piece";
+import { asChild, asChildList, asRoute, asTransaction, Model } from "set-piece";
 import { RoleAttackModel } from "../rules/role-attack";
 import { RoleHealthModel } from "../rules/role-health";
 import { TauntModel } from "../rules/taunt";
 import { DivineShieldModel } from "../rules/divine-shield";
 import { ChargeModel } from "../rules/charge";
+import { RushModel } from "../rules/rush";
+import { StealthModel } from "../rules/stealth";
 import { registerDisposer, useDisposer } from "../utils/use-disposer";
 import { MinionModel } from "./minion";
 import { HeroModel } from "./hero";
@@ -11,16 +13,21 @@ import { PlayerModel } from "./player";
 import { GameModel } from "./game";
 import { Selector } from "../utils/controller";
 import { RoleActionModel } from "../rules/role-action";
+import { CardModel } from "../cards";
 
 export interface RoleProps {
     taunt?: TauntModel;
     divineShield?: DivineShieldModel;
     charge?: ChargeModel;
+    rush?: RushModel;
+    stealth?: StealthModel;
     attack: RoleAttackModel;
     health: RoleHealthModel;
 }
 
+
 export class RoleModel extends Model {
+
     @asChild()
     private _health: RoleHealthModel;
     public get health() {
@@ -47,6 +54,8 @@ export class RoleModel extends Model {
         return !!selector?.options.length;
     }
 
+
+
     @asChild()
     private _taunt: TauntModel;
     public get taunt() {
@@ -65,21 +74,36 @@ export class RoleModel extends Model {
         return this._charge;
     }
 
+    @asChild()
+    private _rush: RushModel;
+    public get rush() {
+        return this._rush;
+    }
+
+    @asChild()
+    private _stealth: StealthModel;
+    public get stealth() {
+        return this._stealth;
+    }
+
+    // Route
+    @asRoute(() => PlayerModel)
+    private _player?: PlayerModel;
+
+    @asRoute(() => GameModel)
+    private _game?: GameModel;
+
     @asRoute(() => MinionModel)
     private _minion?: MinionModel;
     
     @asRoute(() => HeroModel)
     private _hero?: HeroModel;
 
-    private get container() {
+
+
+    public get container() {
         return this._minion ?? this._hero;
     }
-
-    @asRoute(() => PlayerModel)
-    private _player?: PlayerModel;
-
-    @asRoute(() => GameModel)
-    private _game?: GameModel;
 
     constructor(props: RoleProps) {
         super();
@@ -89,18 +113,26 @@ export class RoleModel extends Model {
         this._taunt = props.taunt ?? new TauntModel();
         this._divineShield = props.divineShield ?? new DivineShieldModel();
         this._charge = props.charge ?? new ChargeModel();
+        this._rush = props.rush ?? new RushModel();
+        this._stealth = props.stealth ?? new StealthModel();
     }
 
     @useDisposer()
     public receiveDamage(options: {
         value: number;
     }) {
+        // Check disposer
         const disposer = this.container?.disposer;
         if (!disposer) return;
         registerDisposer(disposer);
-        if (this._divineShield.consume()) return;
+        // Consume divine shield
+        if (this._divineShield.isActived) {
+            this._divineShield.consume();
+            return;
+        }
+        // Consume health
         console.log('Receive damage', options.value);
-        this.health.consume(options.value);
+        this.health.consumeCurrent(options.value);
     }
     
     /** Attack and receiveAttacl */
@@ -108,12 +140,15 @@ export class RoleModel extends Model {
     @asTransaction()
     public async attackRole() {
         if (!this.isAttackEnabled) return;
-
+        // Get target
         const target = await this.attack.getTarget();
         if (!target) return;
-
         if (!this.isAttackEnabled) return;
-        this.action.consume();
-        this.attack.run({ target })
+        // Consume action
+        this.action.consumeCurrent();
+        // Run attack
+        this.attack.run({ target });
+        // Deactive stealth
+        this._stealth.deactive();
     }
 }

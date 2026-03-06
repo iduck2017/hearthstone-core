@@ -12,12 +12,12 @@ export class HandModel extends Model {
         return [...this._cards];
     }
 
-
     public removeCard(card?: CardModel) {
         if (!card) return;
         const index = this._cards.indexOf(card);
-        if (index === -1) return;
-        this._cards.splice(index, 1);
+        if (index !== -1) {
+            this._cards.splice(index, 1);
+        }
     }
 
     @asTransaction()
@@ -29,6 +29,7 @@ export class HandModel extends Model {
         if (!card) return;
         this._cards.push(card);
     }
+
     @asTransaction()
     public addCards(cards: CardModel[]) {
         cards.forEach(card => this.addCard(card));

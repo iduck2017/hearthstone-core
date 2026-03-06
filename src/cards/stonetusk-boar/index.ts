@@ -9,7 +9,7 @@ export class StonetuskBoarModel extends MinionModel {
         super({
             attack: new RoleAttackModel({ origin: 1 }),
             health: new RoleHealthModel({ origin: 1 }),
-            charge: new ChargeModel({ isActive: true }),
+            charge: new ChargeModel({ isActived: true }),
             cost: new CostModel({ origin: 1 }),
         });
     }

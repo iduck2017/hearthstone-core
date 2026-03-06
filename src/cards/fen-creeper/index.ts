@@ -9,7 +9,7 @@ export class FenCreeperModel extends MinionModel {
         super({
             attack: new RoleAttackModel({ origin: 3 }),
             health: new RoleHealthModel({ origin: 6 }),
-            taunt: new TauntModel({ isActive: true }),
+            taunt: new TauntModel({ isActived: true }),
             cost: new CostModel({ origin: 5 }),
         });
     }

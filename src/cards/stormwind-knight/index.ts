@@ -9,7 +9,7 @@ export class StormwindKnightModel extends MinionModel {
         super({
             attack: new RoleAttackModel({ origin: 2 }),
             health: new RoleHealthModel({ origin: 5 }),
-            charge: new ChargeModel({ isActive: true }),
+            charge: new ChargeModel({ isActived: true }),
             cost: new CostModel({ origin: 4 }),
         });
     }

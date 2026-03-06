@@ -9,7 +9,7 @@ export class FrostwolfGruntModel extends MinionModel {
         super({
             attack: new RoleAttackModel({ origin: 2 }),
             health: new RoleHealthModel({ origin: 2 }),
-            taunt: new TauntModel({ isActive: true }),
+            taunt: new TauntModel({ isActived: true }),
             cost: new CostModel({ origin: 2 }),
         });
     }

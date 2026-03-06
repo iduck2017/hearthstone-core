@@ -48,9 +48,9 @@ describe('divine-shield', () => {
     game.start();
 
     it('check-initial-state', () => {
-        expect(squire.role.divineShield.isActive).toBe(true);
-        expect(wispA.role.divineShield.isActive).toBe(false);
-        expect(wispB.role.divineShield.isActive).toBe(false);
+        expect(squire.role.divineShield.isActived).toBe(true);
+        expect(wispA.role.divineShield.isActived).toBe(false);
+        expect(wispB.role.divineShield.isActived).toBe(false);
         expect(wispA.role.action.current).toBe(1);
         expect(wispB.role.action.current).toBe(1);
     })
@@ -60,7 +60,7 @@ describe('divine-shield', () => {
         await sleep();
         playerA.controller.selectTarget(squire.role);
         await sleep();
-        expect(squire.role.divineShield.isActive).toBe(false);
+        expect(squire.role.divineShield.isActived).toBe(false);
         expect(squire.role.health.current).toBe(1);
         expect(squire.disposer.isActived).toBe(false);
         expect(wispA.role.health.current).toBe(0);

@@ -9,7 +9,7 @@ export class WolfriderModel extends MinionModel {
         super({
             attack: new RoleAttackModel({ origin: 3 }),
             health: new RoleHealthModel({ origin: 1 }),
-            charge: new ChargeModel({ isActive: true }),
+            charge: new ChargeModel({ isActived: true }),
             cost: new CostModel({ origin: 3 }),
         });
     }

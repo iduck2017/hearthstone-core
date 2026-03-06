@@ -61,7 +61,8 @@ export class GameModel extends Model {
         currentPlayer.mana.reset();
         const minions = currentPlayer.board.minions;
         minions.forEach(minion => {
-            minion.role.action.reset();
+            minion.role.action.resetCurrent();
+            minion.role.attack.setHeroSelectable(true);
         });
     }
 

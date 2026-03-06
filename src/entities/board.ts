@@ -36,4 +36,5 @@ export class BoardModel extends Model {
             this._cards.splice(index, 1);
         }
     }
+    
 }

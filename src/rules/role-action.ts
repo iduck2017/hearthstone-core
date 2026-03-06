@@ -8,12 +8,12 @@ export interface RoleActionBuff {
 export class RoleActionModel extends Model {
     @asState()
     @asDependency()
-    private _buffs: RoleActionBuff[] = [];
+    private _decors: RoleActionBuff[] = [];
 
     @useMemory()
     public get origin() {
         let result = 1;
-        this._buffs.forEach(buff => {
+        this._decors.forEach(buff => {
             result += buff.value;
         });
         return result;
@@ -26,11 +26,11 @@ export class RoleActionModel extends Model {
         return this._current;
     }
 
-    public consume() {
+    public consumeCurrent() {
         this._current -= 1;
     }
 
-    public reset() {
+    public resetCurrent() {
         this._current = this.origin;
     }
 

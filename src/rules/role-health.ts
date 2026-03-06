@@ -1,17 +1,10 @@
-import { asDependency, asRoute, asState, Model, useEffect, useMemory, useRange } from "set-piece";
+import { asChildList, asDependency, asRoute, asState, Model, useEffect, useMemory, useRange } from "set-piece";
 import { MinionModel } from "../entities/minion";
-
-export interface RoleHealthDecor {
-    readonly name: string;
-    readonly value: number;
-    readonly id?: string;
-}
+import { RoleHealthDecorModel, RoleHealthDecorType } from "./role-health-decor";
 
 export class RoleHealthModel extends Model {
 
-    @asRoute(() => MinionModel)
-    private _minion?: MinionModel;
-
+    // Origin
     @asState()
     @asDependency()
     @useRange(0, undefined)
@@ -20,45 +13,67 @@ export class RoleHealthModel extends Model {
         return this._origin;
     }
 
-    @asState()
-    @asDependency(true)
-    private _buffs: RoleHealthDecor[];
-
+    // Current
     @asState()
     private _current: number;
     public get current() {
         return this._current;
     }
-    public consume(value: number) {
+
+    public setCurrent(value: number) {
+        this._current = this.maximum;
+    }
+
+    public consumeCurrent(value: number) {
         this._current -= value;
     }
 
-    public restore(value: number) {
+    public restoreCurrent(value: number) {
         this._current += value;
         if (this._current > this.maximum) {
             this._current = this.maximum;
         }
     }
-
-
+    
+    // Maximum
     @useMemory()
     public get maximum() {
         let result = this._origin;
-        this._buffs?.forEach(buff => {
-            result += buff.value;
+        this._decors?.forEach(decor => {
+            result += decor.value;
         });
         return result;
     }
-
     
+    @asChildList()
+    @asDependency(true)
+    private _decors: RoleHealthDecorModel[];
+
+    public addDecor(decor: RoleHealthDecorModel) {
+        this._decors.push(decor);
+        if (decor.type === RoleHealthDecorType.OVERRIDE) {
+            this.setCurrent(this.maximum);
+        }
+        if (decor.type === RoleHealthDecorType.BUFF) {
+            this.restoreCurrent(decor.value);
+        }
+    }
+
+    public removeDecor(decor: RoleHealthDecorModel) {
+        const index = this._decors.indexOf(decor);
+        if (index !== -1) {
+            this._decors.splice(index, 1);
+        }
+    }
+
     constructor(props?: {
         origin?: number;
-        buffs?: RoleHealthDecor[];
+        decors?: RoleHealthDecorModel[];
         current?: number;
     }) {
         super();
         this._origin = props?.origin ?? 1;
-        this._buffs = props?.buffs ?? [];
+        this._decors = props?.decors ?? [];
         this._current = props?.current ?? this.origin;
     }   
 }

@@ -13,6 +13,7 @@ export class ManaModel extends Model {
     public get maximum() {
         return this._maximum;
     }
+
     public addMaximum(value: number) {
         this._maximum += value;
         if (this._current > this._maximum) {
@@ -26,11 +27,9 @@ export class ManaModel extends Model {
     public get current() {
         return this._current;
     }
-    public restoreCurrent(value: number) {
+
+    public restore(value: number) {
         this._current += value;
-        if (this._current > this._maximum) {
-            this._current = this._maximum;
-        }
     } 
 
     constructor(props?: {
@@ -42,7 +41,6 @@ export class ManaModel extends Model {
         this._current = props?.current ?? 0;
     }
 
-
     public consume(value: number) {
         if (value > this._current) {
             console.error('Not enough mana');
@@ -52,7 +50,7 @@ export class ManaModel extends Model {
     }
     
     public reset() {
-        console.log('Reset current', this._maximum);
+        console.log('Reset mana', this._maximum);
         this._current = this._maximum;
     }
 }

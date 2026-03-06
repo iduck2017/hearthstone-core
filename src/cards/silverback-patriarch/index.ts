@@ -9,7 +9,7 @@ export class SilverbackPatriarchModel extends MinionModel {
         super({
             attack: new RoleAttackModel({ origin: 1 }),
             health: new RoleHealthModel({ origin: 4 }),
-            taunt: new TauntModel({ isActive: true }),
+            taunt: new TauntModel({ isActived: true }),
             cost: new CostModel({ origin: 3 }),
         });
     }

@@ -16,22 +16,23 @@ export abstract class BattlecryModel<T extends Model = Model> extends Model {
     }
 
     @asState()
-    private _isMultiSelect: boolean = false;
-    protected get isMultiSelect() {
-        return this._isMultiSelect;
+    private _isMultiTarget: boolean = false;
+    protected get isMultiTarget() {
+        return this._isMultiTarget;
     }
 
     constructor(props?: {
         isPending?: boolean;
-        isMultiSelect?: boolean;
+        isMultiTarget?: boolean;
     }) {
         super();
         this._isPending = props?.isPending ?? false;
-        this._isMultiSelect = props?.isMultiSelect ?? false;
+        this._isMultiTarget = props?.isMultiTarget ?? false;
     }
     
     /** Target selector */
     public abstract getSelector(params: Array<T | undefined>): Selector<T> | undefined 
+
     public async getTargets(): Promise<Array<T | undefined>> {
         if (!this.player) return [];
         
@@ -41,7 +42,7 @@ export abstract class BattlecryModel<T extends Model = Model> extends Model {
             if (!selector) break;
             const target = await this.player.controller.fetchTarget(selector);
             targets.push(target);
-            if (!this.isMultiSelect) break;
+            if (!this.isMultiTarget) break;
         }
         return targets;
     }
@@ -50,7 +51,7 @@ export abstract class BattlecryModel<T extends Model = Model> extends Model {
     public async run(params: Array<T | undefined>) {
         // toRun
         if (!this.isPending) {
-            /** prepare */
+            // Prepare
             this._isPending = true;
         }
         await this._run(params);

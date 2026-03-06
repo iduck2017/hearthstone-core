@@ -9,6 +9,7 @@ import { GameModel } from "../entities/game";
 import { DeathrattleModel } from "../hooks/deathrattle";
 import { GraveyardModel } from "../entities/graveyard";
 import { DisposerModel } from "../rules/disposers";
+import { FeatureModel } from "../features";
 
 export interface CardProps {
     cost: CostModel;
@@ -22,6 +23,7 @@ export abstract class CardModel extends Model {
         this._cost = props?.cost ?? new CostModel();
         this._battlecries = props?.battlecries ?? [];
         this._deathrattles = props?.deathrattles ?? [];
+        this._buffs = [];
     }
 
     @asRoute(() => BoardModel)
@@ -79,6 +81,23 @@ export abstract class CardModel extends Model {
     protected abstract _disposer: DisposerModel;
     public get disposer() {
         return this._disposer;
+    }
+    
+    @asChildList()
+    public _buffs: FeatureModel[];
+    public get buffs() {
+        return [...this._buffs];
+    }
+
+    public addBuff(buff: FeatureModel) {
+        this._buffs.push(buff);
+    }
+
+    public removeBuff(buff: FeatureModel) {
+        const index = this._buffs.indexOf(buff);
+        if (index !== -1) {
+            this._buffs.splice(index, 1);
+        }
     }
 
     public get isPlayable() {

@@ -5,33 +5,23 @@ import { HooksLauncherModel, HookRegistry } from "../rules/hooks-launcher";
 import { CostModel } from "../rules/cost";
 import { RoleAttackModel } from "../rules/role-attack";
 import { RoleHealthModel } from "../rules/role-health";
-import { RoleModel } from "./role";
-import { TauntModel } from "../rules/taunt";
-import { DivineShieldModel } from "../rules/divine-shield";
-import { ChargeModel } from "../rules/charge";
+import { RoleModel, RoleProps } from "./role";
 import { MinionDisposerModel } from "../rules/disposers/minion-disposer";
 import { DeathrattleModel } from "../hooks/deathrattle";
 import { BattlecryModel } from "../hooks/battlecry";
 
+export interface MinionProps extends RoleProps {
+    cost: CostModel;
+    attack: RoleAttackModel;
+    health: RoleHealthModel;
+    deathrattles?: DeathrattleModel[];
+    battlecries?: BattlecryModel[];
+}
+
 export abstract class MinionModel extends CardModel {
-    constructor(props: {
-        cost: CostModel;
-        attack: RoleAttackModel;
-        health: RoleHealthModel;
-        taunt?: TauntModel;
-        divineShield?: DivineShieldModel;
-        charge?: ChargeModel;
-        deathrattles?: DeathrattleModel[];
-        battlecries?: BattlecryModel[];
-    }) {
+    constructor(props: MinionProps) {
         super(props);
-        this._role = new RoleModel({
-            taunt: props.taunt,
-            divineShield: props.divineShield,
-            charge: props.charge,
-            attack: props.attack,
-            health: props.health,
-        });
+        this._role = new RoleModel(props);
         this._disposer = new MinionDisposerModel();
     }
 
@@ -64,11 +54,17 @@ export abstract class MinionModel extends CardModel {
         this.finishSummon();
     }
 
+    @asTransaction()
     public finishSummon() {
-        if (this._role.charge.isActive) {
-            this._role.action.reset();
+        this._role.attack.setHeroSelectable(false);
+        if (this._role.charge.isActived) {
+            this._role.attack.setHeroSelectable(true);
+        }
+        if (this._role.charge.isActived || this._role.rush.isActived) {
+            this._role.action.resetCurrent();
         }
     }
+
 
     /** Play: from hand to board */
     /** Just user intention */

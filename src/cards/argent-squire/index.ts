@@ -9,7 +9,7 @@ export class ArgentSquireModel extends MinionModel {
         super({
             attack: new RoleAttackModel({ origin: 1 }),
             health: new RoleHealthModel({ origin: 1 }),
-            divineShield: new DivineShieldModel({ isActive: true }),
+            divineShield: new DivineShieldModel({ isActived: true }),
             cost: new CostModel({ origin: 1 }),
         });
     }
