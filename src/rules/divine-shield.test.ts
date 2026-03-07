@@ -20,8 +20,8 @@ import { GameModel } from "../entities/game";
 import { PlayerModel } from "../entities/player";
 import { MageModel } from "../heroes/mage";
 import { BoardModel } from "../entities/board";
-import { WispModel } from "../cards/wisp";
-import { ArgentSquireModel } from "../cards/argent-squire";
+import { WispModel } from "../cards/neutral/wisp";
+import { ArgentSquireModel } from "../cards/neutral/argent-squire";
 import { sleep } from "../utils/sleep";
 
 describe('divine-shield', () => {
@@ -56,7 +56,7 @@ describe('divine-shield', () => {
     })
 
     it('divine-shield-absorbs-first-hit', async () => {
-        wispA.role.attackRole();
+        wispA.role.runAttack();
         await sleep();
         playerA.controller.selectTarget(squire.role);
         await sleep();
@@ -68,7 +68,7 @@ describe('divine-shield', () => {
     })
 
     it('attack-after-shield-broken', async () => {
-        wispB.role.attackRole();
+        wispB.role.runAttack();
         await sleep();
         playerA.controller.selectTarget(squire.role);
         await sleep();

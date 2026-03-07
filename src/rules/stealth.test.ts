@@ -22,8 +22,8 @@ import { GameModel } from "../entities/game";
 import { PlayerModel } from "../entities/player";
 import { MageModel } from "../heroes/mage";
 import { BoardModel } from "../entities/board";
-import { WispModel } from "../cards/wisp";
-import { WorgenInfiltratorModel } from "../cards/worgen-infiltrator";
+import { WispModel } from "../cards/neutral/wisp";
+import { WorgenInfiltratorModel } from "../cards/neutral/worgen-infiltrator";
 import { sleep } from "../utils/sleep";
 
 describe('stealth', () => {
@@ -60,7 +60,7 @@ describe('stealth', () => {
     })
 
     it('stealth-restricts-target', async () => {
-        wispA.role.attackRole();
+        wispA.role.runAttack();
         await sleep();
         const options = playerA.controller.selector?.options;
         expect(options).toContain(wispB.role);
@@ -78,7 +78,7 @@ describe('stealth', () => {
         game.nextTurn();
         await sleep();
         expect(infiltrator.role.stealth.isActived).toBe(true);
-        infiltrator.role.attackRole();
+        infiltrator.role.runAttack();
         await sleep();
         playerB.controller.selectTarget(playerA.hero.role);
         await sleep();

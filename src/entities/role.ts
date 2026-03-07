@@ -138,7 +138,7 @@ export class RoleModel extends Model {
     /** Attack and receiveAttacl */
     @useDisposer()
     @asTransaction()
-    public async attackRole() {
+    public async runAttack() {
         if (!this.isAttackEnabled) return;
         // Get target
         const target = await this.attack.getTarget();

@@ -3,8 +3,8 @@ import { GameModel } from "../entities/game";
 import { PlayerModel } from "../entities/player";
 import { MageModel } from "../heroes/mage";
 import { BoardModel } from "../entities/board";
-import { WispModel } from "../cards/wisp";
-import { GoldshineFootmanModel } from "../cards/goldshine-footman";
+import { WispModel } from "../cards/neutral/wisp";
+import { GoldshineFootmanModel } from "../cards/neutral/goldshine-footman";
 import { sleep } from "../utils/sleep";
 
 /**
@@ -54,7 +54,7 @@ describe('taunt', () => {
     })
 
     it('taunt-restricts-target', async () => {
-        wispA.role.attackRole();
+        wispA.role.runAttack();
         await sleep();
         const options = playerA.controller.selector?.options;
         expect(options).toContain(footman.role);

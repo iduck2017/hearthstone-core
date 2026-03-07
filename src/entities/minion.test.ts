@@ -3,7 +3,7 @@ import { BoardModel } from "./board";
 import { DeckModel } from "./deck";
 import { GameModel } from "./game";
 import { PlayerModel } from "./player";
-import { WispModel } from "../cards/wisp";
+import { WispModel } from "../cards/neutral/wisp";
 import { MageModel } from "../heroes/mage";
 import { sleep } from "../utils/sleep";
 
@@ -49,7 +49,7 @@ describe('attack', () => {
     })
 
     it('wisp-attack-wisp', async () => {
-        wispA.role.attackRole();
+        wispA.role.runAttack();
         await sleep();
         const options = playerA.controller.selector?.options;
         expect(options).toContain(wispB.role);

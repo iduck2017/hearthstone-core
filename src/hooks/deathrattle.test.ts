@@ -3,8 +3,8 @@ import { GameModel } from "../entities/game";
 import { PlayerModel } from "../entities/player";
 import { MageModel } from "../heroes/mage";
 import { BoardModel } from "../entities/board";
-import { LeperGnomeModel } from "../cards/leper-gnome";
-import { WispModel } from "../cards/wisp";
+import { LeperGnomeModel } from "../cards/neutral/leper-gnome";
+import { WispModel } from "../cards/neutral/wisp";
 import { sleep } from "../utils/sleep";
 
 describe('Deathrattle', () => {
@@ -45,7 +45,7 @@ describe('Deathrattle', () => {
     it('leper-gnome-attack-wisp', async () => {
         expect(leperGnome.role.action.current).toBe(1);
 
-        leperGnome.role.attackRole();
+        leperGnome.role.runAttack();
         await sleep();
         playerA.controller.selectTarget(wisp.role);
         await sleep();

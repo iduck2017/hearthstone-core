@@ -55,7 +55,7 @@ export abstract class MinionModel extends CardModel {
     }
 
     @asTransaction()
-    public finishSummon() {
+    private finishSummon() {
         this._role.attack.setHeroSelectable(false);
         if (this._role.charge.isActived) {
             this._role.attack.setHeroSelectable(true);

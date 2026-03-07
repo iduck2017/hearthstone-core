@@ -2,10 +2,10 @@ import { AppModel } from "../app";
 import { GameModel } from "../entities/game";
 import { PlayerModel } from "../entities/player";
 import { DeckModel } from "../entities/deck";
-import { WispModel } from "../cards/wisp";
+import { WispModel } from "../cards/neutral/wisp";
 import { BoardModel } from "../entities/board";
 import { HandModel } from "../entities/hand";
-import { ElvenArcherModel } from "../cards/elven-archer";
+import { ElvenArcherModel } from "../cards/neutral/elven-archer";
 import { sleep } from "../utils/sleep";
 import { MageModel } from "../heroes/mage";
 

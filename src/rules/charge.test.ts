@@ -26,8 +26,8 @@ import { MageModel } from "../heroes/mage";
 import { BoardModel } from "../entities/board";
 import { HandModel } from "../entities/hand";
 import { DeckModel } from "../entities/deck";
-import { WispModel } from "../cards/wisp";
-import { StonetuskBoarModel } from "../cards/stonetusk-boar";
+import { WispModel } from "../cards/neutral/wisp";
+import { StonetuskBoarModel } from "../cards/neutral/stonetusk-boar";
 import { sleep } from "../utils/sleep";
 
 describe('charge', () => {
@@ -83,7 +83,7 @@ describe('charge', () => {
     })
 
     it('boar-attacks-immediately', async () => {
-        boar.role.attackRole();
+        boar.role.runAttack();
         await sleep();
         playerA.controller.selectTarget(target.role);
         await sleep();
