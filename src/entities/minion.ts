@@ -10,6 +10,7 @@ import { MinionDisposerModel } from "../rules/disposers/minion";
 import { DeathrattleModel } from "../hooks/deathrattle";
 import { BattlecryModel } from "../hooks/battlecry";
 import { GameModel } from "./game";
+import { BooleanDecorModel, BooleanDecorType } from "../utils/boolean-decor";
 
 export interface MinionProps extends RoleProps {
     cost: CostModel;
@@ -67,12 +68,15 @@ export abstract class MinionModel extends CardModel {
         const game = this.game;
         if (!game) return;
         this._summonedTurn = game.turn;
-        this._role.action.sleep();
-        if (this._role.charge.isActived) {
-            this._role.action.wakeup();
-        }
-        if (this._role.rush.isActived) {
-            this._role.action.wakeup();
+        this._role.action.resetSleep();
+
+        const isChargeActived = this._role.charge.isActived;
+        const isRushActived = this._role.rush.isActived;
+        if (!isChargeActived && !isRushActived) {
+            this._role.action.addSleepDecor(new BooleanDecorModel({
+                type: BooleanDecorType.BUFF,
+                value: true,
+            }));
         }
     }
 

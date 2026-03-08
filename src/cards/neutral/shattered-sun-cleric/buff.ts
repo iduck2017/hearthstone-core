@@ -1,7 +1,7 @@
 import { asRoute, onMount, onUnmount } from "set-piece";
 import { FeatureModel } from "../../../features";
 import { RoleModel } from "../../../entities/role";
-import { NumberDecorModel, NumberDecorType } from "../../../utils/decor";
+import { NumberDecorModel, NumberDecorType } from "../../../utils/number-decor";
 import { MinionModel } from "../../../entities/minion";
 import { HeroModel } from "../../../entities/hero";
 

@@ -20,22 +20,4 @@ export class RushModel extends Model {
     public get isActived() {
         return this._isActived;
     }
-
-    public active() {
-        this._isActived = true;
-        const role = this._role;
-        if (role) {
-            role.action.wakeup();
-        }
-    }
-
-    public deactivate() {
-        this._isActived = false;
-        const role = this._role;
-        if (role) {
-            if (!role.charge.isActived) {
-                role.action.sleep();
-            }
-        }
-    }
 }

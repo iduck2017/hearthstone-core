@@ -1,4 +1,5 @@
-import { asDependency, asState, Model, useMemory, useRange } from "set-piece";
+import { asChildList, asDependency, asState, Model, useMemory, useRange } from "set-piece";
+import { BooleanDecorModel, BooleanDecorType } from "../utils/boolean-decor";
 
 export interface RoleActionBuff {
     value: number;
@@ -44,23 +45,35 @@ export class RoleActionModel extends Model {
     }
 
     /** Sleep */
-    @asState()
-    private _isSleep: boolean
+    @asChildList()
+    private _isSleep: BooleanDecorModel[]
     public get isSleep() {
-        return this._isSleep;
+        let result = false;
+        this._isSleep.forEach(decor => {
+            result = decor.value;
+        });
+        return result;
     }
 
-    public sleep() {
-        this._isSleep = true;
+    public addSleepDecor(decor: BooleanDecorModel) {
+        this._isSleep.push(decor);
     }
 
-    public wakeup() {
-        this._isSleep = false;
+    public removeSleepDecor(decor: BooleanDecorModel) {
+        const index = this._isSleep.indexOf(decor);
+        if (index === -1) return;
+        this._isSleep.splice(index, 1);
+    }
+
+    public resetSleep() {
+        this._isSleep = this._isSleep.filter(item => (
+            item.type !== BooleanDecorType.BUFF
+        ));
     }
 
     constructor() {
         super();
         this._current = this.origin;
-        this._isSleep = false;
+        this._isSleep = [];
     }
 }

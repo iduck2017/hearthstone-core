@@ -1,5 +1,6 @@
 import { asRoute, asState, Model } from "set-piece";
 import { RoleModel } from "../entities/role";
+import { BooleanDecorModel, BooleanDecorType } from "../utils/boolean-decor";
 
 export class ChargeModel extends Model {
     constructor(props?: {
@@ -21,21 +22,4 @@ export class ChargeModel extends Model {
         return this._isActived;
     }
 
-    public active() {
-        this._isActived = true;
-        const role = this._role;
-        if (role) {
-            role.action.wakeup();
-        }
-    }
-
-    public deactivate() {
-        this._isActived = false;
-        const role = this._role;
-        if (role) {
-            if (!role.rush.isActived) {
-                role.action.sleep();
-            }
-        }
-    }
 }

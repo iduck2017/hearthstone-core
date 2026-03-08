@@ -1,5 +1,5 @@
 import { asChildList, asDependency, asRoute, asState, Model, useEffect, useMemory, useRange } from "set-piece";
-import { NumberDecorModel, NumberDecorType } from "../utils/decor";
+import { NumberDecorModel, NumberDecorType } from "../utils/number-decor";
 
 export class RoleHealthModel extends Model {
     // Origin

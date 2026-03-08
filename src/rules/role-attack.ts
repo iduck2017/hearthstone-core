@@ -1,7 +1,7 @@
 import { asChildList, asDependency, asRoute, asState, Model, useMemory, useRange } from "set-piece";
 import { RoleModel } from "../entities/role";
 import { PlayerModel } from "../entities/player";
-import { NumberDecorModel } from "../utils/decor";
+import { NumberDecorModel } from "../utils/number-decor";
 import { MinionModel } from "../entities/minion";
 import { HeroModel } from "../entities/hero";
 import { GameModel } from "../entities/game";

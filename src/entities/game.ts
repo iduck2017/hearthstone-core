@@ -64,7 +64,7 @@ export class GameModel extends Model {
         currentPlayer.mana.reset();
         const minions = currentPlayer.board.minions;
         minions.forEach(minion => {
-            minion.role.action.wakeup();
+            minion.role.action.resetSleep();
             minion.role.action.resetCurrent();
         });
     }
