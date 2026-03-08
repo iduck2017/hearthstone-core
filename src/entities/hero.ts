@@ -4,7 +4,7 @@ import { RoleAttackModel } from "../rules/role-attack";
 import { RoleModel, RoleProps } from "./role";
 import { DeathrattleModel } from "../hooks/deathrattle";
 import { DisposerModel } from "../rules/disposers";
-import { HeroDisposerModel } from "../rules/disposers/hero-disposer";
+import { HeroDisposerModel } from "../rules/disposers/hero";
 import { FeatureModel } from "../features";
 
 export interface HeroProps extends RoleProps {

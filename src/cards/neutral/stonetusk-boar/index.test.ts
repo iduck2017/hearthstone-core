@@ -8,29 +8,28 @@
  *   boar and wisp are in hand, not yet on board.
  *
  * Test 2 — play-wisp-no-charge:
- *   Play wisp (costs 0) onto the board; it has no charge so action.current = 0
- *   and cannot attack this turn.
+ *   Play wisp (costs 0) onto the board; it has no charge so it cannot attack this turn.
  *
  * Test 3 — play-boar-with-charge:
- *   Play boar (costs 1 mana) onto the board; charge triggers action.reset()
- *   so action.current = 1 — it can attack immediately.
+ *   Play boar (costs 1 mana) onto the board; charge triggers wakeup()
+ *   so it can attack immediately.
  *
  * Test 4 — boar-attacks-immediately:
  *   boar attacks target the same turn it was played; both die.
  */
 
-import { AppModel } from "../app";
-import { GameModel } from "../entities/game";
-import { PlayerModel } from "../entities/player";
-import { MageModel } from "../heroes/mage";
-import { BoardModel } from "../entities/board";
-import { HandModel } from "../entities/hand";
-import { DeckModel } from "../entities/deck";
-import { WispModel } from "../cards/neutral/wisp";
-import { StonetuskBoarModel } from "../cards/neutral/stonetusk-boar";
-import { sleep } from "../utils/sleep";
+import { AppModel } from "../../../app";
+import { GameModel } from "../../../entities/game";
+import { PlayerModel } from "../../../entities/player";
+import { MageModel } from "../../../heroes/mage";
+import { BoardModel } from "../../../entities/board";
+import { HandModel } from "../../../entities/hand";
+import { DeckModel } from "../../../entities/deck";
+import { WispModel } from "../wisp";
+import { StonetuskBoarModel } from "./index";
+import { sleep } from "../../../utils/sleep";
 
-describe('charge', () => {
+describe('stonetusk-boar', () => {
     const app = new AppModel();
     const boar = new StonetuskBoarModel();
     const wisp = new WispModel();
@@ -68,7 +67,6 @@ describe('charge', () => {
         playerA.controller.selectTarget(0);
         await sleep();
         expect(playerA.board.cards).toContain(wisp);
-        expect(wisp.role.action.current).toBe(0);
         expect(wisp.role.isAttackEnabled).toBe(false);
     })
 
@@ -78,7 +76,6 @@ describe('charge', () => {
         playerA.controller.selectTarget(0);
         await sleep();
         expect(playerA.board.cards).toContain(boar);
-        expect(boar.role.action.current).toBe(1);
         expect(boar.role.isAttackEnabled).toBe(true);
     })
 

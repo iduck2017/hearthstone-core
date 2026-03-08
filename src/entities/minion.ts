@@ -1,4 +1,4 @@
-import { asChild, asTransaction, Model } from "set-piece";
+import { asChild, asRoute, asState, asTransaction, Model } from "set-piece";
 import { CardModel, CardProps } from "../cards";
 import { BoardModel } from "./board";
 import { HooksLauncherModel, HookRegistry } from "../rules/hooks-launcher";
@@ -6,9 +6,10 @@ import { CostModel } from "../rules/cost";
 import { RoleAttackModel } from "../rules/role-attack";
 import { RoleHealthModel } from "../rules/role-health";
 import { RoleModel, RoleProps } from "./role";
-import { MinionDisposerModel } from "../rules/disposers/minion-disposer";
+import { MinionDisposerModel } from "../rules/disposers/minion";
 import { DeathrattleModel } from "../hooks/deathrattle";
 import { BattlecryModel } from "../hooks/battlecry";
+import { GameModel } from "./game";
 
 export interface MinionProps extends RoleProps {
     cost: CostModel;
@@ -39,6 +40,13 @@ export abstract class MinionModel extends CardModel {
 
     @asChild()
     private _launcher?: HooksLauncherModel
+
+
+    @asState()
+    private _summonedTurn?: number;
+    public get summonedTurn() {
+        return this._summonedTurn;
+    }
     
     /** Summon: from anwhere to board */
     @asTransaction()
@@ -56,12 +64,15 @@ export abstract class MinionModel extends CardModel {
 
     @asTransaction()
     private finishSummon() {
-        this._role.attack.setHeroSelectable(false);
+        const game = this.game;
+        if (!game) return;
+        this._summonedTurn = game.turn;
+        this._role.action.sleep();
         if (this._role.charge.isActived) {
-            this._role.attack.setHeroSelectable(true);
+            this._role.action.wakeup();
         }
-        if (this._role.charge.isActived || this._role.rush.isActived) {
-            this._role.action.resetCurrent();
+        if (this._role.rush.isActived) {
+            this._role.action.wakeup();
         }
     }
 

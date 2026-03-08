@@ -1,7 +1,10 @@
 import { asChildList, asDependency, asRoute, asState, Model, useMemory, useRange } from "set-piece";
 import { RoleModel } from "../entities/role";
 import { PlayerModel } from "../entities/player";
-import { RoleAttackDecorModel } from "./role-attack-decor";
+import { NumberDecorModel } from "../utils/decor";
+import { MinionModel } from "../entities/minion";
+import { HeroModel } from "../entities/hero";
+import { GameModel } from "../entities/game";
 
 export class RoleAttackModel extends Model {
     constructor(props?: {
@@ -9,11 +12,29 @@ export class RoleAttackModel extends Model {
     }) {
         super();
         this._origin = props?.origin ?? 1;
-        this._decors = [];
-        this._isHeroSelectable = false;
+        this._current = [];
     }
 
+
     // Routes
+    @asRoute(() => MinionModel)
+    private _minion?: MinionModel;
+    public get minion() {
+        return this._minion;
+    }
+
+    @asRoute(() => HeroModel)
+    private _hero?: HeroModel;
+    public get hero() {
+        return this._hero;
+    }
+
+    @asRoute(() => GameModel)
+    private _game?: GameModel;
+    public get game() {
+        return this._game;
+    }
+
     @asRoute(() => RoleModel)
     private _role?: RoleModel;
     public get role() {
@@ -35,55 +56,56 @@ export class RoleAttackModel extends Model {
     // Current
     @asChildList()
     @asDependency(true)
-    private _decors: RoleAttackDecorModel[];
-
-    public addDecor(decor: RoleAttackDecorModel) {
-        this._decors.push(decor);
-    }
-
-    public removeDecor(decor: RoleAttackDecorModel) {
-        const index = this._decors.indexOf(decor);
-        if (index !== -1) {
-            this._decors.splice(index, 1);
-        }
-    }
+    private _current: NumberDecorModel[];
 
     @useMemory()
     @useRange(0, undefined)
     public get current() {
         let result = this._origin;
-        this._decors?.forEach(buff => {
+        this._current?.forEach(buff => {
             result += buff.value;
         });
         return result;
     }
 
-    // Select
-    @asState()
-    private _isHeroSelectable: boolean;
-    public get isHeroSelectable() {
-        return this._isHeroSelectable;
+    public addDecor(decor: NumberDecorModel) {
+        this._current.push(decor);
     }
 
-    public setHeroSelectable(value: boolean) {
-        this._isHeroSelectable = value;
+    public removeDecor(decor: NumberDecorModel) {
+        const index = this._current.indexOf(decor);
+        if (index !== -1) {
+            this._current.splice(index, 1);
+        }
     }
 
+
+    private get isOpponentHeroSelectable() {
+        const minion = this.minion;
+        if (!minion) return false;
+        const role = this.role;
+        if (!role) return false;
+        if (role.charge.isActived) return true;
+
+        const game = this.game;
+        if (!game) return false;
+        const summonTurn = minion.summonedTurn;
+        const currentTurn = game.turn;
+        if (summonTurn !== currentTurn) return true;
+        return false;
+    }
 
     public getSelector() {
         const player = this._player;
         const opponent = player?.opponent;
         if (!opponent) return;
-        // Get all roles
+        
         const minions = opponent.board.minions;
         let options = [...minions, opponent.hero].map(item => item.role);
-        // Filter stealth
         options = options.filter(role => !role.stealth.isActived);
-        // Filter hero if not selectable
-        if (!this._isHeroSelectable) {
+        if (!this.isOpponentHeroSelectable) {
             options = options.filter(role => role !== opponent.hero.role);
         }
-        // Filter taunt
         if (options.find(role => role.taunt.isActived)) {
             options = options.filter(role => role.taunt.isActived);
         }

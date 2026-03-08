@@ -1,11 +1,11 @@
-import { AppModel } from "../app";      
-import { GameModel } from "../entities/game";
-import { PlayerModel } from "../entities/player";
-import { MageModel } from "../heroes/mage";
-import { BoardModel } from "../entities/board";
-import { WispModel } from "../cards/neutral/wisp";
-import { GoldshineFootmanModel } from "../cards/neutral/goldshine-footman";
-import { sleep } from "../utils/sleep";
+import { AppModel } from "../../../app";      
+import { GameModel } from "../../../entities/game";
+import { PlayerModel } from "../../../entities/player";
+import { MageModel } from "../../../heroes/mage";
+import { BoardModel } from "../../../entities/board";
+import { WispModel } from "../wisp";
+import { GoldshineFootmanModel } from "./index";
+import { sleep } from "../../../utils/sleep";
 
 /**
  * Scenario:
@@ -20,7 +20,7 @@ import { sleep } from "../utils/sleep";
  *   excluding wispB and playerB's hero.
  *   After selecting footman: wispA (1 hp - 1 dmg) dies, footman (2 hp - 1 dmg) survives at 1 hp.
  */
-describe('taunt', () => {
+describe('goldshine-footman', () => {
     const app = new AppModel();
     const wispA = new WispModel();
     const wispB = new WispModel();
@@ -49,8 +49,8 @@ describe('taunt', () => {
         expect(playerB.hero.role.taunt.isActived).toBe(false);
         expect(wispB.role.taunt.isActived).toBe(false);
         expect(footman.role.taunt.isActived).toBe(true);
-        expect(wispA.role.action.current).toBe(1);
-        expect(wispB.role.action.current).toBe(0);
+        expect(wispA.role.isAttackEnabled).toBe(true);
+        expect(wispB.role.isAttackEnabled).toBe(false);
     })
 
     it('taunt-restricts-target', async () => {

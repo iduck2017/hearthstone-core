@@ -26,9 +26,9 @@ Rush（突袭）关键词允许随从在召唤的回合立即攻击，但召唤�
 
 ### 2.2 数据流
 
-1. **召唤阶段**：Rush 随从召唤时，重置 action 允许立即攻击，同时设置 `attack.isHeroSelectable = false`
+1. **召唤阶段**：Rush 随从召唤时，调用 `action.sleep()` 默认 sleep，然后调用 `action.wakeup()` 唤醒，同时设置 `attack.isHeroSelectable = false`
 2. **攻击选择**：`RoleAttackModel.getSelector()` 根据 `isHeroSelectable` 过滤目标，召唤回合排除英雄
-3. **回合开始**：每个回合开始时，所有随从的 `attack.isHeroSelectable` 设置为 `true`
+3. **回合开始**：每个回合开始时，所有随从的 `action.wakeup()` 和 `action.resetCurrent()`，`attack.isHeroSelectable` 设置为 `true`
 
 ## 3. 测试场景
 
@@ -40,14 +40,13 @@ Rush（突袭）关键词允许随从在召唤的回合立即攻击，但召唤�
 ### 3.1 check-initial-state
 
 - rushMinion 在手牌中，rush.isActived = true
-- rushMinion 尚未在场上（action.current = 0）
 
 ### 3.2 play-rush-minion
 
 - playerA 打出 rushMinion
-- rushMinion 进入场上，finishSummon() 触发 action.reset()
-- 验证 rushMinion.role.action.current = 1（Rush 允许立即攻击）
-- 验证 rushMinion.role.attack.isHeroSelectable = false（召唤回合）
+- rushMinion 进入场上，finishSummon() 调用 `action.sleep()` 然后 `action.wakeup()`
+- 验证 rushMinion.role.isAttackEnabled = true（Rush 允许立即攻击）
+- 验证 rushMinion.role.attack.isHeroSelectable = false（召唤回合不能攻击英雄）
 
 ### 3.3 rush-restricts-hero-attack
 

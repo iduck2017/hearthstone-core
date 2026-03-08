@@ -1,9 +1,7 @@
 import { asChildList, asDependency, asRoute, asState, Model, useEffect, useMemory, useRange } from "set-piece";
-import { MinionModel } from "../entities/minion";
-import { RoleHealthDecorModel, RoleHealthDecorType } from "./role-health-decor";
+import { NumberDecorModel, NumberDecorType } from "../utils/decor";
 
 export class RoleHealthModel extends Model {
-
     // Origin
     @asState()
     @asDependency()
@@ -36,44 +34,44 @@ export class RoleHealthModel extends Model {
     }
     
     // Maximum
+    @asChildList()
+    @asDependency(true)
+    private _maximum: NumberDecorModel[];
+
     @useMemory()
     public get maximum() {
         let result = this._origin;
-        this._decors?.forEach(decor => {
+        this._maximum?.forEach(decor => {
             result += decor.value;
         });
         return result;
     }
     
-    @asChildList()
-    @asDependency(true)
-    private _decors: RoleHealthDecorModel[];
-
-    public addDecor(decor: RoleHealthDecorModel) {
-        this._decors.push(decor);
-        if (decor.type === RoleHealthDecorType.OVERRIDE) {
+    public addDecor(decor: NumberDecorModel) {
+        this._maximum.push(decor);
+        if (decor.type === NumberDecorType.OVERRIDE) {
             this.setCurrent(this.maximum);
         }
-        if (decor.type === RoleHealthDecorType.BUFF) {
+        if (decor.type === NumberDecorType.BUFF) {
             this.restoreCurrent(decor.value);
         }
     }
 
-    public removeDecor(decor: RoleHealthDecorModel) {
-        const index = this._decors.indexOf(decor);
+    public removeDecor(decor: NumberDecorModel) {
+        const index = this._maximum.indexOf(decor);
         if (index !== -1) {
-            this._decors.splice(index, 1);
+            this._maximum.splice(index, 1);
         }
     }
 
     constructor(props?: {
         origin?: number;
-        decors?: RoleHealthDecorModel[];
+        decors?: NumberDecorModel[];
         current?: number;
     }) {
         super();
         this._origin = props?.origin ?? 1;
-        this._decors = props?.decors ?? [];
+        this._maximum = props?.decors ?? [];
         this._current = props?.current ?? this.origin;
     }   
 }

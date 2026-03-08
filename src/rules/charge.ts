@@ -1,4 +1,5 @@
-import { asState, Model } from "set-piece";
+import { asRoute, asState, Model } from "set-piece";
+import { RoleModel } from "../entities/role";
 
 export class ChargeModel extends Model {
     constructor(props?: {
@@ -6,6 +7,12 @@ export class ChargeModel extends Model {
     }) {
         super();
         this._isActived = props?.isActived ?? false;
+    }
+
+    @asRoute(() => RoleModel)
+    private _role?: RoleModel;
+    public get role() {
+        return this._role;
     }
 
     @asState()
@@ -16,9 +23,19 @@ export class ChargeModel extends Model {
 
     public active() {
         this._isActived = true;
+        const role = this._role;
+        if (role) {
+            role.action.wakeup();
+        }
     }
 
     public deactivate() {
         this._isActived = false;
+        const role = this._role;
+        if (role) {
+            if (!role.rush.isActived) {
+                role.action.sleep();
+            }
+        }
     }
 }

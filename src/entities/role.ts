@@ -48,13 +48,11 @@ export class RoleModel extends Model {
     public get isAttackEnabled() {
         const currentPlayer = this._game?.currentPlayer;
         if (this._player !== currentPlayer) return false;
-        if (this.action.current <= 0) return false;
+        if (!this.action.isEnable) return false;
         if (this.attack.current <= 0) return false;
         const selector = this.attack.getSelector();
         return !!selector?.options.length;
     }
-
-
 
     @asChild()
     private _taunt: TauntModel;
@@ -92,13 +90,15 @@ export class RoleModel extends Model {
 
     @asRoute(() => GameModel)
     private _game?: GameModel;
+    public get game() {
+        return this._game;
+    }
 
     @asRoute(() => MinionModel)
     private _minion?: MinionModel;
     
     @asRoute(() => HeroModel)
     private _hero?: HeroModel;
-
 
 
     public get container() {

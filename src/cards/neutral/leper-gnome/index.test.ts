@@ -1,13 +1,13 @@
-import { AppModel } from "../app";
-import { GameModel } from "../entities/game";
-import { PlayerModel } from "../entities/player";
-import { MageModel } from "../heroes/mage";
-import { BoardModel } from "../entities/board";
-import { LeperGnomeModel } from "../cards/neutral/leper-gnome";
-import { WispModel } from "../cards/neutral/wisp";
-import { sleep } from "../utils/sleep";
+import { AppModel } from "../../../app";
+import { GameModel } from "../../../entities/game";
+import { PlayerModel } from "../../../entities/player";
+import { MageModel } from "../../../heroes/mage";
+import { BoardModel } from "../../../entities/board";
+import { LeperGnomeModel } from "./index";
+import { WispModel } from "../wisp";
+import { sleep } from "../../../utils/sleep";
 
-describe('Deathrattle', () => {
+describe('leper-gnome', () => {
     const app = new AppModel();
     const game = new GameModel({
         playerA: new PlayerModel({
@@ -43,7 +43,7 @@ describe('Deathrattle', () => {
     });
 
     it('leper-gnome-attack-wisp', async () => {
-        expect(leperGnome.role.action.current).toBe(1);
+        expect(leperGnome.role.isAttackEnabled).toBe(true);
 
         leperGnome.role.runAttack();
         await sleep();

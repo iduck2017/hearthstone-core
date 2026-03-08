@@ -15,16 +15,16 @@
  *   both take 1 damage and die.
  */
 
-import { AppModel } from "../app";
-import { GameModel } from "../entities/game";
-import { PlayerModel } from "../entities/player";
-import { MageModel } from "../heroes/mage";
-import { BoardModel } from "../entities/board";
-import { WispModel } from "../cards/neutral/wisp";
-import { ArgentSquireModel } from "../cards/neutral/argent-squire";
-import { sleep } from "../utils/sleep";
+import { AppModel } from "../../../app";
+import { GameModel } from "../../../entities/game";
+import { PlayerModel } from "../../../entities/player";
+import { MageModel } from "../../../heroes/mage";
+import { BoardModel } from "../../../entities/board";
+import { WispModel } from "../wisp";
+import { ArgentSquireModel } from "./index";
+import { sleep } from "../../../utils/sleep";
 
-describe('divine-shield', () => {
+describe('argent-squire', () => {
     const app = new AppModel();
     const wispA = new WispModel();
     const wispB = new WispModel();
@@ -51,8 +51,8 @@ describe('divine-shield', () => {
         expect(squire.role.divineShield.isActived).toBe(true);
         expect(wispA.role.divineShield.isActived).toBe(false);
         expect(wispB.role.divineShield.isActived).toBe(false);
-        expect(wispA.role.action.current).toBe(1);
-        expect(wispB.role.action.current).toBe(1);
+        expect(wispA.role.isAttackEnabled).toBe(true);
+        expect(wispB.role.isAttackEnabled).toBe(true);
     })
 
     it('divine-shield-absorbs-first-hit', async () => {

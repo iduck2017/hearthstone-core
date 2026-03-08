@@ -17,16 +17,16 @@
  *
  */
 
-import { AppModel } from "../app";
-import { GameModel } from "../entities/game";
-import { PlayerModel } from "../entities/player";
-import { MageModel } from "../heroes/mage";
-import { BoardModel } from "../entities/board";
-import { WispModel } from "../cards/neutral/wisp";
-import { WorgenInfiltratorModel } from "../cards/neutral/worgen-infiltrator";
-import { sleep } from "../utils/sleep";
+import { AppModel } from "../../../app";
+import { GameModel } from "../../../entities/game";
+import { PlayerModel } from "../../../entities/player";
+import { MageModel } from "../../../heroes/mage";
+import { BoardModel } from "../../../entities/board";
+import { WispModel } from "../wisp";
+import { WorgenInfiltratorModel } from "./index";
+import { sleep } from "../../../utils/sleep";
 
-describe('stealth', () => {
+describe('worgen-infiltrator', () => {
     const app = new AppModel();
     const wispA = new WispModel();
     const wispB = new WispModel();
@@ -55,8 +55,8 @@ describe('stealth', () => {
         expect(playerB.hero.role.stealth.isActived).toBe(false);
         expect(wispB.role.stealth.isActived).toBe(false);
         expect(infiltrator.role.stealth.isActived).toBe(true);
-        expect(wispA.role.action.current).toBe(1);
-        expect(wispB.role.action.current).toBe(0);
+        expect(wispA.role.isAttackEnabled).toBe(true);
+        expect(wispB.role.isAttackEnabled).toBe(false);
     })
 
     it('stealth-restricts-target', async () => {

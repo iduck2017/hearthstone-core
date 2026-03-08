@@ -1,13 +1,13 @@
-import { AppModel } from "../app";
-import { BoardModel } from "./board";
-import { DeckModel } from "./deck";
-import { GameModel } from "./game";
-import { PlayerModel } from "./player";
-import { WispModel } from "../cards/neutral/wisp";
-import { MageModel } from "../heroes/mage";
-import { sleep } from "../utils/sleep";
+import { AppModel } from "../../../app";
+import { BoardModel } from "../../../entities/board";
+import { DeckModel } from "../../../entities/deck";
+import { GameModel } from "../../../entities/game";
+import { PlayerModel } from "../../../entities/player";
+import { WispModel } from "./index";
+import { MageModel } from "../../../heroes/mage";
+import { sleep } from "../../../utils/sleep";
 
-describe('attack', () => {
+describe('wisp', () => {
     const app = new AppModel();
     const wispA = new WispModel();
     const wispB = new WispModel();
@@ -44,8 +44,8 @@ describe('attack', () => {
         expect(wispA.role.attack.current).toBe(1);
         expect(wispB.role.attack.current).toBe(1);
 
-        expect(wispA.role.action.current).toBe(1);
-        expect(wispB.role.action.current).toBe(0);
+        expect(wispA.role.isAttackEnabled).toBe(true);
+        expect(wispB.role.isAttackEnabled).toBe(false);
     })
 
     it('wisp-attack-wisp', async () => {

@@ -1,8 +1,6 @@
 import { BattlecryModel } from "../../../hooks/battlecry";
 import { Selector } from "../../../utils/controller";
 import { RoleModel } from "../../../entities/role";
-import { RoleAttackDecorModel, RoleAttackDecorType } from "../../../rules/role-attack-decor";
-import { RoleHealthDecorModel, RoleHealthDecorType } from "../../../rules/role-health-decor";
 import { ShatteredSunClericBuffModel } from "./buff";
 
 export class ShatteredSunClericBattlecryModel extends BattlecryModel<RoleModel> {

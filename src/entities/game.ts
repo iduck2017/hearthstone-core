@@ -46,6 +46,9 @@ export class GameModel extends Model {
 
     @asState()
     private _turn: number = 0;
+    public get turn() {
+        return this._turn;
+    }
     public nextTurn() {
         this.endTurn();
         this._turn += 1;
@@ -61,8 +64,8 @@ export class GameModel extends Model {
         currentPlayer.mana.reset();
         const minions = currentPlayer.board.minions;
         minions.forEach(minion => {
+            minion.role.action.wakeup();
             minion.role.action.resetCurrent();
-            minion.role.attack.setHeroSelectable(true);
         });
     }
 

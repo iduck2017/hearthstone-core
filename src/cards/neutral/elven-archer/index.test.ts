@@ -1,15 +1,15 @@
-import { AppModel } from "../app";
-import { GameModel } from "../entities/game";
-import { PlayerModel } from "../entities/player";
-import { DeckModel } from "../entities/deck";
-import { WispModel } from "../cards/neutral/wisp";
-import { BoardModel } from "../entities/board";
-import { HandModel } from "../entities/hand";
-import { ElvenArcherModel } from "../cards/neutral/elven-archer";
-import { sleep } from "../utils/sleep";
-import { MageModel } from "../heroes/mage";
+import { AppModel } from "../../../app";
+import { GameModel } from "../../../entities/game";
+import { PlayerModel } from "../../../entities/player";
+import { DeckModel } from "../../../entities/deck";
+import { WispModel } from "../wisp";
+import { BoardModel } from "../../../entities/board";
+import { HandModel } from "../../../entities/hand";
+import { ElvenArcherModel } from "./index";
+import { sleep } from "../../../utils/sleep";
+import { MageModel } from "../../../heroes/mage";
 
-describe('battlecry', () => {
+describe('elven-archer', () => {
     const app = new AppModel();
     const game = new GameModel({
         playerA: new PlayerModel({

@@ -1,8 +1,7 @@
 import { asRoute, onMount, onUnmount } from "set-piece";
 import { FeatureModel } from "../../../features";
 import { RoleModel } from "../../../entities/role";
-import { RoleHealthDecorModel, RoleHealthDecorType } from "../../../rules/role-health-decor";
-import { RoleAttackDecorModel, RoleAttackDecorType } from "../../../rules/role-attack-decor";
+import { NumberDecorModel, NumberDecorType } from "../../../utils/decor";
 import { MinionModel } from "../../../entities/minion";
 import { HeroModel } from "../../../entities/hero";
 
@@ -19,22 +18,20 @@ export class ShatteredSunClericBuffModel extends FeatureModel {
         return this._minion ?? this._hero;
     }
 
-    // @asWeakReferList
-    private _decors?: [RoleHealthDecorModel, RoleAttackDecorModel];
+    private _decors?: [NumberDecorModel, NumberDecorModel];
 
     @onMount()
     private handleMount() {
         const container = this.container;
         if (!container) return;
         const role = container.role;
-        console.log('handleMount', container, role);
 
-        const healthDecor = new RoleHealthDecorModel({
-            type: RoleHealthDecorType.BUFF,
+        const healthDecor = new NumberDecorModel({
+            type: NumberDecorType.BUFF,
             value: 1,
         });
-        const attackDecor = new RoleAttackDecorModel({
-            type: RoleAttackDecorType.BUFF,
+        const attackDecor = new NumberDecorModel({
+            type: NumberDecorType.BUFF,
             value: 1,
         });
         role.health.addDecor(healthDecor);
@@ -47,7 +44,6 @@ export class ShatteredSunClericBuffModel extends FeatureModel {
         const container = this.container;
         if (!container) return;
         const role = container.role;
-
 
         if (!this._decors) return;
         const [healthDecor, attackDecor] = this._decors;    
