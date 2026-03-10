@@ -68,16 +68,7 @@ export abstract class MinionModel extends CardModel {
         const game = this.game;
         if (!game) return;
         this._summonedTurn = game.turn;
-        this._role.action.resetSleep();
-
-        const isChargeActived = this._role.charge.isActived;
-        const isRushActived = this._role.rush.isActived;
-        if (!isChargeActived && !isRushActived) {
-            this._role.action.addSleepDecor(new BooleanDecorModel({
-                type: BooleanDecorType.BUFF,
-                value: true,
-            }));
-        }
+        this._role.action.sleep();
     }
 
 

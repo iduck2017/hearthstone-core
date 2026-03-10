@@ -67,6 +67,7 @@ describe('stonetusk-boar', () => {
         playerA.controller.selectTarget(0);
         await sleep();
         expect(playerA.board.cards).toContain(wisp);
+        expect(wisp.role.action.isSleep).toBe(true);
         expect(wisp.role.isAttackEnabled).toBe(false);
     })
 
@@ -76,6 +77,8 @@ describe('stonetusk-boar', () => {
         playerA.controller.selectTarget(0);
         await sleep();
         expect(playerA.board.cards).toContain(boar);
+        expect(boar.role.charge.isActived).toBe(true);
+        expect(boar.role.action.isSleep).toBe(false);
         expect(boar.role.isAttackEnabled).toBe(true);
     })
 
@@ -88,6 +91,8 @@ describe('stonetusk-boar', () => {
         expect(target.role.health.current).toBe(0);
         expect(boar.disposer.isActived).toBe(true);
         expect(target.disposer.isActived).toBe(true);
+
+        
         expect(boar.role.isAttackEnabled).toBe(false);
     })
 })

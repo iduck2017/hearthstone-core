@@ -1,4 +1,5 @@
 import { asState, Model } from "set-piece";
+import { Decor } from "set-piece";
 
 export enum NumberDecorType {
     OVERRIDE = 'override',

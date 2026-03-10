@@ -55,10 +55,8 @@ export class RoleAttackModel extends Model {
 
     // Current
     @asChildList()
-    @asDependency(true)
-    private _current: NumberDecorModel[];
+    public _current: NumberDecorModel[];
 
-    @useMemory()
     @useRange(0, undefined)
     public get current() {
         let result = this._origin;
@@ -74,11 +72,9 @@ export class RoleAttackModel extends Model {
 
     public removeDecor(decor: NumberDecorModel) {
         const index = this._current.indexOf(decor);
-        if (index !== -1) {
-            this._current.splice(index, 1);
-        }
+        if (index === -1) return;
+        this._current.splice(index, 1);
     }
-
 
     private get isOpponentHeroSelectable() {
         const minion = this.minion;

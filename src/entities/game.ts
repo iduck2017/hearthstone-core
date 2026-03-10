@@ -1,6 +1,7 @@
-import { asChild, asChildList, asState, Model } from "set-piece";
+import { asChild, asChildList, asState, Event, Model, usePostEmitter } from "set-piece";
 import { PlayerModel } from "./player";
 import { MageModel } from "../heroes/mage";
+import { TurnEndEvent } from "../utils/turn-event";
 
 
 export class GameModel extends Model {
@@ -55,7 +56,9 @@ export class GameModel extends Model {
         this.startTurn();
     }
 
-    private endTurn() {
+    @usePostEmitter(() => TurnEndEvent)
+    private endTurn(): void {
+        return;
     }
     
     private startTurn() {
@@ -64,7 +67,7 @@ export class GameModel extends Model {
         currentPlayer.mana.reset();
         const minions = currentPlayer.board.minions;
         minions.forEach(minion => {
-            minion.role.action.resetSleep();
+            minion.role.action.wakeup();
             minion.role.action.resetCurrent();
         });
     }

@@ -25,9 +25,7 @@
   },
   "scripts": {
     "test": "jest",
-    "build:cjs": "tsc -p tsconfig.cjs.json",
-    "build:esm": "tsc -p tsconfig.esm.json",
-    "watch:cjs": "tsc -p tsconfig.cjs.json --watch",
-    "watch:esm": "tsc -p tsconfig.esm.json --watch"
+    "build": "tsc -p tsconfig.json",
+    "watch": "tsc -p tsconfig.json --watch"
   }
 }

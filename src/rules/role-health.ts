@@ -50,17 +50,22 @@ export class RoleHealthModel extends Model {
     public addDecor(decor: NumberDecorModel) {
         this._maximum.push(decor);
         if (decor.type === NumberDecorType.OVERRIDE) {
-            this.setCurrent(this.maximum);
+            this._current = this.maximum
         }
         if (decor.type === NumberDecorType.BUFF) {
-            this.restoreCurrent(decor.value);
+            this._current += decor.value;
         }
+        console.log(this.current, this.maximum)
     }
 
     public removeDecor(decor: NumberDecorModel) {
+        console.log("Remove decor")
         const index = this._maximum.indexOf(decor);
         if (index !== -1) {
             this._maximum.splice(index, 1);
+        }
+        if (this._current > this.maximum) {
+            this._current = this.maximum;
         }
     }
 

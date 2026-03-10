@@ -14,6 +14,7 @@ import { GameModel } from "./game";
 import { Selector } from "../utils/controller";
 import { RoleActionModel } from "../rules/role-action";
 import { CardModel } from "../cards";
+import { BoardModel } from "./board";
 
 export interface RoleProps {
     taunt?: TauntModel;
@@ -27,6 +28,9 @@ export interface RoleProps {
 
 
 export class RoleModel extends Model {
+
+    @asRoute(() => BoardModel)
+    private _board?: BoardModel;
 
     @asChild()
     private _health: RoleHealthModel;
@@ -47,9 +51,17 @@ export class RoleModel extends Model {
     }
     public get isAttackEnabled() {
         const currentPlayer = this._game?.currentPlayer;
+        /** Check current turn */
         if (this._player !== currentPlayer) return false;
+        /** Check action */
         if (!this.action.isEnable) return false;
+        /** Check attack */
         if (this.attack.current <= 0) return false;
+        /** Check position */
+        if (!this._board) return false;
+        /** Check disposer */
+        if (!this.container) return false;
+        if (this.container.disposer.isActived) return false;
         const selector = this.attack.getSelector();
         return !!selector?.options.length;
     }

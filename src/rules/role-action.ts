@@ -1,5 +1,8 @@
-import { asChildList, asDependency, asState, Model, useMemory, useRange } from "set-piece";
+import { asChildList, asDependency, asRoute, asState, EditableDecor, Model, onCalc, useDecor, useMemory, useRange } from "set-piece";
 import { BooleanDecorModel, BooleanDecorType } from "../utils/boolean-decor";
+import { AbstractConstructor } from "set-piece/dist/types";
+import { RoleModel } from "../entities/role";
+import { SleepDecor } from "../utils/sleep-decor";
 
 export interface RoleActionBuff {
     value: number;
@@ -7,6 +10,14 @@ export interface RoleActionBuff {
 }
 
 export class RoleActionModel extends Model {
+
+    /** Routes */
+    @asRoute(() => RoleModel)
+    private _role?: RoleModel;       
+    public get role() {
+        return this._role;
+    }
+
     /** Origin */
     @asState()
     @asDependency()
@@ -45,35 +56,24 @@ export class RoleActionModel extends Model {
     }
 
     /** Sleep */
-    @asChildList()
-    private _isSleep: BooleanDecorModel[]
+    @asState()
+    @useDecor(() => SleepDecor)
+    private _isSleep: boolean;
     public get isSleep() {
-        let result = false;
-        this._isSleep.forEach(decor => {
-            result = decor.value;
-        });
-        return result;
+        return this._isSleep;
     }
 
-    public addSleepDecor(decor: BooleanDecorModel) {
-        this._isSleep.push(decor);
+    public sleep() {
+        this._isSleep = true;
     }
 
-    public removeSleepDecor(decor: BooleanDecorModel) {
-        const index = this._isSleep.indexOf(decor);
-        if (index === -1) return;
-        this._isSleep.splice(index, 1);
+    public wakeup() {
+        this._isSleep = false;
     }
-
-    public resetSleep() {
-        this._isSleep = this._isSleep.filter(item => (
-            item.type !== BooleanDecorType.BUFF
-        ));
-    }
-
+    
     constructor() {
         super();
         this._current = this.origin;
-        this._isSleep = [];
+        this._isSleep = true;
     }
 }
