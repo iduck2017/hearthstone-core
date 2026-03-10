@@ -1,4 +1,4 @@
-import { asState, Model } from "set-piece";
+import { useState, Model } from "set-piece";
 
 export class TauntModel extends Model {
     constructor(props?: {
@@ -8,7 +8,7 @@ export class TauntModel extends Model {
         this._isActived = props?.isActived ?? false;
     }
 
-    @asState()
+    @useState()
     private _isActived: boolean;
     public get isActived() {
         return this._isActived;

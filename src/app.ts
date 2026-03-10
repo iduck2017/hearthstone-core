@@ -1,8 +1,8 @@
-import { asChild, Model } from "set-piece";
+import { useChild, Model } from "set-piece";
 import { GameModel } from "./entities/game";
 
 export class AppModel extends Model {
-    @asChild()
+    @useChild()
     private _game?: GameModel;
     public get game() {
         return this._game;

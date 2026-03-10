@@ -1,4 +1,4 @@
-import { asChildList, asDependency, asRoute, asState, EditableDecor, Model, onCalc, useDecor, useMemory, useRange } from "set-piece";
+import { useChildList, useDep, useRoute, useState, CustomDecor, Model, useModifier, useDecor, useMemo, useRange } from "set-piece";
 import { BooleanDecorModel, BooleanDecorType } from "../utils/boolean-decor";
 import { AbstractConstructor } from "set-piece/dist/types";
 import { RoleModel } from "../entities/role";
@@ -12,18 +12,18 @@ export interface RoleActionBuff {
 export class RoleActionModel extends Model {
 
     /** Routes */
-    @asRoute(() => RoleModel)
+    @useRoute(() => RoleModel)
     private _role?: RoleModel;       
     public get role() {
         return this._role;
     }
 
     /** Origin */
-    @asState()
-    @asDependency()
+    @useState()
+    @useDep()
     private _origin: RoleActionBuff[] = [];
 
-    @useMemory()
+    @useMemo()
     public get origin() {
         let result = 1;
         this._origin.forEach(buff => {
@@ -34,7 +34,7 @@ export class RoleActionModel extends Model {
 
 
     /** Current */
-    @asState()
+    @useState()
     @useRange(0, undefined)
     private _current: number;
     public get current() {
@@ -56,7 +56,7 @@ export class RoleActionModel extends Model {
     }
 
     /** Sleep */
-    @asState()
+    @useState()
     @useDecor(() => SleepDecor)
     private _isSleep: boolean;
     public get isSleep() {

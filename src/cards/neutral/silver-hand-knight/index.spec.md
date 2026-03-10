@@ -22,7 +22,7 @@ Silver Hand Knight（银手骑士）是一张 5 费 4/4 的随从，战吼：召
 
 1. **打出卡牌**：玩家打出 Silver Hand Knight
 2. **召唤 Knight**：Knight 被召唤到指定位置
-3. **执行战吼**：战吼通过 `asRoute` 获取父节点（Knight）
+3. **执行战吼**：战吼通过 `useRoute` 获取父节点（Knight）
 4. **确定位置**：找到 Knight 在 board 上的索引
 5. **召唤 Squire**：在 Knight 右侧（index + 1）召唤 Squire
 

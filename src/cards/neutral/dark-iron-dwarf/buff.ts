@@ -1,4 +1,4 @@
-import { asDependency, asRoute, useSelfValidator } from "set-piece";
+import { useDep, useRoute, useSelfValidator } from "set-piece";
 import { FeatureModel } from "../../../features";
 import { useRoleAttackBuff } from "../../../utils/use-role-attack-buff";
 import { TurnEndEvent, useTurnEndEventListener } from "../../../utils/turn-event";
@@ -7,8 +7,8 @@ import { BoardModel } from "../../../entities/board";
 
 @useRoleAttackBuff(2)
 export class DarkIronDwarfBuffModel extends FeatureModel {
-    @asDependency()
-    @asRoute(() => BoardModel)
+    @useDep()
+    @useRoute(() => BoardModel)
     private _board?: BoardModel;
     public get board() {
         return this._board;

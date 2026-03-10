@@ -1,10 +1,10 @@
-import { asRoute, Model } from "set-piece";
+import { useRoute, Model } from "set-piece";
 import { BoardModel } from "../entities/board";
 import { PlayerModel } from "../entities/player";
 
 export abstract class DeathrattleModel extends Model {
 
-    @asRoute(() => PlayerModel)
+    @useRoute(() => PlayerModel)
     private _player?: PlayerModel;
     protected get player() {
         return this._player;

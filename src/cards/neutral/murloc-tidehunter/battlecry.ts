@@ -1,10 +1,10 @@
 import { BattlecryModel } from "../../../hooks/battlecry";
 import { MurlocScoutModel } from "../../derivatives/murloc-scout";
-import { Model, asRoute } from "set-piece";
+import { Model, useRoute } from "set-piece";
 import { MinionModel } from "../../../entities/minion";
 
 export class MurlocTidehunterBattlecryModel extends BattlecryModel<Model> {
-    @asRoute(() => MinionModel)
+    @useRoute(() => MinionModel)
     private _minion?: MinionModel;
     public get minion() {
         return this._minion;

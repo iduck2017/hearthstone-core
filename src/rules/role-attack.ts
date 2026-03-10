@@ -1,4 +1,4 @@
-import { asChildList, asDependency, asRoute, asState, Model, useMemory, useRange } from "set-piece";
+import { useChildList, useDep, useRoute, useState, Model, useMemo, useRange } from "set-piece";
 import { RoleModel } from "../entities/role";
 import { PlayerModel } from "../entities/player";
 import { NumberDecorModel } from "../utils/number-decor";
@@ -17,44 +17,44 @@ export class RoleAttackModel extends Model {
 
 
     // Routes
-    @asRoute(() => MinionModel)
+    @useRoute(() => MinionModel)
     private _minion?: MinionModel;
     public get minion() {
         return this._minion;
     }
 
-    @asRoute(() => HeroModel)
+    @useRoute(() => HeroModel)
     private _hero?: HeroModel;
     public get hero() {
         return this._hero;
     }
 
-    @asRoute(() => GameModel)
+    @useRoute(() => GameModel)
     private _game?: GameModel;
     public get game() {
         return this._game;
     }
 
-    @asRoute(() => RoleModel)
+    @useRoute(() => RoleModel)
     private _role?: RoleModel;
     public get role() {
         return this._role;
     }
 
-    @asRoute(() => PlayerModel)
+    @useRoute(() => PlayerModel)
     private _player?: PlayerModel;
 
     // Origin
     @useRange(0, undefined)
-    @asState()
-    @asDependency()
+    @useState()
+    @useDep()
     private _origin: number;
     public get origin() {
         return this._origin;
     }
 
     // Current
-    @asChildList()
+    @useChildList()
     public _current: NumberDecorModel[];
 
     @useRange(0, undefined)

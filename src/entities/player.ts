@@ -1,4 +1,4 @@
-import { asChild, asRoute, asTransaction, Model } from "set-piece";
+import { useChild, useRoute, useTrx, Model } from "set-piece";
 import { BoardModel } from "./board";
 import { HandModel } from "./hand";
 import { DeckModel } from "./deck";
@@ -33,7 +33,7 @@ export class PlayerModel extends Model {
         return this._controller;
     }
 
-    @asRoute(() => GameModel)
+    @useRoute(() => GameModel)
     private _game?: GameModel;
     public get opponent(): PlayerModel | undefined {
         const game = this._game;
@@ -43,47 +43,57 @@ export class PlayerModel extends Model {
         return;
     }
 
-    @asChild()
+    @useChild()
     private _board: BoardModel;
     public get board() {
         return this._board;
     }
 
-    @asChild()
+    @useChild()
     private _hand: HandModel;
     public get hand() {
         return this._hand;
     }
 
-    @asChild()
+    @useChild()
     private _deck: DeckModel;
     public get deck() {
         return this._deck;
     }
 
-    @asChild()
+    @useChild()
     private _mana: ManaModel;
     public get mana() {
         return this._mana;
     }
 
-    @asChild()
+    @useChild()
     private _hero: HeroModel;
     public get hero() {
         return this._hero;
     }
 
-    @asChild()
+    @useChild()
     private _graveyard: GraveyardModel;
     public get graveyard() {
         return this._graveyard;
     }
 
-    @asTransaction()
-    gainInitialCards(isFirstPlayer: boolean) {
+    @useTrx()
+    public prepareInitialCards(isFirstPlayer: boolean) {
         const count = isFirstPlayer ? 3 : 4;
         const cards = this.deck.cards.slice(0, count);
         this._deck.removeCards(cards);
         this._hand.addCards(cards);
     }
+
+
+    public drawCard() {
+        const card = this.deck.cards[0];
+        if (!card) return;
+        this.deck.removeCard(card);
+        this.hand.addCard(card);
+    }
+
+
 }

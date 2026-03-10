@@ -1,4 +1,4 @@
-import { asChild, asChildList, asRoute, Model } from "set-piece";
+import { useChild, useChildList, useRoute, Model } from "set-piece";
 import { PlayerModel } from "../entities/player";
 import { BoardModel } from "../entities/board";
 import { HandModel } from "../entities/hand";
@@ -26,16 +26,16 @@ export abstract class CardModel extends Model {
         this._buffs = [];
     }
 
-    @asRoute(() => BoardModel)
+    @useRoute(() => BoardModel)
     private _board?: BoardModel;
 
-    @asRoute(() => HandModel)
+    @useRoute(() => HandModel)
     private _hand?: HandModel;
 
-    @asRoute(() => DeckModel)
+    @useRoute(() => DeckModel)
     private _deck?: DeckModel;
 
-    @asRoute(() => GraveyardModel)
+    @useRoute(() => GraveyardModel)
     private _graveyard?: GraveyardModel;
 
     public get container() {
@@ -45,19 +45,19 @@ export abstract class CardModel extends Model {
             this._graveyard; 
     }
 
-    @asRoute(() => GameModel)
+    @useRoute(() => GameModel)
     private _game?: GameModel;
     public get game() {
         return this._game;
     }
     
-    @asRoute(() => PlayerModel)
+    @useRoute(() => PlayerModel)
     private _player?: PlayerModel;
     public get player() {
         return this._player;
     }
 
-    @asChild()
+    @useChild()
     private _cost: CostModel;
     protected consumeMana() {
         if (!this._player) return;
@@ -65,25 +65,25 @@ export abstract class CardModel extends Model {
         this._player.mana.consume(cost);
     }
 
-    @asChildList()
+    @useChildList()
     private _battlecries: BattlecryModel[];
     public get battlecries() {
         return [...this._battlecries];
     }
 
-    @asChildList()
+    @useChildList()
     private _deathrattles: DeathrattleModel[];
     public get deathrattles() {
         return [...this._deathrattles];
     }
 
-    @asChild()
+    @useChild()
     protected abstract _disposer: DisposerModel;
     public get disposer() {
         return this._disposer;
     }
     
-    @asChildList()
+    @useChildList()
     public _buffs: FeatureModel[];
     public get buffs() {
         return [...this._buffs];

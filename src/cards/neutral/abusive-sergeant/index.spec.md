@@ -24,9 +24,9 @@ Abusive Sergeant（叫嚣的中士）是一张 1 费 2/1 的随从，战吼：�
 1. **打出卡牌**：玩家打出 Abusive Sergeant
 2. **选择目标**：战吼选择器提供友方随从列表
 3. **应用 Buff**：通过 `container.addBuff()` 添加 AbusiveSergeantBuffModel
-4. **Buff 生效**：Buff 的 `onMount` 钩子添加攻击力 decor
+4. **Buff 生效**：Buff 的 `useMountHook` 钩子添加攻击力 decor
 5. **回合结束**：监听 TurnEndEvent，自动调用 `deactive()` 移除 buff
-6. **效果移除**：Buff 的 `onUnmount` 钩子移除攻击力 decor
+6. **效果移除**：Buff 的 `useUnmountHook` 钩子移除攻击力 decor
 
 ## 3. 测试场景
 

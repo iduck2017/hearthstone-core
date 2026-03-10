@@ -1,4 +1,4 @@
-import { asDependency, asRoute, onMount, onUnmount, useSelfValidator } from "set-piece";
+import { useDep, useRoute, useMountHook, useUnmountHook, useSelfValidator } from "set-piece";
 import { FeatureModel } from "../../../features";
 import { RoleModel } from "../../../entities/role";
 import { NumberDecorModel, NumberDecorType } from "../../../utils/number-decor";
@@ -11,8 +11,8 @@ import { BoardModel } from "../../../entities/board";
 
 @useRoleAttackBuff(2)
 export class AbusiveSergeantBuffModel extends FeatureModel {
-    @asDependency()
-    @asRoute(() => BoardModel)
+    @useDep()
+    @useRoute(() => BoardModel)
     private _board?: BoardModel;
     public get board() {
         return this._board;

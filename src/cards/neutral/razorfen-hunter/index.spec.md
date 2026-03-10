@@ -22,7 +22,7 @@ Razorfen Hunter（剃刀沼泽猎手）是一张 3 费 2/3 的随从，战吼：
 
 1. **打出卡牌**：玩家打出 Razorfen Hunter
 2. **召唤 Hunter**：Hunter 被召唤到指定位置
-3. **执行战吼**：战吼通过 `asRoute` 获取父节点（Hunter）
+3. **执行战吼**：战吼通过 `useRoute` 获取父节点（Hunter）
 4. **确定位置**：找到 Hunter 在 board 上的索引
 5. **召唤 Boar**：在 Hunter 右侧（index + 1）召唤 Boar
 

@@ -1,10 +1,10 @@
 import { BattlecryModel } from "../../../hooks/battlecry";
 import { BoarModel } from "../../derivatives/boar";
-import { Model, asRoute } from "set-piece";
+import { Model, useRoute } from "set-piece";
 import { MinionModel } from "../../../entities/minion";
 
 export class RazorfenHunterBattlecryModel extends BattlecryModel<Model> {
-    @asRoute(() => MinionModel)
+    @useRoute(() => MinionModel)
     private _minion?: MinionModel;
     public get minion() {
         return this._minion;

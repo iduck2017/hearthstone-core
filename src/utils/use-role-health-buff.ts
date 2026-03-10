@@ -1,4 +1,4 @@
-import { asRoute, Model, onMount, onUnmount, useWeakRef } from "set-piece";
+import { useRoute, Model, useMountHook, useUnmountHook, useWeakRef } from "set-piece";
 import { AbstractConstructor } from "set-piece/dist/types";
 import { RoleModel } from "../entities/role";
 import { MinionModel } from "../entities/minion";
@@ -7,13 +7,13 @@ import { HeroModel } from "../entities/hero";
 import { useFeatDeactiveHook } from "./use-feat-deactive-hook";
 import { FeatureModel } from "../features";
 
-export function useRoleHealthBuff(value: number, type: NumberDecorType) {
+export function useRoleHealthBuff(value: number, type?: NumberDecorType) {
     return function(BaseModel: AbstractConstructor<FeatureModel>): any {
         class _RoleHealthBuffModel extends BaseModel {
             @useWeakRef()
             private _healthDecor?: NumberDecorModel;
 
-            @onMount()
+            @useMountHook()
             private _handleHealthBuffMount() {
                 const container = this.container;
                 console.log('HandleMount', container);
@@ -27,7 +27,7 @@ export function useRoleHealthBuff(value: number, type: NumberDecorType) {
                 this._healthDecor = healthDecor;
             }
 
-            @onUnmount()
+            @useUnmountHook()
             @useFeatDeactiveHook()
             private _handleHealthBuffUnmount() {
                 console.log('HandleUnMount', value);

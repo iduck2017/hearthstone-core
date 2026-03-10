@@ -1,4 +1,4 @@
-import { asChild, asChildList, asState, Model } from "set-piece";
+import { useChild, useChildList, useState, Model } from "set-piece";
 import { RoleHealthModel } from "../rules/role-health";
 import { RoleAttackModel } from "../rules/role-attack";
 import { RoleModel, RoleProps } from "./role";
@@ -19,13 +19,13 @@ export abstract class HeroModel extends Model {
         this._disposer = new HeroDisposerModel();
     }
 
-    @asChildList()
+    @useChildList()
     private _deathrattles: DeathrattleModel[];
     public get deathrattles() {
         return [...this._deathrattles];
     }
 
-    @asChildList()
+    @useChildList()
     public _buffs: FeatureModel[];
     public get buffs() {
         return [...this._buffs];
@@ -42,13 +42,13 @@ export abstract class HeroModel extends Model {
         }
     }
 
-    @asChild()
+    @useChild()
     private _role: RoleModel;
     public get role() {
         return this._role;
     }
 
-    @asChild()
+    @useChild()
     private _disposer: HeroDisposerModel;
     public get disposer() {
         return this._disposer;

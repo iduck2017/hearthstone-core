@@ -1,13 +1,13 @@
-import { asRoute, asState, Model, useRange } from "set-piece";
+import { useRoute, useState, Model, useRange } from "set-piece";
 import { PlayerModel } from "../entities/player";
 
 export class ManaModel extends Model {
 
-    @asRoute(() => PlayerModel)
+    @useRoute(() => PlayerModel)
     private _player?: PlayerModel;
 
 
-    @asState()
+    @useState()
     @useRange(0, undefined)
     private _maximum: number;
     public get maximum() {
@@ -21,7 +21,7 @@ export class ManaModel extends Model {
         }
     }
 
-    @asState()
+    @useState()
     @useRange(0, undefined)
     private _current: number;
     public get current() {

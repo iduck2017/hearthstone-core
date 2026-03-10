@@ -1,4 +1,4 @@
-import { asState, Model } from "set-piece";
+import { useState, Model } from "set-piece";
 
 export enum BooleanDecorType {
     BUFF = 'override',
@@ -15,15 +15,16 @@ export class BooleanDecorModel extends Model {
         this._value = props.value;
     }
 
-    @asState()
+    @useState()
     private _type: BooleanDecorType;
     public get type() {
         return this._type;
     }
 
-    @asState()
+    @useState()
     private _value: boolean;
     public get value() {
         return this._value;
     }
 }
+

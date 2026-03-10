@@ -1,4 +1,4 @@
-import { Event, Method, Model, onEmit } from "set-piece";
+import { Event, Method, Model, useListener } from "set-piece";
 import { GameModel } from "../entities/game";
 
 export class TurnStartEvent extends Event {}
@@ -27,7 +27,7 @@ export function useTurnEndEventListener<
             if (!(target instanceof GameModel)) return;
             method.call(this, target, event);
         }
-        return onEmit(() => [TurnEndEvent, GameModel, GameModel])(
+        return useListener(() => [TurnEndEvent, GameModel, GameModel])(
             prototype,
             key,
             descriptor

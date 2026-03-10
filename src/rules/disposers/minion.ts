@@ -1,4 +1,4 @@
-import { asRoute } from "set-piece";
+import { useRoute } from "set-piece";
 import { MinionModel } from "../../entities/minion";
 import { DisposerModel } from "./index";
 import { PlayerModel } from "../../entities/player";
@@ -9,20 +9,20 @@ import { RoleModel } from "../../entities/role";
 import { GameModel } from "../../entities/game";
 
 export class MinionDisposerModel extends DisposerModel {
-    @asRoute(() => MinionModel)
+    @useRoute(() => MinionModel)
     private _minion?: MinionModel;
     
-    @asRoute(() => PlayerModel)
+    @useRoute(() => PlayerModel)
     private _player?: PlayerModel;
 
 
-    @asRoute(() => HandModel)
+    @useRoute(() => HandModel)
     private _hand?: HandModel;
    
-    @asRoute(() => DeckModel)
+    @useRoute(() => DeckModel)
     private _deck?: DeckModel;
 
-    @asRoute(() => BoardModel)
+    @useRoute(() => BoardModel)
     private _board?: BoardModel;
     
     public get container() {

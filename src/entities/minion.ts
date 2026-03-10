@@ -1,4 +1,4 @@
-import { asChild, asRoute, asState, asTransaction, Model } from "set-piece";
+import { useChild, useRoute, useState, useTrx, Model } from "set-piece";
 import { CardModel, CardProps } from "../cards";
 import { BoardModel } from "./board";
 import { HooksLauncherModel, HookRegistry } from "../rules/hooks-launcher";
@@ -27,30 +27,30 @@ export abstract class MinionModel extends CardModel {
         this._disposer = new MinionDisposerModel();
     }
 
-    @asChild()
+    @useChild()
     private _role: RoleModel;
     public get role() {
         return this._role;
     }
 
-    @asChild()
+    @useChild()
     protected _disposer: MinionDisposerModel;
     public get disposer() {
         return this._disposer;
     }
 
-    @asChild()
+    @useChild()
     private _launcher?: HooksLauncherModel
 
 
-    @asState()
+    @useState()
     private _summonedTurn?: number;
     public get summonedTurn() {
         return this._summonedTurn;
     }
     
     /** Summon: from anwhere to board */
-    @asTransaction()
+    @useTrx()
     public summon(board?: BoardModel, position?: number) {
         board = board ?? this.player?.board;
         if (!board) {
@@ -63,7 +63,7 @@ export abstract class MinionModel extends CardModel {
         this.finishSummon();
     }
 
-    @asTransaction()
+    @useTrx()
     private finishSummon() {
         const game = this.game;
         if (!game) return;

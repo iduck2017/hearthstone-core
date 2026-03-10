@@ -1,4 +1,4 @@
-import { asChildList, Model } from "set-piece";
+import { useChildList, Model } from "set-piece";
 import { CardModel } from "../cards";
 import { MinionModel } from "./minion";
 
@@ -10,7 +10,7 @@ export class BoardModel extends Model {
         this._cards = props?.cards ?? [];
     }
 
-    @asChildList()
+    @useChildList()
     private _cards: CardModel[];
     public get cards() {
         return [...this._cards];

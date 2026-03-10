@@ -1,4 +1,4 @@
-import { asChild, asChildList, asRoute, asTransaction, Model } from "set-piece";
+import { useChild, useChildList, useRoute, useTrx, Model } from "set-piece";
 import { RoleAttackModel } from "../rules/role-attack";
 import { RoleHealthModel } from "../rules/role-health";
 import { TauntModel } from "../rules/taunt";
@@ -29,22 +29,22 @@ export interface RoleProps {
 
 export class RoleModel extends Model {
 
-    @asRoute(() => BoardModel)
+    @useRoute(() => BoardModel)
     private _board?: BoardModel;
 
-    @asChild()
+    @useChild()
     private _health: RoleHealthModel;
     public get health() {
         return this._health;
     }
 
-    @asChild()
+    @useChild()
     private _action: RoleActionModel;
     public get action() {
         return this._action;
     }
 
-    @asChild()
+    @useChild()
     private _attack: RoleAttackModel;
     public get attack() {
         return this._attack;
@@ -66,50 +66,50 @@ export class RoleModel extends Model {
         return !!selector?.options.length;
     }
 
-    @asChild()
+    @useChild()
     private _taunt: TauntModel;
     public get taunt() {
         return this._taunt;
     }
 
-    @asChild()
+    @useChild()
     private _divineShield: DivineShieldModel;
     public get divineShield() {
         return this._divineShield;
     }
 
-    @asChild()
+    @useChild()
     private _charge: ChargeModel;
     public get charge() {
         return this._charge;
     }
 
-    @asChild()
+    @useChild()
     private _rush: RushModel;
     public get rush() {
         return this._rush;
     }
 
-    @asChild()
+    @useChild()
     private _stealth: StealthModel;
     public get stealth() {
         return this._stealth;
     }
 
     // Route
-    @asRoute(() => PlayerModel)
+    @useRoute(() => PlayerModel)
     private _player?: PlayerModel;
 
-    @asRoute(() => GameModel)
+    @useRoute(() => GameModel)
     private _game?: GameModel;
     public get game() {
         return this._game;
     }
 
-    @asRoute(() => MinionModel)
+    @useRoute(() => MinionModel)
     private _minion?: MinionModel;
     
-    @asRoute(() => HeroModel)
+    @useRoute(() => HeroModel)
     private _hero?: HeroModel;
 
 
@@ -149,7 +149,7 @@ export class RoleModel extends Model {
     
     /** Attack and receiveAttacl */
     @useDisposer()
-    @asTransaction()
+    @useTrx()
     public async runAttack() {
         if (!this.isAttackEnabled) return;
         // Get target

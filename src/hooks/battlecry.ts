@@ -1,21 +1,21 @@
-import { asRoute, asState, Model } from "set-piece";
+import { useRoute, useState, Model } from "set-piece";
 import { PlayerModel } from "../entities/player";
 import { Selector } from "../utils/controller";
 
 export abstract class BattlecryModel<T extends Model = Model> extends Model {
-    @asRoute(() => PlayerModel)
+    @useRoute(() => PlayerModel)
     private _player?: PlayerModel;
     public get player() {
         return this._player;
     }
 
-    @asState()
+    @useState()
     private _isPending: boolean = false;
     protected get isPending() {
         return this._isPending;
     }
 
-    @asState()
+    @useState()
     private _isMultiTarget: boolean = false;
     protected get isMultiTarget() {
         return this._isMultiTarget;

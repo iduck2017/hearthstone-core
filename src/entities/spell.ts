@@ -1,4 +1,4 @@
-import { asTransaction } from "set-piece";
+import { useTrx } from "set-piece";
 import { CostModel } from "../rules/cost";
 import { CardModel } from "../cards";
 

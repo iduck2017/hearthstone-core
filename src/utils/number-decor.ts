@@ -1,4 +1,4 @@
-import { asState, Model } from "set-piece";
+import { useState, Model } from "set-piece";
 import { Decor } from "set-piece";
 
 export enum NumberDecorType {
@@ -17,13 +17,13 @@ export class NumberDecorModel extends Model {
         this._value = props.value;
     }
 
-    @asState()  
+    @useState()  
     private _type: NumberDecorType;
     public get type() {
         return this._type;
     }
 
-    @asState()
+    @useState()
     private _value: number;
     public get value() {
         return this._value;

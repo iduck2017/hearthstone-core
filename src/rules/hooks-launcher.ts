@@ -1,13 +1,13 @@
-import { asRoute, asState, Model } from "set-piece";
+import { useRoute, useState, Model } from "set-piece";
 import { BattlecryModel } from "../hooks/battlecry";
 
 export type HookRegistry = Array<{ hook: BattlecryModel, params: Array<Model | undefined> }>;
 
 export class HooksLauncherModel extends Model {
-    @asState()
+    @useState()
     private _registry: HookRegistry;
 
-    @asState()
+    @useState()
     private _currentIndex: number;
     
     constructor(props: {

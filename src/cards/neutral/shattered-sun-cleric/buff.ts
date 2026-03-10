@@ -1,4 +1,4 @@
-import { asRoute, onMount, onUnmount } from "set-piece";
+import { useRoute, useMountHook, useUnmountHook } from "set-piece";
 import { FeatureModel } from "../../../features";
 import { RoleModel } from "../../../entities/role";
 import { NumberDecorModel, NumberDecorType } from "../../../utils/number-decor";

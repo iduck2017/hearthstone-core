@@ -1,10 +1,10 @@
 import { BattlecryModel } from "../../../hooks/battlecry";
 import { MechanicalDragonlingModel } from "../../derivatives/mechanical-dragonling";
-import { Model, asRoute } from "set-piece";
+import { Model, useRoute } from "set-piece";
 import { MinionModel } from "../../../entities/minion";
 
 export class DragonlingMechanicBattlecryModel extends BattlecryModel<Model> {
-    @asRoute(() => MinionModel)
+    @useRoute(() => MinionModel)
     private _minion?: MinionModel;
     public get minion() {
         return this._minion;

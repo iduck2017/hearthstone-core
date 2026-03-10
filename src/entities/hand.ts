@@ -1,12 +1,12 @@
-import { asChildList, asRoute, asTransaction, Model } from "set-piece";
+import { useChildList, useRoute, useTrx, Model } from "set-piece";
 import { CardModel } from "../cards";
 import { PlayerModel } from "./player";
 
 export class HandModel extends Model {
-    @asRoute(() => PlayerModel)
+    @useRoute(() => PlayerModel)
     private _player?: PlayerModel;
 
-    @asChildList()
+    @useChildList()
     private _cards: CardModel[] = [];
     public get cards() {
         return [...this._cards];
@@ -20,7 +20,7 @@ export class HandModel extends Model {
         }
     }
 
-    @asTransaction()
+    @useTrx()
     public removeCards(cards: CardModel[]) {
         cards.forEach(card => this.removeCard(card));
     }
@@ -30,7 +30,7 @@ export class HandModel extends Model {
         this._cards.push(card);
     }
 
-    @asTransaction()
+    @useTrx()
     public addCards(cards: CardModel[]) {
         cards.forEach(card => this.addCard(card));
     }

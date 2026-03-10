@@ -22,7 +22,7 @@ Murloc Tidehunter（鱼人招潮者）是一张 2 费 2/1 的随从，战吼：�
 
 1. **打出卡牌**：玩家打出 Murloc Tidehunter
 2. **召唤 Tidehunter**：Tidehunter 被召唤到指定位置
-3. **执行战吼**：战吼通过 `asRoute` 获取父节点（Tidehunter）
+3. **执行战吼**：战吼通过 `useRoute` 获取父节点（Tidehunter）
 4. **确定位置**：找到 Tidehunter 在 board 上的索引
 5. **召唤 Scout**：在 Tidehunter 右侧（index + 1）召唤 Murloc Scout
 

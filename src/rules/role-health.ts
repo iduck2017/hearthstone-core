@@ -1,10 +1,10 @@
-import { asChildList, asDependency, asRoute, asState, Model, useEffect, useMemory, useRange } from "set-piece";
+import { useChildList, useDep, useRoute, useState, Model, useEffect, useMemo, useRange } from "set-piece";
 import { NumberDecorModel, NumberDecorType } from "../utils/number-decor";
 
 export class RoleHealthModel extends Model {
     // Origin
-    @asState()
-    @asDependency()
+    @useState()
+    @useDep()
     @useRange(0, undefined)
     private _origin: number;
     public get origin() {
@@ -12,7 +12,7 @@ export class RoleHealthModel extends Model {
     }
 
     // Current
-    @asState()
+    @useState()
     private _current: number;
     public get current() {
         return this._current;
@@ -34,11 +34,11 @@ export class RoleHealthModel extends Model {
     }
     
     // Maximum
-    @asChildList()
-    @asDependency(true)
+    @useChildList()
+    @useDep(1)
     private _maximum: NumberDecorModel[];
 
-    @useMemory()
+    @useMemo()
     public get maximum() {
         let result = this._origin;
         this._maximum?.forEach(decor => {

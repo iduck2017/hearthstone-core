@@ -1,4 +1,4 @@
-import { asChild, asChildList, asState, Event, Model, usePostEmitter } from "set-piece";
+import { useChild, useChildList, useState, Event, Model, usePostEvent } from "set-piece";
 import { PlayerModel } from "./player";
 import { MageModel } from "../heroes/mage";
 import { TurnEndEvent } from "../utils/turn-event";
@@ -19,13 +19,13 @@ export class GameModel extends Model {
         });
     }
 
-    @asChild()
+    @useChild()
     private _playerA: PlayerModel;
     public get playerA() {
         return this._playerA;
     }
 
-    @asChild()
+    @useChild()
     private _playerB: PlayerModel;
     public get playerB() {
         return this._playerB;
@@ -39,13 +39,13 @@ export class GameModel extends Model {
     }
     
 
-    @asState()
+    @useState()
     private _isStarted: boolean = false;
     public get isStarted() {
         return this._isStarted;
     }
 
-    @asState()
+    @useState()
     private _turn: number = 0;
     public get turn() {
         return this._turn;
@@ -56,7 +56,7 @@ export class GameModel extends Model {
         this.startTurn();
     }
 
-    @usePostEmitter(() => TurnEndEvent)
+    @usePostEvent(() => TurnEndEvent)
     private endTurn(): void {
         return;
     }
@@ -78,8 +78,8 @@ export class GameModel extends Model {
             return;
         }
         this._isStarted = true;
-        this._playerA.gainInitialCards(true);
-        this._playerB.gainInitialCards(false);
+        this._playerA.prepareInitialCards(true);
+        this._playerB.prepareInitialCards(false);
         this.nextTurn();
     }
 

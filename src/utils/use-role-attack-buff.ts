@@ -1,4 +1,4 @@
-import { asRoute, Model, onMount, onUnmount, useWeakRef } from "set-piece";
+import { useRoute, Model, useMountHook, useUnmountHook, useWeakRef } from "set-piece";
 import { AbstractConstructor, Constructor } from "set-piece/dist/types";
 import { RoleModel } from "../entities/role";
 import { MinionModel } from "../entities/minion";
@@ -13,7 +13,7 @@ export function useRoleAttackBuff(value: number, type?: NumberDecorType) {
             @useWeakRef()
             private _attackDecor?: NumberDecorModel;
 
-            @onMount()
+            @useMountHook()
             private _handleAttackBuffMount() {
                 const container = this.container;
                 if (!container) return;
@@ -26,7 +26,7 @@ export function useRoleAttackBuff(value: number, type?: NumberDecorType) {
                 this._attackDecor = attackDecor;
             }
 
-            @onUnmount()
+            @useUnmountHook()
             @useFeatDeactiveHook()
             private _handleAttackBuffUnmount() {
                 const container = this.container;

@@ -23,7 +23,7 @@ Shattered Sun Cleric（破碎残阳祭司）是一张 3 费 3/2 的随从，战�
 1. **打出卡牌**：玩家打出 ShatteredSunCleric
 2. **选择目标**：战吼选择器提供友方随从列表
 3. **应用 Buff**：通过 `container.addBuff()` 添加 ShatteredSunClericBuffModel
-4. **Buff 生效**：Buff 的 `onMount` 钩子添加攻击和生命值 decor
+4. **Buff 生效**：Buff 的 `useMountHook` 钩子添加攻击和生命值 decor
 5. **效果验证**：目标随从攻击力和生命值上限各增加 1
 
 ## 3. 测试场景

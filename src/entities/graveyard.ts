@@ -1,8 +1,8 @@
-import { asChildList, asTransaction, Model } from "set-piece";
+import { useChildList, useTrx, Model } from "set-piece";
 import { CardModel } from "../cards";
 
 export class GraveyardModel extends Model {
-    @asChildList()
+    @useChildList()
     private _cards: CardModel[] = [];
     public get cards() {
         return [...this._cards];

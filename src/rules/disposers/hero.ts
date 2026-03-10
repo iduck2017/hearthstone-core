@@ -1,17 +1,17 @@
-import { asRoute } from "set-piece";
+import { useRoute } from "set-piece";
 import { DisposerModel } from ".";
 import { HeroModel } from "../../entities/hero";
 import { PlayerModel } from "../../entities/player";
 
 export class HeroDisposerModel extends DisposerModel {
 
-    @asRoute(() => PlayerModel)
+    @useRoute(() => PlayerModel)
     private _player?: PlayerModel;
     public get player() {
         return this._player;
     }
 
-    @asRoute(() => HeroModel)
+    @useRoute(() => HeroModel)
     private _hero?: HeroModel;
 
     public get isActived() {

@@ -1,4 +1,4 @@
-import { asDependency, asRoute, asState, Model, useMemory } from "set-piece";
+import { useDep, useRoute, useState, Model, useMemo } from "set-piece";
 import { CardModel } from "../cards";
 
 export interface CostBuff {
@@ -8,21 +8,21 @@ export interface CostBuff {
 }
 
 export class CostModel extends Model {
-    @asRoute(() => CardModel)
+    @useRoute(() => CardModel)
     private _card?: CardModel;
 
-    @asState()
-    @asDependency()
+    @useState()
+    @useDep()
     private _origin: number;
     public get origin() {
         return this._origin;
     }
 
-    @asState()
-    @asDependency(true)
+    @useState()
+    @useDep(1)
     private _decors: CostBuff[] = [];
 
-    @useMemory()
+    @useMemo()
     public get current() {
         let result = this._origin;
         this._decors.forEach(buff => {

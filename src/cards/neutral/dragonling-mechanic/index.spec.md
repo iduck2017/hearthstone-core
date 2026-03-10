@@ -22,7 +22,7 @@ Dragonling Mechanic（龙人机械师）是一张 4 费 2/4 的随从，战吼�
 
 1. **打出卡牌**：玩家打出 Dragonling Mechanic
 2. **召唤 Mechanic**：Mechanic 被召唤到指定位置
-3. **执行战吼**：战吼通过 `asRoute` 获取父节点（Mechanic）
+3. **执行战吼**：战吼通过 `useRoute` 获取父节点（Mechanic）
 4. **确定位置**：找到 Mechanic 在 board 上的索引
 5. **召唤 Dragonling**：在 Mechanic 右侧（index + 1）召唤 Mechanical Dragonling
 

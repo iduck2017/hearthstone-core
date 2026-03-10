@@ -1,4 +1,4 @@
-import { asRoute, asState, Model } from "set-piece";
+import { useRoute, useState, Model } from "set-piece";
 import { getFeatDeactiveHooks } from "../utils/use-feat-deactive-hook";
 import { GameModel } from "../entities/game";
 import { MinionModel } from "../entities/minion";
@@ -14,32 +14,32 @@ export abstract class FeatureModel extends Model {
         this._isActived = props?.isActived ?? true;
     }
 
-    @asState()
+    @useState()
     private _isActived: boolean;
     public get isActived() {
         return this._isActived;
     }
 
 
-    @asRoute(() => GameModel)
+    @useRoute(() => GameModel)
     private _game?: GameModel;
     protected get game() {
         return this._game;
     }
 
-    @asRoute(() => PlayerModel)
+    @useRoute(() => PlayerModel)
     private _player?: PlayerModel;
     protected get player() {
         return this._player;
     }
     
-    @asRoute(() => MinionModel)
+    @useRoute(() => MinionModel)
     private _minion?: MinionModel;
     protected get minion() {
         return this._minion;
     }
 
-    @asRoute(() => HeroModel)
+    @useRoute(() => HeroModel)
     private _hero?: HeroModel;
     protected get hero() {  
         return this._hero;

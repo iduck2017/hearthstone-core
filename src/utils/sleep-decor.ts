@@ -1,8 +1,8 @@
-import { EditableDecor, Model, onCalc } from "set-piece";
+import { CustomDecor, Model, useModifier } from "set-piece";
 import { RoleModel } from "../entities/role";
 import { RoleActionModel } from "../rules/role-action";
 
-export class SleepDecor extends EditableDecor<boolean> {}
+export class SleepDecor extends CustomDecor<boolean> {}
 
 export function onSleepStatusCalc<I extends Model>(
     selector: (self: I) => RoleModel | undefined
@@ -12,7 +12,7 @@ export function onSleepStatusCalc<I extends Model>(
         key: string,
         descriptor: TypedPropertyDescriptor<(model: RoleActionModel, decor: SleepDecor) => void>
     ) {
-        onCalc<I, RoleActionModel, SleepDecor>(() => [SleepDecor, RoleModel])(
+        useModifier<I, RoleActionModel, SleepDecor>(() => [SleepDecor, RoleModel, RoleActionModel])(
             prototype,
             key,
             descriptor

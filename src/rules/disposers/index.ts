@@ -1,4 +1,4 @@
-import { asRoute, Model } from "set-piece";
+import { useRoute, Model } from "set-piece";
 
 export abstract class DisposerModel extends Model {
     private _isDestroyed: boolean = false;

@@ -1,4 +1,4 @@
-import { asChildList, asTransaction, Model } from "set-piece";
+import { useChildList, useTrx, Model } from "set-piece";
 import { CardModel } from "../cards";
 
 export class DeckModel extends Model {
@@ -9,7 +9,7 @@ export class DeckModel extends Model {
         this._cards = props?.cards ?? [];
     }
 
-    @asChildList()
+    @useChildList()
     private _cards: CardModel[] = [];
     public get cards() {
         return [...this._cards];
@@ -23,7 +23,7 @@ export class DeckModel extends Model {
         }
     }
 
-    @asTransaction()
+    @useTrx()
     public removeCards(cards: CardModel[]) {
         cards.forEach(card => this.removeCard(card));
     }
@@ -33,7 +33,7 @@ export class DeckModel extends Model {
         this._cards.push(card);
     }
 
-    @asTransaction()
+    @useTrx()
     public addCards(cards: CardModel[]) {
         cards.forEach(card => this.addCard(card));
     }
