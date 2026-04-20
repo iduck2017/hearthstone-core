@@ -1,8 +1,7 @@
-import { BattlecryModel } from "../../../hooks/battlecry";
+import { BattlecryModel } from "../../../features/battlecry";
 import { Selector } from "../../../utils/controller";
-import { MinionModel } from "../../../entities/minion";
-import { HeroModel } from "../../../entities/hero";
 import { RoleModel } from "../../../entities/role";
+import { useBattlecryRunHook } from "../../../hooks/battlecry-run";
 
 export class ElvenArcherBattlecryModel extends BattlecryModel<RoleModel> {
 
@@ -15,8 +14,8 @@ export class ElvenArcherBattlecryModel extends BattlecryModel<RoleModel> {
         return { options }
     }
 
-    protected async _run(params: Array<RoleModel | undefined>): Promise<void> {
-        const target = params[0];
+    @useBattlecryRunHook()
+    private async handleRun(target?: RoleModel): Promise<void> {
         if (!target) return;
         target.receiveDamage({
             value: 1,

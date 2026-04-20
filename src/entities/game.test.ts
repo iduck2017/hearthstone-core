@@ -1,10 +1,9 @@
-import { AppModel } from "../app";
-import { sleep } from "../utils/sleep";
 import { DeckModel } from "./deck";
 import { GameModel } from "./game";
 import { PlayerModel } from "./player";
-import { WispModel } from "../cards/neutral/wisp";
 import { MageModel } from "../heroes/mage";
+import { AppModel } from "../app";
+import { WispModel } from "../cards/neutral/wisp";
 
 describe('game', () => {
     const app = new AppModel();

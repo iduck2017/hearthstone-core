@@ -1,4 +1,4 @@
-import { useChildList, useTrx, Model } from "set-piece";
+import { Model, TypedPropertyDecorator, useChild, useMemo, useRoute, useAction } from "set-piece";
 import { CardModel } from "../cards";
 
 export class DeckModel extends Model {
@@ -7,10 +7,12 @@ export class DeckModel extends Model {
     }) {
         super();
         this._cards = props?.cards ?? [];
+        this.init();
     }
 
-    @useChildList()
+    @useChild()
     private _cards: CardModel[] = [];
+    @useMemo()
     public get cards() {
         return [...this._cards];
     }
@@ -22,18 +24,15 @@ export class DeckModel extends Model {
             this._cards.splice(index, 1);
         }
     }
-
-    @useTrx()
+    @useAction()
     public removeCards(cards: CardModel[]) {
         cards.forEach(card => this.removeCard(card));
     }
-
     public addCard(card?: CardModel) {
         if (!card) return;
         this._cards.push(card);
     }
-
-    @useTrx()
+    @useAction()
     public addCards(cards: CardModel[]) {
         cards.forEach(card => this.addCard(card));
     }

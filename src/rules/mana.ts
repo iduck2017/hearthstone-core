@@ -1,4 +1,4 @@
-import { useRoute, useState, Model, useRange } from "set-piece";
+import { useRoute, useState, Model, useRange, useMemo } from "set-piece";
 import { PlayerModel } from "../entities/player";
 
 export class ManaModel extends Model {
@@ -10,6 +10,7 @@ export class ManaModel extends Model {
     @useState()
     @useRange(0, undefined)
     private _maximum: number;
+    @useMemo()
     public get maximum() {
         return this._maximum;
     }
@@ -24,6 +25,7 @@ export class ManaModel extends Model {
     @useState()
     @useRange(0, undefined)
     private _current: number;
+    @useMemo()
     public get current() {
         return this._current;
     }
@@ -39,6 +41,7 @@ export class ManaModel extends Model {
         super();
         this._maximum = props?.maximum ?? 0;
         this._current = props?.current ?? 0;
+        this.init();
     }
 
     public consume(value: number) {

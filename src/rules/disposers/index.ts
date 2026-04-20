@@ -1,7 +1,8 @@
-import { useRoute, Model } from "set-piece";
+import { useRoute, Model, useMemo } from "set-piece";
 
 export abstract class DisposerModel extends Model {
     private _isDestroyed: boolean = false;
+    @useMemo()
     public get isDestroyed() {
         return this._isDestroyed;
     }

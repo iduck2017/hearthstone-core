@@ -1,12 +1,13 @@
-import { useChildList, useDep, useRoute, useState, Model, useEffect, useMemo, useRange } from "set-piece";
-import { NumberDecorModel, NumberDecorType } from "../utils/number-decor";
+import { Model, useChild, useDecorProducer, useDeferEffect, useDep, useEffect, useMemo, useRange, useState } from "set-piece";
+import { RoleMaximumHealthDecor } from "../decors/role-maximum-health";
 
 export class RoleHealthModel extends Model {
+
     // Origin
     @useState()
-    @useDep()
     @useRange(0, undefined)
     private _origin: number;
+    @useMemo()
     public get origin() {
         return this._origin;
     }
@@ -14,12 +15,13 @@ export class RoleHealthModel extends Model {
     // Current
     @useState()
     private _current: number;
+    @useMemo()
     public get current() {
         return this._current;
     }
 
     public setCurrent(value: number) {
-        this._current = this.maximum;
+        this._current = this._maximum;
     }
 
     public consumeCurrent(value: number) {
@@ -28,55 +30,46 @@ export class RoleHealthModel extends Model {
 
     public restoreCurrent(value: number) {
         this._current += value;
-        if (this._current > this.maximum) {
-            this._current = this.maximum;
+        if (this._current > this._maximum) {
+            this._current = this._maximum;
         }
     }
-    
-    // Maximum
-    @useChildList()
-    @useDep(1)
-    private _maximum: NumberDecorModel[];
 
+    private _prevMaximum?: number;
+    @useEffect()
+    private handleMaximumChange() {
+        if (this._prevMaximum !== undefined) {
+            const offset = this._maximum - this._prevMaximum;
+            if (offset === 0)  return;
+            console.log(`Handle maximum change: ${this._prevMaximum} -> ${this.maximum}`)
+            if (offset > 0) this._current += offset;
+            if (offset < 0) this._current = Math.min(this._current, this._maximum);
+        }
+        this._prevMaximum = this._maximum;
+        return;
+    }
+
+    @useDeferEffect()
+    private handleCurrentChangeDefer() {
+        // console.log(`Handle current change defer ${this.current}/${this.maximum}`);
+    }
+    
+    @useState()
+    @useDecorProducer(() => RoleMaximumHealthDecor)
+    private _maximum: number;
     @useMemo()
     public get maximum() {
-        let result = this._origin;
-        this._maximum?.forEach(decor => {
-            result += decor.value;
-        });
-        return result;
-    }
-    
-    public addDecor(decor: NumberDecorModel) {
-        this._maximum.push(decor);
-        if (decor.type === NumberDecorType.OVERRIDE) {
-            this._current = this.maximum
-        }
-        if (decor.type === NumberDecorType.BUFF) {
-            this._current += decor.value;
-        }
-        console.log(this.current, this.maximum)
-    }
-
-    public removeDecor(decor: NumberDecorModel) {
-        console.log("Remove decor")
-        const index = this._maximum.indexOf(decor);
-        if (index !== -1) {
-            this._maximum.splice(index, 1);
-        }
-        if (this._current > this.maximum) {
-            this._current = this.maximum;
-        }
+        return this._maximum;
     }
 
     constructor(props?: {
         origin?: number;
-        decors?: NumberDecorModel[];
         current?: number;
     }) {
         super();
         this._origin = props?.origin ?? 1;
-        this._maximum = props?.decors ?? [];
+        this._maximum = props?.origin ?? 1;
         this._current = props?.current ?? this.origin;
+        this.init();
     }   
 }

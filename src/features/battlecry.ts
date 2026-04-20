@@ -1,22 +1,20 @@
-import { useRoute, useState, Model } from "set-piece";
+import { useRoute, useState, Model, useMemo } from "set-piece";
 import { PlayerModel } from "../entities/player";
 import { Selector } from "../utils/controller";
+import { getBattlecryRunHooks } from "../hooks/battlecry-run";
+import { FeatureModel } from ".";
 
-export abstract class BattlecryModel<T extends Model = Model> extends Model {
-    @useRoute(() => PlayerModel)
-    private _player?: PlayerModel;
-    public get player() {
-        return this._player;
-    }
-
+export abstract class BattlecryModel<T extends Model = Model> extends FeatureModel {
     @useState()
     private _isPending: boolean = false;
+    @useMemo()
     protected get isPending() {
         return this._isPending;
     }
 
     @useState()
     private _isMultiTarget: boolean = false;
+    @useMemo()
     protected get isMultiTarget() {
         return this._isMultiTarget;
     }
@@ -47,13 +45,13 @@ export abstract class BattlecryModel<T extends Model = Model> extends Model {
         return targets;
     }
 
-    protected abstract _run(params: Array<T | undefined>): Promise<void>;
-    public async run(params: Array<T | undefined>) {
-        // toRun
+    public async run(...params: Array<T | undefined>) {
         if (!this.isPending) {
-            // Prepare
             this._isPending = true;
         }
-        await this._run(params);
+        const hooks = getBattlecryRunHooks(this);
+        for (const hook of hooks) {
+            await hook(...params);
+        }
     }
 }

@@ -1,13 +1,39 @@
-import { useRoute, useMountHook, useUnmountHook } from "set-piece";
+import { useMemo, useRoute } from "set-piece";
 import { FeatureModel } from "../../../features";
 import { RoleModel } from "../../../entities/role";
-import { NumberDecorModel, NumberDecorType } from "../../../utils/number-decor";
-import { MinionModel } from "../../../entities/minion";
-import { HeroModel } from "../../../entities/hero";
-import { useRoleAttackBuff } from "../../../utils/use-role-attack-buff";
-import { useRoleHealthBuff } from "../../../utils/use-role-health-buff";
+import { BuffOperatorType, RoleCurrentAttackDecor, useRoleCurrentAttackDecorConsumer } from "../../../decors/role-current-attack";
+import { RoleAttackModel } from "../../../rules/role-attack";
+import { RoleMaximumHealthDecor, useRoleMaximumHealthDecorConsumer } from "../../../decors/role-maximum-health";
+import { RoleHealthModel } from "../../../rules/role-health";
 
-@useRoleHealthBuff(1)
-@useRoleAttackBuff(1)
 export class ShatteredSunClericBuffModel extends FeatureModel {
+    @useRoute(() => RoleModel)
+    private _role?: RoleModel;
+    @useMemo()
+    public get role() {
+        return this._role;
+    }
+
+    constructor() {
+        super();
+        this.init();
+    }
+
+    @useRoleCurrentAttackDecorConsumer()
+    protected _modifyRoleCurrentAttack(decor: RoleCurrentAttackDecor, _target: RoleAttackModel) {
+        decor.addBuff({
+            value: 1,
+            type: BuffOperatorType.COMMON,
+            source: this,
+        });
+    }
+
+    @useRoleMaximumHealthDecorConsumer()
+    protected _modifyRoleMaximumHealth(decor: RoleMaximumHealthDecor, _target: RoleHealthModel) {
+        decor.addBuff({
+            value: 1,
+            type: BuffOperatorType.COMMON,
+            source: this,
+        });
+    }
 }

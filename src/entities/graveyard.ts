@@ -1,9 +1,10 @@
-import { useChildList, useTrx, Model } from "set-piece";
+import { Model, useChild, useMemo } from "set-piece";
 import { CardModel } from "../cards";
 
 export class GraveyardModel extends Model {
-    @useChildList()
+    @useChild()
     private _cards: CardModel[] = [];
+    @useMemo()
     public get cards() {
         return [...this._cards];
     }
@@ -13,6 +14,7 @@ export class GraveyardModel extends Model {
     }) {
         super();
         this._cards = props?.cards ?? [];
+        this.init();
     }
 
     public removeCard(card?: CardModel) {

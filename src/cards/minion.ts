@@ -1,40 +1,33 @@
-import { useChild, useRoute, useState, useTrx, Model } from "set-piece";
-import { CardModel, CardProps } from "../cards";
-import { BoardModel } from "./board";
-import { HooksLauncherModel, HookRegistry } from "../rules/hooks-launcher";
-import { CostModel } from "../rules/cost";
-import { RoleAttackModel } from "../rules/role-attack";
-import { RoleHealthModel } from "../rules/role-health";
-import { RoleModel, RoleProps } from "./role";
+import { Model, TypedPropertyDecorator, useChild, useMemo, useRoute, useState, useAction } from "set-piece";
+import { CardModel, CardProps } from ".";
+import { PlayerModel } from "../entities/player";
+import { RoleModel, RoleProps } from "../entities/role";
 import { MinionDisposerModel } from "../rules/disposers/minion";
-import { DeathrattleModel } from "../hooks/deathrattle";
-import { BattlecryModel } from "../hooks/battlecry";
-import { GameModel } from "./game";
-import { BooleanDecorModel, BooleanDecorType } from "../utils/boolean-decor";
+import { HookRegistry, HooksLauncherModel } from "../rules/hooks-launcher";
+import { BoardModel } from "../entities/board";
+import { RoleHealthModel } from "../rules/role-health";
 
-export interface MinionProps extends RoleProps {
-    cost: CostModel;
-    attack: RoleAttackModel;
-    health: RoleHealthModel;
-    deathrattles?: DeathrattleModel[];
-    battlecries?: BattlecryModel[];
+export interface MinionProps extends CardProps {
+    role: RoleModel;
 }
-
 export abstract class MinionModel extends CardModel {
     constructor(props: MinionProps) {
         super(props);
-        this._role = new RoleModel(props);
+        this._role = props.role;
         this._disposer = new MinionDisposerModel();
+        this.init()
     }
 
     @useChild()
     private _role: RoleModel;
+    @useMemo()
     public get role() {
         return this._role;
     }
 
     @useChild()
     protected _disposer: MinionDisposerModel;
+    @useMemo()
     public get disposer() {
         return this._disposer;
     }
@@ -42,15 +35,15 @@ export abstract class MinionModel extends CardModel {
     @useChild()
     private _launcher?: HooksLauncherModel
 
-
     @useState()
     private _summonedTurn?: number;
+    @useMemo()
     public get summonedTurn() {
         return this._summonedTurn;
     }
     
     /** Summon: from anwhere to board */
-    @useTrx()
+    @useAction()
     public summon(board?: BoardModel, position?: number) {
         board = board ?? this.player?.board;
         if (!board) {
@@ -63,14 +56,13 @@ export abstract class MinionModel extends CardModel {
         this.finishSummon();
     }
 
-    @useTrx()
+    @useAction()
     private finishSummon() {
         const game = this.game;
         if (!game) return;
         this._summonedTurn = game.turn;
         this._role.action.sleep();
     }
-
 
     /** Play: from hand to board */
     /** Just user intention */

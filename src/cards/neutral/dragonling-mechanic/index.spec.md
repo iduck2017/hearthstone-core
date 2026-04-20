@@ -1,48 +1,38 @@
-# Dragonling Mechanic 卡牌设计文档
+# Dragonling Mechanic
 
-## 1. 规则说明
+## 1. Rules
 
-Dragonling Mechanic（龙人机械师）是一张 4 费 2/4 的随从，战吼：召唤一个 2/1 Mechanical Dragonling。
+- **Stats**: 4 cost 2/4 minion.
+- **Battlecry**: Summon a 2/1 Mechanical Dragonling to the right of this minion.
+- **No target**: Battlecry runs automatically.
 
-### 1.1 核心规则
+## 2. Implementation
 
-- **战吼效果**：召唤一个 2/1 Mechanical Dragonling
-- **召唤位置**：Mechanical Dragonling 被召唤到 Dragonling Mechanic 的右侧
-- **无需目标**：战吼不需要选择目标，自动执行
+- **DragonlingMechanicModel**: Minion 2/4, cost 4, with battlecry.
+- **DragonlingMechanicBattlecryModel**: No selector; `_run` gets parent index, summons MechanicalDragonlingModel at index + 1.
+- **MechanicalDragonlingModel**: Token 2/1, cost 0 (e.g. in derivatives/).
 
-## 2. 实现设计
+## 3. Test scenario
 
-### 2.1 核心组件
+**Setup**
 
-- **DragonlingMechanicModel**：卡牌本体（2/4，费用 4）
-- **DragonlingMechanicBattlecryModel**：战吼逻辑，召唤 Mechanical Dragonling
-- **MechanicalDragonlingModel**：被召唤的 token 随从（2/1，费用 0）
-
-### 2.2 数据流
-
-1. **打出卡牌**：玩家打出 Dragonling Mechanic
-2. **召唤 Mechanic**：Mechanic 被召唤到指定位置
-3. **执行战吼**：战吼通过 `useRoute` 获取父节点（Mechanic）
-4. **确定位置**：找到 Mechanic 在 board 上的索引
-5. **召唤 Dragonling**：在 Mechanic 右侧（index + 1）召唤 Mechanical Dragonling
-
-## 3. 测试场景
-
-**场景设置**：
-- playerA hand: dragonlingMechanic (2/4, costs 4)
+- playerA hand: `dragonlingMechanic`
 - playerA board: empty
-- Turn 1: playerA 有 4 mana
+- playerA mana: 4
+
+**Flow**
+
+1. Play dragonlingMechanic, choose board index 0.
+2. Assert dragonlingMechanic on board; mechanicalDragonling summoned to its right; board has 2 minions.
 
 ### 3.1 check-initial-state
 
-- playerA board 为空
-- playerA 有 4 mana
-- dragonlingMechanic 在手牌中
+- playerA.board.cards.length === 0.
+- playerA.hand contains dragonlingMechanic.
 
 ### 3.2 play-dragonling-mechanic
 
-- playerA 打出 dragonlingMechanic
-- 选择位置（boardIndex = 0）
-- 验证 dragonlingMechanic 在场上
-- 验证 mechanicalDragonling 被召唤到 dragonlingMechanic 的右侧
-- 验证 board 上有 2 个随从
+- dragonlingMechanic.play() → select position (boardIndex 0).
+- Assert dragonlingMechanic on board.
+- Assert mechanicalDragonling summoned to right of dragonlingMechanic.
+- Assert playerA.board.minions.length === 2.

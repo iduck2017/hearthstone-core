@@ -1,6 +1,7 @@
-import { useChildList, Model } from "set-piece";
+import { Model, TypedPropertyDecorator, useChild, useMemo, useRoute } from "set-piece";
 import { CardModel } from "../cards";
-import { MinionModel } from "./minion";
+import { MinionModel } from "../cards/minion";
+import { GameModel } from "./game";
 
 export class BoardModel extends Model {
     constructor(props?: {
@@ -8,18 +9,23 @@ export class BoardModel extends Model {
     }) {
         super();
         this._cards = props?.cards ?? [];
+        this.init();
     }
 
-    @useChildList()
+    @useRoute(() => GameModel)
+    private game?: GameModel;
+
+    @useChild()
     private _cards: CardModel[];
+    @useMemo()
     public get cards() {
         return [...this._cards];
     }
     
+    @useMemo()
     public get minions(): MinionModel[] {
         return this._cards.filter((card) => card instanceof MinionModel)
     }
-
     public summonMinion(minion?: MinionModel, index?: number) {
         if (!minion) return;
         if (index === undefined || index < 0 || index > this.cards.length) {
@@ -28,7 +34,6 @@ export class BoardModel extends Model {
         console.log('Summoning minion at index', index);
         this._cards.splice(index, 0, minion);
     }
-    
     public removeCard(card?: CardModel) {
         if (!card) return;
         const index = this._cards.indexOf(card);
@@ -36,5 +41,4 @@ export class BoardModel extends Model {
             this._cards.splice(index, 1);
         }
     }
-    
 }

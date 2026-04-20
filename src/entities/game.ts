@@ -1,8 +1,7 @@
-import { useChild, useChildList, useState, Event, Model, usePostEvent } from "set-piece";
+import { useChild, useState, Event, Model, TypedPropertyDecorator, useRoute, useEventConsumer, PostEvent, PrevEvent, useEventProducer, useMemo } from "set-piece";
 import { PlayerModel } from "./player";
 import { MageModel } from "../heroes/mage";
-import { TurnEndEvent } from "../utils/turn-event";
-
+import { TurnEndPostEvent, TurnEndPrevEvent } from "../event/turn-end";
 
 export class GameModel extends Model {
 
@@ -17,47 +16,53 @@ export class GameModel extends Model {
         this._playerB = props?.playerB ?? new PlayerModel({
             hero: new MageModel(),
         });
+        this.init();
     }
 
     @useChild()
     private _playerA: PlayerModel;
+    @useMemo()
     public get playerA() {
         return this._playerA;
     }
 
     @useChild()
     private _playerB: PlayerModel;
+    @useMemo()
     public get playerB() {
         return this._playerB;
     }
 
+    @useMemo()
     public get currentPlayer() {
         if (this._turn % 2) {
             return this._playerA;
         }
         return this._playerB;
     }
-    
+
 
     @useState()
     private _isStarted: boolean = false;
+    @useMemo()
     public get isStarted() {
         return this._isStarted;
     }
 
     @useState()
     private _turn: number = 0;
+    @useMemo()
     public get turn() {
         return this._turn;
     }
     public nextTurn() {
-        this.endTurn();
+        this.endTurn({});
         this._turn += 1;
         this.startTurn();
     }
 
-    @usePostEvent(() => TurnEndEvent)
-    private endTurn(): void {
+    @useEventProducer(() => [TurnEndPrevEvent, TurnEndPostEvent])
+    private endTurn(options: {}, event?: TurnEndPrevEvent): void {
         return;
     }
     
@@ -72,14 +77,18 @@ export class GameModel extends Model {
         });
     }
 
-    public start() {
+    public start(options?: {
+        isInitPhaseIgnored?: boolean;  
+    }) {
         if (this._isStarted) {
             console.error('Game already started');
             return;
         }
         this._isStarted = true;
-        this._playerA.prepareInitialCards(true);
-        this._playerB.prepareInitialCards(false);
+        if (!options?.isInitPhaseIgnored) {
+            this._playerA.handleGameInit(true);
+            this._playerB.handleGameInit(false);
+        }
         this.nextTurn();
     }
 

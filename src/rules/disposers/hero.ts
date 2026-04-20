@@ -1,12 +1,17 @@
-import { useRoute } from "set-piece";
+import { useMemo, useRoute } from "set-piece";
 import { DisposerModel } from ".";
-import { HeroModel } from "../../entities/hero";
 import { PlayerModel } from "../../entities/player";
+import { HeroModel } from "../../heroes";
 
 export class HeroDisposerModel extends DisposerModel {
+    constructor() {
+        super();
+        this.init();
+    }
 
     @useRoute(() => PlayerModel)
     private _player?: PlayerModel;
+    @useMemo()
     public get player() {
         return this._player;
     }
@@ -14,6 +19,7 @@ export class HeroDisposerModel extends DisposerModel {
     @useRoute(() => HeroModel)
     private _hero?: HeroModel;
 
+    @useMemo()
     public get isActived() {
         const role = this._hero?.role;
         if (!role) return true;

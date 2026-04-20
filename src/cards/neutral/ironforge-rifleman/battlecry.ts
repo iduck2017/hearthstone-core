@@ -1,8 +1,13 @@
-import { BattlecryModel } from "../../../hooks/battlecry";
+import { BattlecryModel } from "../../../features/battlecry";
 import { Selector } from "../../../utils/controller";
 import { RoleModel } from "../../../entities/role";
+import { useBattlecryRunHook } from "../../../hooks/battlecry-run";
 
 export class IronforgeRiflemanBattlecryModel extends BattlecryModel<RoleModel> {
+    constructor() {
+        super();
+        this.init();
+    }
 
     public getSelector(): Selector<RoleModel> | undefined {
         const player = this.player;
@@ -12,8 +17,8 @@ export class IronforgeRiflemanBattlecryModel extends BattlecryModel<RoleModel> {
         return { options };
     }
 
-    protected async _run(params: Array<RoleModel | undefined>): Promise<void> {
-        const target = params[0];
+    @useBattlecryRunHook()
+    protected async handleRun(target?: RoleModel): Promise<void> {
         if (!target) return;
         target.receiveDamage({ value: 1 });
     }

@@ -1,22 +1,23 @@
-import { useRoute } from "set-piece";
-import { MinionModel } from "../../entities/minion";
 import { DisposerModel } from "./index";
+import { DeckModel } from "../../entities/deck";
+import { MinionModel } from "../../cards/minion";
+import { useMemo, useRoute } from "set-piece";
+import { HandModel } from "../../entities/hand";
 import { PlayerModel } from "../../entities/player";
 import { BoardModel } from "../../entities/board";
-import { HandModel } from "../../entities/hand";
-import { DeckModel } from "../../entities/deck";
-import { RoleModel } from "../../entities/role";
-import { GameModel } from "../../entities/game";
 
 export class MinionDisposerModel extends DisposerModel {
+    constructor() {
+        super();
+        this.init();
+    }
     @useRoute(() => MinionModel)
     private _minion?: MinionModel;
-    
+
     @useRoute(() => PlayerModel)
     private _player?: PlayerModel;
 
-
-    @useRoute(() => HandModel)
+    @useRoute(() => HandModel)            
     private _hand?: HandModel;
    
     @useRoute(() => DeckModel)
@@ -25,10 +26,12 @@ export class MinionDisposerModel extends DisposerModel {
     @useRoute(() => BoardModel)
     private _board?: BoardModel;
     
+    @useMemo()
     public get container() {
         return this._board ?? this._hand ?? this._deck;
     }
 
+    @useMemo()
     public get isActived() {
         const minion = this._minion;
         if (!minion) return true;

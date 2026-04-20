@@ -1,13 +1,14 @@
-import { useChildList, useRoute, useTrx, Model } from "set-piece";
-import { CardModel } from "../cards";
+import { Model, TypedPropertyDecorator, useChild, useMemo, useRoute, useAction } from "set-piece";
 import { PlayerModel } from "./player";
+import { CardModel } from "../cards";
 
 export class HandModel extends Model {
     @useRoute(() => PlayerModel)
     private _player?: PlayerModel;
 
-    @useChildList()
+    @useChild()
     private _cards: CardModel[] = [];
+    @useMemo()
     public get cards() {
         return [...this._cards];
     }
@@ -20,7 +21,7 @@ export class HandModel extends Model {
         }
     }
 
-    @useTrx()
+    @useAction()
     public removeCards(cards: CardModel[]) {
         cards.forEach(card => this.removeCard(card));
     }
@@ -30,25 +31,16 @@ export class HandModel extends Model {
         this._cards.push(card);
     }
 
-    @useTrx()
+    @useAction()
     public addCards(cards: CardModel[]) {
         cards.forEach(card => this.addCard(card));
     }
-
 
     constructor(props?: {
         cards?: CardModel[];
     }) {
         super();
         this._cards = props?.cards ?? [];
-    }
-
-    public drawCard() {
-        const deck = this._player?.deck;
-        const card = deck?.cards[0];
-        if (!card) return;
-
-        deck.removeCard(card);
-        this.addCard(card);
+        this.init();
     }
 }

@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(//c/Users/admin/Documents/set-piece/dist/**)",
+      "Read(//c/Users/admin/Documents/set-piece/**)",
+      "Bash(xargs grep *)"
+    ]
+  }
+}

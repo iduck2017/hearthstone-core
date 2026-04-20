@@ -1,6 +1,5 @@
-import { useTrx } from "set-piece";
+import { CardModel } from ".";
 import { CostModel } from "../rules/cost";
-import { CardModel } from "../cards";
 
 export abstract class SpellModel extends CardModel {
     constructor(props?: {
@@ -12,6 +11,5 @@ export abstract class SpellModel extends CardModel {
             }),
         });
     }
-
     public async play(): Promise<void> {}
 }

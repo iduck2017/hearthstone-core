@@ -1,8 +1,6 @@
-import { useChildList, useDep, useRoute, useState, CustomDecor, Model, useModifier, useDecor, useMemo, useRange } from "set-piece";
-import { BooleanDecorModel, BooleanDecorType } from "../utils/boolean-decor";
-import { AbstractConstructor } from "set-piece/dist/types";
+import { useDep, useRoute, useState, CustomDecor, Model, useMemo, useRange, useDecorConsumer, useDecorProducer } from "set-piece";
 import { RoleModel } from "../entities/role";
-import { SleepDecor } from "../utils/sleep-decor";
+import { AsleepDecor } from "../decors/asleep";
 
 export interface RoleActionBuff {
     value: number;
@@ -13,7 +11,8 @@ export class RoleActionModel extends Model {
 
     /** Routes */
     @useRoute(() => RoleModel)
-    private _role?: RoleModel;       
+    private _role?: RoleModel;
+    @useMemo()
     public get role() {
         return this._role;
     }
@@ -37,6 +36,7 @@ export class RoleActionModel extends Model {
     @useState()
     @useRange(0, undefined)
     private _current: number;
+    @useMemo()
     public get current() {
         return this._current;
     }
@@ -49,31 +49,34 @@ export class RoleActionModel extends Model {
         this._current = this.origin;
     }
 
+    @useMemo()
     public get isEnable() {
         if (this.current <= 0) return false;
-        if (this.isSleep) return false;
+        if (this.isAsleep) return false;
         return true;
     }
 
     /** Sleep */
+    @useDecorProducer(() => AsleepDecor)
     @useState()
-    @useDecor(() => SleepDecor)
-    private _isSleep: boolean;
-    public get isSleep() {
-        return this._isSleep;
+    private _isAsleep: boolean;
+    @useMemo()
+    public get isAsleep() {
+        return this._isAsleep;
     }
 
     public sleep() {
-        this._isSleep = true;
+        this._isAsleep = true;
     }
 
     public wakeup() {
-        this._isSleep = false;
+        this._isAsleep = false;
     }
     
     constructor() {
         super();
         this._current = this.origin;
-        this._isSleep = true;
+        this._isAsleep = true;
+        this.init();
     }
 }

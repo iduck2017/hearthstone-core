@@ -1,27 +1,43 @@
-import { useDep, useRoute, useMountHook, useUnmountHook, useSelfValidator } from "set-piece";
+import { useMemo, useRoute } from "set-piece";
 import { FeatureModel } from "../../../features";
 import { RoleModel } from "../../../entities/role";
-import { NumberDecorModel, NumberDecorType } from "../../../utils/number-decor";
-import { MinionModel } from "../../../entities/minion";
-import { HeroModel } from "../../../entities/hero";
-import { useRoleAttackBuff } from "../../../utils/use-role-attack-buff";
-import { TurnEndEvent, useTurnEndEventListener } from "../../../utils/turn-event";
-import { GameModel } from "../../../entities/game";
 import { BoardModel } from "../../../entities/board";
+import { GameModel } from "../../../entities/game";
+import { TurnEndPostEvent, useTurnEndEventConsumer } from "../../../event/turn-end";
+import { BuffOperatorType, RoleCurrentAttackDecor, useRoleCurrentAttackDecorConsumer } from "../../../decors/role-current-attack";
+import { RoleAttackModel } from "../../../rules/role-attack";
 
-@useRoleAttackBuff(2)
 export class AbusiveSergeantBuffModel extends FeatureModel {
-    @useDep()
+    @useRoute(() => RoleModel)
+    private _role?: RoleModel;
+    @useMemo()
+    public get role() {
+        return this._role;
+    }
+
     @useRoute(() => BoardModel)
     private _board?: BoardModel;
+    @useMemo()
     public get board() {
         return this._board;
     }
-    
-    @useTurnEndEventListener(s => s.game)
-    @useSelfValidator(s => s.isActived)
-    @useSelfValidator(s => s.board)
-    private _handleTurnEnd(target: GameModel, event: TurnEndEvent) {
+
+    constructor() {
+        super();
+        this.init();
+    }
+
+    @useRoleCurrentAttackDecorConsumer()
+    protected _modifyRoleCurrentAttack(decor: RoleCurrentAttackDecor, _target: RoleAttackModel) {
+        decor.addBuff({
+            value: 2,
+            type: BuffOperatorType.COMMON,
+            source: this,
+        });
+    }
+
+    @useTurnEndEventConsumer()
+    private _handleTurnEnd(event: TurnEndPostEvent, target: GameModel) {
         console.log('HandleTurnEnd', this.board);
         this.deactive();
     }

@@ -1,9 +1,15 @@
-import { BattlecryModel } from "../../../hooks/battlecry";
+import { BattlecryModel } from "../../../features/battlecry";
 import { Selector } from "../../../utils/controller";
 import { RoleModel } from "../../../entities/role";
 import { AbusiveSergeantBuffModel } from "./buff";
+import { useBattlecryRunHook } from "../../../hooks/battlecry-run";
+import { useConsoleGroup } from "set-piece";
 
 export class AbusiveSergeantBattlecryModel extends BattlecryModel<RoleModel> {
+    constructor() {
+        super();
+        this.init();
+    }
 
     public getSelector(params: Array<RoleModel | undefined>): Selector<RoleModel> | undefined {
         const player = this.player;
@@ -12,9 +18,11 @@ export class AbusiveSergeantBattlecryModel extends BattlecryModel<RoleModel> {
         return { options };
     }
 
-    protected async _run(params: Array<RoleModel | undefined>): Promise<void> {
-        const target = params[0];
+    @useBattlecryRunHook()
+    @useConsoleGroup()
+    protected async handleRun(target?: RoleModel): Promise<void> {
         if (!target) return;
-        target.container?.addBuff(new AbusiveSergeantBuffModel());
+        console.log('Buff target', target.name)
+        target.addFeature(new AbusiveSergeantBuffModel());
     }
 }

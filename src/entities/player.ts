@@ -1,12 +1,12 @@
-import { useChild, useRoute, useTrx, Model } from "set-piece";
+import { useChild, useRoute, Model, TypedPropertyDecorator, useMemo, useAction } from "set-piece";
 import { BoardModel } from "./board";
 import { HandModel } from "./hand";
 import { DeckModel } from "./deck";
 import { GraveyardModel } from "./graveyard";
-import { ManaModel } from "../rules/mana";
 import { Controller } from "../utils/controller";
+import { ManaModel } from "../rules/mana";
 import { GameModel } from "./game";
-import { HeroModel } from "./hero";
+import { HeroModel } from "../heroes";
 
 export class PlayerModel extends Model {
     constructor(props: {
@@ -25,16 +25,18 @@ export class PlayerModel extends Model {
         this._graveyard = props?.graveyard ?? new GraveyardModel();
         this._mana = props?.mana ?? new ManaModel();
         this._controller = new Controller();
+        this.init();
     }
 
-    
     private _controller: Controller
+    @useMemo()
     public get controller() {
         return this._controller;
     }
 
     @useRoute(() => GameModel)
     private _game?: GameModel;
+    @useMemo()
     public get opponent(): PlayerModel | undefined {
         const game = this._game;
         if (!game) return;
@@ -45,48 +47,53 @@ export class PlayerModel extends Model {
 
     @useChild()
     private _board: BoardModel;
+    @useMemo()
     public get board() {
         return this._board;
     }
 
     @useChild()
     private _hand: HandModel;
+    @useMemo()
     public get hand() {
         return this._hand;
     }
 
     @useChild()
     private _deck: DeckModel;
+    @useMemo()
     public get deck() {
         return this._deck;
     }
 
     @useChild()
     private _mana: ManaModel;
+    @useMemo()
     public get mana() {
         return this._mana;
     }
 
     @useChild()
     private _hero: HeroModel;
+    @useMemo()
     public get hero() {
         return this._hero;
     }
 
     @useChild()
     private _graveyard: GraveyardModel;
+    @useMemo()
     public get graveyard() {
         return this._graveyard;
     }
 
-    @useTrx()
-    public prepareInitialCards(isFirstPlayer: boolean) {
+    @useAction()
+    public handleGameInit(isFirstPlayer: boolean) {
         const count = isFirstPlayer ? 3 : 4;
         const cards = this.deck.cards.slice(0, count);
         this._deck.removeCards(cards);
         this._hand.addCards(cards);
     }
-
 
     public drawCard() {
         const card = this.deck.cards[0];

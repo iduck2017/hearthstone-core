@@ -1,29 +1,27 @@
-import { useChild, useChildList, useRoute, Model } from "set-piece";
-import { PlayerModel } from "../entities/player";
+import { Model, useChild, useMemo, useRoute } from "set-piece";
 import { BoardModel } from "../entities/board";
-import { HandModel } from "../entities/hand";
 import { DeckModel } from "../entities/deck";
-import { BattlecryModel } from "../hooks/battlecry";
-import { CostModel } from "../rules/cost";
-import { GameModel } from "../entities/game";
-import { DeathrattleModel } from "../hooks/deathrattle";
+import { HandModel } from "../entities/hand";
 import { GraveyardModel } from "../entities/graveyard";
-import { DisposerModel } from "../rules/disposers";
+import { GameModel } from "../entities/game";
+import { PlayerModel } from "../entities/player";
+import { CostModel } from "../rules/cost";
+import { BattlecryModel } from "../features/battlecry";
+import { DeathrattleModel } from "../features/deathrattle";
 import { FeatureModel } from "../features";
+import { DisposerModel } from "../rules/disposers";
 
 export interface CardProps {
     cost: CostModel;
-    battlecries?: BattlecryModel[];
-    deathrattles?: DeathrattleModel[];
+    features?: FeatureModel[];
 }
 
 export abstract class CardModel extends Model {
     constructor(props: CardProps) {
         super();
         this._cost = props?.cost ?? new CostModel();
-        this._battlecries = props?.battlecries ?? [];
-        this._deathrattles = props?.deathrattles ?? [];
-        this._buffs = [];
+        this._features = props?.features ?? [];
+        this.init()
     }
 
     @useRoute(() => BoardModel)
@@ -38,68 +36,73 @@ export abstract class CardModel extends Model {
     @useRoute(() => GraveyardModel)
     private _graveyard?: GraveyardModel;
 
+    @useMemo()
     public get container() {
-        return this._board ?? 
-            this._hand ?? 
-            this._deck ?? 
-            this._graveyard; 
+        return this._board ??
+            this._hand ??
+            this._deck ??
+            this._graveyard;
     }
 
     @useRoute(() => GameModel)
     private _game?: GameModel;
+    @useMemo()
     public get game() {
         return this._game;
     }
     
     @useRoute(() => PlayerModel)
     private _player?: PlayerModel;
+    @useMemo()
     public get player() {
         return this._player;
     }
 
     @useChild()
     private _cost: CostModel;
+    @useMemo()
     protected consumeMana() {
         if (!this._player) return;
         const cost = this._cost.current;
         this._player.mana.consume(cost);
     }
 
-    @useChildList()
-    private _battlecries: BattlecryModel[];
+    @useMemo()
     public get battlecries() {
-        return [...this._battlecries];
+        return this.features.filter(i => i instanceof BattlecryModel);
     }
 
-    @useChildList()
-    private _deathrattles: DeathrattleModel[];
+    @useMemo()
     public get deathrattles() {
-        return [...this._deathrattles];
+        return this.features.filter(i => i instanceof DeathrattleModel)
     }
 
     @useChild()
     protected abstract _disposer: DisposerModel;
+    @useMemo()
     public get disposer() {
         return this._disposer;
     }
     
-    @useChildList()
-    public _buffs: FeatureModel[];
-    public get buffs() {
-        return [...this._buffs];
+    @useChild()
+    public _features: FeatureModel[];
+    @useMemo()
+    public get features() {
+        return [...this._features];
     }
 
-    public addBuff(buff: FeatureModel) {
-        this._buffs.push(buff);
+    public addFeature(buff: FeatureModel) {
+        this._features.push(buff);
     }
 
-    public removeBuff(buff: FeatureModel) {
-        const index = this._buffs.indexOf(buff);
+    public removeFeature(buff: FeatureModel) {
+        const index = this._features.indexOf(buff);
         if (index !== -1) {
-            this._buffs.splice(index, 1);
+            this._features.splice(index, 1);
         }
     }
 
+    @useMemo()
     public get isPlayable() {
         if (!this._hand) return false;
         if (!this._player) return false;

@@ -1,10 +1,10 @@
-import { useChildList, useDep, useRoute, useState, Model, useMemo, useRange } from "set-piece";
-import { RoleModel } from "../entities/role";
+import { useDep, useRoute, useState, Model, useMemo, useRange, useChild, useDecorProducer } from "set-piece";
+import { RoleModel } from "../../src/entities/role";
 import { PlayerModel } from "../entities/player";
-import { NumberDecorModel } from "../utils/number-decor";
-import { MinionModel } from "../entities/minion";
-import { HeroModel } from "../entities/hero";
 import { GameModel } from "../entities/game";
+import { MinionModel } from "../cards/minion";
+import { HeroModel } from "../heroes";
+import { RoleCurrentAttackDecor } from "../decors/role-current-attack";
 
 export class RoleAttackModel extends Model {
     constructor(props?: {
@@ -12,31 +12,35 @@ export class RoleAttackModel extends Model {
     }) {
         super();
         this._origin = props?.origin ?? 1;
-        this._current = [];
+        this._current = this._origin;
+        this.init();
     }
-
 
     // Routes
     @useRoute(() => MinionModel)
     private _minion?: MinionModel;
+    @useMemo()
     public get minion() {
         return this._minion;
     }
 
     @useRoute(() => HeroModel)
     private _hero?: HeroModel;
+    @useMemo()
     public get hero() {
         return this._hero;
     }
 
     @useRoute(() => GameModel)
     private _game?: GameModel;
+    @useMemo()
     public get game() {
         return this._game;
     }
 
     @useRoute(() => RoleModel)
     private _role?: RoleModel;
+    @useMemo()
     public get role() {
         return this._role;
     }
@@ -47,35 +51,22 @@ export class RoleAttackModel extends Model {
     // Origin
     @useRange(0, undefined)
     @useState()
-    @useDep()
     private _origin: number;
+    @useMemo()
     public get origin() {
         return this._origin;
     }
 
     // Current
-    @useChildList()
-    public _current: NumberDecorModel[];
-
-    @useRange(0, undefined)
+    @useState()
+    @useDecorProducer(() => RoleCurrentAttackDecor)
+    private _current: number;
+    @useMemo()
     public get current() {
-        let result = this._origin;
-        this._current?.forEach(buff => {
-            result += buff.value;
-        });
-        return result;
+        return this._current;
     }
 
-    public addDecor(decor: NumberDecorModel) {
-        this._current.push(decor);
-    }
-
-    public removeDecor(decor: NumberDecorModel) {
-        const index = this._current.indexOf(decor);
-        if (index === -1) return;
-        this._current.splice(index, 1);
-    }
-
+    @useMemo()
     private get isOpponentHeroSelectable() {
         const minion = this.minion;
         if (!minion) return false;
@@ -131,7 +122,7 @@ export class RoleAttackModel extends Model {
         if (!role) return;
         // Deal damage to each other
         const { target } = options;
-        role.receiveDamage({ value: target.attack.current })
-        target.receiveDamage({ value: this.current })
+        role.receiveDamage({ value: target.attack._current })
+        target.receiveDamage({ value: this._current })
     }
 }

@@ -1,6 +1,6 @@
+import { HeroModel } from ".";
 import { RoleAttackModel } from "../rules/role-attack";
 import { RoleHealthModel } from "../rules/role-health";
-import { HeroModel } from "../entities/hero";
 
 export class MageModel extends HeroModel {
     constructor() {
@@ -8,5 +8,6 @@ export class MageModel extends HeroModel {
             attack: new RoleAttackModel({ origin: 1 }),
             health: new RoleHealthModel({ origin: 30 }),
         });
+        this.init()
     }
 }

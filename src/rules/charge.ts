@@ -1,9 +1,7 @@
-import { useDep, useRoute, useState, CustomDecor, Model } from "set-piece";
+import { useDep, useRoute, useState, CustomDecor, Model, useMemo } from "set-piece";
 import { RoleModel } from "../entities/role";
-import { BooleanDecorModel, BooleanDecorType } from "../utils/boolean-decor";
-import { SleepDecor } from "../utils/sleep-decor";
+import { AsleepDecor, useAsleepDecorConsumer } from "../decors/asleep";
 import { RoleActionModel } from "./role-action";
-import { onSleepStatusCalc } from "../utils/sleep-decor";
 
 export class ChargeModel extends Model {
     constructor(props?: {
@@ -11,17 +9,19 @@ export class ChargeModel extends Model {
     }) {
         super();
         this._isActived = props?.isActived ?? false;
+        this.init();
     }
 
     @useRoute(() => RoleModel)
     private _role?: RoleModel;
+    @useMemo()
     public get role() {
         return this._role;
     }
 
     @useState()
-    @useDep()
     private _isActived: boolean;
+    @useMemo()
     public get isActived() {
         return this._isActived;
     }
@@ -34,9 +34,8 @@ export class ChargeModel extends Model {
         this._isActived = false;
     }
 
-
-    @onSleepStatusCalc(s => s.role) 
-    private handleSleepStatusCalc(target: RoleActionModel, decor: SleepDecor) {
+    @useAsleepDecorConsumer()
+    private handleSleepStatusCalc(decor: AsleepDecor, target: RoleActionModel) {
         if (!this.isActived) return;
         console.log('Handle charge check')
         decor.result = false;

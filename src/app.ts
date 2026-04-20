@@ -1,9 +1,15 @@
-import { useChild, Model } from "set-piece";
+import { useChild, Model, useMemo } from "set-piece";
 import { GameModel } from "./entities/game";
 
 export class AppModel extends Model {
+    constructor() {
+        super();
+        this.init();
+    }
+
     @useChild()
     private _game?: GameModel;
+    @useMemo()
     public get game() {
         return this._game;
     }
@@ -13,4 +19,5 @@ export class AppModel extends Model {
     public removeGame(game?: GameModel) {
         this._game = undefined;
     }
+
 }

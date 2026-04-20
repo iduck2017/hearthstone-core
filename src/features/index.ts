@@ -1,10 +1,15 @@
-import { useRoute, useState, Model } from "set-piece";
-import { getFeatDeactiveHooks } from "../utils/use-feat-deactive-hook";
+import { useRoute, useState, Model, useMemo } from "set-piece";
 import { GameModel } from "../entities/game";
-import { MinionModel } from "../entities/minion";
-import { HeroModel } from "../entities/hero";
 import { PlayerModel } from "../entities/player";
 import { BoardModel } from "../entities/board";
+import { MinionModel } from "../cards/minion";
+import { getFeatDeactiveHooks } from "../hooks/feat-deactive";
+import { HeroModel } from "../heroes";
+import { RoleModel } from "../entities/role";
+import { CardModel } from "../cards";
+
+export type RoleFeatureModel = FeatureModel & { role: RoleModel | undefined };
+export type CardFeatureModel = FeatureModel & { card: CardModel | undefined };
 
 export abstract class FeatureModel extends Model {
     constructor(props?: {
@@ -16,44 +21,26 @@ export abstract class FeatureModel extends Model {
 
     @useState()
     private _isActived: boolean;
+    @useMemo()
     public get isActived() {
         return this._isActived;
     }
-
+    protected deactive() {
+        this._isActived = false;
+    }
 
     @useRoute(() => GameModel)
     private _game?: GameModel;
-    protected get game() {
+    @useMemo()
+    public get game() {
         return this._game;
     }
 
     @useRoute(() => PlayerModel)
     private _player?: PlayerModel;
+    @useMemo()
     protected get player() {
         return this._player;
     }
-    
-    @useRoute(() => MinionModel)
-    private _minion?: MinionModel;
-    protected get minion() {
-        return this._minion;
-    }
 
-    @useRoute(() => HeroModel)
-    private _hero?: HeroModel;
-    protected get hero() {  
-        return this._hero;
-    }
-
-    protected get container() {
-        return this._minion ?? this._hero;
-    }
-
-
-
-    protected deactive() {
-        const hooks = getFeatDeactiveHooks(this);
-        hooks.forEach(hook => hook());
-        this._isActived = false;
-    }
 }

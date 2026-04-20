@@ -1,11 +1,18 @@
-import { BattlecryModel } from "../../../hooks/battlecry";
+import { BattlecryModel } from "../../../features/battlecry";
 import { MechanicalDragonlingModel } from "../../derivatives/mechanical-dragonling";
-import { Model, useRoute } from "set-piece";
-import { MinionModel } from "../../../entities/minion";
+import { Model, useMemo, useRoute } from "set-piece";
+import { MinionModel } from "../../minion";
+import { useBattlecryRunHook } from "../../../hooks/battlecry-run";
 
 export class DragonlingMechanicBattlecryModel extends BattlecryModel<Model> {
+    constructor() {
+        super();
+        this.init();
+    }
+
     @useRoute(() => MinionModel)
     private _minion?: MinionModel;
+    @useMemo()
     public get minion() {
         return this._minion;
     }
@@ -14,17 +21,18 @@ export class DragonlingMechanicBattlecryModel extends BattlecryModel<Model> {
         return undefined;
     }
 
-    protected async _run(params: Array<Model | undefined>): Promise<void> {
+    @useBattlecryRunHook()
+    protected async handleRun(): Promise<void> {
         const player = this.player;
         if (!player) return;
-        
+
         const minion = this.minion;
         if (!minion) return;
-        
+
         const board = player.board;
         const index = board.cards.indexOf(minion);
         if (index === -1) return;
-        
+
         const dragonling = new MechanicalDragonlingModel();
         dragonling.summon(board, index + 1);
     }

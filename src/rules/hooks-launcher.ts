@@ -1,5 +1,5 @@
 import { useRoute, useState, Model } from "set-piece";
-import { BattlecryModel } from "../hooks/battlecry";
+import { BattlecryModel } from "../features/battlecry";
 
 export type HookRegistry = Array<{ hook: BattlecryModel, params: Array<Model | undefined> }>;
 
@@ -16,6 +16,7 @@ export class HooksLauncherModel extends Model {
         super();
         this._registry = props.registry;
         this._currentIndex = 0;
+        this.init();
     }
 
     public async next(): Promise<boolean> {
@@ -24,7 +25,7 @@ export class HooksLauncherModel extends Model {
         const currentHook = this._registry[this._currentIndex];
         if (!currentHook) return true;
         /** Run hooks */
-        await currentHook.hook.run(currentHook.params);
+        await currentHook.hook.run(...currentHook.params);
         this._currentIndex += 1
         return false;
     }

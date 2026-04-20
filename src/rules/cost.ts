@@ -12,14 +12,14 @@ export class CostModel extends Model {
     private _card?: CardModel;
 
     @useState()
-    @useDep()
     private _origin: number;
+
+    @useMemo()
     public get origin() {
         return this._origin;
     }
 
     @useState()
-    @useDep(1)
     private _decors: CostBuff[] = [];
 
     @useMemo()
@@ -38,5 +38,6 @@ export class CostModel extends Model {
         super();
         this._origin = props?.origin ?? 1;
         this._decors = props?.decors ?? [];
+        this.init();
     }
 }           
