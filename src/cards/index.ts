@@ -74,7 +74,7 @@ export abstract class CardModel extends Model {
 
     @useMemo()
     public get deathrattles() {
-        return this.features.filter(i => i instanceof DeathrattleModel)
+        return this.features.filter(i => i instanceof DeathrattleModel);
     }
 
     @useChild()

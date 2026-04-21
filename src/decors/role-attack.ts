@@ -16,7 +16,7 @@ export interface BuffOperator {
     source: Model;
 }
 
-export class RoleCurrentAttackDecor extends Decor<number> {
+export class RoleAttackDecor extends Decor<number> {
     private _operators: BuffOperator[] = [];
 
     public addBuff(buff: BuffOperator) {
@@ -48,15 +48,15 @@ export class RoleCurrentAttackDecor extends Decor<number> {
 }
 
 
-export function useRoleCurrentAttackDecorConsumer<I extends FeatureModel & { role: RoleModel | undefined }>() {
+export function useRoleAttackDecorConsumer<I extends FeatureModel & { role: RoleModel | undefined }>() {
     return function(
         prototype: I,
         key: string,
-        descriptor: TypedPropertyDescriptor<(decor: RoleCurrentAttackDecor, target: RoleAttackModel) => void>
+        descriptor: TypedPropertyDescriptor<(decor: RoleAttackDecor, target: RoleAttackModel) => void>
     ) {
         useDecorConsumer((i: I) => [
             i.isActived ? i.role?.attack : undefined, 
-            RoleCurrentAttackDecor
+            RoleAttackDecor
         ])(
             prototype,
             key,
@@ -64,7 +64,7 @@ export function useRoleCurrentAttackDecorConsumer<I extends FeatureModel & { rol
         );
         const handler = descriptor.value;
         if (!handler) return;  
-        descriptor.value = function(this: I,  decor: RoleCurrentAttackDecor, target: RoleAttackModel) {
+        descriptor.value = function(this: I,  decor: RoleAttackDecor, target: RoleAttackModel) {
             handler.call(this, decor, target);
         }
         return descriptor;

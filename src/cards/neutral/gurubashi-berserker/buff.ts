@@ -3,10 +3,10 @@ import { FeatureModel } from "../../../features";
 import { RoleModel } from "../../../entities/role";
 import { BuffOperatorType, RoleAttackDecor, useRoleAttackDecorConsumer } from "../../../decors/role-attack";
 import { RoleAttackModel } from "../../../rules/role-attack";
-import { RoleHealthDecor, useRoleHealthDecorConsumer } from "../../../decors/role-health";
-import { RoleHealthModel } from "../../../rules/role-health";
 
-export class ShatteredSunClericBuffModel extends FeatureModel {
+const ENRAGE_ATTACK = 3;
+
+export class GurubashiBerserkerBuffModel extends FeatureModel {
     @useRoute(() => RoleModel)
     private _role?: RoleModel;
     @useMemo()
@@ -19,19 +19,12 @@ export class ShatteredSunClericBuffModel extends FeatureModel {
         this.init();
     }
 
+    // Add a permanent +3 attack buff each time this buff instance is active.
     @useRoleAttackDecorConsumer()
     protected _modifyRoleCurrentAttack(decor: RoleAttackDecor, _target: RoleAttackModel) {
+        console.log('GurubashiBerserker buff')
         decor.addBuff({
-            value: 1,
-            type: BuffOperatorType.COMMON,
-            source: this,
-        });
-    }
-
-    @useRoleHealthDecorConsumer()
-    protected _modifyRoleMaximumHealth(decor: RoleHealthDecor, _target: RoleHealthModel) {
-        decor.addBuff({
-            value: 1,
+            value: ENRAGE_ATTACK,
             type: BuffOperatorType.COMMON,
             source: this,
         });

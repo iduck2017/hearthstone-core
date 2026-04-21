@@ -1,4 +1,4 @@
-import { Model, TypedPropertyDecorator, useChild, useMemo, useRoute, useAction } from "set-piece";
+import { Model, TypedPropertyDecorator, useChild, useMemo, useRoute, useAction, useEventProducer, PrevEvent } from "set-piece";
 import { TauntModel } from "../rules/taunt";
 import { DivineShieldModel } from "../rules/divine-shield";
 import { ChargeModel } from "../rules/charge";
@@ -14,6 +14,9 @@ import { MinionModel } from "../cards/minion";
 import { HeroModel } from "../heroes";
 import { registerDisposer, useDisposer } from "../hooks/disposer";
 import { FeatureModel } from "../features";
+import { RoleAttackPerformOption, RoleAttackPerformPostEvent, RoleAttackPerformPrevEvent } from "../event/role-attack-perform";
+import { RoleAttackReceiveOption, RoleAttackReceivePostEvent, RoleAttackReceivePrevEvent } from "../event/role-attack-receive";
+import { RoleDamageReceiveOption, RoleDamageReceivePostEvent, RoleDamageReceivePrevEvent } from "../event/role-damage-receive";
 
 
 export interface RoleProps {
@@ -174,13 +177,18 @@ export class RoleModel extends Model {
         const disposer = this.container?.disposer;
         if (!disposer) return;
         registerDisposer(disposer);
-        // Consume divine shield
+        // Consume divine shield — no actual damage, event must NOT fire
         if (this._divineShield.isActived) {
             this._divineShield.consume();
             return;
         }
-        // Consume health
-        console.log('Receive damage', options.value);
+        // Apply damage and fire RoleDamageReceive events
+        this._applyDamage(options);
+    }
+
+    @useEventProducer(() => [RoleDamageReceivePrevEvent, RoleDamageReceivePostEvent])
+    private _applyDamage(options: RoleDamageReceiveOption, _event?: RoleDamageReceivePrevEvent) {
+        console.log(this.name, 'Receive damage', options.value);
         this.health.consumeCurrent(options.value);
     }
     
@@ -193,11 +201,18 @@ export class RoleModel extends Model {
         const target = await this.attack.getTarget();
         if (!target) return;
         if (!this.isAttackEnabled) return;
-        // Consume action
+        this._performAttack({ target })
+    }
+
+    @useEventProducer(() => [RoleAttackPerformPrevEvent, RoleAttackPerformPostEvent])
+    private _performAttack(options: RoleAttackPerformOption, event?: RoleAttackPerformPrevEvent) {
         this.action.consumeCurrent();
-        // Run attack
-        this.attack.run({ target });
-        // Deactive stealth
+        options.target._receiveAttack({ source: this });        
         this._stealth.deactive();
+    }
+
+    @useEventProducer(() => [RoleAttackReceivePrevEvent, RoleAttackReceivePostEvent])
+    private _receiveAttack(options: RoleAttackReceiveOption, event?: RoleAttackReceivePrevEvent) {
+        options.source.attack.run({ target: this })
     }
 }

@@ -46,6 +46,7 @@ export abstract class BattlecryModel<T extends Model = Model> extends FeatureMod
     }
 
     public async run(...params: Array<T | undefined>) {
+        if (!this.isActived) return;
         if (!this.isPending) {
             this._isPending = true;
         }

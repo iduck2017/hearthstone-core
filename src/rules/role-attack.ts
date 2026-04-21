@@ -1,10 +1,10 @@
-import { useDep, useRoute, useState, Model, useMemo, useRange, useChild, useDecorProducer } from "set-piece";
+import { useDep, useRoute, useState, Model, useMemo, useRange, useChild, useDecorProducer, useConsoleGroup } from "set-piece";
 import { RoleModel } from "../../src/entities/role";
 import { PlayerModel } from "../entities/player";
 import { GameModel } from "../entities/game";
 import { MinionModel } from "../cards/minion";
 import { HeroModel } from "../heroes";
-import { RoleCurrentAttackDecor } from "../decors/role-current-attack";
+import { RoleAttackDecor } from "../decors/role-attack";
 
 export class RoleAttackModel extends Model {
     constructor(props?: {
@@ -59,7 +59,7 @@ export class RoleAttackModel extends Model {
 
     // Current
     @useState()
-    @useDecorProducer(() => RoleCurrentAttackDecor)
+    @useDecorProducer(() => RoleAttackDecor)
     private _current: number;
     @useMemo()
     public get current() {

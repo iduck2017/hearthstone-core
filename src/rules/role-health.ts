@@ -1,5 +1,5 @@
 import { Model, useChild, useDecorProducer, useDeferEffect, useDep, useEffect, useMemo, useRange, useState } from "set-piece";
-import { RoleMaximumHealthDecor } from "../decors/role-maximum-health";
+import { RoleHealthDecor } from "../decors/role-health";
 
 export class RoleHealthModel extends Model {
 
@@ -55,7 +55,7 @@ export class RoleHealthModel extends Model {
     }
     
     @useState()
-    @useDecorProducer(() => RoleMaximumHealthDecor)
+    @useDecorProducer(() => RoleHealthDecor)
     private _maximum: number;
     @useMemo()
     public get maximum() {

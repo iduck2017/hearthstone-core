@@ -4,7 +4,7 @@ import { RoleModel } from "../../../entities/role";
 import { BoardModel } from "../../../entities/board";
 import { GameModel } from "../../../entities/game";
 import { TurnEndPostEvent, useTurnEndEventConsumer } from "../../../event/turn-end";
-import { BuffOperatorType, RoleCurrentAttackDecor, useRoleCurrentAttackDecorConsumer } from "../../../decors/role-current-attack";
+import { BuffOperatorType, RoleAttackDecor, useRoleAttackDecorConsumer } from "../../../decors/role-attack";
 import { RoleAttackModel } from "../../../rules/role-attack";
 
 export class DarkIronDwarfBuffModel extends FeatureModel {
@@ -27,8 +27,8 @@ export class DarkIronDwarfBuffModel extends FeatureModel {
         this.init();
     }
 
-    @useRoleCurrentAttackDecorConsumer()
-    protected _modifyRoleCurrentAttack(decor: RoleCurrentAttackDecor, _target: RoleAttackModel) {
+    @useRoleAttackDecorConsumer()
+    protected _modifyRoleCurrentAttack(decor: RoleAttackDecor, _target: RoleAttackModel) {
         decor.addBuff({
             value: 2,
             type: BuffOperatorType.COMMON,

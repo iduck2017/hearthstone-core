@@ -5,6 +5,7 @@ import { FeatureModel } from ".";
 
 export class DeathrattleModel extends FeatureModel {
     public run() {
+        if (!this.isActived) return;
         const hooks = getDeathrattleRunHooks(this);
         for (const hook of hooks) {
             hook();

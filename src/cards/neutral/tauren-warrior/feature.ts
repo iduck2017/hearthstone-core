@@ -1,16 +1,12 @@
-import { useEffect, useMemo, useRoute } from "set-piece";
+import { useMemo, useRoute } from "set-piece";
 import { FeatureModel } from "../../../features";
 import { RoleModel } from "../../../entities/role";
-import {
-    BuffOperatorType,
-    RoleAttackDecor,
-    useRoleAttackDecorConsumer,
-} from "../../../decors/role-attack";
+import { BuffOperatorType, RoleAttackDecor, useRoleAttackDecorConsumer } from "../../../decors/role-attack";
 import { RoleAttackModel } from "../../../rules/role-attack";
 
-const ENRAGE_ATTACK = 5;
+const ENRAGE_ATTACK = 3;
 
-export class AngryChickenFeatureModel extends FeatureModel {
+export class TaurenWarriorFeatureModel extends FeatureModel {
     @useRoute(() => RoleModel)
     private _role?: RoleModel;
     @useMemo()
@@ -23,11 +19,8 @@ export class AngryChickenFeatureModel extends FeatureModel {
         this.init();
     }
 
-
-    // Apply +5 attack as an aura buff whenever the chicken is damaged (enrage).
-    // The consumer re-evaluates reactively, so reading health.current here
-    // registers it as a dependency — the buff is removed automatically when
-    // health is restored to maximum.
+    // Apply +3 attack as an aura buff while the warrior is damaged (enrage).
+    // Reactive re-evaluation removes the buff automatically when health is restored.
     @useRoleAttackDecorConsumer()
     protected _onAttackDecor(decor: RoleAttackDecor, _target: RoleAttackModel) {
         const health = this.role?.health;

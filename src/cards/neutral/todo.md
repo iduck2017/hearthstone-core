@@ -1,6 +1,6 @@
 # Neutral cards
 
-## Completed (46)
+## Completed (47)
 
 - [x] Silvermoon Guardian (`silvermoon-guardian`)
 - [x] Frostwolf Grunt (`frostwolf-grunt`)
@@ -113,7 +113,7 @@
 - [ ] Defender of Argus (`defender-of-argus`)
 - [ ] Thrallmar Farseer (`thrallmar-farseer`)
 - [ ] Gurubashi Berserker (`gurubashi-berserker`)
-- [ ] Amani Berserker (`amani-berserker`)
+- [x] Amani Berserker (`amani-berserker`)
 - [ ] Questing Adventurer (`questing-adventurer`)
 - [ ] Crazed Alchemist (`crazed-alchemist`)
 - [ ] Cult Master (`cult-master`)

@@ -5,7 +5,7 @@ let isPending = false;
 const disposerRegistry: DisposerModel[] = [];
 
 export function registerDisposer(disposer: DisposerModel) {
-    console.log('Register death', disposer.constructor.name);
+    // console.log('Register death', disposer.parent?.name);
     disposerRegistry.push(disposer);
 }
 
