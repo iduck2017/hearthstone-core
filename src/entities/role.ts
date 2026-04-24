@@ -17,6 +17,7 @@ import { FeatureModel } from "../features";
 import { RoleAttackPerformOption, RoleAttackPerformPostEvent, RoleAttackPerformPrevEvent } from "../event/role-attack-perform";
 import { RoleAttackReceiveOption, RoleAttackReceivePostEvent, RoleAttackReceivePrevEvent } from "../event/role-attack-receive";
 import { RoleDamageReceiveOption, RoleDamageReceivePostEvent, RoleDamageReceivePrevEvent } from "../event/role-damage-receive";
+import { DamageDealOption } from "../event/damage-deal";
 
 
 export interface RoleProps {
@@ -105,8 +106,8 @@ export class RoleModel extends Model {
         /** Check position */
         if (!this._board) return false;
         /** Check disposer */
-        if (!this.container) return false;
-        if (this.container.disposer.isActived) return false;
+        if (!this.entity) return false;
+        if (this.entity.disposer.isActived) return false;
         const selector = this.attack.getSelector();
         return !!selector?.options.length;
     }
@@ -164,17 +165,20 @@ export class RoleModel extends Model {
     private _hero?: HeroModel;
     
     @useMemo()
-    public get container() {
+    public get entity() {
         return this._minion ?? this._hero;
     }
 
+    public dealDamage(options: DamageDealOption) {
+        this.entity?.damageSource.dealDamage(options);
+    }
 
     @useDisposer()
     public receiveDamage(options: {
         value: number;
     }) {
         // Check disposer
-        const disposer = this.container?.disposer;
+        const disposer = this.entity?.disposer;
         if (!disposer) return;
         registerDisposer(disposer);
         // Consume divine shield — no actual damage, event must NOT fire

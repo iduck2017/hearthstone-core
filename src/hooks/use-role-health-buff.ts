@@ -3,10 +3,11 @@ import { FeatureModel, RoleFeatureModel } from "../features";
 import { BuffOperatorType } from "../decors/role-attack";
 import { RoleHealthDecor, useRoleHealthDecorConsumer } from "../decors/role-health";
 import { RoleHealthModel } from "../rules/role-health";
+import { RoleModel } from "../entities/role";
 
 export function useRoleHealthBuff(value: number) {
-    return function(BaseModel: AbstractConstructor<RoleFeatureModel>): any {
-        class _RoleHealthBuffModel extends BaseModel {
+    return function<T extends AbstractConstructor<RoleFeatureModel>>(BaseModel: T) {
+        abstract class RoleHealthBuffModel extends BaseModel {
             @useRoleHealthDecorConsumer()
             protected _modifyRoleMaximumHealth(decor: RoleHealthDecor, target: RoleHealthModel) {
                 decor.addBuff({
@@ -16,6 +17,8 @@ export function useRoleHealthBuff(value: number) {
                 })
             }
         }
-        return _RoleHealthBuffModel;
+        return RoleHealthBuffModel as T
     }
 }
+
+

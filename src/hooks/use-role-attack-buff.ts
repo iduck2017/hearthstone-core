@@ -4,8 +4,8 @@ import { BuffOperatorType, RoleAttackDecor, useRoleAttackDecorConsumer } from ".
 import { RoleAttackModel } from "../rules/role-attack";
 
 export function useRoleAttackBuff(value: number) {
-    return function(BaseModel: AbstractConstructor<RoleFeatureModel>): any {
-        class _RoleAttackBuffModel extends BaseModel {
+    return function<T extends AbstractConstructor<RoleFeatureModel>>(BaseModel: T) {
+        abstract class RoleAttackBuffModel extends BaseModel {
             @useRoleAttackDecorConsumer()
             protected _modifyRoleCurrentAttack(decor: RoleAttackDecor, target: RoleAttackModel) {
                 decor.addBuff({
@@ -15,6 +15,6 @@ export function useRoleAttackBuff(value: number) {
                 });
             }
         }
-        return _RoleAttackBuffModel;
+        return RoleAttackBuffModel as T;
     }
 }

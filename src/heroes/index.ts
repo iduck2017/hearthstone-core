@@ -1,8 +1,9 @@
-import { useChild, useState, Model, useMemo } from "set-piece";
+import { useChild, Model, useMemo } from "set-piece";
 import { HeroDisposerModel } from "../rules/disposers/hero";
 import { RoleModel, RoleProps } from "../entities/role";
 import { FeatureModel } from "../features";
 import { DeathrattleModel } from "../features/deathrattle";
+import { DamageSourceModel } from "../rules/damage-source";
 
 export interface HeroProps extends RoleProps {
     features?: FeatureModel[];
@@ -15,6 +16,14 @@ export abstract class HeroModel extends Model {
         this._deathrattles = [];
         this._disposer = new HeroDisposerModel();
         this._features = props?.features ?? [];
+        this._damageSource = new DamageSourceModel();
+    }
+
+    @useChild()
+    private _damageSource: DamageSourceModel;
+    @useMemo()
+    public get damageSource() {
+        return this._damageSource;
     }
 
     @useChild()

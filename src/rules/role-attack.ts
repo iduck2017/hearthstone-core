@@ -120,9 +120,9 @@ export class RoleAttackModel extends Model {
         // Check role
         const role = this.role;
         if (!role) return;
-        // Deal damage to each other
+        // Deal damage to each other via damageSource
         const { target } = options;
-        role.receiveDamage({ value: target.attack._current })
-        target.receiveDamage({ value: this._current })
+        role.dealDamage({ target, value: this._current });
+        target.dealDamage({ target: role, value: target.attack._current });
     }
 }

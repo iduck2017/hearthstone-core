@@ -10,6 +10,7 @@ import { BattlecryModel } from "../features/battlecry";
 import { DeathrattleModel } from "../features/deathrattle";
 import { FeatureModel } from "../features";
 import { DisposerModel } from "../rules/disposers";
+import { DamageSourceModel } from "../rules/damage-source";
 
 export interface CardProps {
     cost: CostModel;
@@ -50,7 +51,7 @@ export abstract class CardModel extends Model {
     public get game() {
         return this._game;
     }
-    
+
     @useRoute(() => PlayerModel)
     private _player?: PlayerModel;
     @useMemo()
@@ -83,7 +84,14 @@ export abstract class CardModel extends Model {
     public get disposer() {
         return this._disposer;
     }
-    
+
+    @useChild()
+    private _damageSource: DamageSourceModel = new DamageSourceModel();
+    @useMemo()
+    public get damageSource() {
+        return this._damageSource;
+    }
+
     @useChild()
     public _features: FeatureModel[];
     @useMemo()

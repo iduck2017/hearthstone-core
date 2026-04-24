@@ -43,4 +43,22 @@ export abstract class FeatureModel extends Model {
         return this._player;
     }
 
+
+    @useRoute(() => HeroModel)
+    private _hero?: HeroModel;
+    @useRoute(() => CardModel)
+    private _card?: CardModel;
+
+    @useMemo()
+    public get entity() {
+        return this._hero ?? this._card
+    }
+
+    @useRoute(() => MinionModel)
+    private _minion?: MinionModel;
+    @useMemo()
+    public get role() {
+        const entity = this._hero ?? this._minion;
+        return entity?.role;
+    }
 }
