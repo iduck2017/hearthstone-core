@@ -1,7 +1,8 @@
-import { useMemo, useRoute } from "set-piece";
+import { useChild, useMemo, useRoute } from "set-piece";
 import { FeatModel } from "../../../feats";
 import { MinionModel } from "../../minion";
 import { HeroModel } from "../../../heroes";
+import { BoardOnlyTagModel } from "../../../rules/board-only-tag";
 import { RoleDamageReceivePostEvent, useRoleDamageReceiveEventConsumer } from "../../../event/role-damage-receive";
 import { GurubashiBerserkerBuffModel } from "./buff";
 
@@ -13,8 +14,12 @@ export class GurubashiBerserkerFeatModel extends FeatModel {
         return this._minion?.role ?? this._hero?.role;
     }
 
+    @useChild()
+    private _boardOnly: BoardOnlyTagModel;
+
     constructor() {
         super();
+        this._boardOnly = new BoardOnlyTagModel();
         this.init();
     }
 

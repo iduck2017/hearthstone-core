@@ -1,14 +1,16 @@
-import { useRoute, useState, Model, useMemo } from "set-piece";
+import { useRoute, useState, Model, useMemo, useDecorProducer } from "set-piece";
 import { GameModel } from "../entities/game";
 import { PlayerModel } from "../entities/player";
 import { MinionModel } from "../cards/minion";
 import { HeroModel } from "../heroes";
 import { RoleModel } from "../entities/role";
 import { CardModel } from "../cards";
+import { FeatActiveDecor } from "../decors/feat-active";
 
 export interface RoleFeatureModel extends Model {
     role: RoleModel | undefined
     feat: FeatModel | undefined
+    player?: PlayerModel | undefined
 }
 
 export abstract class FeatModel extends Model {
@@ -19,6 +21,7 @@ export abstract class FeatModel extends Model {
         this._isActived = props?.isActived ?? true;
     }
 
+    @useDecorProducer(() => FeatActiveDecor)
     @useState()
     private _isActived: boolean;
     @useMemo()
@@ -39,7 +42,7 @@ export abstract class FeatModel extends Model {
     @useRoute(() => PlayerModel)
     private _player?: PlayerModel;
     @useMemo()
-    protected get player() {
+    public get player() {
         return this._player;
     }
 

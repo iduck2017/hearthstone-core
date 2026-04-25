@@ -1,7 +1,8 @@
-import { useEffect, useMemo, useRoute } from "set-piece";
+import { useChild, useEffect, useMemo, useRoute } from "set-piece";
 import { FeatModel } from "../../../feats";
 import { MinionModel } from "../../minion";
 import { HeroModel } from "../../../heroes";
+import { BoardOnlyTagModel } from "../../../rules/board-only-tag";
 import {
     BuffOperatorType,
     RoleAttackDecor,
@@ -18,8 +19,12 @@ export class AngryChickenFeatModel extends FeatModel {
         return this._minion?.role ?? this._hero?.role;
     }
 
+    @useChild()
+    private _boardOnly: BoardOnlyTagModel;
+
     constructor() {
         super();
+        this._boardOnly = new BoardOnlyTagModel();
         this.init();
     }
 

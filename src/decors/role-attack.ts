@@ -2,6 +2,7 @@ import { number } from "joi";
 import { Decor, Model, useDecorConsumer } from "set-piece";
 import { RoleModel } from "../entities/role";
 import { FeatModel, RoleFeatureModel } from "../feats";
+import { PlayerModel } from "../entities/player";
 
 export enum BuffOperatorType {
     COMMON = 'common',
@@ -56,6 +57,27 @@ export function useRoleAttackDecorConsumer<I extends RoleFeatureModel>() {
     ) {
         useDecorConsumer((i: I) => [
             i.feat?.isActived ? i.role?.attack : undefined,
+            RoleAttackDecor
+        ])(
+            prototype,
+            key,
+            descriptor
+        );
+    }
+}
+
+// Subscribes to the RoleAttackDecor of every allied minion on the board.
+// The handler is called once per ally; use this to apply aura buffs to all friendly minions.
+export function useAllyRoleAttackDecorConsumer<I extends RoleFeatureModel>() {
+    return function(
+        prototype: I,
+        key: string,
+        descriptor: TypedPropertyDescriptor<(decor: RoleAttackDecor) => void>
+    ) {
+        useDecorConsumer((i: I) => [
+            i.feat?.isActived
+                ? i.player?.board.minions.map(m => m.role?.attack)
+                : undefined,
             RoleAttackDecor
         ])(
             prototype,
