@@ -13,11 +13,9 @@ import { GameModel } from "./game";
 import { MinionModel } from "../cards/minion";
 import { HeroModel } from "../heroes";
 import { registerDisposer, useDisposer } from "../hooks/disposer";
-import { FeatureModel } from "../features";
 import { RoleAttackPerformOption, RoleAttackPerformPostEvent, RoleAttackPerformPrevEvent } from "../event/role-attack-perform";
 import { RoleAttackReceiveOption, RoleAttackReceivePostEvent, RoleAttackReceivePrevEvent } from "../event/role-attack-receive";
 import { RoleDamageReceiveOption, RoleDamageReceivePostEvent, RoleDamageReceivePrevEvent } from "../event/role-damage-receive";
-import { DamageDealOption } from "../event/damage-deal";
 
 
 export interface RoleProps {
@@ -28,7 +26,6 @@ export interface RoleProps {
     stealth?: StealthModel;
     attack: RoleAttackModel;
     health: RoleHealthModel;
-    features?: FeatureModel[];
 }
 
 export class RoleModel extends Model {
@@ -44,7 +41,6 @@ export class RoleModel extends Model {
         this._charge = props.charge ?? new ChargeModel();
         this._rush = props.rush ?? new RushModel();
         this._stealth = props.stealth ?? new StealthModel();
-        this._features = props.features ?? [];
         this.init();
     }
 
@@ -52,24 +48,6 @@ export class RoleModel extends Model {
         return `${this.parent?.name}.RoleModel`
     }
     
-    @useChild()
-    public _features: FeatureModel[];
-    @useMemo()
-    public get features() {
-        return [...this._features];
-    }
-
-    public addFeature(buff: FeatureModel) {
-        this._features.push(buff);
-    }
-
-    public removeFeature(buff: FeatureModel) {
-        const index = this._features.indexOf(buff);
-        if (index !== -1) {
-            this._features.splice(index, 1);
-        }
-    }
-
     @useRoute(() => BoardModel)
     private _board?: BoardModel;
 
@@ -169,8 +147,8 @@ export class RoleModel extends Model {
         return this._minion ?? this._hero;
     }
 
-    public dealDamage(options: DamageDealOption) {
-        this.entity?.damageSource.dealDamage(options);
+    public receiveRestore(options: { value: number }) {
+        this.health.restoreCurrent(options.value);
     }
 
     @useDisposer()

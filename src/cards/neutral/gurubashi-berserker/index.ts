@@ -3,7 +3,7 @@ import { RoleAttackModel } from "../../../rules/role-attack";
 import { RoleHealthModel } from "../../../rules/role-health";
 import { CostModel } from "../../../rules/cost";
 import { RoleModel } from "../../../entities/role";
-import { GurubashiBerserkerFeatureModel } from "./feature";
+import { GurubashiBerserkerFeatModel } from "./feat";
 
 export class GurubashiBerserkerModel extends MinionModel {
     constructor() {
@@ -11,9 +11,9 @@ export class GurubashiBerserkerModel extends MinionModel {
             role: new RoleModel({
                 attack: new RoleAttackModel({ origin: 2 }),
                 health: new RoleHealthModel({ origin: 7 }),
-                features: [new GurubashiBerserkerFeatureModel()],
             }),
             cost: new CostModel({ origin: 5 }),
+            feats: [new GurubashiBerserkerFeatModel()],
         });
     }
 }

@@ -13,7 +13,7 @@ export class CairneBloodhoofModel extends MinionModel {
                 health: new RoleHealthModel({ origin: 5 }),
             }),
             cost: new CostModel({ origin: 6 }),
-            features: [new CairneBloodhoofDeathrattleModel()],
+            feats: [new CairneBloodhoofDeathrattleModel()],
         });
     }
 }

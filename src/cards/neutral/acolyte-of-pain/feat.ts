@@ -1,14 +1,14 @@
 import { useMemo, useRoute } from "set-piece";
-import { FeatureModel } from "../../../features";
-import { RoleModel } from "../../../entities/role";
+import { FeatModel } from "../../../feats";
+import { MinionModel } from "../../minion";
 import { RoleDamageReceivePostEvent, useRoleDamageReceiveEventConsumer } from "../../../event/role-damage-receive";
 
-export class AcolyteOfPainFeatureModel extends FeatureModel {
-    @useRoute(() => RoleModel)
-    private _role?: RoleModel;
+export class AcolyteOfPainFeatModel extends FeatModel {
+    @useRoute(() => MinionModel)
+    private _minion?: MinionModel;
     @useMemo()
     public get role() {
-        return this._role;
+        return this._minion?.role ?? this._hero?.role;
     }
 
     constructor() {

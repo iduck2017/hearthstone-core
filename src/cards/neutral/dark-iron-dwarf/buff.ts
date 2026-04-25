@@ -1,18 +1,11 @@
-import { useMemo, useRoute } from "set-piece";
-import { FeatureModel } from "../../../features";
+import { useChild, useMemo, useRoute } from "set-piece";
+import { FeatModel } from "../../../feats";
 import { RoleModel } from "../../../entities/role";
 import { BoardModel } from "../../../entities/board";
 import { TurnEndPostEvent, useTurnEndEventConsumer } from "../../../event/turn-end";
-import { BuffOperatorType, RoleAttackDecor, useRoleAttackDecorConsumer } from "../../../decors/role-attack";
+import { RoleAttackBuffModel } from "../../../feats/role-attack-buff";
 
-export class DarkIronDwarfBuffModel extends FeatureModel {
-    @useRoute(() => RoleModel)
-    private _role?: RoleModel;
-    @useMemo()
-    public get role() {
-        return this._role;
-    }
-
+export class DarkIronDwarfBuffModel extends FeatModel {
     @useRoute(() => BoardModel)
     private _board?: BoardModel;
     @useMemo()
@@ -20,24 +13,17 @@ export class DarkIronDwarfBuffModel extends FeatureModel {
         return this._board;
     }
 
+    @useChild()
+    public attackBuff: RoleAttackBuffModel;
+
     constructor() {
         super();
+        this.attackBuff = new RoleAttackBuffModel(2);
         this.init();
-    }
-
-    @useRoleAttackDecorConsumer()
-    protected _modifyRoleCurrentAttack(decor: RoleAttackDecor) {
-        decor.addBuff({
-            value: 2,
-            type: BuffOperatorType.COMMON,
-            source: this,
-        });
     }
 
     @useTurnEndEventConsumer()
     private _handleTurnEnd(event: TurnEndPostEvent) {
-        this.deactive()
+        this.deactive();
     }
-
-
 }

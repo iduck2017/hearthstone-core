@@ -1,7 +1,7 @@
 import { Decor, useDecorConsumer } from "set-piece";
 import { BuffOperator, BuffOperatorType } from "./role-attack";
 import { RoleModel } from "../entities/role";
-import { FeatureModel } from "../features";
+import { FeatModel, RoleFeatureModel } from "../feats";
 
 export class RoleHealthDecor extends Decor<number> {
     private _operators: BuffOperator[] = [];
@@ -35,13 +35,16 @@ export class RoleHealthDecor extends Decor<number> {
 }
 
 
-export function useRoleHealthDecorConsumer<I extends FeatureModel & { role: RoleModel | undefined }>() {
+export function useRoleHealthDecorConsumer<I extends RoleFeatureModel>() {
     return function(
         prototype: I,
         key: string,
         descriptor: TypedPropertyDescriptor<(decor: RoleHealthDecor) => void>
     ) {
-        useDecorConsumer((i: I) => [i.isActived ? i.role?.health : undefined, RoleHealthDecor])(
+        useDecorConsumer((i: I) => [
+            i.feat?.isActived ? i.role?.health : undefined, 
+            RoleHealthDecor
+        ])(
             prototype,
             key,
             descriptor

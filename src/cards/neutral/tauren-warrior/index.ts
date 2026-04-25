@@ -4,7 +4,7 @@ import { RoleHealthModel } from "../../../rules/role-health";
 import { TauntModel } from "../../../rules/taunt";
 import { CostModel } from "../../../rules/cost";
 import { RoleModel } from "../../../entities/role";
-import { TaurenWarriorFeatureModel } from "./feature";
+import { TaurenWarriorFeatModel } from "./feat";
 
 export class TaurenWarriorModel extends MinionModel {
     constructor() {
@@ -13,9 +13,9 @@ export class TaurenWarriorModel extends MinionModel {
                 attack: new RoleAttackModel({ origin: 2 }),
                 health: new RoleHealthModel({ origin: 3 }),
                 taunt: new TauntModel({ isActived: true }),
-                features: [new TaurenWarriorFeatureModel()],
             }),
             cost: new CostModel({ origin: 3 }),
+            feats: [new TaurenWarriorFeatModel()],
         });
     }
 }

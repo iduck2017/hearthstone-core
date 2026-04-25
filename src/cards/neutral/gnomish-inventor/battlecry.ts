@@ -1,4 +1,4 @@
-import { BattlecryModel } from "../../../features/battlecry";
+import { BattlecryModel } from "../../../feats/battlecry";
 import { Model } from "set-piece";
 import { Selector } from "../../../utils/controller";
 import { useBattlecryRunHook } from "../../../hooks/battlecry-run";

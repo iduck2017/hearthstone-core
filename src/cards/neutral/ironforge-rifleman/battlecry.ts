@@ -1,4 +1,4 @@
-import { BattlecryModel } from "../../../features/battlecry";
+import { BattlecryModel } from "../../../feats/battlecry";
 import { Selector } from "../../../utils/controller";
 import { RoleModel } from "../../../entities/role";
 import { useBattlecryRunHook } from "../../../hooks/battlecry-run";

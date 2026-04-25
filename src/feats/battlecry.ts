@@ -2,9 +2,9 @@ import { useRoute, useState, Model, useMemo } from "set-piece";
 import { PlayerModel } from "../entities/player";
 import { Selector } from "../utils/controller";
 import { getBattlecryRunHooks } from "../hooks/battlecry-run";
-import { FeatureModel } from ".";
+import { FeatModel } from ".";
 
-export abstract class BattlecryModel<T extends Model = Model> extends FeatureModel {
+export abstract class BattlecryModel<T extends Model = Model> extends FeatModel {
     @useState()
     private _isPending: boolean = false;
     @useMemo()

@@ -1,4 +1,4 @@
-import { BattlecryModel } from "../../../features/battlecry";
+import { BattlecryModel } from "../../../feats/battlecry";
 import { Selector } from "../../../utils/controller";
 import { RoleModel } from "../../../entities/role";
 import { AbusiveSergeantBuffModel } from "./buff";
@@ -23,6 +23,6 @@ export class AbusiveSergeantBattlecryModel extends BattlecryModel<RoleModel> {
     protected async handleRun(target?: RoleModel): Promise<void> {
         if (!target) return;
         console.log('Buff target', target.name)
-        target.addFeature(new AbusiveSergeantBuffModel());
+        target.entity?.addFeature(new AbusiveSergeantBuffModel());
     }
 }

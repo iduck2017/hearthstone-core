@@ -1,7 +1,9 @@
-import { BattlecryModel } from "../../../features/battlecry";
+import { BattlecryModel } from "../../../feats/battlecry";
 import { Selector } from "../../../utils/controller";
 import { RoleModel } from "../../../entities/role";
 import { useBattlecryRunHook } from "../../../hooks/battlecry-run";
+import { useRoute } from "set-piece";
+import { MinionModel } from "../../minion";
 
 export class StormpikeCommandoBattlecryModel extends BattlecryModel<RoleModel> {
     constructor() {
@@ -17,9 +19,10 @@ export class StormpikeCommandoBattlecryModel extends BattlecryModel<RoleModel> {
         return { options };
     }
 
+
     @useBattlecryRunHook()
     protected async handleRun(target?: RoleModel): Promise<void> {
         if (!target) return;
-        this._minion?.damageSource.dealDamage({ target, value: 2 });
+        this.entity?.damageSource.dealDamage({ target, value: 2 });
     }
 }

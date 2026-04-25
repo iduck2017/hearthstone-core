@@ -13,7 +13,7 @@ export class LootHoarderModel extends MinionModel {
                 health: new RoleHealthModel({ origin: 1 }),
             }),
             cost: new CostModel({ origin: 2 }),
-            features: [
+            feats: [
                 new LootHoarderDeathrattleModel(),
             ],
         });

@@ -1,18 +1,17 @@
 import { useRoute, useState, Model, useMemo } from "set-piece";
 import { GameModel } from "../entities/game";
 import { PlayerModel } from "../entities/player";
-import { BoardModel } from "../entities/board";
 import { MinionModel } from "../cards/minion";
-import { getFeatDeactiveHooks } from "../hooks/feat-deactive";
 import { HeroModel } from "../heroes";
 import { RoleModel } from "../entities/role";
 import { CardModel } from "../cards";
 
-export type RoleFeatureModel = FeatureModel & { role: RoleModel | undefined };
-export type CardFeatureModel = FeatureModel & { card: CardModel | undefined };
-export type MixinResult<T, TNew = {}> = T & (abstract new (...args: any[]) => TNew);
+export interface RoleFeatureModel extends Model {
+    role: RoleModel | undefined
+    feat: FeatModel | undefined
+}
 
-export abstract class FeatureModel extends Model {
+export abstract class FeatModel extends Model {
     constructor(props?: {
         isActived?: boolean;
     }) {
@@ -44,7 +43,6 @@ export abstract class FeatureModel extends Model {
         return this._player;
     }
 
-
     @useRoute(() => HeroModel)
     protected _hero?: HeroModel;
     @useRoute(() => CardModel)
@@ -54,11 +52,7 @@ export abstract class FeatureModel extends Model {
         return this._hero ?? this._card
     }
 
-    @useRoute(() => MinionModel)
-    protected _minion?: MinionModel;
-    @useMemo()
-    public get role() {
-        const entity = this._hero ?? this._minion;
-        return entity?.role;
+    public get feat() {
+        return this;
     }
 }

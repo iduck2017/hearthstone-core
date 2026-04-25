@@ -6,22 +6,23 @@ import { GraveyardModel } from "../entities/graveyard";
 import { GameModel } from "../entities/game";
 import { PlayerModel } from "../entities/player";
 import { CostModel } from "../rules/cost";
-import { BattlecryModel } from "../features/battlecry";
-import { DeathrattleModel } from "../features/deathrattle";
-import { FeatureModel } from "../features";
+import { BattlecryModel } from "../feats/battlecry";
+import { DeathrattleModel } from "../feats/deathrattle";
+import { FeatModel } from "../feats";
 import { DisposerModel } from "../rules/disposers";
 import { DamageSourceModel } from "../rules/damage-source";
+import { RestoreSourceModel } from "../rules/restore-source";
 
 export interface CardProps {
     cost: CostModel;
-    features?: FeatureModel[];
+    feats?: FeatModel[];
 }
 
 export abstract class CardModel extends Model {
     constructor(props: CardProps) {
         super();
         this._cost = props?.cost ?? new CostModel();
-        this._features = props?.features ?? [];
+        this._feats = props?.feats ?? [];
         this.init()
     }
 
@@ -70,12 +71,12 @@ export abstract class CardModel extends Model {
 
     @useMemo()
     public get battlecries() {
-        return this.features.filter(i => i instanceof BattlecryModel);
+        return this.feats.filter(i => i instanceof BattlecryModel);
     }
 
     @useMemo()
     public get deathrattles() {
-        return this.features.filter(i => i instanceof DeathrattleModel);
+        return this.feats.filter(i => i instanceof DeathrattleModel);
     }
 
     @useChild()
@@ -93,20 +94,27 @@ export abstract class CardModel extends Model {
     }
 
     @useChild()
-    public _features: FeatureModel[];
+    private _restoreSource: RestoreSourceModel = new RestoreSourceModel();
     @useMemo()
-    public get features() {
-        return [...this._features];
+    public get restoreSource() {
+        return this._restoreSource;
     }
 
-    public addFeature(buff: FeatureModel) {
-        this._features.push(buff);
+    @useChild()
+    public _feats: FeatModel[];
+    @useMemo()
+    public get feats() {
+        return [...this._feats];
     }
 
-    public removeFeature(buff: FeatureModel) {
-        const index = this._features.indexOf(buff);
+    public addFeature(buff: FeatModel) {
+        this._feats.push(buff);
+    }
+
+    public removeFeature(buff: FeatModel) {
+        const index = this._feats.indexOf(buff);
         if (index !== -1) {
-            this._features.splice(index, 1);
+            this._feats.splice(index, 1);
         }
     }
 

@@ -1,9 +1,9 @@
 import { useRoute, Model, useMemo } from "set-piece";
 import { PlayerModel } from "../entities/player";
 import { getDeathrattleRunHooks } from "../hooks/deathrattle-run";
-import { FeatureModel } from ".";
+import { FeatModel } from ".";
 
-export class DeathrattleModel extends FeatureModel {
+export class DeathrattleModel extends FeatModel {
     public run() {
         if (!this.isActived) return;
         const hooks = getDeathrattleRunHooks(this);

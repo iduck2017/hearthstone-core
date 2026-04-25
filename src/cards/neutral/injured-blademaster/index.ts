@@ -13,7 +13,7 @@ export class InjuredBlademasterModel extends MinionModel {
                 health: new RoleHealthModel({ origin: 7 }),
             }),
             cost: new CostModel({ origin: 3 }),
-            features: [new InjuredBlademasterBattlecryModel()],
+            feats: [new InjuredBlademasterBattlecryModel()],
         });
     }
 }

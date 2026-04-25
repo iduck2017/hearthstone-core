@@ -13,7 +13,7 @@ export class DarkIronDwarfModel extends MinionModel {
                 health: new RoleHealthModel({ origin: 4 }),
             }),
             cost: new CostModel({ origin: 4 }),
-            features: [
+            feats: [
                 new DarkIronDwarfBattlecryModel(),
             ],
         });

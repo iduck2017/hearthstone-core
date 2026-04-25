@@ -1,15 +1,16 @@
 import { useMemo, useRoute } from "set-piece";
-import { FeatureModel } from "../../../features";
-import { RoleModel } from "../../../entities/role";
+import { FeatModel } from "../../../feats";
+import { MinionModel } from "../../minion";
+import { HeroModel } from "../../../heroes";
 import { RoleDamageReceivePostEvent, useRoleDamageReceiveEventConsumer } from "../../../event/role-damage-receive";
 import { GurubashiBerserkerBuffModel } from "./buff";
 
-export class GurubashiBerserkerFeatureModel extends FeatureModel {
-    @useRoute(() => RoleModel)
-    private _role?: RoleModel;
+export class GurubashiBerserkerFeatModel extends FeatModel {
+    @useRoute(() => MinionModel)
+    private _minion?: MinionModel;
     @useMemo()
     public get role() {
-        return this._role;
+        return this._minion?.role ?? this._hero?.role;
     }
 
     constructor() {
@@ -20,9 +21,8 @@ export class GurubashiBerserkerFeatureModel extends FeatureModel {
     // Each time this minion takes damage, attach a new permanent +3 attack buff.
     @useRoleDamageReceiveEventConsumer()
     private _onReceiveAttack(event: RoleDamageReceivePostEvent) {
-        const role = this._role;
-        if (!role) return;
-        console.log('GurubashiBerserker Receive damage')
-        role.addFeature(new GurubashiBerserkerBuffModel());
+        if (!this._minion) return;
+        console.log('GurubashiBerserker Receive damage');
+        this._minion.addFeature(new GurubashiBerserkerBuffModel());
     }
 }

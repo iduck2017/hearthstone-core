@@ -13,7 +13,7 @@ export class IronforgeRiflemanModel extends MinionModel {
                 health: new RoleHealthModel({ origin: 2 }),
             }),
             cost: new CostModel({ origin: 3 }),
-            features: [
+            feats: [
                 new IronforgeRiflemanBattlecryModel(),
             ],
         });

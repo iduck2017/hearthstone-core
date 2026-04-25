@@ -13,7 +13,7 @@ export class ElvenArcherModel extends MinionModel {
                 health: new RoleHealthModel({ origin: 1 }),
             }),
             cost: new CostModel({ origin: 1 }),
-            features: [
+            feats: [
                 new ElvenArcherBattlecryModel(),
             ],
         })

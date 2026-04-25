@@ -1,5 +1,5 @@
 import { useRoute, useState, Model } from "set-piece";
-import { BattlecryModel } from "../features/battlecry";
+import { BattlecryModel } from "../feats/battlecry";
 
 export type HookRegistry = Array<{ hook: BattlecryModel, params: Array<Model | undefined> }>;
 

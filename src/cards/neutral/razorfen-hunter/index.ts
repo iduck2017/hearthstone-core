@@ -13,7 +13,7 @@ export class RazorfenHunterModel extends MinionModel {
                 health: new RoleHealthModel({ origin: 3 }),
             }),
             cost: new CostModel({ origin: 3 }),
-            features: [
+            feats: [
                 new RazorfenHunterBattlecryModel(),
             ],
         });

@@ -1,7 +1,8 @@
-import { BattlecryModel } from "../../../features/battlecry";
+import { BattlecryModel } from "../../../feats/battlecry";
 import { BoarModel } from "../../derivatives/boar";
-import { Model } from "set-piece";
+import { Model, useRoute } from "set-piece";
 import { useBattlecryRunHook } from "../../../hooks/battlecry-run";
+import { MinionModel } from "../../minion";
 
 export class RazorfenHunterBattlecryModel extends BattlecryModel<Model> {
     constructor() {
@@ -12,6 +13,9 @@ export class RazorfenHunterBattlecryModel extends BattlecryModel<Model> {
     public getSelector(params: Array<Model | undefined>): undefined {
         return undefined;
     }
+    
+    @useRoute(() => MinionModel)
+    private _minion?: MinionModel;
 
     @useBattlecryRunHook()
     protected async handleRun(): Promise<void> {

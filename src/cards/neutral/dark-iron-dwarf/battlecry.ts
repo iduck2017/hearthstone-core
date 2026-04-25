@@ -1,4 +1,4 @@
-import { BattlecryModel } from "../../../features/battlecry";
+import { BattlecryModel } from "../../../feats/battlecry";
 import { Selector } from "../../../utils/controller";
 import { RoleModel } from "../../../entities/role";
 import { DarkIronDwarfBuffModel } from "./buff";
@@ -20,6 +20,6 @@ export class DarkIronDwarfBattlecryModel extends BattlecryModel<RoleModel> {
     @useBattlecryRunHook()
     protected async handleRun(target?: RoleModel): Promise<void> {
         if (!target) return;
-        target.addFeature(new DarkIronDwarfBuffModel());
+        target.entity?.addFeature(new DarkIronDwarfBuffModel());
     }
 }

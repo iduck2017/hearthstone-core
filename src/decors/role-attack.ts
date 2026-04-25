@@ -1,7 +1,7 @@
 import { number } from "joi";
 import { Decor, Model, useDecorConsumer } from "set-piece";
 import { RoleModel } from "../entities/role";
-import { FeatureModel } from "../features";
+import { FeatModel, RoleFeatureModel } from "../feats";
 
 export enum BuffOperatorType {
     COMMON = 'common',
@@ -14,6 +14,7 @@ export interface BuffOperator {
     type: BuffOperatorType;
     source: Model;
 }
+
 
 export class RoleAttackDecor extends Decor<number> {
     private _operators: BuffOperator[] = [];
@@ -47,14 +48,14 @@ export class RoleAttackDecor extends Decor<number> {
 }
 
 
-export function useRoleAttackDecorConsumer<I extends FeatureModel & { role: RoleModel | undefined }>() {
+export function useRoleAttackDecorConsumer<I extends RoleFeatureModel>() {
     return function(
         prototype: I,
         key: string,
         descriptor: TypedPropertyDescriptor<(decor: RoleAttackDecor) => void>
     ) {
         useDecorConsumer((i: I) => [
-            i.isActived ? i.role?.attack : undefined,
+            i.feat?.isActived ? i.role?.attack : undefined,
             RoleAttackDecor
         ])(
             prototype,

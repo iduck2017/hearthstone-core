@@ -3,7 +3,12 @@
     "allow": [
       "Read(//c/Users/admin/Documents/set-piece/dist/**)",
       "Read(//c/Users/admin/Documents/set-piece/**)",
-      "Bash(xargs grep *)"
+      "Bash(xargs grep *)",
+      "Bash(python3 -c ' *)",
+      "Bash(git add *)",
+      "Bash(git commit -m ' *)",
+      "Bash(git push *)",
+      "Bash(npx jest *)"
     ]
   }
 }

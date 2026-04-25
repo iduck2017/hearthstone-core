@@ -13,7 +13,7 @@ export class StormpikeCommandoModel extends MinionModel {
                 health: new RoleHealthModel({ origin: 2 }),
             }),
             cost: new CostModel({ origin: 5 }),
-            features: [
+            feats: [
                 new StormpikeCommandoBattlecryModel(),
             ],
         });

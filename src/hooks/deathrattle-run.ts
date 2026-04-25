@@ -1,5 +1,5 @@
 import { Method, Model } from "set-piece";
-import { DeathrattleModel } from "../features/deathrattle";
+import { DeathrattleModel } from "../feats/deathrattle";
 
 export const deathrattleRunRegistry: Map<Function, string[]> = new Map();
 

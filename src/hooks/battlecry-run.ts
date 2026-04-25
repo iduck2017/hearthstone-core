@@ -1,5 +1,5 @@
 import { Method, Model } from "set-piece";
-import { BattlecryModel } from "../features/battlecry";
+import { BattlecryModel } from "../feats/battlecry";
 
 export const battlecryRunRegistry: Map<Function, string[]> = new Map();
 

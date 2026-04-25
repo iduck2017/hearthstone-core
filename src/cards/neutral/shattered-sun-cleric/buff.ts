@@ -1,10 +1,10 @@
-import { useMemo, useRoute } from "set-piece";
-import { FeatureModel } from "../../../features";
+import { useChild, useMemo, useRoute } from "set-piece";
+import { FeatModel } from "../../../feats";
 import { RoleModel } from "../../../entities/role";
-import { BuffOperatorType, RoleAttackDecor, useRoleAttackDecorConsumer } from "../../../decors/role-attack";
-import { RoleHealthDecor, useRoleHealthDecorConsumer } from "../../../decors/role-health";
+import { RoleAttackBuffModel } from "../../../feats/role-attack-buff";
+import { RoleHealthBuffModel } from "../../../feats/role-health-buff";
 
-export class ShatteredSunClericBuffModel extends FeatureModel {
+export class ShatteredSunClericBuffModel extends FeatModel {
     @useRoute(() => RoleModel)
     private _role?: RoleModel;
     @useMemo()
@@ -12,26 +12,16 @@ export class ShatteredSunClericBuffModel extends FeatureModel {
         return this._role;
     }
 
+    @useChild()
+    public attackBuff: RoleAttackBuffModel;
+
+    @useChild()
+    public healthBuff: RoleHealthBuffModel;
+
     constructor() {
         super();
+        this.attackBuff = new RoleAttackBuffModel(1);
+        this.healthBuff = new RoleHealthBuffModel(1);
         this.init();
-    }
-
-    @useRoleAttackDecorConsumer()
-    protected _modifyRoleCurrentAttack(decor: RoleAttackDecor) {
-        decor.addBuff({
-            value: 1,
-            type: BuffOperatorType.COMMON,
-            source: this,
-        });
-    }
-
-    @useRoleHealthDecorConsumer()
-    protected _modifyRoleMaximumHealth(decor: RoleHealthDecor) {
-        decor.addBuff({
-            value: 1,
-            type: BuffOperatorType.COMMON,
-            source: this,
-        });
     }
 }

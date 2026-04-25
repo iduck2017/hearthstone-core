@@ -1,4 +1,4 @@
-import { DeathrattleModel } from "../../../features/deathrattle";
+import { DeathrattleModel } from "../../../feats/deathrattle";
 import { useDeathrattleRunHook } from "../../../hooks/deathrattle-run";
 import { BaineBloodhoofModel } from "../../derivatives/baine-bloodhoof";
 

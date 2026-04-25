@@ -1,16 +1,17 @@
 import { useMemo, useRoute } from "set-piece";
-import { FeatureModel } from "../../../features";
-import { RoleModel } from "../../../entities/role";
+import { FeatModel } from "../../../feats";
+import { MinionModel } from "../../minion";
+import { HeroModel } from "../../../heroes";
 import { BuffOperatorType, RoleAttackDecor, useRoleAttackDecorConsumer } from "../../../decors/role-attack";
 
 const ENRAGE_ATTACK = 3;
 
-export class TaurenWarriorFeatureModel extends FeatureModel {
-    @useRoute(() => RoleModel)
-    private _role?: RoleModel;
+export class TaurenWarriorFeatModel extends FeatModel {
+    @useRoute(() => MinionModel)
+    private _minion?: MinionModel;
     @useMemo()
     public get role() {
-        return this._role;
+        return this._minion?.role ?? this._hero?.role;
     }
 
     constructor() {

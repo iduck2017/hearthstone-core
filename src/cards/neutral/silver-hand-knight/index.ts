@@ -13,7 +13,7 @@ export class SilverHandKnightModel extends MinionModel {
                 health: new RoleHealthModel({ origin: 4 }),
             }),
             cost: new CostModel({ origin: 5 }),
-            features: [
+            feats: [
                 new SilverHandKnightBattlecryModel(),
             ],
         });

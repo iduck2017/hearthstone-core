@@ -15,7 +15,7 @@ export class LeeroyJenkinsModel extends MinionModel {
                 charge: new ChargeModel({ isActived: true }),
             }),
             cost: new CostModel({ origin: 5 }),
-            features: [new LeeroyJenkinsBattlecryModel()],
+            feats: [new LeeroyJenkinsBattlecryModel()],
         });
     }
 }

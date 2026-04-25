@@ -1,4 +1,4 @@
-import { DeathrattleModel } from "../../../features/deathrattle";
+import { DeathrattleModel } from "../../../feats/deathrattle";
 import { DamagedGolemModel } from "../../derivatives/damaged-golem";
 import { useDeathrattleRunHook } from "../../../hooks/deathrattle-run";
 

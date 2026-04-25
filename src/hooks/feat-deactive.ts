@@ -1,5 +1,5 @@
 import { Method, Model } from "set-piece";
-import { FeatureModel } from "../features";
+import { FeatModel } from "../feats";
 
 export const featDeactiveRegistry: Map<Function, string[]> = new Map();
 

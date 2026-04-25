@@ -1,8 +1,9 @@
-import { BattlecryModel } from "../../../features/battlecry";
-import { Model } from "set-piece";
+import { BattlecryModel } from "../../../feats/battlecry";
+import { Model, useRoute } from "set-piece";
 import { useBattlecryRunHook } from "../../../hooks/battlecry-run";
-import { MinionModel } from "../../minion";
 import { Selector } from "../../../utils/controller";
+import { RoleModel } from "../../../entities/role";
+import { MinionModel } from "../../minion";
 
 export class InjuredBlademasterBattlecryModel extends BattlecryModel<Model> {
     constructor() {
@@ -14,10 +15,13 @@ export class InjuredBlademasterBattlecryModel extends BattlecryModel<Model> {
         return undefined;
     }
 
+    @useRoute(() => MinionModel)
+    private _minion?: MinionModel;
+
     @useBattlecryRunHook()
     protected async handleRun(): Promise<void> {
-        const role = this?.role;
-        if (!role) return;
-        role.dealDamage({ target: role, value: 4 });
+        const minion = this._minion;
+        if (!minion) return;
+        minion.damageSource.dealDamage({ target: minion.role, value: 4 });
     }
 }

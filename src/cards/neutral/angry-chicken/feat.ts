@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRoute } from "set-piece";
-import { FeatureModel } from "../../../features";
-import { RoleModel } from "../../../entities/role";
+import { FeatModel } from "../../../feats";
+import { MinionModel } from "../../minion";
+import { HeroModel } from "../../../heroes";
 import {
     BuffOperatorType,
     RoleAttackDecor,
@@ -9,19 +10,18 @@ import {
 
 const ENRAGE_ATTACK = 5;
 
-export class AngryChickenFeatureModel extends FeatureModel {
-    @useRoute(() => RoleModel)
-    private _role?: RoleModel;
+export class AngryChickenFeatModel extends FeatModel {
+    @useRoute(() => MinionModel)
+    private _minion?: MinionModel;
     @useMemo()
     public get role() {
-        return this._role;
+        return this._minion?.role ?? this._hero?.role;
     }
 
     constructor() {
         super();
         this.init();
     }
-
 
     // Apply +5 attack as an aura buff whenever the chicken is damaged (enrage).
     // The consumer re-evaluates reactively, so reading health.current here

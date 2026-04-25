@@ -1,4 +1,4 @@
-import { BattlecryModel } from "../../../features/battlecry";
+import { BattlecryModel } from "../../../feats/battlecry";
 import { Selector } from "../../../utils/controller";
 import { RoleModel } from "../../../entities/role";
 import { ShatteredSunClericBuffModel } from "./buff";
@@ -22,6 +22,6 @@ export class ShatteredSunClericBattlecryModel extends BattlecryModel<RoleModel> 
     @useConsoleGroup()
     protected async handleRun(target?: RoleModel): Promise<void> {
         if (!target) return;
-        target.addFeature(new ShatteredSunClericBuffModel());
+        target.entity?.addFeature(new ShatteredSunClericBuffModel());
     }
 }
