@@ -18,7 +18,7 @@ export class AcolyteOfPainFeatureModel extends FeatureModel {
 
     // Whenever this minion takes damage, draw a card for its controller.
     @useRoleDamageReceiveEventConsumer()
-    private _onDamageReceive(event: RoleDamageReceivePostEvent, _target: RoleModel) {
+    private _onDamageReceive(event: RoleDamageReceivePostEvent) {
         this.player?.drawCard();
     }
 }

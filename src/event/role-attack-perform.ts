@@ -17,7 +17,7 @@ export function useRoleAttackPerformPrevEventConsumer<I extends Model & { role: 
     return function(
         prototype: I,
         key: string,
-        descriptor: TypedPropertyDescriptor<(event: RoleAttackPerformPrevEvent, target: RoleModel) => void>
+        descriptor: TypedPropertyDescriptor<(event: RoleAttackPerformPrevEvent) => void>
     ) {
         useEventConsumer((i: I) => [i.role, RoleAttackPerformPrevEvent])(
             prototype,
@@ -31,7 +31,7 @@ export function useRoleAttackPerformEventConsumer<I extends Model & { role: Role
     return function(
         prototype: I,
         key: string,
-        descriptor: TypedPropertyDescriptor<(event: RoleAttackPerformPostEvent, target: RoleModel) => void>
+        descriptor: TypedPropertyDescriptor<(event: RoleAttackPerformPostEvent) => void>
     ) {
         useEventConsumer((i: I) => [i.role, RoleAttackPerformPostEvent])(
             prototype,

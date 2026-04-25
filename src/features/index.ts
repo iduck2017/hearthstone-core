@@ -10,6 +10,7 @@ import { CardModel } from "../cards";
 
 export type RoleFeatureModel = FeatureModel & { role: RoleModel | undefined };
 export type CardFeatureModel = FeatureModel & { card: CardModel | undefined };
+export type MixinResult<T, TNew = {}> = T & (abstract new (...args: any[]) => TNew);
 
 export abstract class FeatureModel extends Model {
     constructor(props?: {
@@ -45,17 +46,16 @@ export abstract class FeatureModel extends Model {
 
 
     @useRoute(() => HeroModel)
-    private _hero?: HeroModel;
+    protected _hero?: HeroModel;
     @useRoute(() => CardModel)
-    private _card?: CardModel;
-
+    protected _card?: CardModel;
     @useMemo()
     public get entity() {
         return this._hero ?? this._card
     }
 
     @useRoute(() => MinionModel)
-    private _minion?: MinionModel;
+    protected _minion?: MinionModel;
     @useMemo()
     public get role() {
         const entity = this._hero ?? this._minion;

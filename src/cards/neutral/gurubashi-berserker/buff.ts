@@ -2,7 +2,6 @@ import { useMemo, useRoute } from "set-piece";
 import { FeatureModel } from "../../../features";
 import { RoleModel } from "../../../entities/role";
 import { BuffOperatorType, RoleAttackDecor, useRoleAttackDecorConsumer } from "../../../decors/role-attack";
-import { RoleAttackModel } from "../../../rules/role-attack";
 
 const ENRAGE_ATTACK = 3;
 
@@ -21,7 +20,7 @@ export class GurubashiBerserkerBuffModel extends FeatureModel {
 
     // Add a permanent +3 attack buff each time this buff instance is active.
     @useRoleAttackDecorConsumer()
-    protected _modifyRoleCurrentAttack(decor: RoleAttackDecor, _target: RoleAttackModel) {
+    protected _modifyRoleCurrentAttack(decor: RoleAttackDecor) {
         console.log('GurubashiBerserker buff')
         decor.addBuff({
             value: ENRAGE_ATTACK,

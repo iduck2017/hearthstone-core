@@ -19,7 +19,7 @@ export class GurubashiBerserkerFeatureModel extends FeatureModel {
 
     // Each time this minion takes damage, attach a new permanent +3 attack buff.
     @useRoleDamageReceiveEventConsumer()
-    private _onReceiveAttack(event: RoleDamageReceivePostEvent, _target: RoleModel) {
+    private _onReceiveAttack(event: RoleDamageReceivePostEvent) {
         const role = this._role;
         if (!role) return;
         console.log('GurubashiBerserker Receive damage')

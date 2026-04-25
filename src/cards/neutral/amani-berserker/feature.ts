@@ -6,7 +6,6 @@ import {
     RoleAttackDecor,
     useRoleAttackDecorConsumer,
 } from "../../../decors/role-attack";
-import { RoleAttackModel } from "../../../rules/role-attack";
 
 const ENRAGE_ATTACK = 3;
 
@@ -24,7 +23,7 @@ export class AmaniBerserkerFeatureModel extends FeatureModel {
     }
 
     @useRoleAttackDecorConsumer()
-    protected _onAttackDecor(decor: RoleAttackDecor, _target: RoleAttackModel) {
+    protected _onAttackDecor(decor: RoleAttackDecor) {
         const health = this.role?.health;
         if (!health) return;
         if (health.current < health.maximum) {

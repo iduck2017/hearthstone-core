@@ -1,7 +1,6 @@
 import { number } from "joi";
 import { Decor, Model, useDecorConsumer } from "set-piece";
 import { RoleModel } from "../entities/role";
-import { RoleAttackModel } from "../rules/role-attack";
 import { FeatureModel } from "../features";
 
 export enum BuffOperatorType {
@@ -52,21 +51,15 @@ export function useRoleAttackDecorConsumer<I extends FeatureModel & { role: Role
     return function(
         prototype: I,
         key: string,
-        descriptor: TypedPropertyDescriptor<(decor: RoleAttackDecor, target: RoleAttackModel) => void>
+        descriptor: TypedPropertyDescriptor<(decor: RoleAttackDecor) => void>
     ) {
         useDecorConsumer((i: I) => [
-            i.isActived ? i.role?.attack : undefined, 
+            i.isActived ? i.role?.attack : undefined,
             RoleAttackDecor
         ])(
             prototype,
             key,
             descriptor
         );
-        const handler = descriptor.value;
-        if (!handler) return;  
-        descriptor.value = function(this: I,  decor: RoleAttackDecor, target: RoleAttackModel) {
-            handler.call(this, decor, target);
-        }
-        return descriptor;
     }
 }

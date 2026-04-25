@@ -2,9 +2,7 @@ import { useMemo, useRoute } from "set-piece";
 import { FeatureModel } from "../../../features";
 import { RoleModel } from "../../../entities/role";
 import { BuffOperatorType, RoleAttackDecor, useRoleAttackDecorConsumer } from "../../../decors/role-attack";
-import { RoleAttackModel } from "../../../rules/role-attack";
 import { RoleHealthDecor, useRoleHealthDecorConsumer } from "../../../decors/role-health";
-import { RoleHealthModel } from "../../../rules/role-health";
 
 export class ShatteredSunClericBuffModel extends FeatureModel {
     @useRoute(() => RoleModel)
@@ -20,7 +18,7 @@ export class ShatteredSunClericBuffModel extends FeatureModel {
     }
 
     @useRoleAttackDecorConsumer()
-    protected _modifyRoleCurrentAttack(decor: RoleAttackDecor, _target: RoleAttackModel) {
+    protected _modifyRoleCurrentAttack(decor: RoleAttackDecor) {
         decor.addBuff({
             value: 1,
             type: BuffOperatorType.COMMON,
@@ -29,7 +27,7 @@ export class ShatteredSunClericBuffModel extends FeatureModel {
     }
 
     @useRoleHealthDecorConsumer()
-    protected _modifyRoleMaximumHealth(decor: RoleHealthDecor, _target: RoleHealthModel) {
+    protected _modifyRoleMaximumHealth(decor: RoleHealthDecor) {
         decor.addBuff({
             value: 1,
             type: BuffOperatorType.COMMON,

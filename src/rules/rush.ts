@@ -37,7 +37,7 @@ export class RushModel extends Model {
 
 
     @useAsleepDecorConsumer()
-    private handleSleepStatusCalc(decor: AsleepDecor, target: RoleActionModel) {
+    private handleSleepStatusCalc(decor: AsleepDecor) {
         if (!this.isActived) return;
         console.log('Handle charge check')
         decor.result = false;

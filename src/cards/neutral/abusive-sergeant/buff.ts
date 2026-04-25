@@ -2,10 +2,8 @@ import { useMemo, useRoute } from "set-piece";
 import { FeatureModel } from "../../../features";
 import { RoleModel } from "../../../entities/role";
 import { BoardModel } from "../../../entities/board";
-import { GameModel } from "../../../entities/game";
 import { TurnEndPostEvent, useTurnEndEventConsumer } from "../../../event/turn-end";
 import { BuffOperatorType, RoleAttackDecor, useRoleAttackDecorConsumer } from "../../../decors/role-attack";
-import { RoleAttackModel } from "../../../rules/role-attack";
 
 export class AbusiveSergeantBuffModel extends FeatureModel {
     @useRoute(() => RoleModel)
@@ -28,7 +26,7 @@ export class AbusiveSergeantBuffModel extends FeatureModel {
     }
 
     @useRoleAttackDecorConsumer()
-    protected _modifyRoleCurrentAttack(decor: RoleAttackDecor, _target: RoleAttackModel) {
+    protected _modifyRoleCurrentAttack(decor: RoleAttackDecor) {
         decor.addBuff({
             value: 2,
             type: BuffOperatorType.COMMON,
@@ -37,7 +35,7 @@ export class AbusiveSergeantBuffModel extends FeatureModel {
     }
 
     @useTurnEndEventConsumer()
-    private _handleTurnEnd(event: TurnEndPostEvent, target: GameModel) {
+    private _handleTurnEnd(event: TurnEndPostEvent) {
         console.log('HandleTurnEnd', this.board);
         this.deactive();
     }

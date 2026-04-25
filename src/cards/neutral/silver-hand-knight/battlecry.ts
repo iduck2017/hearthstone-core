@@ -1,20 +1,12 @@
 import { BattlecryModel } from "../../../features/battlecry";
 import { SquireModel } from "../../derivatives/squire";
-import { Model, useMemo, useRoute } from "set-piece";
-import { MinionModel } from "../../minion";
+import { Model } from "set-piece";
 import { useBattlecryRunHook } from "../../../hooks/battlecry-run";
 
 export class SilverHandKnightBattlecryModel extends BattlecryModel<Model> {
     constructor() {
         super();
         this.init();
-    }
-
-    @useRoute(() => MinionModel)
-    private _minion?: MinionModel;
-    @useMemo()
-    public get minion() {
-        return this._minion;
     }
 
     public getSelector(params: Array<Model | undefined>): undefined {
@@ -26,7 +18,7 @@ export class SilverHandKnightBattlecryModel extends BattlecryModel<Model> {
         const player = this.player;
         if (!player) return;
 
-        const minion = this.minion;
+        const minion = this._minion;
         if (!minion) return;
 
         const board = player.board;

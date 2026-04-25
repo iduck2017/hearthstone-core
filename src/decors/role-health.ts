@@ -1,7 +1,6 @@
 import { Decor, useDecorConsumer } from "set-piece";
 import { BuffOperator, BuffOperatorType } from "./role-attack";
 import { RoleModel } from "../entities/role";
-import { RoleHealthModel } from "../rules/role-health";
 import { FeatureModel } from "../features";
 
 export class RoleHealthDecor extends Decor<number> {
@@ -40,18 +39,12 @@ export function useRoleHealthDecorConsumer<I extends FeatureModel & { role: Role
     return function(
         prototype: I,
         key: string,
-        descriptor: TypedPropertyDescriptor<(decor: RoleHealthDecor, target: RoleHealthModel) => void>
+        descriptor: TypedPropertyDescriptor<(decor: RoleHealthDecor) => void>
     ) {
         useDecorConsumer((i: I) => [i.isActived ? i.role?.health : undefined, RoleHealthDecor])(
             prototype,
             key,
             descriptor
         );
-        const handler = descriptor.value;
-        if (!handler) return;  
-        descriptor.value = function(this: I,  decor: RoleHealthDecor, target: RoleHealthModel) {
-            handler.call(this, decor, target);
-        }
-        return descriptor;
     }
 }

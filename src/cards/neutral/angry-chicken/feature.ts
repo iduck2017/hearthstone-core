@@ -6,7 +6,6 @@ import {
     RoleAttackDecor,
     useRoleAttackDecorConsumer,
 } from "../../../decors/role-attack";
-import { RoleAttackModel } from "../../../rules/role-attack";
 
 const ENRAGE_ATTACK = 5;
 
@@ -29,7 +28,7 @@ export class AngryChickenFeatureModel extends FeatureModel {
     // registers it as a dependency — the buff is removed automatically when
     // health is restored to maximum.
     @useRoleAttackDecorConsumer()
-    protected _onAttackDecor(decor: RoleAttackDecor, _target: RoleAttackModel) {
+    protected _onAttackDecor(decor: RoleAttackDecor) {
         const health = this.role?.health;
         if (!health) return;
         if (health.current < health.maximum) {

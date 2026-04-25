@@ -19,7 +19,7 @@ export function useDamageDealEventConsumer<I extends Model & { damageSource: Dam
     return function(
         prototype: I,
         key: string,
-        descriptor: TypedPropertyDescriptor<(event: DamageDealPostEvent, target: DamageSourceModel) => void>
+        descriptor: TypedPropertyDescriptor<(event: DamageDealPostEvent) => void>
     ) {
         useEventConsumer((i: I) => [i.damageSource, DamageDealPostEvent])(
             prototype,
@@ -33,7 +33,7 @@ export function useDamageDealPrevEventConsumer<I extends Model & { damageSource:
     return function(
         prototype: I,
         key: string,
-        descriptor: TypedPropertyDescriptor<(event: DamageDealPrevEvent, target: DamageSourceModel) => void>
+        descriptor: TypedPropertyDescriptor<(event: DamageDealPrevEvent) => void>
     ) {
         useEventConsumer((i: I) => [i.damageSource, DamageDealPrevEvent])(
             prototype,

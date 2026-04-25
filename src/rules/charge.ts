@@ -1,7 +1,6 @@
 import { useDep, useRoute, useState, CustomDecor, Model, useMemo } from "set-piece";
 import { RoleModel } from "../entities/role";
 import { AsleepDecor, useAsleepDecorConsumer } from "../decors/asleep";
-import { RoleActionModel } from "./role-action";
 
 export class ChargeModel extends Model {
     constructor(props?: {
@@ -35,7 +34,7 @@ export class ChargeModel extends Model {
     }
 
     @useAsleepDecorConsumer()
-    private handleSleepStatusCalc(decor: AsleepDecor, target: RoleActionModel) {
+    private handleSleepStatusCalc(decor: AsleepDecor) {
         if (!this.isActived) return;
         console.log('Handle charge check')
         decor.result = false;
