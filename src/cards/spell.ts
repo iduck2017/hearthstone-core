@@ -1,15 +1,45 @@
-import { CardModel } from ".";
-import { CostModel } from "../rules/cost";
+import { useChild } from "set-piece";
+import { CardModel, CardProps } from ".";
+import { HookRegistry, HooksLauncherModel } from "../rules/hooks-launcher";
+import { SpellEffectModel } from "../feats/spell-effect";
 
+export interface SpellProps extends CardProps {}
 export abstract class SpellModel extends CardModel {
-    constructor(props?: {
-        cost?: CostModel;
-    }) {
-        super({
-            cost: new CostModel({
-                origin: 0,
-            }),
-        });
+    constructor(props: SpellProps) {
+        super(props);
     }
-    public async play(): Promise<void> {}
+
+    @useChild()
+    private _launcher?: HooksLauncherModel;
+
+    public get spellEffects() {
+        return this.feats.filter(i => i instanceof SpellEffectModel);
+    }
+
+    public async play(): Promise<void> {
+        const player = this.player;
+        if (!player) return;
+
+        // Collect targets for each spell effect before consuming mana
+        const hookRegistry: HookRegistry = [];
+        for (const hook of this.spellEffects) {
+            const params = await hook.getTargets();
+            hookRegistry.push({ hook, params });
+        }
+
+        // Consume mana and remove from hand
+        this.consumeMana();
+        this.container?.removeCard(this);
+
+        // Execute spell effects
+        this._launcher = new HooksLauncherModel({ registry: hookRegistry });
+        while (true) {
+            const isFinished = await this._launcher.next();
+            if (isFinished) break;
+        }
+        this._launcher = undefined;
+
+        // Enter graveyard after all effects resolve
+        player.graveyard.disposeCard(this);
+    }
 }

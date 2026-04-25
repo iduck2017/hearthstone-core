@@ -12,10 +12,14 @@ import { FeatModel } from "../feats";
 import { DisposerModel } from "../rules/disposers";
 import { DamageSourceModel } from "../rules/damage-source";
 import { RestoreSourceModel } from "../rules/restore-source";
+import { RarityType } from "../rules/rarity";
+import { ClassType } from "../rules/class";
 
 export interface CardProps {
     cost: CostModel;
     feats?: FeatModel[];
+    rarity: RarityType;
+    class: ClassType;
 }
 
 export abstract class CardModel extends Model {
@@ -23,7 +27,20 @@ export abstract class CardModel extends Model {
         super();
         this._cost = props?.cost ?? new CostModel();
         this._feats = props?.feats ?? [];
-        this.init()
+        this._rarity = props.rarity;
+        this._class = props.class;
+    }
+
+    private _rarity: RarityType;
+    @useMemo()
+    public get rarity() {
+        return this._rarity;
+    }
+
+    private _class: ClassType;
+    @useMemo()
+    public get class() {
+        return this._class;
     }
 
     @useRoute(() => BoardModel)
@@ -80,7 +97,7 @@ export abstract class CardModel extends Model {
     }
 
     @useChild()
-    protected abstract _disposer: DisposerModel;
+    protected _disposer?: DisposerModel;
     @useMemo()
     public get disposer() {
         return this._disposer;

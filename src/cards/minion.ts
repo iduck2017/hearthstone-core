@@ -6,16 +6,18 @@ import { MinionDisposerModel } from "../rules/disposers/minion";
 import { HookRegistry, HooksLauncherModel } from "../rules/hooks-launcher";
 import { BoardModel } from "../entities/board";
 import { RoleHealthModel } from "../rules/role-health";
+import { RaceType } from "../rules/race";
 
 export interface MinionProps extends CardProps {
     role: RoleModel;
+    races: RaceType[];
 }
 export abstract class MinionModel extends CardModel {
     constructor(props: MinionProps) {
         super(props);
         this._role = props.role;
+        this._races = props.races ?? [];
         this._disposer = new MinionDisposerModel();
-        this.init()
     }
 
     @useChild()
@@ -23,6 +25,12 @@ export abstract class MinionModel extends CardModel {
     @useMemo()
     public get role() {
         return this._role;
+    }
+
+    private _races: RaceType[];
+    @useMemo()
+    public get races() {
+        return [...this._races];
     }
 
     @useChild()

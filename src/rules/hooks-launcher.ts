@@ -1,7 +1,8 @@
 import { useRoute, useState, Model } from "set-piece";
 import { BattlecryModel } from "../feats/battlecry";
+import { SpellEffectModel } from "../feats/spell-effect";
 
-export type HookRegistry = Array<{ hook: BattlecryModel, params: Array<Model | undefined> }>;
+export type HookRegistry = Array<{ hook: BattlecryModel | SpellEffectModel, params: Array<Model | undefined> }>;
 
 export class HooksLauncherModel extends Model {
     @useState()

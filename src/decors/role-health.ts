@@ -42,7 +42,28 @@ export function useRoleHealthDecorConsumer<I extends RoleFeatureModel>() {
         descriptor: TypedPropertyDescriptor<(decor: RoleHealthDecor) => void>
     ) {
         useDecorConsumer((i: I) => [
-            i.feat?.isActived ? i.role?.health : undefined, 
+            i.feat?.isActived ? i.role?.health : undefined,
+            RoleHealthDecor
+        ])(
+            prototype,
+            key,
+            descriptor
+        );
+    }
+}
+
+// Subscribes to the RoleHealthDecor of every allied minion on the board.
+// The handler is called once per ally; use this to apply aura buffs to all friendly minions.
+export function useAllyRoleHealthDecorConsumer<I extends RoleFeatureModel>() {
+    return function(
+        prototype: I,
+        key: string,
+        descriptor: TypedPropertyDescriptor<(decor: RoleHealthDecor) => void>
+    ) {
+        useDecorConsumer((i: I) => [
+            i.feat?.isActived
+                ? i.player?.board.minions.map(m => m.role?.health)
+                : undefined,
             RoleHealthDecor
         ])(
             prototype,
