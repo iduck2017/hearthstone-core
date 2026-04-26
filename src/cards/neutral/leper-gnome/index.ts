@@ -1,3 +1,4 @@
+import { useModel } from "set-piece";
 import { MinionModel } from "../../minion";
 import { RoleHealthModel } from "../../../rules/role-health";
 import { RoleAttackModel } from "../../../rules/role-attack";
@@ -7,7 +8,9 @@ import { RoleModel } from "../../../entities/role";
 import { LeperGnomeDeathrattleModel } from "./deathrattle";
 import { RarityType } from "../../../rules/rarity";
 
+@useModel('leper-gnome-model')
 export class LeperGnomeModel extends MinionModel {
+    protected _brand: symbol = Symbol('leper-gnome-model');
     constructor() {
         super({
             class: ClassType.NEUTRAL,
@@ -22,6 +25,6 @@ export class LeperGnomeModel extends MinionModel {
                 new LeperGnomeDeathrattleModel(),
             ],
         });
-        this.init();
+        
     }
 }

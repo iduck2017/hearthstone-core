@@ -1,8 +1,10 @@
-import { Model, TypedPropertyDecorator, useChild, useMemo, useRoute, useAction } from "set-piece";
+import { Model, TypedPropertyDecorator, useChild, useMemo, useRoute, useAction, useModel } from "set-piece";
 import { PlayerModel } from "./player";
 import { CardModel } from "../cards";
 
+@useModel('hand-model')
 export class HandModel extends Model {
+    protected _brand: symbol = Symbol('hand-model');
     @useRoute(() => PlayerModel)
     private _player?: PlayerModel;
 
@@ -41,6 +43,6 @@ export class HandModel extends Model {
     }) {
         super();
         this._cards = props?.cards ?? [];
-        this.init();
+        
     }
 }

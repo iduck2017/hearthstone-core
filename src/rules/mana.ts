@@ -1,7 +1,9 @@
-import { useRoute, useState, Model, useRange, useMemo } from "set-piece";
+import { useRoute, useState, Model, useRange, useMemo, useModel } from "set-piece";
 import { PlayerModel } from "../entities/player";
 
+@useModel('mana-model')
 export class ManaModel extends Model {
+    protected _brand: symbol = Symbol('mana-model');
 
     @useRoute(() => PlayerModel)
     private _player?: PlayerModel;
@@ -41,7 +43,7 @@ export class ManaModel extends Model {
         super();
         this._maximum = props?.maximum ?? 0;
         this._current = props?.current ?? 0;
-        this.init();
+        
     }
 
     public consume(value: number) {

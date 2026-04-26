@@ -1,3 +1,4 @@
+import { useModel } from "set-piece";
 import { RoleAttackModel } from "../../../rules/role-attack";
 import { RoleHealthModel } from "../../../rules/role-health";
 import { ClassType } from "../../../rules/class";
@@ -7,7 +8,9 @@ import { MinionModel } from "../../minion";
 import { RarityType } from "../../../rules/rarity";
 import { RoleModel } from "../../../entities/role";
 
+@useModel('abusive-sergeant-model')
 export class AbusiveSergeantModel extends MinionModel {
+    protected _brand: symbol = Symbol('abusive-sergeant-model');
     constructor() {
         super({
             class: ClassType.NEUTRAL,
@@ -22,6 +25,6 @@ export class AbusiveSergeantModel extends MinionModel {
                 new AbusiveSergeantBattlecryModel(),
             ],
         });
-        this.init();
+        
     }
 }

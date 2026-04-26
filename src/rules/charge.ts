@@ -1,14 +1,16 @@
-import { useDep, useRoute, useState, CustomDecor, Model, useMemo } from "set-piece";
+import { useDep, useRoute, useState, CustomDecor, Model, useMemo, useModel } from "set-piece";
 import { RoleModel } from "../entities/role";
 import { AsleepDecor, useAsleepDecorConsumer } from "../decors/asleep";
 
+@useModel('charge-model')
 export class ChargeModel extends Model {
+    protected _brand: symbol = Symbol('charge-model');
     constructor(props?: {
         isActived?: boolean;
     }) {
         super();
         this._isActived = props?.isActived ?? false;
-        this.init();
+        
     }
 
     @useRoute(() => RoleModel)

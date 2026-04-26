@@ -1,3 +1,4 @@
+import { useModel } from "set-piece";
 import { MinionModel } from "../../minion";
 import { RoleAttackModel } from "../../../rules/role-attack";
 import { RoleHealthModel } from "../../../rules/role-health";
@@ -8,7 +9,9 @@ import { CostModel } from "../../../rules/cost";
 import { RoleModel } from "../../../entities/role";
 import { RarityType } from "../../../rules/rarity";
 
+@useModel('argent-commander-model')
 export class ArgentCommanderModel extends MinionModel {
+    protected _brand: symbol = Symbol('argent-commander-model');
     constructor() {
         super({
             class: ClassType.NEUTRAL,
@@ -22,6 +25,6 @@ export class ArgentCommanderModel extends MinionModel {
             rarity: RarityType.RARE,
             races: [],
         });
-        this.init();
+        
     }
 }

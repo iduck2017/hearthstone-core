@@ -1,9 +1,11 @@
 import { BattlecryModel } from "../../../feats/battlecry";
 import { Selector } from "../../../utils/controller";
-import { Model } from "set-piece";
+import { Model, useModel } from "set-piece";
 import { useBattlecryRunHook } from "../../../hooks/battlecry-run";
 
+@useModel('antique-healbot-battlecry-model')
 export class AntiqueHealbotBattlecryModel extends BattlecryModel<Model> {
+    protected _brand: symbol = Symbol('antique-healbot-battlecry-model');
     public getSelector(): Selector<Model> | undefined {
         return undefined;
     }

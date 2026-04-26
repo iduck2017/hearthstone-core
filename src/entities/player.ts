@@ -1,4 +1,4 @@
-import { useChild, useRoute, Model, TypedPropertyDecorator, useMemo, useAction } from "set-piece";
+import { useChild, useRoute, Model, TypedPropertyDecorator, useMemo, useAction, useModel } from "set-piece";
 import { BoardModel } from "./board";
 import { HandModel } from "./hand";
 import { DeckModel } from "./deck";
@@ -8,7 +8,9 @@ import { ManaModel } from "../rules/mana";
 import { GameModel } from "./game";
 import { HeroModel } from "../heroes";
 
+@useModel('player-model')
 export class PlayerModel extends Model {
+    protected _brand: symbol = Symbol('player-model');
     constructor(props: {
         hero: HeroModel;
         board?: BoardModel;
@@ -25,7 +27,6 @@ export class PlayerModel extends Model {
         this._graveyard = props?.graveyard ?? new GraveyardModel();
         this._mana = props?.mana ?? new ManaModel();
         this._controller = new Controller();
-        this.init();
     }
 
     private _controller: Controller

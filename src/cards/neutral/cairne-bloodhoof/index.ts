@@ -1,3 +1,4 @@
+import { useModel } from "set-piece";
 import { MinionModel } from "../../minion";
 import { RoleAttackModel } from "../../../rules/role-attack";
 import { RoleHealthModel } from "../../../rules/role-health";
@@ -7,7 +8,9 @@ import { RoleModel } from "../../../entities/role";
 import { CairneBloodhoofDeathrattleModel } from "./deathrattle";
 import { RarityType } from "../../../rules/rarity";
 
+@useModel('cairne-bloodhoof-model')
 export class CairneBloodhoofModel extends MinionModel {
+    protected _brand: symbol = Symbol('cairne-bloodhoof-model');
     constructor() {
         super({
             class: ClassType.NEUTRAL,
@@ -20,6 +23,6 @@ export class CairneBloodhoofModel extends MinionModel {
             races: [],
             feats: [new CairneBloodhoofDeathrattleModel()],
         });
-        this.init();
+        
     }
 }

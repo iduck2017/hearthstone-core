@@ -1,3 +1,4 @@
+import { useModel } from "set-piece";
 import { MinionModel } from "../../minion";
 import { RoleAttackModel } from "../../../rules/role-attack";
 import { RoleHealthModel } from "../../../rules/role-health";
@@ -8,7 +9,9 @@ import { MurlocTidehunterBattlecryModel } from "./battlecry";
 import { RaceType } from "../../../rules/race";
 import { RarityType } from "../../../rules/rarity";
 
+@useModel('murloc-tidehunter-model')
 export class MurlocTidehunterModel extends MinionModel {
+    protected _brand: symbol = Symbol('murloc-tidehunter-model');
     constructor() {
         super({
             class: ClassType.NEUTRAL,
@@ -23,6 +26,6 @@ export class MurlocTidehunterModel extends MinionModel {
                 new MurlocTidehunterBattlecryModel(),
             ],
         });
-        this.init();
+        
     }
 }

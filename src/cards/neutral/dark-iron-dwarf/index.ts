@@ -1,3 +1,4 @@
+import { useModel } from "set-piece";
 import { MinionModel } from "../../minion";
 import { RoleAttackModel } from "../../../rules/role-attack";
 import { RoleHealthModel } from "../../../rules/role-health";
@@ -7,7 +8,9 @@ import { RoleModel } from "../../../entities/role";
 import { DarkIronDwarfBattlecryModel } from "./battlecry";
 import { RarityType } from "../../../rules/rarity";
 
+@useModel('dark-iron-dwarf-model')
 export class DarkIronDwarfModel extends MinionModel {
+    protected _brand: symbol = Symbol('dark-iron-dwarf-model');
     constructor() {
         super({
             class: ClassType.NEUTRAL,
@@ -22,6 +25,6 @@ export class DarkIronDwarfModel extends MinionModel {
                 new DarkIronDwarfBattlecryModel(),
             ],
         });
-        this.init();
+        
     }
 }

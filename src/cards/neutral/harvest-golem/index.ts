@@ -1,3 +1,4 @@
+import { useModel } from "set-piece";
 import { MinionModel } from "../../minion";
 import { RoleAttackModel } from "../../../rules/role-attack";
 import { RoleHealthModel } from "../../../rules/role-health";
@@ -8,7 +9,9 @@ import { HarvestGolemDeathrattleModel } from "./deathrattle";
 import { RaceType } from "../../../rules/race";
 import { RarityType } from "../../../rules/rarity";
 
+@useModel('harvest-golem-model')
 export class HarvestGolemModel extends MinionModel {
+    protected _brand: symbol = Symbol('harvest-golem-model');
     constructor() {
         super({
             class: ClassType.NEUTRAL,
@@ -23,6 +26,6 @@ export class HarvestGolemModel extends MinionModel {
                 new HarvestGolemDeathrattleModel(),
             ],
         });
-        this.init();
+        
     }
 }

@@ -1,13 +1,11 @@
 import { BattlecryModel } from "../../../feats/battlecry";
-import { Model } from "set-piece";
+import { Model, useModel } from "set-piece";
 import { Selector } from "../../../utils/controller";
 import { useBattlecryRunHook } from "../../../hooks/battlecry-run";
 
+@useModel('gnomish-inventor-battlecry-model')
 export class GnomishInventorBattlecryModel extends BattlecryModel<Model> {
-    constructor() {
-        super();
-        this.init();
-    }
+    protected _brand: symbol = Symbol('gnomish-inventor-battlecry-model');
 
     public getSelector(params: Array<Model | undefined>): Selector<Model> | undefined {
         return undefined;

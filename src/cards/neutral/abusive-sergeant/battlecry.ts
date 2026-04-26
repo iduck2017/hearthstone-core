@@ -3,12 +3,14 @@ import { Selector } from "../../../utils/controller";
 import { RoleModel } from "../../../entities/role";
 import { AbusiveSergeantBuffModel } from "./buff";
 import { useBattlecryRunHook } from "../../../hooks/battlecry-run";
-import { useConsoleGroup } from "set-piece";
+import { useConsoleGroup, useModel } from "set-piece";
 
+@useModel('abusive-sergeant-battlecry-model')
 export class AbusiveSergeantBattlecryModel extends BattlecryModel<RoleModel> {
+    protected _brand: symbol = Symbol('abusive-sergeant-battlecry-model');
     constructor() {
         super();
-        this.init();
+        
     }
 
     public getSelector(params: Array<RoleModel | undefined>): Selector<RoleModel> | undefined {

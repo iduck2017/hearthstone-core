@@ -1,3 +1,4 @@
+import { useModel } from "set-piece";
 import { MinionModel } from "../../minion";
 import { RoleAttackModel } from "../../../rules/role-attack";
 import { RoleHealthModel } from "../../../rules/role-health";
@@ -7,7 +8,9 @@ import { RoleModel } from "../../../entities/role";
 import { RazorfenHunterBattlecryModel } from "./battlecry";
 import { RarityType } from "../../../rules/rarity";
 
+@useModel('razorfen-hunter-model')
 export class RazorfenHunterModel extends MinionModel {
+    protected _brand: symbol = Symbol('razorfen-hunter-model');
     constructor() {
         super({
             class: ClassType.NEUTRAL,
@@ -22,6 +25,6 @@ export class RazorfenHunterModel extends MinionModel {
                 new RazorfenHunterBattlecryModel(),
             ],
         });
-        this.init();
+        
     }
 }

@@ -1,9 +1,12 @@
+import { useModel } from "set-piece";
 import { BattlecryModel } from "../../../feats/battlecry";
 import { Selector } from "../../../utils/controller";
 import { RoleModel } from "../../../entities/role";
 import { useBattlecryRunHook } from "../../../hooks/battlecry-run";
 
+@useModel('earthen-ring-farseer-battlecry-model')
 export class EarthenRingFarseerBattlecryModel extends BattlecryModel<RoleModel> {
+    protected _brand: symbol = Symbol('earthen-ring-farseer-battlecry-model');
     public getSelector(): Selector<RoleModel> | undefined {
         const player = this.player;
         const opponent = player?.opponent;

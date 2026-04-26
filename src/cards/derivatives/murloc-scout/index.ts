@@ -1,3 +1,4 @@
+import { useModel } from "set-piece";
 import { MinionModel } from "../../minion";
 import { RoleAttackModel } from "../../../rules/role-attack";
 import { RoleHealthModel } from "../../../rules/role-health";
@@ -7,7 +8,9 @@ import { RoleModel } from "../../../entities/role";
 import { RaceType } from "../../../rules/race";
 import { RarityType } from "../../../rules/rarity";
 
+@useModel('murloc-scout-model')
 export class MurlocScoutModel extends MinionModel {
+    protected _brand: symbol = Symbol('murloc-scout-model');
     constructor() {
         super({
             class: ClassType.NEUTRAL,
@@ -19,6 +22,6 @@ export class MurlocScoutModel extends MinionModel {
             rarity: RarityType.BASIC,
             races: [RaceType.MURLOC],
         });
-        this.init();
+        
     }
 }

@@ -1,11 +1,13 @@
-import { useChild, useMemo, useRoute } from "set-piece";
+import { useChild, useMemo, useRoute, useModel } from "set-piece";
 import { FeatModel } from "../../../feats";
 import { RoleModel } from "../../../entities/role";
 import { BoardModel } from "../../../entities/board";
 import { TurnEndPostEvent, useTurnEndEventConsumer } from "../../../event/turn-end";
 import { RoleAttackBuffModel } from "../../../feats/role-attack-buff";
 
+@useModel('abusive-sergeant-buff-model')
 export class AbusiveSergeantBuffModel extends FeatModel {
+    protected _brand: symbol = Symbol('abusive-sergeant-buff-model');
     @useRoute(() => BoardModel)
     private _board?: BoardModel;
     @useMemo()
@@ -19,7 +21,7 @@ export class AbusiveSergeantBuffModel extends FeatModel {
     constructor() {
         super();
         this.attackBuff = new RoleAttackBuffModel(2);
-        this.init();
+        
     }
 
     @useTurnEndEventConsumer()

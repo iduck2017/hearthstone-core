@@ -1,4 +1,4 @@
-import { useChild, useMemo, useRoute } from "set-piece";
+import { useChild, useMemo, useRoute, useModel } from "set-piece";
 import { FeatModel } from "../../../feats";
 import { MinionModel } from "../../minion";
 import { BoardOnlyTagModel } from "../../../rules/board-only-tag";
@@ -10,7 +10,9 @@ import {
 
 const ENRAGE_ATTACK = 3;
 
+@useModel('amani-berserker-feat-model')
 export class AmaniBerserkerFeatModel extends FeatModel {
+    protected _brand: symbol = Symbol('amani-berserker-feat-model');
     @useRoute(() => MinionModel)
     private _minion?: MinionModel;
     @useMemo()
@@ -24,7 +26,7 @@ export class AmaniBerserkerFeatModel extends FeatModel {
     constructor() {
         super();
         this._boardOnly = new BoardOnlyTagModel();
-        this.init();
+        
     }
 
     @useRoleAttackDecorConsumer()

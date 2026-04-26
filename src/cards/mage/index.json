@@ -1,0 +1,797 @@
+{
+    "cards": [
+        {
+            "id": 564,
+            "collectible": 1,
+            "slug": "564-arcane-missiles",
+            "classId": 4,
+            "multiClassIds": [],
+            "spellSchoolId": 1,
+            "cardTypeId": 5,
+            "cardSetId": 1635,
+            "rarityId": 2,
+            "artistName": "Warren Mahy",
+            "manaCost": 1,
+            "name": "Arcane Missiles",
+            "text": "Deal 3 damage randomly split among all enemies.",
+            "image": "https://d15f34w2p8l1cc.cloudfront.net/hearthstone/a4b5c9d24981537be224742266ce9352537f4e563202433ad1eb3e357194a887.png",
+            "imageGold": "https://d15f34w2p8l1cc.cloudfront.net/hearthstone/b6f0e2ef6cc826bc3df7c9ff1ebe3c61db9931bda03db54a5d7274a0285ec101.png",
+            "flavorText": "You'd think you'd be able to control your missiles a little better since you're a powerful mage and all.",
+            "cropImage": "https://d15f34w2p8l1cc.cloudfront.net/hearthstone/c768bd053be169d72620df64b1d56baede2c579b8747850d1fd287c153340cd2.png",
+            "copyOfCardId": [
+                68457
+            ],
+            "isZilliaxFunctionalModule": false,
+            "isZilliaxCosmeticModule": false
+        },
+        {
+            "id": 172,
+            "collectible": 1,
+            "slug": "172-ice-lance",
+            "classId": 4,
+            "multiClassIds": [],
+            "spellSchoolId": 3,
+            "cardTypeId": 5,
+            "cardSetId": 3,
+            "rarityId": 1,
+            "artistName": "Alex Horley Orlandelli",
+            "manaCost": 1,
+            "name": "Ice Lance",
+            "text": "<b>Freeze</b> a character. If it was already <b>Frozen</b>, deal 4 damage instead.",
+            "image": "https://d15f34w2p8l1cc.cloudfront.net/hearthstone/549715e9f034dd29ace24ee02b3cb3cdd6dea74bcae51ff12df05cde2cda79bc.png",
+            "imageGold": "https://d15f34w2p8l1cc.cloudfront.net/hearthstone/a6fe2ec18002dca4d5714f04f8f712b93922a7bd30e3e18c061d1b73ee6e42c4.png",
+            "flavorText": "The trick is not to break the lance. Otherwise, you have \"Ice Pieces.\" Ice Pieces aren't as effective.",
+            "cropImage": "https://d15f34w2p8l1cc.cloudfront.net/hearthstone/a8bdd3a10e8d49307523ac8fa4dad1ac5e0d2d70431545aa9ac8eaea80025b53.png",
+            "keywordIds": [
+                10
+            ],
+            "copyOfCardId": [
+                69748
+            ],
+            "isZilliaxFunctionalModule": false,
+            "isZilliaxCosmeticModule": false
+        },
+        {
+            "id": 103655,
+            "collectible": 1,
+            "slug": "103655-jainas-gift",
+            "classId": 4,
+            "multiClassIds": [],
+            "cardTypeId": 5,
+            "cardSetId": 3,
+            "rarityId": 3,
+            "artistName": "Melvin Chan",
+            "manaCost": 1,
+            "name": "Jaina's Gift",
+            "text": "<b>Discover</b> a <b>Temporary</b> Frostbolt, Arcane Intellect, or Fireball.",
+            "image": "https://d15f34w2p8l1cc.cloudfront.net/hearthstone/ba9fb5b1396babd48ed20bcd8ab01ab104aa7f588108266ffca24405b58dffd1.png",
+            "imageGold": "",
+            "flavorText": "\"On this day, my magic will bring us together.\" -Jaina",
+            "cropImage": "https://d15f34w2p8l1cc.cloudfront.net/hearthstone/86ea2364ae413bf7c8b29fad2429e2c59ac0ab48a677535e7f866dd53f87d7cb.png",
+            "childIds": [
+                662,
+                69500,
+                69501
+            ],
+            "keywordIds": [
+                21,
+                320
+            ],
+            "copyOfCardId": [
+                110082
+            ],
+            "isZilliaxFunctionalModule": false,
+            "isZilliaxCosmeticModule": false
+        },
+        {
+            "id": 405,
+            "collectible": 1,
+            "slug": "405-mana-wyrm",
+            "classId": 4,
+            "multiClassIds": [],
+            "cardTypeId": 4,
+            "cardSetId": 3,
+            "rarityId": 1,
+            "artistName": "Blizzard Cinematics",
+            "health": 3,
+            "attack": 1,
+            "manaCost": 1,
+            "name": "Mana Wyrm",
+            "text": "Whenever you cast a spell, gain +1 Attack.",
+            "image": "https://d15f34w2p8l1cc.cloudfront.net/hearthstone/091a588eb7f48b22aa8e2d4ce3ec8c0166b544b80a2abca4ea79973e4d363932.png",
+            "imageGold": "https://d15f34w2p8l1cc.cloudfront.net/hearthstone/5569b02471195296541aac75b50d99e746cb570cea55e6b48112e5019f4d157f.png",
+            "flavorText": "These wyrms feed on arcane energies, and while they are generally considered a nuisance rather than a real threat, you really shouldn't leave them alone with a bucket of mana.",
+            "cropImage": "https://d15f34w2p8l1cc.cloudfront.net/hearthstone/ee380852ca68a222b745a3f1d6d2d6cbdd9fd807ee76df50820c229e2b8c413d.png",
+            "copyOfCardId": [
+                102556,
+                70079
+            ],
+            "isZilliaxFunctionalModule": false,
+            "isZilliaxCosmeticModule": false
+        },
+        {
+            "id": 1084,
+            "collectible": 1,
+            "slug": "1084-mirror-image",
+            "classId": 4,
+            "multiClassIds": [],
+            "cardTypeId": 5,
+            "cardSetId": 1635,
+            "rarityId": 2,
+            "artistName": "Jim Nelson",
+            "manaCost": 1,
+            "name": "Mirror Image",
+            "text": "Summon two 0/2 minions with <b>Taunt</b>.",
+            "image": "https://d15f34w2p8l1cc.cloudfront.net/hearthstone/39382aae1e9a0a18ae525bb04e12e1b437d44105ef77b3988512991a4cd3be63.png",
+            "imageGold": "https://d15f34w2p8l1cc.cloudfront.net/hearthstone/ec2dee80763445b52d3b372d33b3b98ae167ebbf8826bb1f4434804c801f0c3a.png",
+            "flavorText": "Oh hey it's Mirror Image! !egamI rorriM s'ti yeh hO",
+            "cropImage": "https://d15f34w2p8l1cc.cloudfront.net/hearthstone/13aa97386c8e350d18c180491e16fe1e6eac80b5ae049751f562305c481218f4.png",
+            "childIds": [
+                968
+            ],
+            "keywordIds": [
+                1
+            ],
+            "copyOfCardId": [
+                68325
+            ],
+            "isZilliaxFunctionalModule": false,
+            "isZilliaxCosmeticModule": false
+        },
+        {
+            "id": 52262,
+            "collectible": 1,
+            "slug": "52262-tome-of-intellect",
+            "classId": 4,
+            "multiClassIds": [],
+            "spellSchoolId": 1,
+            "cardTypeId": 5,
+            "cardSetId": 1635,
+            "rarityId": 1,
+            "artistName": "Derk Venneman",
+            "manaCost": 1,
+            "name": "Tome of Intellect",
+            "text": "Add a random Mage spell to your hand.",
+            "image": "https://d15f34w2p8l1cc.cloudfront.net/hearthstone/dab03fa5bf45f40b7a88240bdb05f8078c8daee1f729b9b4c1947411d655096e.png",
+            "imageGold": "https://d15f34w2p8l1cc.cloudfront.net/hearthstone/858cdd6ec9d7e74f98936d7e2c64013628f016caf83d6a11fbaad3b8e94cf74b.png",
+            "flavorText": "Just a compilation of napkins of intellect.",
+            "cropImage": "https://d15f34w2p8l1cc.cloudfront.net/hearthstone/39e86d26b8169058e6fb5fc4d0d8f3c889898efae2bef9873c0d48547ad30471.png",
+            "isZilliaxFunctionalModule": false,
+            "isZilliaxCosmeticModule": false
+        },
+        {
+            "id": 447,
+            "collectible": 1,
+            "slug": "447-arcane-explosion",
+            "classId": 4,
+            "multiClassIds": [],
+            "spellSchoolId": 1,
+            "cardTypeId": 5,
+            "cardSetId": 1635,
+            "rarityId": 2,
+            "artistName": "Howard Lyon",
+            "manaCost": 2,
+            "name": "Arcane Explosion",
+            "text": "Deal 1 damage to all enemy minions.",
+            "image": "https://d15f34w2p8l1cc.cloudfront.net/hearthstone/b025450ead7971b09e61d21ef26dcd100d5c64ee6cc3df472ccce7f2e326fbbb.png",
+            "imageGold": "https://d15f34w2p8l1cc.cloudfront.net/hearthstone/9b17a8f15c2b868d4a8e7b1ee4e62ae941c7ef00dd0a524b7fbfac450c6a91d1.png",
+            "flavorText": "This spell is much better than Arcane Implosion.",
+            "cropImage": "https://d15f34w2p8l1cc.cloudfront.net/hearthstone/12b147a129bb7fe11fd300abdba22a0a0ae7da3e6777bae56d49121d16af2ef0.png",
+            "copyOfCardId": [
+                68191,
+                68323
+            ],
+            "isZilliaxFunctionalModule": false,
+            "isZilliaxCosmeticModule": false
+        },
+        {
+            "id": 662,
+            "collectible": 1,
+            "slug": "662-frostbolt",
+            "classId": 4,
+            "multiClassIds": [],
+            "spellSchoolId": 3,
+            "cardTypeId": 5,
+            "cardSetId": 1635,
+            "rarityId": 2,
+            "artistName": "Steve Ellis",
+            "manaCost": 2,
+            "name": "Frostbolt",
+            "text": "Deal 3 damage to a character and <b>Freeze</b> it.",
+            "image": "https://d15f34w2p8l1cc.cloudfront.net/hearthstone/03a6f49f51edc8c976d2a8e401cea8696ecc605db9a45199c7c66bc59baf061b.png",
+            "imageGold": "https://d15f34w2p8l1cc.cloudfront.net/hearthstone/265215e6dbb4d3a6dfac9c02c236e4e1791d31413a6f7b2541bad92b24d1cef2.png",
+            "flavorText": "It is customary to yell \"Chill out!\" or \"Freeze!\" or \"Ice ice, baby!\" when you play this card.",
+            "cropImage": "https://d15f34w2p8l1cc.cloudfront.net/hearthstone/99e0c71afa6b7744a78674fb4b4f28afb90d398a6c51327fca8e9bf1ea9d7917.png",
+            "keywordIds": [
+                10
+            ],
+            "copyOfCardId": [
+                68322,
+                111365
+            ],
+            "isZilliaxFunctionalModule": false,
+            "isZilliaxCosmeticModule": false
+        },
+        {
+            "id": 52255,
+            "collectible": 1,
+            "slug": "52255-icicle",
+            "classId": 4,
+            "multiClassIds": [],
+            "spellSchoolId": 3,
+            "cardTypeId": 5,
+            "cardSetId": 1635,
+            "rarityId": 4,
+            "artistName": "Arthur Gimaldinov",
+            "manaCost": 2,
+            "name": "Icicle",
+            "text": "Deal 2 damage to a minion. If it's <b>Frozen</b>, draw a card.",
+            "image": "https://d15f34w2p8l1cc.cloudfront.net/hearthstone/2e4d22a832578241f1dc883df8cc3dc1d1bc60f5e758cb970cb6f547467b00f8.png",
+            "imageGold": "https://d15f34w2p8l1cc.cloudfront.net/hearthstone/c81f5de079c5b0e950c6cdba0b05a78f19bca6004b4f59d262edfd1e29442c11.png",
+            "flavorText": "This may appear weak at frost glance, but it's actually a very ice spell.",
+            "cropImage": "https://d15f34w2p8l1cc.cloudfront.net/hearthstone/f66996ab60ba6ed86afd517fd8d8f04c09843bbc037cd7d1e61480cd092d875b.png",
+            "keywordIds": [
+                10
+            ],
+            "isZilliaxFunctionalModule": false,
+            "isZilliaxCosmeticModule": false
+        },
+        {
+            "id": 614,
+            "collectible": 1,
+            "slug": "614-sorcerers-apprentice",
+            "classId": 4,
+            "multiClassIds": [],
+            "cardTypeId": 4,
+            "cardSetId": 3,
+            "rarityId": 1,
+            "artistName": "Alex Horley Orlandelli",
+            "health": 2,
+            "attack": 3,
+            "manaCost": 2,
+            "name": "Sorcerer's Apprentice",
+            "text": "Your spells cost (1) less <i>(but not less than 1)</i>.",
+            "image": "https://d15f34w2p8l1cc.cloudfront.net/hearthstone/abc088e02318e1eeee28a97a08387b593059c71a67944721a6619b94b55a83e6.png",
+            "imageGold": "https://d15f34w2p8l1cc.cloudfront.net/hearthstone/ca5fdec029b3d566636e78bc819eb50d75d7e08232acf4a76fe0f2b73f35934f.png",
+            "flavorText": "Apprentices are great for bossing around. \"Conjure me some mana buns! And a coffee! Make that a mana coffee!\"",
+            "cropImage": "https://d15f34w2p8l1cc.cloudfront.net/hearthstone/f1e00e98afc369e63476fb74a2f711d581528df5f80945c7a941dc52542a3d45.png",
+            "copyOfCardId": [
+                70048
+            ],
+            "isZilliaxFunctionalModule": false,
+            "isZilliaxCosmeticModule": false
+        },
+        {
+            "id": 555,
+            "collectible": 1,
+            "slug": "555-arcane-intellect",
+            "classId": 4,
+            "multiClassIds": [],
+            "spellSchoolId": 1,
+            "cardTypeId": 5,
+            "cardSetId": 1635,
+            "rarityId": 2,
+            "artistName": "Dave Berggren",
+            "manaCost": 3,
+            "name": "Arcane Intellect",
+            "text": "Draw 2 cards.",
+            "image": "https://d15f34w2p8l1cc.cloudfront.net/hearthstone/abb372c879aa12421824cf3a1125e218c80311613545ba10b43b44c99f6c5256.png",
+            "imageGold": "https://d15f34w2p8l1cc.cloudfront.net/hearthstone/24ae4612e5f97902559f92167c9abb39079387907dcc5fec5b5d35f3014da676.png",
+            "flavorText": "Playing this card makes you SMARTER. And let's face it: we could all stand to be a little smarter.",
+            "cropImage": "https://d15f34w2p8l1cc.cloudfront.net/hearthstone/85a8ede320262f60c650638a154107206f9ec6f99aa771e8df710f191ff16088.png",
+            "copyOfCardId": [
+                68192,
+                68321,
+                69500
+            ],
+            "isZilliaxFunctionalModule": false,
+            "isZilliaxCosmeticModule": false
+        },
+        {
+            "id": 430,
+            "collectible": 1,
+            "slug": "430-cone-of-cold",
+            "classId": 4,
+            "multiClassIds": [],
+            "spellSchoolId": 3,
+            "cardTypeId": 5,
+            "cardSetId": 3,
+            "rarityId": 1,
+            "artistName": "Leo Che",
+            "manaCost": 3,
+            "name": "Cone of Cold",
+            "text": "<b>Freeze</b> a minion and the minions next to it, and deal 1 damage to them.",
+            "image": "https://d15f34w2p8l1cc.cloudfront.net/hearthstone/9a9eec08ff850ce18c8b94a4597fd59c68e0b2d9084e29663fd9f66016a02804.png",
+            "imageGold": "https://d15f34w2p8l1cc.cloudfront.net/hearthstone/7a09a85bd17cf03ec384a9197aad74b0b4c02ea7287f7d40d9bf98c35c95c165.png",
+            "flavorText": "Magi of the Kirin Tor were casting Cubes of Cold for many years before Cones came into fashion some 90 years ago.",
+            "cropImage": "https://d15f34w2p8l1cc.cloudfront.net/hearthstone/10a4ea20c54c549b8674ecfa51d784d00375b79f820cd129b0ff42295821289b.png",
+            "keywordIds": [
+                10
+            ],
+            "copyOfCardId": [
+                69606,
+                69904
+            ],
+            "isZilliaxFunctionalModule": false,
+            "isZilliaxCosmeticModule": false
+        },
+        {
+            "id": 113,
+            "collectible": 1,
+            "slug": "113-counterspell",
+            "classId": 4,
+            "multiClassIds": [],
+            "spellSchoolId": 1,
+            "cardTypeId": 5,
+            "cardSetId": 3,
+            "rarityId": 3,
+            "artistName": "Jason Chan",
+            "manaCost": 3,
+            "name": "Counterspell",
+            "text": "<b>Secret:</b> When your opponent casts a spell, <b>Counter</b> it.",
+            "image": "https://d15f34w2p8l1cc.cloudfront.net/hearthstone/1eea2f958a6c2cf0111911ced74bff5f5585ea56cd3523bf16712c5cf71c8d1d.png",
+            "imageGold": "https://d15f34w2p8l1cc.cloudfront.net/hearthstone/f55e19dcc0d2d3fcd1d694e747d446142f928ee60c65d3fa4cdba2d987dc0de3.png",
+            "flavorText": "What's the difference between a mage playing with Counterspell and a mage who isn't? The mage who isn't is getting Pyroblasted in the face.",
+            "cropImage": "https://d15f34w2p8l1cc.cloudfront.net/hearthstone/935769c84b06af8c03be1b50255c606d2d13f4435435c8900f3099251b4de42e.png",
+            "keywordIds": [
+                5,
+                16
+            ],
+            "copyOfCardId": [
+                69607,
+                69908
+            ],
+            "isZilliaxFunctionalModule": false,
+            "isZilliaxCosmeticModule": false
+        },
+        {
+            "id": 587,
+            "collectible": 1,
+            "slug": "587-frost-nova",
+            "classId": 4,
+            "multiClassIds": [],
+            "spellSchoolId": 3,
+            "cardTypeId": 5,
+            "cardSetId": 1635,
+            "rarityId": 2,
+            "artistName": "Josh Tallman",
+            "manaCost": 3,
+            "name": "Frost Nova",
+            "text": "<b>Freeze</b> all enemy minions.",
+            "image": "https://d15f34w2p8l1cc.cloudfront.net/hearthstone/a99d4e456551f3376fe5fa1cef9a4d0fc010bdba632a84a18bf2bc0c24ecf85f.png",
+            "imageGold": "https://d15f34w2p8l1cc.cloudfront.net/hearthstone/93b8d2427c17f8ccc8e0349394060854178466caf1d19ecd49825b22dd67765c.png",
+            "flavorText": "Hey man, that's cold. Literally and metaphorically.",
+            "cropImage": "https://d15f34w2p8l1cc.cloudfront.net/hearthstone/0da158e6c13902e0da4147023b52de4b93578000f5cdb5042ddf05c410fb482c.png",
+            "keywordIds": [
+                10
+            ],
+            "copyOfCardId": [
+                68324
+            ],
+            "isZilliaxFunctionalModule": false,
+            "isZilliaxCosmeticModule": false
+        },
+        {
+            "id": 621,
+            "collectible": 1,
+            "slug": "621-ice-barrier",
+            "classId": 4,
+            "multiClassIds": [],
+            "spellSchoolId": 3,
+            "cardTypeId": 5,
+            "cardSetId": 3,
+            "rarityId": 1,
+            "artistName": "Alex Garner",
+            "manaCost": 3,
+            "name": "Ice Barrier",
+            "text": "<b>Secret:</b> When your hero is attacked, gain 8 Armor.",
+            "image": "https://d15f34w2p8l1cc.cloudfront.net/hearthstone/836a3c5a8f85126a0e6cfcb457430ff9f22895bddd11804d7da842594d44a9fe.png",
+            "imageGold": "https://d15f34w2p8l1cc.cloudfront.net/hearthstone/449282fa4cb4edf453124b6f9ddc26b5f20f562350938e5a6c3d7a8130804a1a.png",
+            "flavorText": "This is Rank 1. Rank 2 is Chocolate Milk Barrier.",
+            "cropImage": "https://d15f34w2p8l1cc.cloudfront.net/hearthstone/5f38da867f056808c74be7dd5195308706a64a61523d08d10285b5778cc72bb2.png",
+            "keywordIds": [
+                5
+            ],
+            "copyOfCardId": [
+                69608,
+                69909
+            ],
+            "isZilliaxFunctionalModule": false,
+            "isZilliaxCosmeticModule": false
+        },
+        {
+            "id": 192,
+            "collectible": 1,
+            "slug": "192-ice-block",
+            "classId": 4,
+            "multiClassIds": [],
+            "spellSchoolId": 3,
+            "cardTypeId": 5,
+            "cardSetId": 3,
+            "rarityId": 4,
+            "artistName": "Carl Frank",
+            "manaCost": 3,
+            "name": "Ice Block",
+            "text": "<b>Secret:</b> When your hero takes fatal damage, prevent it and become <b>Immune</b> this turn.",
+            "image": "https://d15f34w2p8l1cc.cloudfront.net/hearthstone/03646d09025cab3e87c6cfaf0966d01648093b671e0e88a266be06420b52602e.png",
+            "imageGold": "https://d15f34w2p8l1cc.cloudfront.net/hearthstone/40009b5a51d5ec4b12bb217e0e19086d49591f3085e6bfe00602506b573fabd0.png",
+            "flavorText": "Ice is nice, and will suffice!",
+            "cropImage": "https://d15f34w2p8l1cc.cloudfront.net/hearthstone/d9b8ba21cb2957ed236b2282d5ecf8fd4f7d057faab6d6e7c5cc4c01fc8e9e0b.png",
+            "keywordIds": [
+                5,
+                17
+            ],
+            "copyOfCardId": [
+                69911
+            ],
+            "isZilliaxFunctionalModule": false,
+            "isZilliaxCosmeticModule": false
+        },
+        {
+            "id": 748,
+            "collectible": 1,
+            "slug": "748-kirin-tor-mage",
+            "classId": 4,
+            "multiClassIds": [],
+            "cardTypeId": 4,
+            "cardSetId": 3,
+            "rarityId": 3,
+            "artistName": "Popo Wei",
+            "health": 3,
+            "attack": 4,
+            "manaCost": 3,
+            "name": "Kirin Tor Mage",
+            "text": "<b>Battlecry:</b> The next <b>Secret</b> you play this turn costs (0).",
+            "image": "https://d15f34w2p8l1cc.cloudfront.net/hearthstone/e760e227348b526b1f2efd5456814580d32747908468ac695f13ba25296ee75d.png",
+            "imageGold": "https://d15f34w2p8l1cc.cloudfront.net/hearthstone/d50fcd3f3a7f2510af548edf6e74a0146b7324b7e94d492c86356db1bdf29786.png",
+            "flavorText": "The Kirin Tor reside in the floating city of Dalaran. How do you make a Dalaran float? Two scoops of ice cream, one scoop of Dalaran.",
+            "cropImage": "https://d15f34w2p8l1cc.cloudfront.net/hearthstone/28789c59b6e1fb80b3c001d0bfe12e1edf8c6a633c45548e9de77270b6a91587.png",
+            "keywordIds": [
+                5,
+                8
+            ],
+            "copyOfCardId": [
+                70052
+            ],
+            "isZilliaxFunctionalModule": false,
+            "isZilliaxCosmeticModule": false
+        },
+        {
+            "id": 195,
+            "collectible": 1,
+            "slug": "195-mirror-entity",
+            "classId": 4,
+            "multiClassIds": [],
+            "spellSchoolId": 1,
+            "cardTypeId": 5,
+            "cardSetId": 3,
+            "rarityId": 1,
+            "artistName": "Raven Mimura",
+            "manaCost": 3,
+            "name": "Mirror Entity",
+            "text": "<b>Secret:</b> After your opponent plays a minion, summon a copy of it.",
+            "image": "https://d15f34w2p8l1cc.cloudfront.net/hearthstone/b21d53cc33894322c5ee54597160777b4ba3a26432aaafbbdff65c1b4c140a12.png",
+            "imageGold": "https://d15f34w2p8l1cc.cloudfront.net/hearthstone/465a5679f9649ff423d9eb309d829cd0778e115195aa46276cbc272e6de4df75.png",
+            "flavorText": "\"You go first.\" - Krush'gor the Behemoth, to his pet boar.",
+            "cropImage": "https://d15f34w2p8l1cc.cloudfront.net/hearthstone/190268053ccb218689b81088904053103b227fdfe02323f986c4be19e06da94c.png",
+            "keywordIds": [
+                5
+            ],
+            "copyOfCardId": [
+                69609,
+                69910
+            ],
+            "isZilliaxFunctionalModule": false,
+            "isZilliaxCosmeticModule": false
+        },
+        {
+            "id": 366,
+            "collectible": 1,
+            "slug": "366-spellbender",
+            "classId": 4,
+            "multiClassIds": [],
+            "cardTypeId": 5,
+            "cardSetId": 3,
+            "rarityId": 4,
+            "artistName": "Gonzalo Ordonez",
+            "manaCost": 3,
+            "name": "Spellbender",
+            "text": "<b>Secret:</b> When an enemy casts a spell on a minion, summon a 1/3 as the new target.",
+            "image": "https://d15f34w2p8l1cc.cloudfront.net/hearthstone/22068a8eae328e907a13a35d8b1052e72f213bf73bee090533ffc71c80d553fa.png",
+            "imageGold": "https://d15f34w2p8l1cc.cloudfront.net/hearthstone/cfc4c7bc4d23fff0e856601efc979fd845a04203f7c68e725f8360a1f764d81b.png",
+            "flavorText": "While it's fun to intercept enemy lightning bolts, a spellbender much prefers to intercept opposing Marks of the Wild. It just feels meaner. And blood elves... well, they're a little mean.",
+            "cropImage": "https://d15f34w2p8l1cc.cloudfront.net/hearthstone/9a3f2d0cb05ab95da658bebfcd45c16ecd51312cb4a1b3b7317afb57d6f09f76.png",
+            "childIds": [
+                1086
+            ],
+            "keywordIds": [
+                5
+            ],
+            "copyOfCardId": [
+                70102
+            ],
+            "isZilliaxFunctionalModule": false,
+            "isZilliaxCosmeticModule": false
+        },
+        {
+            "id": 286,
+            "collectible": 1,
+            "slug": "286-vaporize",
+            "classId": 4,
+            "multiClassIds": [],
+            "spellSchoolId": 2,
+            "cardTypeId": 5,
+            "cardSetId": 3,
+            "rarityId": 3,
+            "artistName": "Raymond Swanland",
+            "manaCost": 3,
+            "name": "Vaporize",
+            "text": "<b>Secret:</b> When a minion attacks your hero, destroy it.",
+            "image": "https://d15f34w2p8l1cc.cloudfront.net/hearthstone/6ecf57b1064bdb98528601ac39226648fe57ecefd23ed16dcfc13209446dfd41.png",
+            "imageGold": "https://d15f34w2p8l1cc.cloudfront.net/hearthstone/981b87f5ad520bbc1bb52611c854ef94298d85c043a60a65320b767816925de3.png",
+            "flavorText": "Rumor has it that Deathwing brought about the Cataclysm after losing a game to this card. We may never know the truth.",
+            "cropImage": "https://d15f34w2p8l1cc.cloudfront.net/hearthstone/a1a68392d80d88503e19616fd136016860e55655ab94a27a66b24f4a6d9a19d5.png",
+            "keywordIds": [
+                5
+            ],
+            "copyOfCardId": [
+                70040
+            ],
+            "isZilliaxFunctionalModule": false,
+            "isZilliaxCosmeticModule": false
+        },
+        {
+            "id": 1737,
+            "collectible": 1,
+            "slug": "1737-ethereal-arcanist",
+            "classId": 4,
+            "multiClassIds": [],
+            "cardTypeId": 4,
+            "cardSetId": 3,
+            "rarityId": 3,
+            "artistName": "Michael Komarck",
+            "health": 3,
+            "attack": 3,
+            "manaCost": 4,
+            "name": "Ethereal Arcanist",
+            "text": "If you control a <b>Secret</b> at the end of your turn, gain +2/+2.",
+            "image": "https://d15f34w2p8l1cc.cloudfront.net/hearthstone/09c624bc79187895103065f593f21c3c5f3f3f872f7a44ec40f2f17a922423d8.png",
+            "imageGold": "https://d15f34w2p8l1cc.cloudfront.net/hearthstone/75ea58ee7e157e189bc51cc08992f210e2a9714d340a1eb59bf9b15fc8a6a1e8.png",
+            "flavorText": "The ethereals are wrapped in cloth to give form to their non-corporeal bodies. Also because it's nice and soft.",
+            "cropImage": "https://d15f34w2p8l1cc.cloudfront.net/hearthstone/c296e0f830c7c203fab48576440dd039f1ecff501105011d42c26fd5b32cc85f.png",
+            "keywordIds": [
+                5
+            ],
+            "copyOfCardId": [
+                69903
+            ],
+            "isZilliaxFunctionalModule": false,
+            "isZilliaxCosmeticModule": false
+        },
+        {
+            "id": 315,
+            "collectible": 1,
+            "slug": "315-fireball",
+            "classId": 4,
+            "multiClassIds": [],
+            "spellSchoolId": 2,
+            "cardTypeId": 5,
+            "cardSetId": 1635,
+            "rarityId": 2,
+            "artistName": "Ralph Horsley",
+            "manaCost": 4,
+            "name": "Fireball",
+            "text": "Deal 6 damage.",
+            "image": "https://d15f34w2p8l1cc.cloudfront.net/hearthstone/c96ec18477a2baf9fde029c2f523318d0a8d2c672a5d1924a67251ce78aa98fb.png",
+            "imageGold": "https://d15f34w2p8l1cc.cloudfront.net/hearthstone/8e87a42598f8f41210ca04ff5ab99d1cc5d928809e9f4c9e2ab5ccf636a049f8.png",
+            "flavorText": "This spell is useful for burning things. If you're looking for spells that toast things, or just warm them a little, you're in the wrong place.",
+            "cropImage": "https://d15f34w2p8l1cc.cloudfront.net/hearthstone/e3237e72821ef9dd2b7f56c5ac771549fcf4ab9a8cf7b5be11342ebf64e345f2.png",
+            "copyOfCardId": [
+                68208,
+                68326,
+                69501
+            ],
+            "isZilliaxFunctionalModule": false,
+            "isZilliaxCosmeticModule": false
+        },
+        {
+            "id": 77,
+            "collectible": 1,
+            "slug": "77-polymorph",
+            "classId": 4,
+            "multiClassIds": [],
+            "spellSchoolId": 1,
+            "cardTypeId": 5,
+            "cardSetId": 1635,
+            "rarityId": 2,
+            "artistName": "Vance Kovacs",
+            "manaCost": 4,
+            "name": "Polymorph",
+            "text": "Transform a minion into a 1/1 Sheep.",
+            "image": "https://d15f34w2p8l1cc.cloudfront.net/hearthstone/eca3260cbec6bd0485627af598b876ad1be039b175da91f189075335896def9a.png",
+            "imageGold": "https://d15f34w2p8l1cc.cloudfront.net/hearthstone/dcb0ea3e5436ed08af831be1c541e86e9c68fb48b0da6f796b19a086aa165798.png",
+            "flavorText": "There was going to be a pun in this flavor text, but it just came out baa-d.",
+            "cropImage": "https://d15f34w2p8l1cc.cloudfront.net/hearthstone/02615bc460870d18e2b2d190f4981b388c25901dbc018856cfca38b54c7af1cc.png",
+            "childIds": [
+                796
+            ],
+            "copyOfCardId": [
+                68194,
+                68319
+            ],
+            "isZilliaxFunctionalModule": false,
+            "isZilliaxCosmeticModule": false
+        },
+        {
+            "id": 395,
+            "collectible": 1,
+            "slug": "395-water-elemental",
+            "classId": 4,
+            "multiClassIds": [],
+            "minionTypeId": 18,
+            "cardTypeId": 4,
+            "cardSetId": 1635,
+            "rarityId": 2,
+            "artistName": "John Avon",
+            "health": 6,
+            "attack": 3,
+            "manaCost": 4,
+            "name": "Water Elemental",
+            "text": "<b>Freeze</b> any character damaged by this minion.",
+            "image": "https://d15f34w2p8l1cc.cloudfront.net/hearthstone/989131f9904811dbaa005243e6f9faa2aebd56af056a3ff7a36dfa133351e676.png",
+            "imageGold": "https://d15f34w2p8l1cc.cloudfront.net/hearthstone/c7a5a8852db161eb9d91cfaad9f0fe3aefe48fdb5d8ec5540d3b9f8df78e8fe4.png",
+            "flavorText": "Don't summon a water elemental at a party. It'll dampen the mood.",
+            "cropImage": "https://d15f34w2p8l1cc.cloudfront.net/hearthstone/04b6041de2219af8b4929fd1fbfc514078a840b74ed17efdf3381946eb0bcd83.png",
+            "keywordIds": [
+                10
+            ],
+            "copyOfCardId": [
+                68328,
+                69503,
+                111536,
+                46458
+            ],
+            "isZilliaxFunctionalModule": false,
+            "isZilliaxCosmeticModule": false
+        },
+        {
+            "id": 113180,
+            "collectible": 1,
+            "slug": "113180-aegwynn-the-guardian",
+            "classId": 4,
+            "multiClassIds": [],
+            "cardTypeId": 4,
+            "cardSetId": 1635,
+            "rarityId": 5,
+            "artistName": "Luke Mancini",
+            "health": 5,
+            "attack": 5,
+            "manaCost": 5,
+            "name": "Aegwynn, the Guardian",
+            "text": "<b>Spell Damage +2</b> <b>Deathrattle:</b> The next minion you draw inherits these powers.",
+            "image": "https://d15f34w2p8l1cc.cloudfront.net/hearthstone/e6ac5580b63611926a1f7c1de79036a45e977bb9f5ee87a99373d75ddc448251.png",
+            "imageGold": "",
+            "flavorText": "With Medivh as her son, nothing YOU do could ever disappoint her.",
+            "cropImage": "https://d15f34w2p8l1cc.cloudfront.net/hearthstone/e63f767cc590dc8bbf7a9826aba0545ab10f9f0767b6614318358d444430ce99.png",
+            "keywordIds": [
+                2,
+                12
+            ],
+            "copyOfCardId": [
+                62347
+            ],
+            "isZilliaxFunctionalModule": false,
+            "isZilliaxCosmeticModule": false
+        },
+        {
+            "id": 457,
+            "collectible": 1,
+            "slug": "457-blizzard",
+            "classId": 4,
+            "multiClassIds": [],
+            "spellSchoolId": 3,
+            "cardTypeId": 5,
+            "cardSetId": 3,
+            "rarityId": 3,
+            "artistName": "Chris Seaman",
+            "manaCost": 6,
+            "name": "Blizzard",
+            "text": "Deal 2 damage to all enemy minions and <b>Freeze</b> them.",
+            "image": "https://d15f34w2p8l1cc.cloudfront.net/hearthstone/cc920a19df972b3f4752fbfbda7be09fd2953010b9f6628e94f87a0395642421.png",
+            "imageGold": "https://d15f34w2p8l1cc.cloudfront.net/hearthstone/731a5fc14d3a4c745f90003721717d664175df69da43a413c1db30fce09a9e67.png",
+            "flavorText": "This spell can be very Entertaining.",
+            "cropImage": "https://d15f34w2p8l1cc.cloudfront.net/hearthstone/20df2e4eb8198e73da36b3e8d5e693055dda65a6c9900c7f7b105b2e557facb4.png",
+            "keywordIds": [
+                10
+            ],
+            "copyOfCardId": [
+                76273,
+                69747
+            ],
+            "isZilliaxFunctionalModule": false,
+            "isZilliaxCosmeticModule": false
+        },
+        {
+            "id": 1080,
+            "collectible": 1,
+            "slug": "1080-archmage-antonidas",
+            "classId": 4,
+            "multiClassIds": [],
+            "cardTypeId": 4,
+            "cardSetId": 3,
+            "rarityId": 5,
+            "artistName": "Wayne Reynolds",
+            "health": 7,
+            "attack": 5,
+            "manaCost": 7,
+            "name": "Archmage Antonidas",
+            "text": "Whenever you cast a spell, add a 'Fireball' spell to your hand.",
+            "image": "https://d15f34w2p8l1cc.cloudfront.net/hearthstone/8c7ba065f8abafbbaedd80a33d4da06817b01aa78f21917f10e54bbafa1cbf63.png",
+            "imageGold": "https://d15f34w2p8l1cc.cloudfront.net/hearthstone/30a73ff94d4f1a223f5e20a5fd953f4ae95a97c6828ba092293c4ca71a16e09e.png",
+            "flavorText": "Antonidas was the Grand Magus of the Kirin Tor, and Jaina's mentor. This was a big step up from being Grand Magus of Jelly Donuts.",
+            "cropImage": "https://d15f34w2p8l1cc.cloudfront.net/hearthstone/e75f24de4b95a013e04f9c98e333b57cf146c45d4368053338ecc74922ce3b6d.png",
+            "childIds": [
+                315
+            ],
+            "copyOfCardId": [
+                69975,
+                120426
+            ],
+            "isZilliaxFunctionalModule": false,
+            "isZilliaxCosmeticModule": false
+        },
+        {
+            "id": 1004,
+            "collectible": 1,
+            "slug": "1004-flamestrike",
+            "classId": 4,
+            "multiClassIds": [],
+            "spellSchoolId": 2,
+            "cardTypeId": 5,
+            "cardSetId": 1635,
+            "rarityId": 2,
+            "artistName": "Romain De Santi",
+            "manaCost": 7,
+            "name": "Flamestrike",
+            "text": "Deal 5 damage to all enemy minions.",
+            "image": "https://d15f34w2p8l1cc.cloudfront.net/hearthstone/5cfc43aa8b8c2672a06dab6642d93dc03346a0ffb04d2a2afdbf69f95131cea8.png",
+            "imageGold": "https://d15f34w2p8l1cc.cloudfront.net/hearthstone/6eeb5811fa4e5da6825b78de62312d88a5652c42198df967e885aace9f3c1b8d.png",
+            "flavorText": "When the ground is on fire, you should <i>not</i> stop, drop, and roll.",
+            "cropImage": "https://d15f34w2p8l1cc.cloudfront.net/hearthstone/9b995078a367825d6d857c7641a99ace1da290cc8b9055b04cc9a0c72d2922c4.png",
+            "copyOfCardId": [
+                68327,
+                69502
+            ],
+            "isZilliaxFunctionalModule": false,
+            "isZilliaxCosmeticModule": false
+        },
+        {
+            "id": 1087,
+            "collectible": 1,
+            "slug": "1087-pyroblast",
+            "classId": 4,
+            "multiClassIds": [],
+            "spellSchoolId": 2,
+            "cardTypeId": 5,
+            "cardSetId": 3,
+            "rarityId": 4,
+            "artistName": "Luca Zontini",
+            "manaCost": 10,
+            "name": "Pyroblast",
+            "text": "Deal 10 damage.",
+            "image": "https://d15f34w2p8l1cc.cloudfront.net/hearthstone/aaab1ee07624155ded2da716d0e67ca30a02bbffc505335af1be28fe599a218c.png",
+            "imageGold": "https://d15f34w2p8l1cc.cloudfront.net/hearthstone/5de9cce7eb958493bd027c6b6e3ce4a91717e30c9c98c6c460bfef30514e707d.png",
+            "flavorText": "Take the time for an evil laugh after you draw this card.",
+            "cropImage": "https://d15f34w2p8l1cc.cloudfront.net/hearthstone/de5b0f83e8a1735030914bb1015a67fadc5d7d48423851e8c223400f11c2ea66.png",
+            "copyOfCardId": [
+                76272,
+                69905
+            ],
+            "isZilliaxFunctionalModule": false,
+            "isZilliaxCosmeticModule": false
+        }
+    ],
+    "cardCount": 29,
+    "pageCount": 1,
+    "page": 1
+}

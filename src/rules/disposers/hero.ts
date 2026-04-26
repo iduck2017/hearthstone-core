@@ -1,12 +1,14 @@
-import { useMemo, useRoute } from "set-piece";
+import { useMemo, useRoute, useModel } from "set-piece";
 import { DisposerModel } from ".";
 import { PlayerModel } from "../../entities/player";
 import { HeroModel } from "../../heroes";
 
+@useModel('hero-disposer-model')
 export class HeroDisposerModel extends DisposerModel {
+    protected _brand: symbol = Symbol('hero-disposer-model');
     constructor() {
         super();
-        this.init();
+        
     }
 
     @useRoute(() => PlayerModel)

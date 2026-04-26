@@ -1,10 +1,12 @@
-import { useChild, useMemo, useRoute } from "set-piece";
+import { useChild, useMemo, useRoute, useModel } from "set-piece";
 import { FeatModel } from "../../../feats";
 import { MinionModel } from "../../minion";
 import { BuffOperatorType, RoleAttackDecor, useAllyRoleAttackDecorConsumer } from "../../../decors/role-attack";
 import { BoardOnlyTagModel } from "../../../rules/board-only-tag";
 
+@useModel('raid-leader-feat-model')
 export class RaidLeaderFeatModel extends FeatModel {
+    protected _brand: symbol = Symbol('raid-leader-feat-model');
     @useRoute(() => MinionModel)
     private _minion?: MinionModel;
     @useMemo()
@@ -18,7 +20,7 @@ export class RaidLeaderFeatModel extends FeatModel {
     constructor() {
         super();
         this.isBoardOnly = new BoardOnlyTagModel();
-        this.init();
+        
     }
 
     // Grant +1 Attack to every other allied minion as a reactive aura.

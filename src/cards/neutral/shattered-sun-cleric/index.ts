@@ -1,3 +1,4 @@
+import { useModel } from "set-piece";
 import { RoleAttackModel } from "../../../rules/role-attack";
 import { RoleHealthModel } from "../../../rules/role-health";
 import { ClassType } from "../../../rules/class";
@@ -7,7 +8,9 @@ import { MinionModel } from "../../minion";
 import { RoleModel } from "../../../entities/role";
 import { RarityType } from "../../../rules/rarity";
 
+@useModel('shattered-sun-cleric-model')
 export class ShatteredSunClericModel extends MinionModel {
+    protected _brand: symbol = Symbol('shattered-sun-cleric-model');
     constructor() {
         super({
             class: ClassType.NEUTRAL,
@@ -22,6 +25,6 @@ export class ShatteredSunClericModel extends MinionModel {
                 new ShatteredSunClericBattlecryModel(),
             ],
         });
-        this.init();
+        
     }
 }

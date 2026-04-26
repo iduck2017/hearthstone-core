@@ -1,13 +1,11 @@
 import { BattlecryModel } from "../../../feats/battlecry";
 import { WhelpModel } from "../../derivatives/whelp";
-import { Model } from "set-piece";
+import { Model, useModel } from "set-piece";
 import { useBattlecryRunHook } from "../../../hooks/battlecry-run";
 
+@useModel('leeroy-jenkins-battlecry-model')
 export class LeeroyJenkinsBattlecryModel extends BattlecryModel<Model> {
-    constructor() {
-        super();
-        this.init();
-    }
+    protected _brand: symbol = Symbol('leeroy-jenkins-battlecry-model');
 
     public getSelector(): undefined {
         return undefined;

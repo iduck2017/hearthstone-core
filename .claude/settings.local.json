@@ -9,7 +9,11 @@
       "Bash(git commit -m ' *)",
       "Bash(git push *)",
       "Bash(npx jest *)",
-      "Bash(npx tsc *)"
+      "Bash(npx tsc *)",
+      "Read(//c/Users/admin/Documents/hearthstone-core/node_modules/set-piece/dist/dep/**)",
+      "Bash(grep -rn \"useMemo\" node_modules/set-piece/dist/*.d.ts)",
+      "Bash(grep -rLn \"this\\\\.init\\(\\)\" src/cards/neutral/*/index.ts src/cards/derivatives/*/index.ts)",
+      "Bash(node -e ' *)"
     ]
   }
 }

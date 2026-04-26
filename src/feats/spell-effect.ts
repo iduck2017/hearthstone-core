@@ -18,6 +18,11 @@ export abstract class SpellEffectModel<T extends Model = Model> extends FeatMode
         return this._isMultiTarget;
     }
 
+    /** Returns itself so SpellFeatureModel consumers can locate the decor producer on subclasses. */
+    public get spellEffect() {
+        return this;
+    }
+
     constructor(props?: {
         isPending?: boolean;
         isMultiTarget?: boolean;

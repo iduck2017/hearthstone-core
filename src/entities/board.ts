@@ -1,15 +1,17 @@
-import { Model, TypedPropertyDecorator, useChild, useMemo, useRoute } from "set-piece";
+import { Model, TypedPropertyDecorator, useChild, useMemo, useRoute, useModel } from "set-piece";
 import { CardModel } from "../cards";
 import { MinionModel } from "../cards/minion";
 import { GameModel } from "./game";
 
+@useModel('board-model')
 export class BoardModel extends Model {
+    protected _brand: symbol = Symbol('board-model');
     constructor(props?: {
         cards?: CardModel[];
     }) {
         super();
         this._cards = props?.cards ?? [];
-        this.init();
+        
     }
 
     @useRoute(() => GameModel)

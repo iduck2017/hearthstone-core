@@ -1,15 +1,17 @@
 import { DisposerModel } from "./index";
 import { DeckModel } from "../../entities/deck";
 import { MinionModel } from "../../cards/minion";
-import { useMemo, useRoute } from "set-piece";
+import { useMemo, useRoute, useModel } from "set-piece";
 import { HandModel } from "../../entities/hand";
 import { PlayerModel } from "../../entities/player";
 import { BoardModel } from "../../entities/board";
 
+@useModel('minion-disposer-model')
 export class MinionDisposerModel extends DisposerModel {
+    protected _brand: symbol = Symbol('minion-disposer-model');
     constructor() {
         super();
-        this.init();
+        
     }
     @useRoute(() => MinionModel)
     private _minion?: MinionModel;

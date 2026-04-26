@@ -32,6 +32,7 @@ export abstract class FeatModel extends Model {
         this._isActived = false;
     }
 
+
     @useRoute(() => GameModel)
     private _game?: GameModel;
     @useMemo()

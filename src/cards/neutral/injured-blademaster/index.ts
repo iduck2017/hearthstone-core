@@ -1,3 +1,4 @@
+import { useModel } from "set-piece";
 import { MinionModel } from "../../minion";
 import { RoleAttackModel } from "../../../rules/role-attack";
 import { RoleHealthModel } from "../../../rules/role-health";
@@ -7,7 +8,9 @@ import { RoleModel } from "../../../entities/role";
 import { InjuredBlademasterBattlecryModel } from "./battlecry";
 import { RarityType } from "../../../rules/rarity";
 
+@useModel('injured-blademaster-model')
 export class InjuredBlademasterModel extends MinionModel {
+    protected _brand: symbol = Symbol('injured-blademaster-model');
     constructor() {
         super({
             class: ClassType.NEUTRAL,
@@ -20,6 +23,6 @@ export class InjuredBlademasterModel extends MinionModel {
             races: [],
             feats: [new InjuredBlademasterBattlecryModel()],
         });
-        this.init();
+        
     }
 }

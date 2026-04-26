@@ -1,4 +1,4 @@
-import { useChild, useEffect, useMemo, useRoute } from "set-piece";
+import { useChild, useEffect, useMemo, useRoute, useModel } from "set-piece";
 import { FeatModel } from "../../../feats";
 import { MinionModel } from "../../minion";
 import { HeroModel } from "../../../heroes";
@@ -11,7 +11,9 @@ import {
 
 const ENRAGE_ATTACK = 5;
 
+@useModel('angry-chicken-feat-model')
 export class AngryChickenFeatModel extends FeatModel {
+    protected _brand: symbol = Symbol('angry-chicken-feat-model');
     @useRoute(() => MinionModel)
     private _minion?: MinionModel;
     @useMemo()
@@ -25,7 +27,7 @@ export class AngryChickenFeatModel extends FeatModel {
     constructor() {
         super();
         this._boardOnly = new BoardOnlyTagModel();
-        this.init();
+        
     }
 
     // Apply +5 attack as an aura buff whenever the chicken is damaged (enrage).

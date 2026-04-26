@@ -1,10 +1,12 @@
-import { useChild, useMemo, useRoute } from "set-piece";
+import { useChild, useMemo, useRoute, useModel } from "set-piece";
 import { FeatModel } from "../../../feats";
 import { MinionModel } from "../../minion";
 import { BoardOnlyTagModel } from "../../../rules/board-only-tag";
 import { RoleDamageReceivePostEvent, useRoleDamageReceiveEventConsumer } from "../../../event/role-damage-receive";
 
+@useModel('acolyte-of-pain-feat-model')
 export class AcolyteOfPainFeatModel extends FeatModel {
+    protected _brand: symbol = Symbol('acolyte-of-pain-feat-model');
     @useRoute(() => MinionModel)
     private _minion?: MinionModel;
     @useMemo()
@@ -18,7 +20,7 @@ export class AcolyteOfPainFeatModel extends FeatModel {
     constructor() {
         super();
         this._boardOnly = new BoardOnlyTagModel();
-        this.init();
+        
     }
 
     // Whenever this minion takes damage, draw a card for its controller.

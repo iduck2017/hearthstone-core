@@ -1,10 +1,12 @@
-import { useRoute, useState, Model } from "set-piece";
+import { useRoute, useState, Model, useModel } from "set-piece";
 import { BattlecryModel } from "../feats/battlecry";
 import { SpellEffectModel } from "../feats/spell-effect";
 
 export type HookRegistry = Array<{ hook: BattlecryModel | SpellEffectModel, params: Array<Model | undefined> }>;
 
+@useModel('hooks-launcher-model')
 export class HooksLauncherModel extends Model {
+    protected _brand: symbol = Symbol('hooks-launcher-model');
     @useState()
     private _registry: HookRegistry;
 
@@ -17,7 +19,7 @@ export class HooksLauncherModel extends Model {
         super();
         this._registry = props.registry;
         this._currentIndex = 0;
-        this.init();
+        
     }
 
     public async next(): Promise<boolean> {

@@ -1,11 +1,9 @@
-import { Model, useEventProducer } from "set-piece";
+import { Model, useEventProducer, useModel } from "set-piece";
 import { DamageDealOption, DamageDealPostEvent, DamageDealPrevEvent } from "../event/damage-deal";
 
+@useModel('damage-source-model')
 export class DamageSourceModel extends Model {
-    constructor() {
-        super();
-        this.init();
-    }
+    protected _brand: symbol = Symbol('damage-source-model');
 
     // Deal damage to a target role, firing DamageDeal events around the call.
     // target.receiveDamage handles divine shield and fires RoleDamageReceive events.

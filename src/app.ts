@@ -1,11 +1,9 @@
-import { useChild, Model, useMemo } from "set-piece";
+import { useChild, Model, useMemo, useModel } from "set-piece";
 import { GameModel } from "./entities/game";
 
+@useModel('app-model')
 export class AppModel extends Model {
-    constructor() {
-        super();
-        this.init();
-    }
+    protected _brand: symbol = Symbol('app-model');
 
     @useChild()
     private _game?: GameModel;
@@ -19,5 +17,4 @@ export class AppModel extends Model {
     public removeGame(game?: GameModel) {
         this._game = undefined;
     }
-
 }

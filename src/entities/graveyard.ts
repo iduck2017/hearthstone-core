@@ -1,7 +1,9 @@
-import { Model, useChild, useMemo } from "set-piece";
+import { Model, useChild, useMemo, useModel } from "set-piece";
 import { CardModel } from "../cards";
 
+@useModel('graveyard-model')
 export class GraveyardModel extends Model {
+    protected _brand: symbol = Symbol('graveyard-model');
     @useChild()
     private _cards: CardModel[] = [];
     @useMemo()
@@ -14,7 +16,7 @@ export class GraveyardModel extends Model {
     }) {
         super();
         this._cards = props?.cards ?? [];
-        this.init();
+        
     }
 
     public removeCard(card?: CardModel) {

@@ -1,4 +1,4 @@
-import { Model, TypedPropertyDecorator, useChild, useMemo, useRoute, useAction, useEventProducer, PrevEvent } from "set-piece";
+import { Model, TypedPropertyDecorator, useChild, useMemo, useRoute, useAction, useEventProducer, PrevEvent, useModel } from "set-piece";
 import { TauntModel } from "../rules/taunt";
 import { DivineShieldModel } from "../rules/divine-shield";
 import { ChargeModel } from "../rules/charge";
@@ -28,6 +28,7 @@ export interface RoleProps {
     health: RoleHealthModel;
 }
 
+@useModel('role-model')
 export class RoleModel extends Model {
     protected _brand = Symbol('role-model');
 
@@ -41,7 +42,7 @@ export class RoleModel extends Model {
         this._charge = props.charge ?? new ChargeModel();
         this._rush = props.rush ?? new RushModel();
         this._stealth = props.stealth ?? new StealthModel();
-        this.init();
+        
     }
 
     public get name() {

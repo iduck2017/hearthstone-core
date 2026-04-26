@@ -1,7 +1,9 @@
-import { Model, useChild, useDecorProducer, useDeferEffect, useDep, useEffect, useMemo, useRange, useState } from "set-piece";
+import { Model, useChild, useDecorProducer, useDeferEffect, useDep, useEffect, useMemo, useRange, useState, useModel } from "set-piece";
 import { RoleHealthDecor } from "../decors/role-health";
 
+@useModel('role-health-model')
 export class RoleHealthModel extends Model {
+    protected _brand: symbol = Symbol('role-health-model');
 
     // Origin
     @useState()
@@ -70,6 +72,6 @@ export class RoleHealthModel extends Model {
         this._origin = props?.origin ?? 1;
         this._maximum = props?.origin ?? 1;
         this._current = props?.current ?? this.origin;
-        this.init();
+        
     }   
 }

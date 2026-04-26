@@ -1,4 +1,4 @@
-import { useDep, useRoute, useState, Model, useMemo, useRange, useChild, useDecorProducer, useConsoleGroup } from "set-piece";
+import { useDep, useRoute, useState, Model, useMemo, useRange, useChild, useDecorProducer, useConsoleGroup, useModel } from "set-piece";
 import { RoleModel } from "../../src/entities/role";
 import { PlayerModel } from "../entities/player";
 import { GameModel } from "../entities/game";
@@ -6,14 +6,16 @@ import { MinionModel } from "../cards/minion";
 import { HeroModel } from "../heroes";
 import { RoleAttackDecor } from "../decors/role-attack";
 
+@useModel('role-attack-model')
 export class RoleAttackModel extends Model {
+    protected _brand: symbol = Symbol('role-attack-model');
     constructor(props?: {
         origin?: number;
     }) {
         super();
         this._origin = props?.origin ?? 1;
         this._current = this._origin;
-        this.init();
+        
     }
 
     // Routes

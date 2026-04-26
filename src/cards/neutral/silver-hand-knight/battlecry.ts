@@ -1,14 +1,12 @@
 import { BattlecryModel } from "../../../feats/battlecry";
 import { SquireModel } from "../../derivatives/squire";
-import { Model, useRoute } from "set-piece";
+import { Model, useRoute, useModel } from "set-piece";
 import { useBattlecryRunHook } from "../../../hooks/battlecry-run";
 import { MinionModel } from "../../minion";
 
+@useModel('silver-hand-knight-battlecry-model')
 export class SilverHandKnightBattlecryModel extends BattlecryModel<Model> {
-    constructor() {
-        super();
-        this.init();
-    }
+    protected _brand: symbol = Symbol('silver-hand-knight-battlecry-model');
 
     public getSelector(params: Array<Model | undefined>): undefined {
         return undefined;

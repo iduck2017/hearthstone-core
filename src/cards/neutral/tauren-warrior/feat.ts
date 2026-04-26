@@ -1,4 +1,4 @@
-import { useChild, useMemo, useRoute } from "set-piece";
+import { useChild, useMemo, useRoute, useModel } from "set-piece";
 import { FeatModel } from "../../../feats";
 import { MinionModel } from "../../minion";
 import { HeroModel } from "../../../heroes";
@@ -7,7 +7,9 @@ import { BuffOperatorType, RoleAttackDecor, useRoleAttackDecorConsumer } from ".
 
 const ENRAGE_ATTACK = 3;
 
+@useModel('tauren-warrior-feat-model')
 export class TaurenWarriorFeatModel extends FeatModel {
+    protected _brand: symbol = Symbol('tauren-warrior-feat-model');
     @useRoute(() => MinionModel)
     private _minion?: MinionModel;
     @useMemo()
@@ -21,7 +23,7 @@ export class TaurenWarriorFeatModel extends FeatModel {
     constructor() {
         super();
         this._boardOnly = new BoardOnlyTagModel();
-        this.init();
+        
     }
 
     // Apply +3 attack as an aura buff while the warrior is damaged (enrage).

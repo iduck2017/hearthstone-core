@@ -1,3 +1,4 @@
+import { useModel } from "set-piece";
 import { MinionModel } from "../../minion";
 import { RoleAttackModel } from "../../../rules/role-attack";
 import { RoleHealthModel } from "../../../rules/role-health";
@@ -7,7 +8,9 @@ import { RoleModel } from "../../../entities/role";
 import { AmaniBerserkerFeatModel } from "./feat";
 import { RarityType } from "../../../rules/rarity";
 
+@useModel('amani-berserker-model')
 export class AmaniBerserkerModel extends MinionModel {
+    protected _brand: symbol = Symbol('amani-berserker-model');
     constructor() {
         super({
             class: ClassType.NEUTRAL,
@@ -20,6 +23,6 @@ export class AmaniBerserkerModel extends MinionModel {
             races: [],
             feats: [new AmaniBerserkerFeatModel()],
         });
-        this.init();
+        
     }
 }

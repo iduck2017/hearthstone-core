@@ -1,3 +1,4 @@
+import { useModel } from "set-piece";
 import { MinionModel } from "../../minion";
 import { RoleAttackModel } from "../../../rules/role-attack";
 import { RoleHealthModel } from "../../../rules/role-health";
@@ -7,7 +8,9 @@ import { RoleModel } from "../../../entities/role";
 import { GurubashiBerserkerFeatModel } from "./feat";
 import { RarityType } from "../../../rules/rarity";
 
+@useModel('gurubashi-berserker-model')
 export class GurubashiBerserkerModel extends MinionModel {
+    protected _brand: symbol = Symbol('gurubashi-berserker-model');
     constructor() {
         super({
             class: ClassType.NEUTRAL,
@@ -20,6 +23,6 @@ export class GurubashiBerserkerModel extends MinionModel {
             races: [],
             feats: [new GurubashiBerserkerFeatModel()],
         });
-        this.init();
+        
     }
 }

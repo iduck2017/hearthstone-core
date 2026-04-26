@@ -1,3 +1,4 @@
+import { useModel } from "set-piece";
 import { MinionModel } from "../../minion";
 import { RoleAttackModel } from "../../../rules/role-attack";
 import { RoleHealthModel } from "../../../rules/role-health";
@@ -6,7 +7,9 @@ import { CostModel } from "../../../rules/cost";
 import { RoleModel } from "../../../entities/role";
 import { RarityType } from "../../../rules/rarity";
 
+@useModel('boulderfist-ogre-model')
 export class BoulderfistOgreModel extends MinionModel {
+    protected _brand: symbol = Symbol('boulderfist-ogre-model');
     constructor() {
         super({
             class: ClassType.NEUTRAL,
@@ -18,6 +21,6 @@ export class BoulderfistOgreModel extends MinionModel {
             rarity: RarityType.COMMON,
             races: [],
         });
-        this.init();
+        
     }
 }

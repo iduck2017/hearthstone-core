@@ -1,4 +1,4 @@
-import { useDep, useRoute, useState, Model, useMemo } from "set-piece";
+import { useDep, useRoute, useState, Model, useMemo, useModel } from "set-piece";
 import { CardModel } from "../cards";
 
 export interface CostBuff {
@@ -7,7 +7,9 @@ export interface CostBuff {
     readonly id: string;
 }
 
+@useModel('cost-model')
 export class CostModel extends Model {
+    protected _brand: symbol = Symbol('cost-model');
     @useRoute(() => CardModel)
     private _card?: CardModel;
 
@@ -38,6 +40,6 @@ export class CostModel extends Model {
         super();
         this._origin = props?.origin ?? 1;
         this._decors = props?.decors ?? [];
-        this.init();
+        
     }
 }           

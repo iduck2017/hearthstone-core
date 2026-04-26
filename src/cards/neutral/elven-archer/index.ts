@@ -1,3 +1,4 @@
+import { useModel } from "set-piece";
 import { RoleAttackModel } from "../../../rules/role-attack";
 import { ClassType } from "../../../rules/class";
 import { CostModel } from "../../../rules/cost";
@@ -7,7 +8,9 @@ import { MinionModel } from "../../minion";
 import { RoleModel } from "../../../entities/role";
 import { RarityType } from "../../../rules/rarity";
 
+@useModel('elven-archer-model')
 export class ElvenArcherModel extends MinionModel {
+    protected _brand: symbol = Symbol('elven-archer-model');
     constructor() {
         super({
             class: ClassType.NEUTRAL,
@@ -22,6 +25,6 @@ export class ElvenArcherModel extends MinionModel {
                 new ElvenArcherBattlecryModel(),
             ],
         });
-        this.init();
+        
     }
 }

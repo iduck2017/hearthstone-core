@@ -1,3 +1,4 @@
+import { useModel } from "set-piece";
 import { MinionModel } from "../../minion";
 import { RoleAttackModel } from "../../../rules/role-attack";
 import { RoleHealthModel } from "../../../rules/role-health";
@@ -7,7 +8,9 @@ import { RoleModel } from "../../../entities/role";
 import { RaceType } from "../../../rules/race";
 import { RarityType } from "../../../rules/rarity";
 
+@useModel('whelp-model')
 export class WhelpModel extends MinionModel {
+    protected _brand: symbol = Symbol('whelp-model');
     constructor() {
         super({
             class: ClassType.NEUTRAL,
@@ -19,6 +22,6 @@ export class WhelpModel extends MinionModel {
             rarity: RarityType.BASIC,
             races: [RaceType.DRAGON],
         });
-        this.init();
+        
     }
 }

@@ -1,18 +1,20 @@
-import { Model, useMemo, useRoute, useState } from "set-piece";
+import { Model, useMemo, useRoute, useState, useModel } from "set-piece";
 import { FeatModel } from ".";
 import { BuffOperatorType, RoleAttackDecor, useRoleAttackDecorConsumer } from "../decors/role-attack";
 import { MinionModel } from "../cards/minion";
 import { HeroModel } from "../heroes";
 import { RoleModel } from "../entities/role";
 
+@useModel('role-attack-buff-model')
 export class RoleAttackBuffModel extends Model {
+    protected _brand: symbol = Symbol('role-attack-buff-model');
     @useState()
     public offset: number;
 
     constructor(offset: number) {
         super();
         this.offset = offset;
-        this.init();
+        
     }
 
     @useRoute(() => FeatModel)

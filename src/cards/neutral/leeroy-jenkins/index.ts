@@ -1,3 +1,4 @@
+import { useModel } from "set-piece";
 import { MinionModel } from "../../minion";
 import { RoleAttackModel } from "../../../rules/role-attack";
 import { RoleHealthModel } from "../../../rules/role-health";
@@ -8,7 +9,9 @@ import { ChargeModel } from "../../../rules/charge";
 import { LeeroyJenkinsBattlecryModel } from "./battlecry";
 import { RarityType } from "../../../rules/rarity";
 
+@useModel('leeroy-jenkins-model')
 export class LeeroyJenkinsModel extends MinionModel {
+    protected _brand: symbol = Symbol('leeroy-jenkins-model');
     constructor() {
         super({
             class: ClassType.NEUTRAL,
@@ -22,6 +25,6 @@ export class LeeroyJenkinsModel extends MinionModel {
             races: [],
             feats: [new LeeroyJenkinsBattlecryModel()],
         });
-        this.init();
+        
     }
 }

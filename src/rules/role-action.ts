@@ -1,4 +1,4 @@
-import { useDep, useRoute, useState, CustomDecor, Model, useMemo, useRange, useDecorConsumer, useDecorProducer } from "set-piece";
+import { useDep, useRoute, useState, CustomDecor, Model, useMemo, useRange, useDecorConsumer, useDecorProducer, useModel } from "set-piece";
 import { RoleModel } from "../entities/role";
 import { AsleepDecor } from "../decors/asleep";
 
@@ -7,7 +7,9 @@ export interface RoleActionBuff {
     id: string;
 }
 
+@useModel('role-action-model')
 export class RoleActionModel extends Model {
+    protected _brand: symbol = Symbol('role-action-model');
 
     /** Routes */
     @useRoute(() => RoleModel)
@@ -77,6 +79,6 @@ export class RoleActionModel extends Model {
         super();
         this._current = this.origin;
         this._isAsleep = true;
-        this.init();
+        
     }
 }

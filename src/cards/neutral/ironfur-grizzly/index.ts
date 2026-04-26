@@ -1,3 +1,4 @@
+import { useModel } from "set-piece";
 import { MinionModel } from "../../minion";
 import { RoleAttackModel } from "../../../rules/role-attack";
 import { RoleHealthModel } from "../../../rules/role-health";
@@ -8,7 +9,9 @@ import { RoleModel } from "../../../entities/role";
 import { RaceType } from "../../../rules/race";
 import { RarityType } from "../../../rules/rarity";
 
+@useModel('ironfur-grizzly-model')
 export class IronfurGrizzlyModel extends MinionModel {
+    protected _brand: symbol = Symbol('ironfur-grizzly-model');
     constructor() {
         super({
             class: ClassType.NEUTRAL,
@@ -21,6 +24,6 @@ export class IronfurGrizzlyModel extends MinionModel {
             rarity: RarityType.COMMON,
             races: [RaceType.BEAST],
         });
-        this.init();
+        
     }
 }

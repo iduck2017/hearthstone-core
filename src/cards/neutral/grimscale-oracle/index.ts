@@ -1,3 +1,4 @@
+import { useModel } from "set-piece";
 import { MinionModel } from "../../minion";
 import { RoleAttackModel } from "../../../rules/role-attack";
 import { RoleHealthModel } from "../../../rules/role-health";
@@ -8,7 +9,9 @@ import { RaceType } from "../../../rules/race";
 import { RarityType } from "../../../rules/rarity";
 import { GrimscaleOracleFeatModel } from "./feat";
 
+@useModel('grimscale-oracle-model')
 export class GrimscaleOracleModel extends MinionModel {
+    protected _brand: symbol = Symbol('grimscale-oracle-model');
     constructor() {
         super({
             class: ClassType.NEUTRAL,
@@ -21,6 +24,6 @@ export class GrimscaleOracleModel extends MinionModel {
             races: [RaceType.MURLOC],
             feats: [new GrimscaleOracleFeatModel()],
         });
-        this.init();
+        
     }
 }

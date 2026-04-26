@@ -1,3 +1,4 @@
+import { useModel } from "set-piece";
 import { MinionModel } from "../../minion";
 import { RoleAttackModel } from "../../../rules/role-attack";
 import { RoleHealthModel } from "../../../rules/role-health";
@@ -7,7 +8,9 @@ import { RoleModel } from "../../../entities/role";
 import { RaidLeaderFeatModel } from "./feat";
 import { RarityType } from "../../../rules/rarity";
 
+@useModel('raid-leader-model')
 export class RaidLeaderModel extends MinionModel {
+    protected _brand: symbol = Symbol('raid-leader-model');
     constructor() {
         super({
             class: ClassType.NEUTRAL,
@@ -20,6 +23,6 @@ export class RaidLeaderModel extends MinionModel {
             races: [],
             feats: [new RaidLeaderFeatModel()],
         });
-        this.init();
+        
     }
 }

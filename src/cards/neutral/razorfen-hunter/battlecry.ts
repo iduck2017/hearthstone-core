@@ -1,14 +1,12 @@
 import { BattlecryModel } from "../../../feats/battlecry";
 import { BoarModel } from "../../derivatives/boar";
-import { Model, useRoute } from "set-piece";
+import { Model, useRoute, useModel } from "set-piece";
 import { useBattlecryRunHook } from "../../../hooks/battlecry-run";
 import { MinionModel } from "../../minion";
 
+@useModel('razorfen-hunter-battlecry-model')
 export class RazorfenHunterBattlecryModel extends BattlecryModel<Model> {
-    constructor() {
-        super();
-        this.init();
-    }
+    protected _brand: symbol = Symbol('razorfen-hunter-battlecry-model');
 
     public getSelector(params: Array<Model | undefined>): undefined {
         return undefined;

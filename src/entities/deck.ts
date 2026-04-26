@@ -1,13 +1,15 @@
-import { Model, TypedPropertyDecorator, useChild, useMemo, useRoute, useAction } from "set-piece";
+import { Model, TypedPropertyDecorator, useChild, useMemo, useRoute, useAction, useModel } from "set-piece";
 import { CardModel } from "../cards";
 
+@useModel('deck-model')
 export class DeckModel extends Model {
+    protected _brand: symbol = Symbol('deck-model');
     constructor(props?: {
         cards?: CardModel[];
     }) {
         super();
         this._cards = props?.cards ?? [];
-        this.init();
+        
     }
 
     @useChild()

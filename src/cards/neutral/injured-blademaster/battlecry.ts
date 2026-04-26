@@ -1,15 +1,13 @@
 import { BattlecryModel } from "../../../feats/battlecry";
-import { Model, useRoute } from "set-piece";
+import { Model, useRoute, useModel } from "set-piece";
 import { useBattlecryRunHook } from "../../../hooks/battlecry-run";
 import { Selector } from "../../../utils/controller";
 import { RoleModel } from "../../../entities/role";
 import { MinionModel } from "../../minion";
 
+@useModel('injured-blademaster-battlecry-model')
 export class InjuredBlademasterBattlecryModel extends BattlecryModel<Model> {
-    constructor() {
-        super();
-        this.init();
-    }
+    protected _brand: symbol = Symbol('injured-blademaster-battlecry-model');
 
     public getSelector(): Selector<Model> | undefined {
         return undefined;

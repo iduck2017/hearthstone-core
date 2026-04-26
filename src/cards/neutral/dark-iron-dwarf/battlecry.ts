@@ -1,14 +1,13 @@
+import { useModel } from "set-piece";
 import { BattlecryModel } from "../../../feats/battlecry";
 import { Selector } from "../../../utils/controller";
 import { RoleModel } from "../../../entities/role";
 import { DarkIronDwarfBuffModel } from "./buff";
 import { useBattlecryRunHook } from "../../../hooks/battlecry-run";
 
+@useModel('dark-iron-dwarf-battlecry-model')
 export class DarkIronDwarfBattlecryModel extends BattlecryModel<RoleModel> {
-    constructor() {
-        super();
-        this.init();
-    }
+    protected _brand: symbol = Symbol('dark-iron-dwarf-battlecry-model');
 
     public getSelector(params: Array<RoleModel | undefined>): Selector<RoleModel> | undefined {
         const player = this.player;

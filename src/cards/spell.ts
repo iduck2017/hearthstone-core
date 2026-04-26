@@ -27,11 +27,10 @@ export abstract class SpellModel extends CardModel {
             hookRegistry.push({ hook, params });
         }
 
-        // Consume mana and remove from hand
+        // Consume mana
         this.consumeMana();
-        this.container?.removeCard(this);
 
-        // Execute spell effects
+        // Execute spell effects (card stays in hand so Spell Damage auras remain active)
         this._launcher = new HooksLauncherModel({ registry: hookRegistry });
         while (true) {
             const isFinished = await this._launcher.next();
@@ -39,7 +38,8 @@ export abstract class SpellModel extends CardModel {
         }
         this._launcher = undefined;
 
-        // Enter graveyard after all effects resolve
+        // Remove from hand and enter graveyard after all effects resolve
+        this.container?.removeCard(this);
         player.graveyard.disposeCard(this);
     }
 }

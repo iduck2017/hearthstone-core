@@ -1,13 +1,12 @@
+import { useModel } from "set-piece";
 import { BattlecryModel } from "../../../feats/battlecry";
 import { Selector } from "../../../utils/controller";
 import { RoleModel } from "../../../entities/role";
 import { useBattlecryRunHook } from "../../../hooks/battlecry-run";
 
+@useModel('ironforge-rifleman-battlecry-model')
 export class IronforgeRiflemanBattlecryModel extends BattlecryModel<RoleModel> {
-    constructor() {
-        super();
-        this.init();
-    }
+    protected _brand: symbol = Symbol('ironforge-rifleman-battlecry-model');
 
     public getSelector(): Selector<RoleModel> | undefined {
         const player = this.player;

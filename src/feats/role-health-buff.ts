@@ -1,4 +1,4 @@
-import { Model, useState, useRoute, useMemo } from "set-piece";
+import { Model, useState, useRoute, useMemo, useModel } from "set-piece";
 import { FeatModel, RoleFeatureModel } from ".";
 import { BuffOperatorType, BuffOperator } from "../decors/role-attack";
 import { RoleHealthDecor, useRoleHealthDecorConsumer } from "../decors/role-health";
@@ -6,14 +6,16 @@ import { RoleModel } from "../entities/role";
 import { MinionModel } from "../cards/minion";
 import { HeroModel } from "../heroes";
 
+@useModel('role-health-buff-model')
 export class RoleHealthBuffModel extends Model {
+    protected _brand: symbol = Symbol('role-health-buff-model');
     @useState()
     public offset: number;
 
     constructor(offset: number) {
         super();
         this.offset = offset;
-        this.init();
+        
     }
 
     @useRoute(() => FeatModel)

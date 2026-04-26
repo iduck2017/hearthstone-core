@@ -1,9 +1,11 @@
-import { useChild, useState, Event, Model, TypedPropertyDecorator, useRoute, useEventConsumer, PostEvent, PrevEvent, useEventProducer, useMemo } from "set-piece";
+import { useChild, useState, Event, Model, TypedPropertyDecorator, useRoute, useEventConsumer, PostEvent, PrevEvent, useEventProducer, useMemo, useModel } from "set-piece";
 import { PlayerModel } from "./player";
 import { MageModel } from "../heroes/mage";
 import { TurnEndPostEvent, TurnEndPrevEvent } from "../event/turn-end";
 
+@useModel('game-model')
 export class GameModel extends Model {
+    protected _brand: symbol = Symbol('game-model');
 
     constructor(props?: {
         playerA?: PlayerModel;
@@ -16,7 +18,7 @@ export class GameModel extends Model {
         this._playerB = props?.playerB ?? new PlayerModel({
             hero: new MageModel(),
         });
-        this.init();
+        
     }
 
     @useChild()

@@ -1,3 +1,4 @@
+import { useModel } from "set-piece";
 import { MinionModel } from "../../minion";
 import { RoleAttackModel } from "../../../rules/role-attack";
 import { RoleHealthModel } from "../../../rules/role-health";
@@ -7,7 +8,9 @@ import { RoleModel } from "../../../entities/role";
 import { EarthenRingFarseerBattlecryModel } from "./battlecry";
 import { RarityType } from "../../../rules/rarity";
 
+@useModel('earthen-ring-farseer-model')
 export class EarthenRingFarseerModel extends MinionModel {
+    protected _brand: symbol = Symbol('earthen-ring-farseer-model');
     constructor() {
         super({
             class: ClassType.NEUTRAL,
@@ -20,6 +23,6 @@ export class EarthenRingFarseerModel extends MinionModel {
             races: [],
             feats: [new EarthenRingFarseerBattlecryModel()],
         });
-        this.init();
+        
     }
 }

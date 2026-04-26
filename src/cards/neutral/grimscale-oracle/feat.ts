@@ -1,4 +1,4 @@
-import { useChild, useMemo, useRoute } from "set-piece";
+import { useChild, useMemo, useRoute, useModel } from "set-piece";
 import { FeatModel } from "../../../feats";
 import { MinionModel } from "../../minion";
 import { BuffOperatorType, RoleAttackDecor, useAllyRoleAttackDecorConsumer } from "../../../decors/role-attack";
@@ -6,7 +6,9 @@ import { BoardOnlyTagModel } from "../../../rules/board-only-tag";
 import { RoleAttackModel } from "../../../rules/role-attack";
 import { RaceType } from "../../../rules/race";
 
+@useModel('grimscale-oracle-feat-model')
 export class GrimscaleOracleFeatModel extends FeatModel {
+    protected _brand: symbol = Symbol('grimscale-oracle-feat-model');
     @useRoute(() => MinionModel)
     private _minion?: MinionModel;
     @useMemo()
@@ -20,7 +22,7 @@ export class GrimscaleOracleFeatModel extends FeatModel {
     constructor() {
         super();
         this.isBoardOnly = new BoardOnlyTagModel();
-        this.init();
+        
     }
 
     // Grant +1 Attack to every other allied Murloc as a reactive aura.

@@ -1,3 +1,4 @@
+import { useModel } from "set-piece";
 import { MinionModel } from "../../minion";
 import { RoleAttackModel } from "../../../rules/role-attack";
 import { RoleHealthModel } from "../../../rules/role-health";
@@ -7,7 +8,9 @@ import { RoleModel } from "../../../entities/role";
 import { NoviceEngineerBattlecryModel } from "./battlecry";
 import { RarityType } from "../../../rules/rarity";
 
+@useModel('novice-engineer-model')
 export class NoviceEngineerModel extends MinionModel {
+    protected _brand: symbol = Symbol('novice-engineer-model');
     constructor() {
         super({
             class: ClassType.NEUTRAL,
@@ -22,6 +25,6 @@ export class NoviceEngineerModel extends MinionModel {
                 new NoviceEngineerBattlecryModel(),
             ],
         });
-        this.init();
+        
     }
 }

@@ -1,3 +1,4 @@
+import { useModel } from "set-piece";
 import { RoleAttackModel } from "../../../rules/role-attack";
 import { RoleHealthModel } from "../../../rules/role-health";
 import { ClassType } from "../../../rules/class";
@@ -8,7 +9,9 @@ import { RoleModel } from "../../../entities/role";
 import { RaceType } from "../../../rules/race";
 import { RarityType } from "../../../rules/rarity";
 
+@useModel('stonetusk-boar-model')
 export class StonetuskBoarModel extends MinionModel {
+    protected _brand: symbol = Symbol('stonetusk-boar-model');
     constructor() {
         super({
             class: ClassType.NEUTRAL,
@@ -21,6 +24,6 @@ export class StonetuskBoarModel extends MinionModel {
             rarity: RarityType.COMMON,
             races: [RaceType.BEAST],
         });
-        this.init();
+        
     }
 }

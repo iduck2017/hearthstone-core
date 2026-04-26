@@ -1,3 +1,4 @@
+import { useModel } from "set-piece";
 import { MinionModel } from "../../minion";
 import { RoleAttackModel } from "../../../rules/role-attack";
 import { RoleHealthModel } from "../../../rules/role-health";
@@ -8,7 +9,9 @@ import { RoleModel } from "../../../entities/role";
 import { RaceType } from "../../../rules/race";
 import { RarityType } from "../../../rules/rarity";
 
+@useModel('angry-chicken-model')
 export class AngryChickenModel extends MinionModel {
+    protected _brand: symbol = Symbol('angry-chicken-model');
     constructor() {
         super({
             class: ClassType.NEUTRAL,
@@ -21,6 +24,6 @@ export class AngryChickenModel extends MinionModel {
             races: [RaceType.BEAST],
             feats: [new AngryChickenFeatModel()],
         });
-        this.init()
+        
     }
 }

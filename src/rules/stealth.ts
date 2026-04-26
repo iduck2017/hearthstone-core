@@ -1,12 +1,14 @@
-import { useState, Model, useMemo } from "set-piece";
+import { useState, Model, useMemo, useModel } from "set-piece";
 
+@useModel('stealth-model')
 export class StealthModel extends Model {
+    protected _brand: symbol = Symbol('stealth-model');
     constructor(props?: {
         isActived?: boolean;
     }) {
         super();
         this._isActived = props?.isActived ?? false;
-        this.init();
+        
     }
 
     @useState()

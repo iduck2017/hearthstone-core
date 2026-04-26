@@ -1,3 +1,4 @@
+import { useModel } from "set-piece";
 import { MinionModel } from "../../minion";
 import { RoleAttackModel } from "../../../rules/role-attack";
 import { RoleHealthModel } from "../../../rules/role-health";
@@ -7,7 +8,9 @@ import { RoleModel } from "../../../entities/role";
 import { SilverHandKnightBattlecryModel } from "./battlecry";
 import { RarityType } from "../../../rules/rarity";
 
+@useModel('silver-hand-knight-model')
 export class SilverHandKnightModel extends MinionModel {
+    protected _brand: symbol = Symbol('silver-hand-knight-model');
     constructor() {
         super({
             class: ClassType.NEUTRAL,
@@ -22,6 +25,6 @@ export class SilverHandKnightModel extends MinionModel {
                 new SilverHandKnightBattlecryModel(),
             ],
         });
-        this.init();
+        
     }
 }

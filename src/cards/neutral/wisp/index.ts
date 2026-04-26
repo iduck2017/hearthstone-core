@@ -1,3 +1,4 @@
+import { useModel } from "set-piece";
 import { CostModel } from "../../../rules/cost";
 import { RoleAttackModel } from "../../../rules/role-attack";
 import { RoleHealthModel } from "../../../rules/role-health";
@@ -6,7 +7,9 @@ import { MinionModel } from "../../minion";
 import { RarityType } from "../../../rules/rarity";
 import { RoleModel } from "../../../entities/role";
 
+@useModel('wisp-model')
 export class WispModel extends MinionModel {
+    protected _brand: symbol = Symbol('wisp-model');
     constructor() {
         super({
             class: ClassType.NEUTRAL,
@@ -18,6 +21,6 @@ export class WispModel extends MinionModel {
             rarity: RarityType.BASIC,
             races: [],
         });
-        this.init();
+        
     }
 }

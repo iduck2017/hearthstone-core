@@ -1,14 +1,12 @@
-import { Model, useMemo, useRoute } from "set-piece";
+import { Model, useMemo, useRoute, useModel } from "set-piece";
 import { FeatModel } from "../feats";
 import { FeatActiveDecor, useFeatActiveDecorConsumer } from "../decors/feat-active";
 import { BoardModel } from "../entities/board";
 import { HeroModel } from "../heroes";
 
+@useModel('board-only-tag-model')
 export class BoardOnlyTagModel extends Model {
-    constructor() {
-        super();
-        this.init();
-    }
+    protected _brand: symbol = Symbol('board-only-tag-model');
 
     @useRoute(() => FeatModel)
     private _feat?: FeatModel;

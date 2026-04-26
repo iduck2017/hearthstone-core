@@ -2,14 +2,12 @@ import { BattlecryModel } from "../../../feats/battlecry";
 import { Selector } from "../../../utils/controller";
 import { RoleModel } from "../../../entities/role";
 import { useBattlecryRunHook } from "../../../hooks/battlecry-run";
-import { useRoute } from "set-piece";
+import { useRoute, useModel } from "set-piece";
 import { MinionModel } from "../../minion";
 
+@useModel('stormpike-commando-battlecry-model')
 export class StormpikeCommandoBattlecryModel extends BattlecryModel<RoleModel> {
-    constructor() {
-        super();
-        this.init();
-    }
+    protected _brand: symbol = Symbol('stormpike-commando-battlecry-model');
 
     public getSelector(): Selector<RoleModel> | undefined {
         const player = this.player;

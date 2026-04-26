@@ -1,14 +1,12 @@
 import { BattlecryModel } from "../../../feats/battlecry";
 import { MechanicalDragonlingModel } from "../../derivatives/mechanical-dragonling";
-import { Model, useRoute } from "set-piece";
+import { Model, useRoute, useModel } from "set-piece";
 import { useBattlecryRunHook } from "../../../hooks/battlecry-run";
 import { MinionModel } from "../../minion";
 
+@useModel('dragonling-mechanic-battlecry-model')
 export class DragonlingMechanicBattlecryModel extends BattlecryModel<Model> {
-    constructor() {
-        super();
-        this.init();
-    }
+    protected _brand: symbol = Symbol('dragonling-mechanic-battlecry-model');
 
     public getSelector(params: Array<Model | undefined>): undefined {
         return undefined;

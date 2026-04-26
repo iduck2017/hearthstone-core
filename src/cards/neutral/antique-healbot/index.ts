@@ -1,3 +1,4 @@
+import { useModel } from "set-piece";
 import { MinionModel } from "../../minion";
 import { RoleAttackModel } from "../../../rules/role-attack";
 import { RoleHealthModel } from "../../../rules/role-health";
@@ -8,7 +9,9 @@ import { AntiqueHealbotBattlecryModel } from "./battlecry";
 import { RaceType } from "../../../rules/race";
 import { RarityType } from "../../../rules/rarity";
 
+@useModel('antique-healbot-model')
 export class AntiqueHealbotModel extends MinionModel {
+    protected _brand: symbol = Symbol('antique-healbot-model');
     constructor() {
         super({
             class: ClassType.NEUTRAL,
@@ -21,6 +24,6 @@ export class AntiqueHealbotModel extends MinionModel {
             races: [RaceType.MECH],
             feats: [new AntiqueHealbotBattlecryModel()],
         });
-        this.init();
+        
     }
 }

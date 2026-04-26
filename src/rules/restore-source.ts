@@ -1,11 +1,9 @@
-import { Model, useEventProducer } from "set-piece";
+import { Model, useEventProducer, useModel } from "set-piece";
 import { RestoreDealOption, RestoreDealPostEvent, RestoreDealPrevEvent } from "../event/restore-deal";
 
+@useModel('restore-source-model')
 export class RestoreSourceModel extends Model {
-    constructor() {
-        super();
-        this.init();
-    }
+    protected _brand: symbol = Symbol('restore-source-model');
 
     // Restore health to a target role, firing RestoreDeal events around the call.
     // target.receiveRestore handles the actual health restoration.

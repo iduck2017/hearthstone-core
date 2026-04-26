@@ -1,3 +1,4 @@
+import { useModel } from "set-piece";
 import { MinionModel } from "../../minion";
 import { RoleAttackModel } from "../../../rules/role-attack";
 import { RoleHealthModel } from "../../../rules/role-health";
@@ -7,7 +8,9 @@ import { RoleModel } from "../../../entities/role";
 import { VoodooDoctorBattlecryModel } from "./battlecry";
 import { RarityType } from "../../../rules/rarity";
 
+@useModel('voodoo-doctor-model')
 export class VoodooDoctorModel extends MinionModel {
+    protected _brand: symbol = Symbol('voodoo-doctor-model');
     constructor() {
         super({
             class: ClassType.NEUTRAL,
@@ -20,6 +23,6 @@ export class VoodooDoctorModel extends MinionModel {
             races: [],
             feats: [new VoodooDoctorBattlecryModel()],
         });
-        this.init();
+        
     }
 }

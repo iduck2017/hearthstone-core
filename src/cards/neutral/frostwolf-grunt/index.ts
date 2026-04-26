@@ -1,3 +1,4 @@
+import { useModel } from "set-piece";
 import { MinionModel } from "../../minion";
 import { RoleAttackModel } from "../../../rules/role-attack";
 import { RoleHealthModel } from "../../../rules/role-health";
@@ -7,7 +8,9 @@ import { CostModel } from "../../../rules/cost";
 import { RoleModel } from "../../../entities/role";
 import { RarityType } from "../../../rules/rarity";
 
+@useModel('frostwolf-grunt-model')
 export class FrostwolfGruntModel extends MinionModel {
+    protected _brand: symbol = Symbol('frostwolf-grunt-model');
     constructor() {
         super({
             class: ClassType.NEUTRAL,
@@ -20,6 +23,6 @@ export class FrostwolfGruntModel extends MinionModel {
             rarity: RarityType.COMMON,
             races: [],
         });
-        this.init();
+        
     }
 }
