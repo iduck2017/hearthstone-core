@@ -28,3 +28,7 @@ alwaysApply: true
    - **Reference cards**: Reference cards and reference effects the design builds on.
 3. Implement the example card and tests according to the spec.
 4. Update the implemented list in todo.md.
+
+## Workflow
+
+- **Do not run tests on your own.** Only run tests when the user explicitly asks.

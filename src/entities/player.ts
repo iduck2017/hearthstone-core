@@ -7,7 +7,7 @@ import { Controller } from "../utils/controller";
 import { ManaModel } from "../rules/mana";
 import { GameModel } from "./game";
 import { HeroModel } from "../heroes";
-import { WeaponModel } from "../cards/weapon";
+
 
 @useModel('player-model')
 export class PlayerModel extends Model {
@@ -89,25 +89,9 @@ export class PlayerModel extends Model {
         return this._graveyard;
     }
 
-    @useChild()
-    private _weapon?: WeaponModel;
     @useMemo()
     public get weapon() {
-        return this._weapon;
-    }
-
-    public equipWeapon(weapon: WeaponModel) {
-        if (this._weapon) {
-            // Previous weapon is silently replaced and sent to graveyard
-            const old = this._weapon;
-            this._weapon = undefined;
-            this._graveyard.disposeCard(old);
-        }
-        this._weapon = weapon;
-    }
-
-    public unequipWeapon() {
-        this._weapon = undefined;
+        return this._hero.weapon;
     }
 
     @useAction()

@@ -79,6 +79,5 @@ export class RoleActionModel extends Model {
         super();
         this._current = this.origin;
         this._isAsleep = true;
-        
     }
 }

@@ -15,7 +15,7 @@ export abstract class WeaponModel extends CardModel {
     constructor(props: WeaponProps) {
         super(props);
         const durability = new WeaponDurabilityModel({ current: props.durability });
-        const disposer = new WeaponDisposerModel(durability);
+        const disposer = new WeaponDisposerModel();
         this._durability = durability;
         this._disposer = disposer;
         this._attack = new WeaponAttackModel({ origin: props.attack });
@@ -48,6 +48,6 @@ export abstract class WeaponModel extends CardModel {
         if (!player) return;
         this.consumeMana();
         this.container?.removeCard(this);
-        player.equipWeapon(this);
+        player.hero.equipWeapon(this);
     }
 }

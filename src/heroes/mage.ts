@@ -8,7 +8,7 @@ export class MageModel extends HeroModel {
     protected _brand: symbol = Symbol('mage-model');
     constructor() {
         super({
-            attack: new RoleAttackModel({ origin: 1 }),
+            attack: new RoleAttackModel({ origin: 0 }),
             health: new RoleHealthModel({ origin: 30 }),
         });
         

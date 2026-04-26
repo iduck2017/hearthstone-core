@@ -1,10 +1,12 @@
-import { useChild, Model, useMemo } from "set-piece";
+import { useChild, Model, useMemo, useRoute, useAction } from "set-piece";
 import { HeroDisposerModel } from "../rules/disposers/hero-disposer";
 import { RoleModel, RoleProps } from "../entities/role";
 import { FeatModel } from "../feats";
 import { DeathrattleModel } from "../feats/deathrattle";
 import { DamageSourceModel } from "../rules/damage-source";
 import { RestoreSourceModel } from "../rules/restore-source";
+import { WeaponModel } from "../cards/weapon";
+import { PlayerModel } from "../entities/player";
 
 export interface HeroProps extends RoleProps {
     feats?: FeatModel[];
@@ -20,6 +22,9 @@ export abstract class HeroModel extends Model {
         this._damageSource = new DamageSourceModel();
         this._restoreSource = new RestoreSourceModel();
     }
+
+    @useRoute(() => PlayerModel)
+    private _player?: PlayerModel;
 
     @useChild()
     private _damageSource: DamageSourceModel;
@@ -74,4 +79,27 @@ export abstract class HeroModel extends Model {
         return this._disposer;
     }
 
+    @useChild()
+    private _weapon?: WeaponModel;
+    @useMemo()
+    public get weapon() {
+        return this._weapon;
+    }
+
+    /** Equip a weapon; if one is already equipped, replace it and send the old one to graveyard. */
+    @useAction()
+    public equipWeapon(weapon: WeaponModel) {
+        const prevWeapon = this._weapon;
+        if (prevWeapon) {
+            this._weapon = undefined;
+            this._player?.graveyard.disposeCard(prevWeapon);
+        }
+        this._weapon = weapon;
+    }
+
+    /** Remove the equipped weapon from the slot (does not send to graveyard). */
+    @useAction()
+    public unequipWeapon() {
+        this._weapon = undefined;
+    }
 }
