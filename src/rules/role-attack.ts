@@ -1,4 +1,4 @@
-import { useDep, useRoute, useState, Model, useMemo, useRange, useChild, useDecorProducer, useConsoleGroup, useModel } from "set-piece";
+import { useDep, useRoute, useState, Model, useMemo, useRange, useChild, useDecorProducer, useConsoleGroup, useModel, useAction } from "set-piece";
 import { RoleModel } from "../../src/entities/role";
 import { PlayerModel } from "../entities/player";
 import { GameModel } from "../entities/game";
@@ -116,6 +116,7 @@ export class RoleAttackModel extends Model {
 
 
     // Attack
+    @useAction()
     public run(options: {
         target: RoleModel;
     }) {
@@ -127,4 +128,6 @@ export class RoleAttackModel extends Model {
         role.entity?.damageSource.dealDamage({ target, value: this._current });
         target.entity?.damageSource.dealDamage({ target: role, value: target.attack._current });
     }
+
+    
 }

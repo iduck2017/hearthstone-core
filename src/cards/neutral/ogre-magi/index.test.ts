@@ -6,49 +6,48 @@ import { BoardModel } from "../../../entities/board";
 import { HandModel } from "../../../entities/hand";
 import { DeckModel } from "../../../entities/deck";
 import { ManaModel } from "../../../rules/mana";
-import { FireballModel } from "./index";
-import { ChillwindYetiModel } from "../../neutral/chillwind-yeti";
+import { OgreMagiModel } from "./index";
+import { FireballModel } from "../../mage/fireball";
+import { BoulderfistOgreModel } from "../boulderfist-ogre";
 import { sleep } from "../../../utils/sleep";
 
-describe("fireball", () => {
+describe("ogre-magi", () => {
     const app = new AppModel();
+    const ogreMagi = new OgreMagiModel();
     const fireball = new FireballModel();
-    const yeti = new ChillwindYetiModel();
+    const boulderfistOgre = new BoulderfistOgreModel();
     const game = new GameModel({
         playerA: new PlayerModel({
             hero: new MageModel(),
+            board: new BoardModel({ cards: [ogreMagi] }),
             hand: new HandModel({ cards: [fireball] }),
-            board: new BoardModel(),
             deck: new DeckModel(),
             mana: new ManaModel({ maximum: 10, current: 10 }),
         }),
         playerB: new PlayerModel({
             hero: new MageModel(),
-            board: new BoardModel({ cards: [yeti] }),
+            board: new BoardModel({ cards: [boulderfistOgre] }),
         }),
     });
     const playerA = game.playerA;
     const playerB = game.playerB;
     app.setGame(game);
-    game.start();
+    game.start({ isInitPhaseIgnored: true });
 
     it("check-initial-state", () => {
-        console.log(playerA, playerB)
+        expect(playerA.board.cards).toContain(ogreMagi);
         expect(playerA.hand.cards).toContain(fireball);
-        expect(playerB.board.cards).toContain(yeti);
+        expect(playerB.board.cards).toContain(boulderfistOgre);
     });
 
-    it("fireball-kills-target-and-enters-graveyard", async () => {
+    it("spell-damage-boosts-fireball", async () => {
+        // Boulderfist Ogre has 7 HP: survives Fireball (6), dies to Spell Damage +1 Fireball (7)
         fireball.play();
         await sleep();
-        const options = playerA.controller.selector?.options;
-        expect(options).toContain(yeti.role);
-        playerA.controller.selectTarget(yeti.role);
+        playerA.controller.selectTarget(boulderfistOgre.role);
         await sleep();
 
-        expect(yeti.disposer.isActived).toBe(true);
+        expect(boulderfistOgre.disposer.isActived).toBe(true);
         expect(playerB.board.cards.length).toBe(0);
-        expect(playerA.graveyard.cards).toContain(fireball);
-        expect(playerA.mana.current).toBe(playerA.mana.maximum - 4);
     });
 });

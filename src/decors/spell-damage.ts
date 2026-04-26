@@ -49,7 +49,7 @@ export function usePlayerSpellDamageDecorConsumer<I extends SpellFeatureModel>()
     ) {
         useDecorConsumer((i: I) => {
             const targets: FeatModel[] = [];
-            i.player?.hand?.cards.forEach(item => {
+            i.player?.hand.cards.forEach(item => {
                 targets.push(...item.feats)
             })
             return [
