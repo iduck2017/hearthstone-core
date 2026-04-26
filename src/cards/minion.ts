@@ -2,7 +2,7 @@ import { Model, TypedPropertyDecorator, useChild, useMemo, useRoute, useState, u
 import { CardModel, CardProps } from ".";
 import { PlayerModel } from "../entities/player";
 import { RoleModel, RoleProps } from "../entities/role";
-import { MinionDisposerModel } from "../rules/disposers/minion";
+import { MinionDisposerModel } from "../rules/disposers/minion-disposer";
 import { HookRegistry, HooksLauncherModel } from "../rules/hooks-launcher";
 import { BoardModel } from "../entities/board";
 import { RoleHealthModel } from "../rules/role-health";

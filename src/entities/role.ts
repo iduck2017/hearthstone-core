@@ -82,8 +82,8 @@ export class RoleModel extends Model {
         if (!this.action.isEnable) return false;
         /** Check attack */
         if (this.attack.current <= 0) return false;
-        /** Check position */
-        if (!this._board) return false;
+        /** Check position — minions must be on a board; heroes are always in play */
+        if (!this._board && !this._hero) return false;
         /** Check disposer */
         if (!this.entity) return false;
         if (this.entity.disposer.isActived) return false;
