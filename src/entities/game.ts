@@ -72,6 +72,8 @@ export class GameModel extends Model {
         const currentPlayer = this.currentPlayer;
         currentPlayer.mana.addMaximum(1);
         currentPlayer.mana.reset();
+        currentPlayer.hero.role.action.wakeup();
+        currentPlayer.hero.role.action.resetCurrent();
         const minions = currentPlayer.board.minions;
         minions.forEach(minion => {
             minion.role.action.wakeup();
