@@ -2,6 +2,7 @@ import { useChild } from "set-piece";
 import { CardModel, CardProps } from ".";
 import { HookRegistry, HooksLauncherModel } from "../rules/hooks-launcher";
 import { SpellEffectModel } from "../feats/spell-effect";
+import { SpellPlayPostEvent } from "../event/spell-play";
 
 export interface SpellProps extends CardProps {}
 export abstract class SpellModel extends CardModel {
@@ -27,8 +28,16 @@ export abstract class SpellModel extends CardModel {
             hookRegistry.push({ hook, params });
         }
 
-        // Consume mana
+        // Consume mana, then hand off to cast
         this.consumeMana();
+        await this.cast(hookRegistry);
+    }
+
+    // Fires SpellPlayPostEvent, executes effects, then moves card to graveyard.
+    private async cast(hookRegistry: HookRegistry) {
+        const player = this.player;
+        if (!player) return;
+
 
         // Execute spell effects (card stays in hand so Spell Damage auras remain active)
         this._launcher = new HooksLauncherModel({ registry: hookRegistry });
@@ -41,5 +50,7 @@ export abstract class SpellModel extends CardModel {
         // Remove from hand and enter graveyard after all effects resolve
         this.container?.removeCard(this);
         player.graveyard.disposeCard(this);
+        
+        this.emit(new SpellPlayPostEvent({ options: {}, result: undefined }), { isDefer: true });
     }
 }
