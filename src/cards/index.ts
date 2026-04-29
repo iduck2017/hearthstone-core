@@ -1,4 +1,4 @@
-import { Model, useChild, useMemo, useRoute } from "set-piece";
+import { Model, useAction, useChild, useMemo, useRoute } from "set-piece";
 import { BoardModel } from "../entities/board";
 import { DeckModel } from "../entities/deck";
 import { HandModel } from "../entities/hand";
@@ -55,13 +55,6 @@ export abstract class CardModel extends Model {
     @useRoute(() => GraveyardModel)
     private _graveyard?: GraveyardModel;
 
-    @useMemo()
-    public get container() {
-        return this._board ??
-            this._hand ??
-            this._deck ??
-            this._graveyard;
-    }
 
     @useRoute(() => GameModel)
     private _game?: GameModel;
@@ -80,7 +73,7 @@ export abstract class CardModel extends Model {
     @useChild()
     private _cost: CostModel;
     @useMemo()
-    protected consumeMana() {
+    public consumeMana() {
         if (!this._player) return;
         const cost = this._cost.current;
         this._player.mana.consume(cost);
@@ -152,4 +145,19 @@ export abstract class CardModel extends Model {
     }
     public abstract play(): Promise<void>;
 
+
+    @useMemo()
+    public get container() {
+        return this._board ??
+            this._hand ??
+            this._deck ??
+            this._graveyard;
+    }
+    @useAction()
+    public launch() {
+        const player = this.player;
+        const container = this.container;
+        container?.removeCard(this);
+        player?.workspace.addCard(this);
+    }
 }

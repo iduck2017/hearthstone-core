@@ -2,6 +2,7 @@ import { Decor, Model, useDecorConsumer } from "set-piece";
 import { BuffOperator, BuffOperatorType } from "./role-attack";
 import { FeatModel } from "../feats";
 import { PlayerModel } from "../entities/player";
+import { CardModel } from "../cards";
 
 export interface SpellFeatureModel extends Model {
     feat: FeatModel | undefined;
@@ -48,14 +49,17 @@ export function usePlayerSpellDamageDecorConsumer<I extends SpellFeatureModel>()
         descriptor: TypedPropertyDescriptor<(decor: SpellDamageDecor) => void>
     ) {
         useDecorConsumer((i: I) => {
-            const targets: FeatModel[] = [];
-            i.player?.hand.cards.forEach(item => {
-                targets.push(...item.feats)
-            })
-            return [
-                i.feat?.isActived ? targets : undefined,
-                SpellDamageDecor
+            const cards: CardModel[] = [
+                ...i.player?.hand.cards ?? [],
+                ...i.player?.workspace.cards ?? [],
+                ...i.player?.deck.cards ?? [],
+                ...i.player?.board.cards ?? [],
+                ...i.player?.graveyard.cards ?? []
             ]
+            const targets: FeatModel[] = [];
+            cards.forEach(card => targets.push(...card.feats))
+            if (!i.feat?.isActived) return [undefined, SpellDamageDecor];
+            return [targets, SpellDamageDecor]
         })(
             prototype,
             key,

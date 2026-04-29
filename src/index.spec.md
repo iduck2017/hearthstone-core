@@ -123,9 +123,10 @@ GameModel
 │   │       ├── feats: FeatModel[]
 │   │       ├── disposer: MinionDisposerModel
 │   │       └── damageSource / restoreSource
-│   ├── hand: HandModel    — CardModel[]
-│   ├── deck: DeckModel    — CardModel[]
+│   ├── hand: HandModel      — CardModel[]
+│   ├── deck: DeckModel      — CardModel[]
 │   ├── graveyard: GraveyardModel
+│   ├── workspace: WorkspaceModel  — transient staging area while a card moves between containers
 │   └── mana: ManaModel
 ├── currentPlayer          — odd turn = playerA
 ├── turn: number
@@ -382,8 +383,10 @@ minion.play()
 │   └── battlecry.getTargets()                  — per battlecry: getSelector → fetchTarget loop
 ├── consumeMana()                                — deduct cost from player's mana
 ├── summon(board, boardIndex)
-│   ├── container.removeCard(this)              — remove from hand
-│   ├── board.summonMinion(this, position)      — insert into BoardModel
+│   ├── launch()                                — move card from current container → workspace
+│   ├── handleSummon(board, position)           — move from workspace → board.summonMinion()
+│   │   ├── workspace.removeCard(this)
+│   │   └── board.summonMinion(this, position)  — insert into BoardModel
 │   └── finishSummon()
 │       ├── summonedTurn = game.turn
 │       └── role.action.sleep()                 — summoning sickness
@@ -402,8 +405,10 @@ spell.play()
 ├── HooksLauncherModel.next()                   — card stays in hand so Spell Damage auras remain active
 │   └── spellEffect.run(target)
 │       └── @useSpellEffectRunHook              — handleRun(target) on the SpellEffectModel subclass
-├── container.removeCard(this)                  — remove from hand after all effects resolve
-└── graveyard.disposeCard(this)                 — move to graveyard
+├── launch()                                     — move card from hand → workspace
+└── dispose()                                   — move from workspace → graveyard
+    ├── workspace.removeCard(this)
+    └── graveyard.disposeCard(this)
 ```
 
 ### Weapon play flow
@@ -411,8 +416,10 @@ spell.play()
 ```
 weapon.play()
 ├── consumeMana()                                — deduct cost from player's mana
-├── container.removeCard(this)                  — remove from hand
-└── hero.equipWeapon(this)                      — attach weapon to hero; previous weapon is disposed
+├── launch()                                     — move card from hand → workspace
+└── equip()                                     — move from workspace → hero
+    ├── workspace.removeCard(this)
+    └── hero.equipWeapon(this)                  — attach weapon to hero; previous weapon is disposed
 ```
 
 ### Disposer execution flow

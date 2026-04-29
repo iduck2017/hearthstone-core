@@ -51,7 +51,6 @@ export abstract class MinionModel extends CardModel {
     }
     
     /** Summon: from anwhere to board */
-    @useAction()
     public summon(board?: BoardModel, position?: number) {
         board = board ?? this.player?.board;
         if (!board) {
@@ -59,9 +58,16 @@ export abstract class MinionModel extends CardModel {
             return;
         }        
         position = position ?? board.cards.length;
-        this.container?.removeCard(this);
-        board.summonMinion(this, position);
+        this.launch();
+        this.handleSummon(board, position);
         this.finishSummon();
+    }
+
+    @useAction()
+    private handleSummon(board: BoardModel, position: number) {
+        const player = this.player;
+        player?.workspace.removeCard(this);
+        board.summonMinion(this, position);
     }
 
     @useAction()
@@ -81,7 +87,6 @@ export abstract class MinionModel extends CardModel {
     } | undefined> {
         const player = this.player;
         if (!player) return;
-        
         const board = player.board;
         const positions = new Array(board.cards.length + 1).fill(0).map((_, index) => index);
         const boardIndex = await player.controller.fetchTarget({
@@ -91,7 +96,6 @@ export abstract class MinionModel extends CardModel {
         const hand = player.hand;
         const handIndex = hand.cards.indexOf(this);
         if (handIndex === -1) return;
-        
         const hookRegistry: HookRegistry = []
         for (const hook of this.battlecries) {
             const params = await hook.getTargets();
@@ -105,17 +109,16 @@ export abstract class MinionModel extends CardModel {
     }
 
     public async play() {
+        /** Prepare */
         const player = this.player;
         if (!player) return;
-
-        /** Prepare */
         const options = await this.preparePlay();
         if (!options) return;
-
+        /** Consume */
         const board = player.board;
         this.consumeMana();
+        /** Summon */
         this.summon(board, options.boardIndex);
-        
         /** Launch */
         this._launcher = new HooksLauncherModel({
             registry: options.hookRegistry,

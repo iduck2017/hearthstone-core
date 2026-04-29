@@ -1,4 +1,4 @@
-import { useChild } from "set-piece";
+import { useAction, useChild } from "set-piece";
 import { CardModel, CardProps } from ".";
 import { HookRegistry, HooksLauncherModel } from "../rules/hooks-launcher";
 import { SpellEffectModel } from "../feats/spell-effect";
@@ -38,6 +38,7 @@ export abstract class SpellModel extends CardModel {
         const player = this.player;
         if (!player) return;
 
+        this.launch();
 
         // Execute spell effects (card stays in hand so Spell Damage auras remain active)
         this._launcher = new HooksLauncherModel({ registry: hookRegistry });
@@ -48,9 +49,16 @@ export abstract class SpellModel extends CardModel {
         this._launcher = undefined;
 
         // Remove from hand and enter graveyard after all effects resolve
-        this.container?.removeCard(this);
-        player.graveyard.disposeCard(this);
+        this.dispose()
         
         this.emit(new SpellPlayPostEvent({ options: {}, result: undefined }), { isDefer: true });
+    }
+
+    @useAction()
+    private dispose() {
+        const player = this.player;
+        if (!player) return;
+        player.workspace.removeCard(this)
+        player.graveyard.disposeCard(this);
     }
 }

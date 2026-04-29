@@ -7,6 +7,7 @@ import { Controller } from "../utils/controller";
 import { ManaModel } from "../rules/mana";
 import { GameModel } from "./game";
 import { HeroModel } from "../heroes";
+import { WorkspaceModel } from "./workspace";
 
 
 @useModel('player-model')
@@ -27,6 +28,7 @@ export class PlayerModel extends Model {
         this._deck = props?.deck ?? new DeckModel();
         this._graveyard = props?.graveyard ?? new GraveyardModel();
         this._mana = props?.mana ?? new ManaModel();
+        this._workspace = new WorkspaceModel();
         this._controller = new Controller();
     }
 
@@ -52,6 +54,13 @@ export class PlayerModel extends Model {
     @useMemo()
     public get board() {
         return this._board;
+    }
+
+    @useChild()
+    private _workspace: WorkspaceModel;
+    @useMemo()
+    public get workspace() {
+        return this._workspace;
     }
 
     @useChild()

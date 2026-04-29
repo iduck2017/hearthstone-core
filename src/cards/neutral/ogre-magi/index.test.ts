@@ -47,6 +47,7 @@ describe("ogre-magi", () => {
         playerA.controller.selectTarget(boulderfistOgre.role);
         await sleep();
 
+        expect(boulderfistOgre.role.health.current).toBe(0)
         expect(boulderfistOgre.disposer.isActived).toBe(true);
         expect(playerB.board.cards.length).toBe(0);
     });

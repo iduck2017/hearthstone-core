@@ -47,7 +47,14 @@ export abstract class WeaponModel extends CardModel {
         const player = this.player;
         if (!player) return;
         this.consumeMana();
-        this.container?.removeCard(this);
+        this.launch();
+        this.equip()
+    }
+
+    private equip() {
+        const player = this.player;
+        if (!player) return;
+        player.workspace.removeCard(this);
         player.hero.equipWeapon(this);
     }
 }

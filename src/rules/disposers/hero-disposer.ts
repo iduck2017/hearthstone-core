@@ -6,10 +6,6 @@ import { HeroModel } from "../../heroes";
 @useModel('hero-disposer-model')
 export class HeroDisposerModel extends DisposerModel {
     protected _brand: symbol = Symbol('hero-disposer-model');
-    constructor() {
-        super();
-        
-    }
 
     @useRoute(() => PlayerModel)
     private _player?: PlayerModel;
