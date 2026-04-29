@@ -19,13 +19,13 @@ export class SpellLauncherModel extends LauncherModel {
     private _currentIndex?: number;
 
     @useAction()
-    public finishCast() {
+    public moveToGraveyard() {
         const player = this._player;
         if (!player) return;
         const spell = this._spell;
         if (!spell) return;
         player.workspace.removeCard(spell);
-        player.graveyard.disposeCard(spell);
+        player.graveyard.addCard(spell);
     }
 
     private async proceedCast(): Promise<boolean> {
@@ -58,7 +58,7 @@ export class SpellLauncherModel extends LauncherModel {
         const result = await this.prepareLaunch();
         if (!result) return;
         spell.consumeMana();
-        this.prepare(player);
+        this.moveToWorkspace(player);
         this._options = result.options;
         this._currentIndex = 0;
         while (true) {
@@ -67,7 +67,7 @@ export class SpellLauncherModel extends LauncherModel {
         }
         this._options = undefined;
         this._currentIndex = undefined;
-        this.finishCast();
+        this.moveToGraveyard();
         this.emit(new SpellPlayPostEvent({ options: {}, result: undefined }), { isDefer: true });
     }
 }

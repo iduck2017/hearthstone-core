@@ -16,8 +16,8 @@ describe('southsea-deckhand', () => {
 
     const fieryWarAxe = new FieryWarAxeModel();
     const deckhand = new SouthseaDeckhandModel();
-    const wisp1 = new WispModel();
-    const wisp2 = new WispModel();
+    const wispA = new WispModel();
+    const wispB = new WispModel();
 
     const warrior = new WarriorModel();
 
@@ -29,7 +29,7 @@ describe('southsea-deckhand', () => {
         }),
         playerB: new PlayerModel({
             hero: new MageModel(),
-            board: new BoardModel({ cards: [wisp1, wisp2] }),
+            board: new BoardModel({ cards: [wispA, wispB] }),
         }),
     });
 
@@ -41,7 +41,7 @@ describe('southsea-deckhand', () => {
     const playerB = game.playerB;
 
     it('check-initial-state', () => {
-        expect(playerA.weapon).toBe(fieryWarAxe);
+        expect(playerA.hero.weapon).toBe(fieryWarAxe);
         expect(playerA.hand.cards).toContain(deckhand);
     });
 
@@ -72,19 +72,19 @@ describe('southsea-deckhand', () => {
         // First hero attack: durability 2 → 1
         warrior.role.runAttack();
         await sleep();
-        playerA.controller.selectTarget(wisp1.role);
+        playerA.controller.selectTarget(wispA.role);
         await sleep();
-        expect(wisp1.disposer.isActived).toBe(true);
+        expect(wispA.disposer.isActived).toBe(true);
         expect(fieryWarAxe.durability.current).toBe(1);
 
         // Second hero attack: durability 1 → 0, weapon destroyed
         warrior.role.action.resetCurrent();
         warrior.role.runAttack();
         await sleep();
-        playerA.controller.selectTarget(wisp2.role);
+        playerA.controller.selectTarget(wispB.role);
         await sleep();
-        expect(wisp2.disposer.isActived).toBe(true);
-        expect(playerA.weapon).toBeUndefined();
+        expect(wispB.disposer.isActived).toBe(true);
+        expect(playerA.hero.weapon).toBeUndefined();
 
         // Charge deactivated — ChargeActiveDecor no longer fires active()
         expect(deckhand.role.charge.isActived).toBe(false);

@@ -26,7 +26,9 @@ export abstract class LauncherModel extends Model {
     private _graveyard?: GraveyardModel;
 
 
-    protected prepare(player?: PlayerModel) {
+    public abstract launch(): Promise<void>;
+
+    protected moveToWorkspace(player?: PlayerModel) {
         player = player ?? this._player;
         if (!player) return;
         const card = this._card;

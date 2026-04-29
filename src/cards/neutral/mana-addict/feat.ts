@@ -2,7 +2,7 @@ import { useChild, useMemo, useRoute, useModel } from "set-piece";
 import { FeatModel } from "../../../feats";
 import { MinionModel } from "../../minion";
 import { BoardOnlyTagModel } from "../../../rules/board-only-tag";
-import { SpellPlayPostEvent, useSpellPlayEventConsumer } from "../../../event/spell-play";
+import { SpellPlayPostEvent, usePlayerSpellCast } from "../../../event/spell-play";
 import { ManaAddictBuffModel } from "./buff";
 
 // Whenever the controller casts a spell, attach a temporary +2 Attack buff to this minion.
@@ -25,8 +25,8 @@ export class ManaAddictFeatModel extends FeatModel {
         this._boardOnly = new BoardOnlyTagModel();
     }
 
-    @useSpellPlayEventConsumer()
+    @usePlayerSpellCast()
     private _onSpellPlay(_event: SpellPlayPostEvent) {
-        this.entity?.addFeature(new ManaAddictBuffModel());
+        this.entity?.addFeat(new ManaAddictBuffModel());
     }
 }

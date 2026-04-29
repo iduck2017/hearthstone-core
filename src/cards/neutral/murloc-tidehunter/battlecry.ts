@@ -20,15 +20,12 @@ export class MurlocTidehunterBattlecryModel extends BattlecryModel<Model> {
     protected async handleRun(): Promise<void> {
         const player = this.player;
         if (!player) return;
-
         const minion = this._minion;
         if (!minion) return;
-
         const board = player.board;
         const index = board.cards.indexOf(minion);
         if (index === -1) return;
-
         const scout = new MurlocScoutModel();
-        scout.summon(board, index + 1);
+        scout.summon(player, index + 1);
     }
 }

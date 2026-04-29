@@ -46,7 +46,6 @@ describe("gadgetzan-auctioneer", () => {
         await sleep();
         playerA.controller.selectTarget(playerB.hero.role);
         await sleep();
-
         expect(playerA.hand.cards).toContain(deckWisp);
         expect(playerA.deck.cards.length).toBe(0);
     });

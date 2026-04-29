@@ -32,7 +32,7 @@ export class WeaponDisposerModel extends DisposerModel {
         if (!hero || !player || !weapon) return;
         // Remove from hero's weapon slot, then send to graveyard
         hero.unequipWeapon();
-        player.graveyard.disposeCard(weapon);
+        player.graveyard.addCard(weapon);
     }
 
     public finishRun() {

@@ -2,7 +2,7 @@ import { useChild, useMemo, useRoute, useModel } from "set-piece";
 import { FeatModel } from "../../../feats";
 import { MinionModel } from "../../minion";
 import { BoardOnlyTagModel } from "../../../rules/board-only-tag";
-import { SpellPlayPostEvent, useSpellPlayEventConsumer } from "../../../event/spell-play";
+import { SpellPlayPostEvent, usePlayerSpellCast } from "../../../event/spell-play";
 import { VioletApprenticeModel } from "../../derivatives/violet-apprentice";
 
 // Whenever the controller casts a spell, summon a 1/1 Violet Apprentice to the right of this minion.
@@ -25,14 +25,14 @@ export class VioletTeacherFeatModel extends FeatModel {
         this._boardOnly = new BoardOnlyTagModel();
     }
 
-    @useSpellPlayEventConsumer()
-    private _onSpellPlay(_event: SpellPlayPostEvent) {
-        const board = this.player?.board;
+    @usePlayerSpellCast()
+    protected _onSpellPlay(_event: SpellPlayPostEvent) {
+        const player = this.player;
         const minion = this._minion;
-        if (!board || !minion) return;
-
+        if (!player || !minion) return;
+        const board = player.board;
         const index = board.cards.indexOf(minion);
         const apprentice = new VioletApprenticeModel();
-        apprentice.summon(board, index + 1);
+        apprentice.summon(player, index + 1);
     }
 }

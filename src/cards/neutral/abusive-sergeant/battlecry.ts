@@ -25,6 +25,6 @@ export class AbusiveSergeantBattlecryModel extends BattlecryModel<RoleModel> {
     protected async handleRun(target?: RoleModel): Promise<void> {
         if (!target) return;
         console.log('Buff target', target.name)
-        target.entity?.addFeature(new AbusiveSergeantBuffModel());
+        target.entity?.addFeat(new AbusiveSergeantBuffModel());
     }
 }

@@ -49,13 +49,7 @@ export function usePlayerSpellDamageDecorConsumer<I extends SpellFeatureModel>()
         descriptor: TypedPropertyDescriptor<(decor: SpellDamageDecor) => void>
     ) {
         useDecorConsumer((i: I) => {
-            const cards: CardModel[] = [
-                ...i.player?.hand.cards ?? [],
-                ...i.player?.workspace.cards ?? [],
-                ...i.player?.deck.cards ?? [],
-                ...i.player?.board.cards ?? [],
-                ...i.player?.graveyard.cards ?? []
-            ]
+            const cards: CardModel[] = i.player?.cards ?? [];
             const targets: FeatModel[] = [];
             cards.forEach(card => targets.push(...card.feats))
             if (!i.feat?.isActived) return [undefined, SpellDamageDecor];

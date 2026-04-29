@@ -14,22 +14,22 @@ import { sleep } from "../../../utils/sleep";
 describe("coldlight-oracle", () => {
     const app = new AppModel();
     const coldlightOracle = new ColdlightOracleModel();
-    const deckWisp1 = new WispModel();
-    const deckWisp2 = new WispModel();
-    const deckRaptor1 = new BloodfenRaptorModel();
-    const deckRaptor2 = new BloodfenRaptorModel();
+    const deckWispA = new WispModel();
+    const deckWispB = new WispModel();
+    const deckRaptorA = new BloodfenRaptorModel();
+    const deckRaptorB = new BloodfenRaptorModel();
     const game = new GameModel({
         playerA: new PlayerModel({
             hero: new MageModel(),
             board: new BoardModel(),
             hand: new HandModel({ cards: [coldlightOracle] }),
-            deck: new DeckModel({ cards: [deckWisp1, deckWisp2] }),
+            deck: new DeckModel({ cards: [deckWispA, deckWispB] }),
             mana: new ManaModel({ maximum: 10, current: 10 }),
         }),
         playerB: new PlayerModel({
             hero: new MageModel(),
             board: new BoardModel(),
-            deck: new DeckModel({ cards: [deckRaptor1, deckRaptor2] }),
+            deck: new DeckModel({ cards: [deckRaptorA, deckRaptorB] }),
         }),
     });
     const playerA = game.playerA;
@@ -39,10 +39,10 @@ describe("coldlight-oracle", () => {
 
     it("check-initial-state", () => {
         expect(playerA.hand.cards).toContain(coldlightOracle);
-        expect(playerA.deck.cards).toContain(deckWisp1);
-        expect(playerA.deck.cards).toContain(deckWisp2);
-        expect(playerB.deck.cards).toContain(deckRaptor1);
-        expect(playerB.deck.cards).toContain(deckRaptor2);
+        expect(playerA.deck.cards).toContain(deckWispA);
+        expect(playerA.deck.cards).toContain(deckWispB);
+        expect(playerB.deck.cards).toContain(deckRaptorA);
+        expect(playerB.deck.cards).toContain(deckRaptorB);
     });
 
     it("battlecry-both-players-draw-two", async () => {
@@ -52,11 +52,11 @@ describe("coldlight-oracle", () => {
         playerA.controller.selectTarget(0); // select board position
         await sleep();
 
-        expect(playerA.hand.cards).toContain(deckWisp1);
-        expect(playerA.hand.cards).toContain(deckWisp2);
+        expect(playerA.hand.cards).toContain(deckWispA);
+        expect(playerA.hand.cards).toContain(deckWispB);
         expect(playerA.deck.cards.length).toBe(0);
-        expect(playerB.hand.cards).toContain(deckRaptor1);
-        expect(playerB.hand.cards).toContain(deckRaptor2);
+        expect(playerB.hand.cards).toContain(deckRaptorA);
+        expect(playerB.hand.cards).toContain(deckRaptorB);
         expect(playerB.deck.cards.length).toBe(0);
     });
 });

@@ -90,8 +90,8 @@ export class GameModel extends Model {
         }
         this._isStarted = true;
         if (!options?.isInitPhaseIgnored) {
-            this._playerA.handleGameInit(true);
-            this._playerB.handleGameInit(false);
+            this._playerA.prepareGame(true);
+            this._playerB.prepareGame(false);
         }
         this.nextTurn();
     }

@@ -2,7 +2,7 @@ import { useChild, useMemo, useRoute, useModel } from "set-piece";
 import { FeatModel } from "../../../feats";
 import { MinionModel } from "../../minion";
 import { BoardOnlyTagModel } from "../../../rules/board-only-tag";
-import { SpellPlayPostEvent, useSpellPlayEventConsumer } from "../../../event/spell-play";
+import { SpellPlayPostEvent, usePlayerSpellCast } from "../../../event/spell-play";
 
 // Whenever the controller casts a spell, draw a card.
 @useModel('gadgetzan-auctioneer-feat-model')
@@ -24,7 +24,7 @@ export class GadgetzanAuctioneerFeatModel extends FeatModel {
         this._boardOnly = new BoardOnlyTagModel();
     }
 
-    @useSpellPlayEventConsumer()
+    @usePlayerSpellCast()
     private _onSpellPlay(_event: SpellPlayPostEvent) {
         this.player?.drawCard();
     }

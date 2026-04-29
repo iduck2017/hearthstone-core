@@ -27,6 +27,7 @@ export class SouthseaDeckhandFeatModel extends FeatModel {
     @useChargeActiveFlagDecorConsumer()
     protected _onChargeActiveDecor(decor: ChargeActiveDecor) {
         if (!this.isActived) return;
-        if (this.player?.weapon) decor.active();
+        const weapon = this.player?.hero.weapon;
+        if (weapon) decor.active();
     }
 }

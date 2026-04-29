@@ -28,6 +28,6 @@ export class RazorfenHunterBattlecryModel extends BattlecryModel<Model> {
         if (index === -1) return;
 
         const boar = new BoarModel();
-        boar.summon(board, index + 1);
+        boar.summon(player, index + 1);
     }
 }

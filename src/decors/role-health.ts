@@ -1,7 +1,8 @@
-import { Decor, useDecorConsumer } from "set-piece";
+import { Decor, Model, useDecorConsumer } from "set-piece";
 import { BuffOperator, BuffOperatorType } from "./role-attack";
 import { RoleModel } from "../entities/role";
-import { FeatModel, RoleFeatureModel } from "../feats";
+import { FeatModel, SubFeatModel } from "../feats";
+import { PlayerModel } from "../entities/player";
 
 export class RoleHealthDecor extends Decor<number> {
     private _operators: BuffOperator[] = [];
@@ -35,13 +36,16 @@ export class RoleHealthDecor extends Decor<number> {
 }
 
 
-export function useRoleHealthDecorConsumer<I extends RoleFeatureModel>() {
+export function useRoleHealthDecorConsumer<F extends Model & {
+    feat: FeatModel | undefined,
+    role: RoleModel | undefined
+}>() {
     return function(
-        prototype: I,
+        prototype: F,
         key: string,
         descriptor: TypedPropertyDescriptor<(decor: RoleHealthDecor) => void>
     ) {
-        useDecorConsumer((i: I) => [
+        useDecorConsumer((i: F) => [
             i.feat?.isActived ? i.role?.health : undefined,
             RoleHealthDecor
         ])(
@@ -55,18 +59,21 @@ export function useRoleHealthDecorConsumer<I extends RoleFeatureModel>() {
 
 // Subscribes to the RoleHealthDecor of every allied minion on the board.
 // The handler is called once per ally; use this to apply aura buffs to all friendly minions.
-export function useAllyRoleHealthDecorConsumer<I extends RoleFeatureModel>() {
+export function useAllyRoleHealthDecorConsumer<F extends Model & {
+    player: PlayerModel | undefined
+    feat: FeatModel | undefined
+}>() {
     return function(
-        prototype: I,
+        prototype: F,
         key: string,
         descriptor: TypedPropertyDescriptor<(decor: RoleHealthDecor) => void>
     ) {
-        useDecorConsumer((i: I) => [
-            i.feat?.isActived
-                ? i.player?.board.minions.map(m => m.role?.health)
-                : undefined,
-            RoleHealthDecor
-        ])(
+        useDecorConsumer((feat: F) => {
+            const minions = feat.player?.board.minions;
+            const feats = minions?.map(minion => minion.role.health);
+            if (!feat.feat?.isActived) return [undefined, RoleHealthDecor];
+            else return [feats, RoleHealthDecor]
+        })(
             prototype,
             key,
             descriptor

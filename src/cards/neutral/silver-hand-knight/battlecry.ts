@@ -19,15 +19,12 @@ export class SilverHandKnightBattlecryModel extends BattlecryModel<Model> {
     protected async handleRun(): Promise<void> {
         const player = this.player;
         if (!player) return;
-
         const minion = this._minion;
         if (!minion) return;
-
         const board = player.board;
         const index = board.cards.indexOf(minion);
         if (index === -1) return;
-
         const squire = new SquireModel();
-        squire.summon(board, index + 1);
+        squire.summon(player, index + 1);
     }
 }

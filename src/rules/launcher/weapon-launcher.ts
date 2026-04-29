@@ -26,7 +26,7 @@ export class WeaponLauncherModel extends LauncherModel {
         const weapon = this._weapon;
         if (!weapon) return;
         weapon.consumeMana();
-        this.prepare(player);
+        this.moveToWorkspace(player);
         this.equip();
     }
 }

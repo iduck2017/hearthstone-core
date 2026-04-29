@@ -18,7 +18,6 @@ export abstract class DisposerModel extends Model {
     
     public abstract get isActived(): boolean;
 
-    
     public abstract run(): void;
     public abstract finishRun(): void;
 }           

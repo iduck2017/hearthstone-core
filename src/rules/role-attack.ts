@@ -75,12 +75,11 @@ export class RoleAttackModel extends Model {
         const role = this.role;
         if (!role) return false;
         if (role.charge.isActived) return true;
-
         const game = this.game;
         if (!game) return false;
-        const summonTurn = minion.summonedTurn;
+        const summonedTurn = minion.launcher.summonedTurn;
         const currentTurn = game.turn;
-        if (summonTurn !== currentTurn) return true;
+        if (summonedTurn !== currentTurn) return true;
         return false;
     }
 
@@ -117,7 +116,7 @@ export class RoleAttackModel extends Model {
 
     // Attack
     @useAction()
-    public run(options: {
+    public launch(options: {
         target: RoleModel;
     }) {
         // Check role
@@ -128,9 +127,10 @@ export class RoleAttackModel extends Model {
         role.entity?.damageSource.dealDamage({ target, value: this._current });
         target.entity?.damageSource.dealDamage({ target: role, value: target.attack._current });
         // If this is a hero attack, consume weapon durability
-        if (!this._hero) return;
-        this._player?.weapon?.durability.consume();
+        const hero = this._hero
+        if (!hero) return;
+        const weapon = hero.weapon;
+        if (!weapon) return;
+        weapon?.durability.consume();
     }
-
-    
 }

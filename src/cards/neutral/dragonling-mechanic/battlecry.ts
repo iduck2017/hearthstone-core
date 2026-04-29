@@ -19,15 +19,12 @@ export class DragonlingMechanicBattlecryModel extends BattlecryModel<Model> {
     protected async handleRun(): Promise<void> {
         const player = this.player;
         if (!player) return;
-
         const minion = this._minion;
         if (!minion) return;
-
         const board = player.board;
         const index = board.cards.indexOf(minion);
         if (index === -1) return;
-
         const dragonling = new MechanicalDragonlingModel();
-        dragonling.summon(board, index + 1);
+        dragonling.summon(player, index + 1);
     }
 }

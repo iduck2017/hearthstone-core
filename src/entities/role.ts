@@ -196,6 +196,6 @@ export class RoleModel extends Model {
 
     @useEventProducer(() => [RoleAttackReceivePrevEvent, RoleAttackReceivePostEvent])
     private _receiveAttack(options: RoleAttackReceiveOption, event?: RoleAttackReceivePrevEvent) {
-        options.source.attack.run({ target: this })
+        options.source.attack.launch({ target: this })
     }
 }

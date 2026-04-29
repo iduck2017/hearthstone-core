@@ -37,7 +37,7 @@ describe('acidic-swamp-ooze', () => {
     game.nextTurn();
 
     it('check-initial-state', () => {
-        expect(playerA.weapon).toBe(fieryWarAxe);
+        expect(playerA.hero.weapon).toBe(fieryWarAxe);
         expect(fieryWarAxe.durability.current).toBe(2);
     });
 
@@ -45,7 +45,7 @@ describe('acidic-swamp-ooze', () => {
         const promise = ooze.play();
         playerB.controller.selectTarget(0); // board position
         await promise;
-        expect(playerA.weapon).toBeUndefined();
+        expect(playerA.hero.weapon).toBeUndefined();
         expect(playerA.graveyard.cards).toContain(fieryWarAxe);
     });
 });

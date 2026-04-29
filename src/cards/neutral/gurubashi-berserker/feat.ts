@@ -30,6 +30,6 @@ export class GurubashiBerserkerFeatModel extends FeatModel {
     private _onReceiveAttack(event: RoleDamageReceivePostEvent) {
         if (!this._minion) return;
         console.log('GurubashiBerserker Receive damage');
-        this._minion.addFeature(new GurubashiBerserkerBuffModel());
+        this._minion.addFeat(new GurubashiBerserkerBuffModel());
     }
 }

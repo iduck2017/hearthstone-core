@@ -11,7 +11,6 @@ export class BoardModel extends Model {
     }) {
         super();
         this._cards = props?.cards ?? [];
-        
     }
 
     @useRoute(() => GameModel)

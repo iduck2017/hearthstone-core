@@ -38,12 +38,12 @@ export class MinionLauncherModel extends LauncherModel {
     }
 
     public executeSummon(player: PlayerModel, position: number) {
-        this.prepare(player);
-        this.spawn(player, position);
+        this.moveToWorkspace(player);
+        this.moveToBoard(player, position);
     }
 
     @useAction()
-    public spawn(player: PlayerModel, position: number) {
+    public moveToBoard(player: PlayerModel, position: number) {
         const minion = this._minion;
         if (!minion) return;
         player.workspace.removeCard(minion);

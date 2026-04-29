@@ -7,10 +7,20 @@ import { RoleModel } from "../entities/role";
 import { CardModel } from "../cards";
 import { FeatActiveDecor } from "../decors/feat-active";
 
-export interface RoleFeatureModel extends Model {
-    role: RoleModel | undefined
-    feat: FeatModel | undefined
-    player?: PlayerModel | undefined
+export abstract class SubFeatModel extends Model {
+    @useRoute(() => FeatModel)
+    private _feat?: FeatModel
+    @useMemo()
+    public get feat() {
+        return this._feat;
+    }
+
+    @useRoute(() => PlayerModel)
+    private _player?: PlayerModel;
+    @useMemo()
+    public get player() {
+        return this._player;
+    }
 }
 
 export abstract class FeatModel extends Model {

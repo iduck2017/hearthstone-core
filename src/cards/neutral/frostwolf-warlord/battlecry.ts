@@ -19,6 +19,6 @@ export class FrostwolfWarlordBattlecryModel extends BattlecryModel<Model> {
         // Warlord is already on board when battlecry fires; subtract 1 to exclude self
         const n = player.board.minions.length - 1;
         if (n <= 0) return;
-        this.entity?.addFeature(new FrostwolfWarlordBuffModel(n));
+        this.entity?.addFeat(new FrostwolfWarlordBuffModel(n));
     }
 }

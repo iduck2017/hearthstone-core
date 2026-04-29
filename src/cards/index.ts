@@ -1,4 +1,5 @@
 import { Model, useAction, useChild, useMemo, useRoute } from "set-piece";
+import { LauncherModel } from "../rules/launcher";
 import { BoardModel } from "../entities/board";
 import { DeckModel } from "../entities/deck";
 import { HandModel } from "../entities/hand";
@@ -42,19 +43,8 @@ export abstract class CardModel extends Model {
     public get class() {
         return this._class;
     }
-
-    @useRoute(() => BoardModel)
-    private _board?: BoardModel;
-
     @useRoute(() => HandModel)
     private _hand?: HandModel;
-
-    @useRoute(() => DeckModel)
-    private _deck?: DeckModel;
-
-    @useRoute(() => GraveyardModel)
-    private _graveyard?: GraveyardModel;
-
 
     @useRoute(() => GameModel)
     private _game?: GameModel;
@@ -116,16 +106,15 @@ export abstract class CardModel extends Model {
     public get feats() {
         return [...this._feats];
     }
-
-    public addFeature(buff: FeatModel) {
+    
+    public addFeat(buff: FeatModel) {
         this._feats.push(buff);
     }
 
-    public removeFeature(buff: FeatModel) {
+    public removeFeat(buff: FeatModel) {
         const index = this._feats.indexOf(buff);
-        if (index !== -1) {
-            this._feats.splice(index, 1);
-        }
+        if (index !== -1) return;
+        this._feats.splice(index, 1);
     }
 
     @useMemo()
@@ -133,31 +122,23 @@ export abstract class CardModel extends Model {
         if (!this._hand) return false;
         if (!this._player) return false;
         if (!this._game) return false;
-
         const currentPlayer = this._game.currentPlayer;
         if (currentPlayer !== this._player) return false;
-
         const mana = this._player.mana.current;
         const cost = this._cost.current;
         if (mana < cost) return false;
-
         return true;
     }
-    public abstract play(): Promise<void>;
 
-
+    @useChild()
+    protected abstract _launcher: LauncherModel;
     @useMemo()
-    public get container() {
-        return this._board ??
-            this._hand ??
-            this._deck ??
-            this._graveyard;
+    public get launcher() {
+        return this._launcher;
     }
-    @useAction()
-    public launch() {
-        const player = this.player;
-        const container = this.container;
-        container?.removeCard(this);
-        player?.workspace.addCard(this);
+
+    public async play() {
+        if (!this.isPlayable) return;
+        return this._launcher.launch();
     }
 }

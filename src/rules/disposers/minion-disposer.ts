@@ -44,14 +44,12 @@ export class MinionDisposerModel extends DisposerModel {
 
     public run() {
         if (!this.isActived) return;
-        
         const player = this._player;
         if (!player) return;
-
         const card = this._minion;
         if (!card) return;
         this.container?.removeCard(card);
-        player.graveyard.disposeCard(card);
+        player.graveyard.addCard(card);
     }
 
     public finishRun() {

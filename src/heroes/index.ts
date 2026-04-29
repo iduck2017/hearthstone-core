@@ -54,12 +54,12 @@ export abstract class HeroModel extends Model {
         return [...this._feats];
     }
 
-    public addFeature(buff: FeatModel) {
-        this._feats.push(buff);
+    public addFeat(feat: FeatModel) {
+        this._feats.push(feat);
     }
 
-    public removeFeature(buff: FeatModel) {
-        const index = this._feats.indexOf(buff);
+    public removeFeat(feat: FeatModel) {
+        const index = this._feats.indexOf(feat);
         if (index !== -1) {
             this._feats.splice(index, 1);
         }
@@ -92,7 +92,7 @@ export abstract class HeroModel extends Model {
         const prevWeapon = this._weapon;
         if (prevWeapon) {
             this._weapon = undefined;
-            this._player?.graveyard.disposeCard(prevWeapon);
+            this._player?.graveyard.addCard(prevWeapon);
         }
         this._weapon = weapon;
     }

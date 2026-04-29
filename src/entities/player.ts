@@ -8,7 +8,7 @@ import { ManaModel } from "../rules/mana";
 import { GameModel } from "./game";
 import { HeroModel } from "../heroes";
 import { WorkspaceModel } from "./workspace";
-
+import { CardModel } from "../cards";
 
 @useModel('player-model')
 export class PlayerModel extends Model {
@@ -98,13 +98,23 @@ export class PlayerModel extends Model {
         return this._graveyard;
     }
 
+
     @useMemo()
-    public get weapon() {
-        return this._hero.weapon;
+    public get cards(): CardModel[] {
+        const result = [
+            ...this._board.cards,
+            ...this._graveyard.cards,
+            ...this._workspace.cards,
+            ...this._deck.cards,
+            ...this._hand.cards,
+        ];
+        const weapon = this.hero.weapon;
+        if (weapon) result.push(weapon);
+        return result;
     }
 
     @useAction()
-    public handleGameInit(isFirstPlayer: boolean) {
+    public prepareGame(isFirstPlayer: boolean) {
         const count = isFirstPlayer ? 3 : 4;
         const cards = this.deck.cards.slice(0, count);
         this._deck.removeCards(cards);
@@ -117,6 +127,4 @@ export class PlayerModel extends Model {
         this.deck.removeCard(card);
         this.hand.addCard(card);
     }
-
-
 }

@@ -3,6 +3,7 @@ import { CardModel, CardProps } from ".";
 import { WeaponAttackModel } from "../rules/weapon-attack";
 import { WeaponDurabilityModel } from "../rules/weapon-durability";
 import { WeaponDisposerModel } from "../rules/disposers/weapon-disposer";
+import { WeaponLauncherModel } from "../rules/launcher/weapon-launcher";
 
 export interface WeaponProps extends CardProps {
     /** Base attack value granted to the hero while equipped. */
@@ -10,7 +11,6 @@ export interface WeaponProps extends CardProps {
     /** Number of attacks before the weapon breaks. */
     durability: number;
 }
-
 export abstract class WeaponModel extends CardModel {
     constructor(props: WeaponProps) {
         super(props);
@@ -42,19 +42,6 @@ export abstract class WeaponModel extends CardModel {
         return this._disposer;
     }
 
-    /** Play: consume mana, leave hand, equip on hero. */
-    public async play() {
-        const player = this.player;
-        if (!player) return;
-        this.consumeMana();
-        this.launch();
-        this.equip()
-    }
-
-    private equip() {
-        const player = this.player;
-        if (!player) return;
-        player.workspace.removeCard(this);
-        player.hero.equipWeapon(this);
-    }
+    @useChild()
+    protected _launcher: WeaponLauncherModel = new WeaponLauncherModel();
 }

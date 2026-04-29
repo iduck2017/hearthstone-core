@@ -24,6 +24,6 @@ export class ShatteredSunClericBattlecryModel extends BattlecryModel<RoleModel> 
     @useConsoleGroup()
     protected async handleRun(target?: RoleModel): Promise<void> {
         if (!target) return;
-        target.entity?.addFeature(new ShatteredSunClericBuffModel());
+        target.entity?.addFeat(new ShatteredSunClericBuffModel());
     }
 }

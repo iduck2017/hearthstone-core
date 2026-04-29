@@ -12,12 +12,12 @@ import { sleep } from "../../../utils/sleep";
 describe("frostwolf-warlord", () => {
     const app = new AppModel();
     const frostwolfWarlord = new FrostwolfWarlordModel();
-    const wisp1 = new WispModel();
-    const wisp2 = new WispModel();
+    const wispA = new WispModel();
+    const wispB = new WispModel();
     const game = new GameModel({
         playerA: new PlayerModel({
             hero: new MageModel(),
-            board: new BoardModel({ cards: [wisp1, wisp2] }),
+            board: new BoardModel({ cards: [wispA, wispB] }),
             hand: new HandModel({ cards: [frostwolfWarlord] }),
             mana: new ManaModel({ maximum: 10, current: 10 }),
         }),
@@ -31,8 +31,8 @@ describe("frostwolf-warlord", () => {
     game.start({ isInitPhaseIgnored: true });
 
     it("check-initial-state", () => {
-        expect(playerA.board.cards).toContain(wisp1);
-        expect(playerA.board.cards).toContain(wisp2);
+        expect(playerA.board.cards).toContain(wispA);
+        expect(playerA.board.cards).toContain(wispB);
         expect(playerA.hand.cards).toContain(frostwolfWarlord);
     });
 

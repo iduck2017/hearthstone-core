@@ -19,6 +19,6 @@ export class DarkIronDwarfBattlecryModel extends BattlecryModel<RoleModel> {
     @useBattlecryRunHook()
     protected async handleRun(target?: RoleModel): Promise<void> {
         if (!target) return;
-        target.entity?.addFeature(new DarkIronDwarfBuffModel());
+        target.entity?.addFeat(new DarkIronDwarfBuffModel());
     }
 }

@@ -14,7 +14,7 @@ export class AcidicSwampOozeBattlecryModel extends BattlecryModel<Model> {
     @useBattlecryRunHook()
     protected async handleRun(): Promise<void> {
         const opponent = this.player?.opponent;
-        const weapon = opponent?.weapon;
+        const weapon = opponent?.hero.weapon;
         if (!opponent || !weapon) return;
         weapon.disposer.destroy();
     }
