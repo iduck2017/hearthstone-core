@@ -1,11 +1,11 @@
 import { Model, useAction, useDep, useMemo, useModel, useRoute, useState } from "set-piece";
-import { LauncherModel } from ".";
 import { PlayerModel } from "../../entities/player";
 import { MinionModel } from "../../cards/minion";
 import { BattlecryModel } from "../../feats/battlecry";
+import { CardLauncherModel } from "./card-launcher";
 
 @useModel('minion-launcher')
-export class MinionLauncherModel extends LauncherModel {
+export class MinionLauncherModel extends CardLauncherModel {
     protected _brand: symbol = Symbol('minion-launcher')
 
     @useRoute(() => MinionModel)
@@ -28,27 +28,17 @@ export class MinionLauncherModel extends LauncherModel {
     @useState()
     private _currentIndex?: number;
 
-    public summon(player?: PlayerModel, position?: number) {
+    /** Summon from anywhere to board. board defaults to player.board; safe for fresh tokens. */
+    public summon(player: PlayerModel, position: number) {
         player = player ?? this._player;
         if (!player) return;
         const board = player.board;
         position = position ?? board.cards.length;
-        this.executeSummon(player, position);
-        this.finishSummon();
-    }
-
-    public executeSummon(player: PlayerModel, position: number) {
-        this.moveToWorkspace(player);
-        this.moveToBoard(player, position);
-    }
-
-    @useAction()
-    public moveToBoard(player: PlayerModel, position: number) {
         const minion = this._minion;
         if (!minion) return;
-        player.workspace.removeCard(minion);
-        const board = player.board;
-        board.summonMinion(minion, position);
+        minion.moveToWorkspace(player);
+        minion.moveToBoard(board, position);
+        this.finishSummon();
     }
 
     @useAction()
@@ -61,7 +51,7 @@ export class MinionLauncherModel extends LauncherModel {
         role.action.sleep();
     }
 
-    private async prepareLaunch() {
+    private async prepareRun() {
         const player = this._player;
         if (!player) return;
         const card = this._card;
@@ -76,6 +66,7 @@ export class MinionLauncherModel extends LauncherModel {
         const options: Array<[BattlecryModel, Array<Model | undefined>]> = [];
         for (const hook of card.battlecries) {
             const params = await hook.getTargets();
+            console.log(params)
             options.push([hook, params])
         }
         return {
@@ -85,26 +76,27 @@ export class MinionLauncherModel extends LauncherModel {
         }
     }
 
-    public async launch() {
+    public async run() {
+        if (!this.isPlayable) return;
         const player = this._player;
         if (!player) return;
         const minion = this._minion;
         if (!minion) return;
-        const result = await this.prepareLaunch();
+        const result = await this.prepareRun();
         if (!result) return;
         minion.consumeMana();
         this.summon(player, result.boardIndex);
         this._options = result.options;
         this._currentIndex = 0;
         while (true) {
-            const isFinished = await this.proceedLaunch()
+            const isFinished = await this.proceedRun()
             if (isFinished) break;
         }
         this._options = undefined;
         this._currentIndex = undefined;
     }
 
-    private async proceedLaunch(): Promise<boolean> {
+    private async proceedRun(): Promise<boolean> {
         if (!this._options) return false;
         if (this._currentIndex === undefined) return false;
         const currentStep = this._options[this._currentIndex];

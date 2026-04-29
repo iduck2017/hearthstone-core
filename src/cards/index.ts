@@ -1,9 +1,5 @@
-import { Model, useAction, useChild, useMemo, useRoute } from "set-piece";
+import { Model, useChild, useMemo, useRoute } from "set-piece";
 import { LauncherModel } from "../rules/launcher";
-import { BoardModel } from "../entities/board";
-import { DeckModel } from "../entities/deck";
-import { HandModel } from "../entities/hand";
-import { GraveyardModel } from "../entities/graveyard";
 import { GameModel } from "../entities/game";
 import { PlayerModel } from "../entities/player";
 import { CostModel } from "../rules/cost";
@@ -15,6 +11,11 @@ import { DamageSourceModel } from "../rules/damage-source";
 import { RestoreSourceModel } from "../rules/restore-source";
 import { RarityType } from "../rules/rarity";
 import { ClassType } from "../rules/class";
+import { CardLauncherModel } from "../rules/launcher/card-launcher";
+import { HandModel } from "../entities/hand";
+import { DeckModel } from "../entities/deck";
+import { GraveyardModel } from "../entities/graveyard";
+import { WorkspaceModel } from "../entities/workspace";
 
 export interface CardProps {
     cost: CostModel;
@@ -43,8 +44,6 @@ export abstract class CardModel extends Model {
     public get class() {
         return this._class;
     }
-    @useRoute(() => HandModel)
-    private _hand?: HandModel;
 
     @useRoute(() => GameModel)
     private _game?: GameModel;
@@ -62,6 +61,11 @@ export abstract class CardModel extends Model {
 
     @useChild()
     private _cost: CostModel;
+    @useMemo()
+    public get cost() {
+        return this._cost;
+    }
+
     @useMemo()
     public consumeMana() {
         if (!this._player) return;
@@ -100,6 +104,7 @@ export abstract class CardModel extends Model {
         return this._restoreSource;
     }
 
+
     @useChild()
     public _feats: FeatModel[];
     @useMemo()
@@ -117,28 +122,42 @@ export abstract class CardModel extends Model {
         this._feats.splice(index, 1);
     }
 
+    @useRoute(() => HandModel)
+    protected _hand?: HandModel;
     @useMemo()
-    public get isPlayable() {
-        if (!this._hand) return false;
-        if (!this._player) return false;
-        if (!this._game) return false;
-        const currentPlayer = this._game.currentPlayer;
-        if (currentPlayer !== this._player) return false;
-        const mana = this._player.mana.current;
-        const cost = this._cost.current;
-        if (mana < cost) return false;
-        return true;
+    public get hand() { return this._hand; }
+
+    @useRoute(() => DeckModel)
+    protected _deck?: DeckModel;
+
+    @useRoute(() => GraveyardModel)
+    protected _graveyard?: GraveyardModel;
+
+    @useRoute(() => WorkspaceModel)
+    protected _workspace?: WorkspaceModel;
+
+    /** Move this card from hand/deck/graveyard into the given player's workspace. */
+    public moveToWorkspace(player?: PlayerModel) {
+        player = player ?? this._player;
+        if (!player) return;
+        this._hand?.removeCard(this);
+        this._deck?.removeCard(this);
+        this._graveyard?.removeCard(this);
+        player.workspace.addCard(this);
+    }
+
+    /** Move this card from workspace into the owning player's graveyard. */
+    public moveToGraveyard() {
+        const player = this._player;
+        if (!player) return;
+        this._workspace?.removeCard(this);
+        player.graveyard.addCard(this);
     }
 
     @useChild()
-    protected abstract _launcher: LauncherModel;
+    protected abstract _launcher: CardLauncherModel;
     @useMemo()
     public get launcher() {
         return this._launcher;
-    }
-
-    public async play() {
-        if (!this.isPlayable) return;
-        return this._launcher.launch();
     }
 }

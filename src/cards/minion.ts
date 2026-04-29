@@ -1,4 +1,4 @@
-import { useChild, useMemo } from "set-piece";
+import { useAction, useChild, useMemo } from "set-piece";
 import { CardModel, CardProps } from ".";
 import { RoleModel } from "../entities/role";
 import { MinionDisposerModel } from "../rules/disposers/minion-disposer";
@@ -46,7 +46,11 @@ export abstract class MinionModel extends CardModel {
         return this._launcher;
     }
 
-    public summon(player: PlayerModel, position: number) {
-        this._launcher.summon(player, position);
+    /** Move this minion from workspace onto the given board at the given position. */
+    @useAction()
+    public moveToBoard(board: BoardModel, position: number) {
+        this._workspace?.removeCard(this);
+        board.summonMinion(this, position);
     }
+
 }

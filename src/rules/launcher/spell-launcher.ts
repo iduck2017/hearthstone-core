@@ -1,12 +1,13 @@
-import { Model, useAction, useDep, useModel, useRoute, useState } from "set-piece";
+import { Model, useDep, useModel, useRoute, useState } from "set-piece";
 import { LauncherModel } from ".";
 import { PlayerModel } from "../../entities/player";
 import { SpellModel } from "../../cards/spell";
 import { SpellEffectModel } from "../../feats/spell-effect";
 import { SpellPlayPostEvent } from "../../event/spell-play";
+import { CardLauncherModel } from "./card-launcher";
 
 @useModel('spell-launcher')
-export class SpellLauncherModel extends LauncherModel {
+export class SpellLauncherModel extends CardLauncherModel {
     protected _brand: symbol = Symbol('spell-launcher')
 
     @useRoute(() => SpellModel)
@@ -17,16 +18,6 @@ export class SpellLauncherModel extends LauncherModel {
 
     @useState()
     private _currentIndex?: number;
-
-    @useAction()
-    public moveToGraveyard() {
-        const player = this._player;
-        if (!player) return;
-        const spell = this._spell;
-        if (!spell) return;
-        player.workspace.removeCard(spell);
-        player.graveyard.addCard(spell);
-    }
 
     private async proceedCast(): Promise<boolean> {
         if (!this._options) return false;
@@ -39,7 +30,7 @@ export class SpellLauncherModel extends LauncherModel {
         return false;
     }
 
-    private async prepareLaunch() {
+    private async prepareRun() {
         const spell = this._spell;
         if (!spell) return;
         const options: Array<[SpellEffectModel, Array<Model | undefined>]> = [];
@@ -50,15 +41,16 @@ export class SpellLauncherModel extends LauncherModel {
         return { options };
     }
 
-    public async launch() {
+    public async run() {
+        if (!this.isPlayable) return;
         const player = this._player;
         if (!player) return;
         const spell = this._spell;
         if (!spell) return;
-        const result = await this.prepareLaunch();
+        const result = await this.prepareRun();
         if (!result) return;
         spell.consumeMana();
-        this.moveToWorkspace(player);
+        spell.moveToWorkspace(player);
         this._options = result.options;
         this._currentIndex = 0;
         while (true) {
@@ -67,7 +59,7 @@ export class SpellLauncherModel extends LauncherModel {
         }
         this._options = undefined;
         this._currentIndex = undefined;
-        this.moveToGraveyard();
+        spell.moveToGraveyard();
         const postEvent = new SpellPlayPostEvent({ options: {}, result: undefined })
         this.emitDeferEvent(postEvent);
     }
