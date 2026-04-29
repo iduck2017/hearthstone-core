@@ -39,7 +39,7 @@ describe("fireball", () => {
     });
 
     it("fireball-kills-target-and-enters-graveyard", async () => {
-        fireball.play();
+        fireball.launcher.run();
         await sleep();
         const options = playerA.controller.selector?.options;
         expect(options).toContain(yeti.role);

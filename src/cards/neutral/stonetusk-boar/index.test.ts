@@ -62,7 +62,7 @@ describe('stonetusk-boar', () => {
     })
 
     it('play-wisp-no-charge', async () => {
-        wisp.play();
+        wisp.launcher.run();
         await sleep();
         playerA.controller.selectTarget(0);
         await sleep();
@@ -72,7 +72,7 @@ describe('stonetusk-boar', () => {
     })
 
     it('play-boar-with-charge', async () => {
-        boar.play();
+        boar.launcher.run();
         await sleep();
         playerA.controller.selectTarget(0);
         await sleep();

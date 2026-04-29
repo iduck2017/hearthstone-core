@@ -33,6 +33,6 @@
 
 ### 3.2 battlecry-draws-card
 
-- noviceEngineer.play() → select position.
+- noviceEngineer.launcher.launch() → select position.
 - Assert playerA.hand.cards contains wisp.
 - Assert playerA.deck.cards.length === 0.

@@ -8,7 +8,6 @@ export class StealthModel extends Model {
     }) {
         super();
         this._isActived = props?.isActived ?? false;
-        
     }
 
     @useState()
@@ -18,11 +17,6 @@ export class StealthModel extends Model {
         return this._isActived;
     }
     
-    public active() { 
-        this._isActived = true; 
-    }
-
-    public deactive() { 
-        this._isActived = false; 
-    }
+    public active() { this._isActived = true;  }
+    public deactive() { this._isActived = false;  }
 }

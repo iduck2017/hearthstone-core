@@ -17,12 +17,6 @@ export class TauntModel extends Model {
     public get isActived() {
         return this._isActived;
     }
-
-    public active() {
-        this._isActived = true;
-    }
-
-    public deactive() {
-        this._isActived = false;
-    }
+    public active() { this._isActived = true; }
+    public deactive() { this._isActived = false; }
 }

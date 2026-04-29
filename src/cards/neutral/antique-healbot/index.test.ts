@@ -37,7 +37,7 @@ describe("antique-healbot", () => {
     });
 
     it("battlecry-restores-eight-health-to-hero", async () => {
-        healbot.play();
+        healbot.launcher.run();
         await sleep();
         playerA.controller.selectTarget(0);
         await sleep();

@@ -15,7 +15,7 @@
     - Calls `decor.addBuff({ value: 1, type: BuffOperatorType.AURA, source: this })`.
 - **KoboldGeomancerModel**: extends `MinionModel`, 2 cost, 2/2, Neutral, Common, feats = `[new KoboldGeomancerFeatModel()]`.
 
-### SpellModel.play() fix
+### SpellModel.launcher.launch() fix
 
 `removeCard` must move to after effects resolve (alongside `disposeCard`), so the spell stays in hand during `handleRun` and the Spell Damage aura remains active:
 
@@ -47,7 +47,7 @@ consumeMana()
 
 ### 3.2 spell-damage-boosts-fireball
 
-- `fireball.play()`, controller selects `boulderfistOgre.role`.
+- `fireball.launcher.launch()`, controller selects `boulderfistOgre.role`.
 - Assert `boulderfistOgre.disposer.isActived === true`.
 - Assert `playerB.board.cards.length === 0`.
 

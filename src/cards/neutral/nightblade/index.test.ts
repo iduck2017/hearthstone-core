@@ -35,7 +35,7 @@ describe("nightblade", () => {
 
     it("battlecry-deals-three-damage-to-enemy-hero", async () => {
         // Play Nightblade; battlecry fires immediately (no target selection)
-        nightblade.play();
+        nightblade.launcher.run();
         await sleep();
         playerA.controller.selectTarget(0); // select board position
         await sleep();

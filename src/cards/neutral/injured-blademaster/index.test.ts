@@ -32,7 +32,7 @@ describe("injured-blademaster", () => {
     });
 
     it("battlecry-deals-four-damage-to-self", async () => {
-        injuredBlademaster.play();
+        injuredBlademaster.launcher.run();
         await sleep();
         playerA.controller.selectTarget(0);
         await sleep();

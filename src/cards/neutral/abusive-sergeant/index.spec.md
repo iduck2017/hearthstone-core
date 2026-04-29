@@ -35,7 +35,7 @@
 
 ### 3.2 play-abusive-sergeant
 
-- abusiveSergeant.play() → select position → select wisp.role.
+- abusiveSergeant.launcher.launch() → select position → select wisp.role.
 - Assert wisp.role.attack.current === 3.
 
 ### 3.3 buff-removed-on-turn-end

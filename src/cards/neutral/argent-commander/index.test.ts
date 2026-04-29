@@ -56,7 +56,7 @@ describe("argent-commander", () => {
     });
 
     it("charge-attack-divine-shield-absorbs-counter", async () => {
-        argentCommander.play();
+        argentCommander.launcher.run();
         await sleep();
         playerA.controller.selectTarget(0);
         await sleep();

@@ -39,7 +39,7 @@ describe("stormpike-commando", () => {
     });
 
     it("battlecry-deals-two-damage-to-enemy-minion", async () => {
-        stormpikeCommando.play();
+        stormpikeCommando.launcher.run();
         await sleep();
         playerA.controller.selectTarget(0);
         await sleep();

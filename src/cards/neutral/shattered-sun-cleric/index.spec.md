@@ -33,6 +33,6 @@
 
 ### 3.2 play-shattered-sun-cleric
 
-- shatteredSunCleric.play() → select position → select wisp.role.
+- shatteredSunCleric.launcher.launch() → select position → select wisp.role.
 - Assert wisp.role.attack.current === 2.
 - Assert wisp.role.health.current === 2, wisp.role.health.maximum === 2.

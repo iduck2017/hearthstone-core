@@ -57,7 +57,7 @@
 
 ### 3.2 spell-damage-boosts-fireball
 
-- `fireball.play()`, controller selects `boulderfistOgre.role`.
+- `fireball.launcher.launch()`, controller selects `boulderfistOgre.role`.
 - Assert `boulderfistOgre.disposer.isActived === true`.
 - Assert `playerB.board.cards` does not contain `boulderfistOgre`.
 

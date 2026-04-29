@@ -34,7 +34,7 @@
 
 ### 3.2 fireball-kills-target-and-enters-graveyard
 
-- `fireball.play()`, controller returns `yeti.role`.
+- `fireball.launcher.launch()`, controller returns `yeti.role`.
 - Assert `yeti.disposer.isActived === true`.
 - Assert `playerB.board.cards.length === 0`.
 - Assert `playerA.graveyard.cards` contains `fireball`.

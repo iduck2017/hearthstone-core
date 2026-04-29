@@ -25,6 +25,6 @@ export class SilverHandKnightBattlecryModel extends BattlecryModel<Model> {
         const index = board.cards.indexOf(minion);
         if (index === -1) return;
         const squire = new SquireModel();
-        squire.summon(player, index + 1);
+        squire.launcher.summon(player, index + 1);
     }
 }

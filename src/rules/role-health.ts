@@ -51,10 +51,6 @@ export class RoleHealthModel extends Model {
         return;
     }
 
-    @useDeferEffect()
-    private handleCurrentChangeDefer() {
-        // console.log(`Handle current change defer ${this.current}/${this.maximum}`);
-    }
     
     @useState()
     @useDecorProducer(() => RoleHealthDecor)

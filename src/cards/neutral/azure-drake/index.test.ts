@@ -45,7 +45,7 @@ describe("azure-drake", () => {
 
     it("battlecry-draws-card-and-spell-damage-boosts-fireball", async () => {
         // Play Azure Drake: select board position, battlecry draws deckWisp
-        azureDrake.play();
+        azureDrake.launcher.run();
         await sleep();
         playerA.controller.selectTarget(0);
         await sleep();
@@ -56,7 +56,7 @@ describe("azure-drake", () => {
 
         // Play Fireball with Spell Damage +1 from Azure Drake (on board)
         // Boulderfist Ogre has 7 HP: survives Fireball (6), dies to 7 damage
-        fireball.play();
+        fireball.launcher.run();
         await sleep();
         playerA.controller.selectTarget(boulderfistOgre.role);
         await sleep();

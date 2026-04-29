@@ -42,7 +42,7 @@ describe('acidic-swamp-ooze', () => {
     });
 
     it('battlecry-destroys-opponent-weapon', async () => {
-        const promise = ooze.play();
+        const promise = ooze.launcher.run();
         playerB.controller.selectTarget(0); // board position
         await promise;
         expect(playerA.hero.weapon).toBeUndefined();

@@ -32,7 +32,7 @@
 
 ### 3.2 play-silver-hand-knight
 
-- silverHandKnight.play() → select position (boardIndex 0).
+- silverHandKnight.launcher.launch() → select position (boardIndex 0).
 - Assert silverHandKnight on board.
 - Assert squire summoned to right of silverHandKnight.
 - Assert playerA.board.minions.length === 2.

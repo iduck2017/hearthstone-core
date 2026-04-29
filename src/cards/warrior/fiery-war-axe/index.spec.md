@@ -24,7 +24,7 @@ Data flow:
 
 **Flow**
 
-1. `fieryWarAxe.play()` → weapon removed from hand, equipped on playerA hero.
+1. `fieryWarAxe.launcher.launch()` → weapon removed from hand, equipped on playerA hero.
 2. Assert `playerA.weapon === fieryWarAxe`, `hero.role.attack.current === 3`, `fieryWarAxe.durability.current === 2`.
 3. Wake up hero action. `hero.role.runAttack()` → target `wisp1.role` → wisp1 dies, durability 2→1.
 4. Reset hero action. `hero.role.runAttack()` → target `wisp2.role` → wisp2 dies, durability 1→0 → weapon destroyed.
@@ -38,7 +38,7 @@ Data flow:
 
 ### 3.2 equip-weapon-on-play
 
-- After `fieryWarAxe.play()`: `playerA.weapon === fieryWarAxe`.
+- After `fieryWarAxe.launcher.launch()`: `playerA.weapon === fieryWarAxe`.
 - `playerA.hero.role.attack.current === 3`.
 - `fieryWarAxe.durability.current === 2`.
 - `playerA.hand.cards` does not contain `fieryWarAxe`.

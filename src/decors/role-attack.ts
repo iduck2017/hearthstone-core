@@ -5,9 +5,9 @@ import { FeatModel, SubFeatModel } from "../feats";
 import { PlayerModel } from "../entities/player";
 
 export enum BuffOperatorType {
-    COMMON = 'common',
     AURA = 'aura',
-    RESET = 'reset'    
+    RESET = 'reset',
+    COMMON = 'common',
 }
 
 export interface BuffOperator {

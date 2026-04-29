@@ -36,7 +36,7 @@ describe("dark-iron-dwarf", () => {
     });
 
     it("battlecry-gives-friendly-minion-plus-two-attack-until-turn-end", async () => {
-        darkIronDwarf.play();
+        darkIronDwarf.launcher.run();
         await sleep();
         playerA.controller.selectTarget(0);
         await sleep();

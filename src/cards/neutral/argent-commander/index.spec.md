@@ -23,7 +23,7 @@
 
 **Flow**
 
-1. `argentCommander.play()` → select board position 0. Charge allows immediate attack.
+1. `argentCommander.launcher.launch()` → select board position 0. Charge allows immediate attack.
 2. `argentCommander.role.runAttack()`, select `wispA.role`. wispA takes 4 and dies; Divine Shield absorbs wispA's 1-damage counter.
 3. `game.nextTurn()` → playerB's turn. `wispB.role.runAttack()`, select `argentCommander.role`. Divine Shield is gone; commander takes 1 damage (health = 1), wispB takes 4 and dies.
 
@@ -34,7 +34,7 @@
 
 ### 3.2 charge-attack-divine-shield-absorbs-counter
 
-- `argentCommander.play()` → select position 0.
+- `argentCommander.launcher.launch()` → select position 0.
 - Assert `argentCommander.role.isAttackEnabled === true` (Charge).
 - `argentCommander.role.runAttack()` → select `wispA.role`.
 - Assert `wispA.disposer.isActived === true`.

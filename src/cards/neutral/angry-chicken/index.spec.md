@@ -31,7 +31,7 @@
 
 ### 3.2 enrage-gains-attack-while-damaged
 
-- shatteredSunCleric.play() → select position → select angryChicken.role.
+- shatteredSunCleric.launcher.launch() → select position → select angryChicken.role.
 - wisp.role.runAttack(), target angryChicken.role.
 - Assert angryChicken.role.health.current === 1, angryChicken.role.health.maximum === 2.
 - Assert angryChicken.role.attack.current === 6.

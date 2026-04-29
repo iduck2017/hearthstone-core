@@ -45,11 +45,11 @@ describe('shattered-sun-cleric', () => {
         expect(wisp.role.health.maximum).toBe(1);
         expect(game.currentPlayer).toBe(playerA);
         expect(playerA.mana.current).toBe(3);
-        expect(shatteredSunCleric.isPlayable).toBe(true);
+        expect(shatteredSunCleric.launcher.isPlayable).toBe(true);
     })
 
     it('play-shattered-sun-cleric', async () => {
-        shatteredSunCleric.play();
+        shatteredSunCleric.launcher.run();
         await sleep();
         // Select board position (0 = before wisp)
         playerA.controller.selectTarget(0);

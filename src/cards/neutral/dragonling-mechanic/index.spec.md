@@ -32,7 +32,7 @@
 
 ### 3.2 play-dragonling-mechanic
 
-- dragonlingMechanic.play() → select position (boardIndex 0).
+- dragonlingMechanic.launcher.launch() → select position (boardIndex 0).
 - Assert dragonlingMechanic on board.
 - Assert mechanicalDragonling summoned to right of dragonlingMechanic.
 - Assert playerA.board.minions.length === 2.

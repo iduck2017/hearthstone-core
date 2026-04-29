@@ -19,8 +19,8 @@ export class LeeroyJenkinsBattlecryModel extends BattlecryModel<Model> {
         if (!opponent) return;
         const board = opponent.board;
         const length = board.cards.length;
-        new WhelpModel().summon(opponent, length);
-        new WhelpModel().summon(opponent, length);
+        new WhelpModel().launcher.summon(opponent, length);
+        new WhelpModel().launcher.summon(opponent, length);
     }
 
 }

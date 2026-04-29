@@ -32,5 +32,5 @@
 
 ### 3.2 battlecry-deals-two-damage-to-enemy-minion
 
-- stormpikeCommando.play() → select position → select wisp.role.
+- stormpikeCommando.launcher.launch() → select position → select wisp.role.
 - Assert wisp.role.health.current === -1 (or 0), wisp.disposer.isActived === true.

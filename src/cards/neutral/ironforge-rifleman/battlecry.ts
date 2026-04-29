@@ -9,6 +9,7 @@ export class IronforgeRiflemanBattlecryModel extends BattlecryModel<RoleModel> {
     protected _brand: symbol = Symbol('ironforge-rifleman-battlecry-model');
 
     public getSelector(): Selector<RoleModel> | undefined {
+        console.log('getSelector');
         const player = this.player;
         const opponent = player?.opponent;
         if (!opponent) return;
@@ -18,6 +19,7 @@ export class IronforgeRiflemanBattlecryModel extends BattlecryModel<RoleModel> {
 
     @useBattlecryRunHook()
     protected async handleRun(target?: RoleModel): Promise<void> {
+        console.log('handleRun');
         if (!target) return;
         this.entity?.damageSource.dealDamage({ target, value: 1 });
     }

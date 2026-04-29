@@ -36,7 +36,7 @@
 
 ### 3.2 battlecry-both-players-draw-two
 
-- `coldlightOracle.play()`, controller selects position 0.
+- `coldlightOracle.launcher.launch()`, controller selects position 0.
 - Assert `playerA.hand.cards` contains `deckWisp1` and `deckWisp2`.
 - Assert `playerA.deck.cards.length === 0`.
 - Assert `playerB.hand.cards` contains `deckRaptor1` and `deckRaptor2`.

@@ -27,8 +27,7 @@ export class WeaponDurabilityModel extends Model {
     public consume() {
         this._current -= 1;
         const disposer = this._card?.disposer;
-        if (disposer?.isActived) {
-            registerDisposer(disposer);
-        }
+        if (!disposer?.isActived) return;
+        registerDisposer(disposer);
     }
 }

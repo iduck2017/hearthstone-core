@@ -32,7 +32,7 @@
 
 ### 3.2 play-razorfen-hunter
 
-- razorfenHunter.play() → select position (boardIndex 0).
+- razorfenHunter.launcher.launch() → select position (boardIndex 0).
 - Assert razorfenHunter on board.
 - Assert boar summoned to right of razorfenHunter.
 - Assert playerA.board.minions.length === 2.

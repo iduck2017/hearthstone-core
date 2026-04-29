@@ -32,7 +32,7 @@
 
 ### 3.2 play-murloc-tidehunter
 
-- murlocTidehunter.play() → select position (boardIndex 0).
+- murlocTidehunter.launcher.launch() → select position (boardIndex 0).
 - Assert murlocTidehunter on board.
 - Assert murlocScout summoned to right of murlocTidehunter.
 - Assert playerA.board.minions.length === 2.

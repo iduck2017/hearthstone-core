@@ -58,7 +58,7 @@ describe("acolyte-of-pain", () => {
     });
 
     it("battlecry-hit-draws-another-card", async () => {
-        elvenArcher.play();
+        elvenArcher.launcher.run();
         await sleep();
         playerB.controller.selectTarget(0);
         await sleep();

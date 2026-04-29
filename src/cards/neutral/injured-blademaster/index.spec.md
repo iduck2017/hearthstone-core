@@ -20,7 +20,7 @@
 
 **Flow**
 
-1. `injuredBlademaster.play()`, select board position 0.
+1. `injuredBlademaster.launcher.launch()`, select board position 0.
 2. Battlecry fires automatically — deals 4 damage to self.
 3. injuredBlademaster enters board as 4/3.
 
@@ -31,7 +31,7 @@
 
 ### 3.2 battlecry-deals-four-damage-to-self
 
-- injuredBlademaster.play(), select board position 0.
+- injuredBlademaster.launcher.launch(), select board position 0.
 - Assert playerA.board contains injuredBlademaster.
 - Assert injuredBlademaster.role.health.current === 3.
 - Assert injuredBlademaster.role.health.maximum === 7.

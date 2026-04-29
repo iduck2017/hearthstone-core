@@ -32,5 +32,5 @@
 
 ### 3.2 battlecry-deals-one-damage-to-enemy-minion
 
-- ironforgeRifleman.play() → select position → select wisp.role.
+- ironforgeRifleman.launcher.launch() → select position → select wisp.role.
 - Assert wisp.role.health.current === 0, wisp.disposer.isActived === true.

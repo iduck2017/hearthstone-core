@@ -10,6 +10,15 @@ export interface CostBuff {
 @useModel('cost-model')
 export class CostModel extends Model {
     protected _brand: symbol = Symbol('cost-model');
+    constructor(props?: {
+        origin?: number;
+        decors?: CostBuff[];
+    }) {
+        super();
+        this._origin = props?.origin ?? 1;
+        this._decors = props?.decors ?? [];
+    }
+
     @useRoute(() => CardModel)
     private _card?: CardModel;
 
@@ -33,13 +42,4 @@ export class CostModel extends Model {
         return result;
     }
 
-    constructor(props?: {
-        origin?: number;
-        decors?: CostBuff[];
-    }) {
-        super();
-        this._origin = props?.origin ?? 1;
-        this._decors = props?.decors ?? [];
-        
-    }
 }           

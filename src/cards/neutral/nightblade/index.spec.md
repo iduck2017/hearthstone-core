@@ -32,7 +32,7 @@
 
 ### 3.2 battlecry-deals-three-damage-to-enemy-hero
 
-- `nightblade.play()`, controller selects position 0.
+- `nightblade.launcher.launch()`, controller selects position 0.
 - Assert `playerB.hero.role.health.current === 27`.
 
 ## 4. Reference cards

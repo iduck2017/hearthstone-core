@@ -39,7 +39,7 @@ describe("violet-teacher", () => {
     });
 
     it("spell-summons-apprentice", async () => {
-        fireballA.play();
+        fireballA.launcher.run();
         await sleep();
         playerA.controller.selectTarget(playerB.hero.role);
         await sleep();
@@ -49,7 +49,7 @@ describe("violet-teacher", () => {
     });
 
     it("second-spell-summons-another-apprentice", async () => {
-        fireballB.play();
+        fireballB.launcher.run();
         await sleep();
         playerA.controller.selectTarget(playerB.hero.role);
         await sleep();

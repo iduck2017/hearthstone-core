@@ -12,11 +12,11 @@ export class WeaponAttackModel extends Model {
     @useRoute(() => HeroModel)
     private _hero?: HeroModel;
 
-    @useRoute(() => PlayerModel)
-    private _player?: PlayerModel;
-
     @useRoute(() => GameModel)
     private _game?: GameModel;
+
+    @useRoute(() => PlayerModel)
+    private _player?: PlayerModel;
 
     @useRange(0, undefined)
     @useState()
@@ -42,11 +42,13 @@ export class WeaponAttackModel extends Model {
     // _hero is only set when equipped under the hero, so this aura is naturally suppressed while in hand
     @useDecorConsumer((i: WeaponAttackModel) => [i._hero?.role?.attack, RoleAttackDecor])
     protected _buffHeroAttack(decor: RoleAttackDecor) {
-        if (this._game?.currentPlayer !== this._player) return;
+        const currentPlayer = this._game?.currentPlayer;
+        if (currentPlayer !== this._player) return;
         decor.addBuff({
             value: this._current,
             type: BuffOperatorType.AURA,
             source: this,
         });
     }
+
 }

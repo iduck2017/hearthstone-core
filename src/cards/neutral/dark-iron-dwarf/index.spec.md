@@ -35,7 +35,7 @@
 
 ### 3.2 battlecry-gives-friendly-minion-plus-two-attack-until-turn-end
 
-- darkIronDwarf.play() → select position → select wisp.role.
+- darkIronDwarf.launcher.launch() → select position → select wisp.role.
 - Assert wisp.role.attack.current === 3.
 - game.nextTurn().
 - Assert wisp.role.attack.current === 1.

@@ -47,7 +47,7 @@ describe('novice-engineer', () => {
     });
 
     it('battlecry-draws-top-card-on-play', async () => {
-        noviceEngineer.play();
+        noviceEngineer.launcher.run();
         await sleep();
         playerA.controller.selectTarget(0);
         await sleep();

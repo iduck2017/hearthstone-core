@@ -39,7 +39,7 @@ describe('abusive-sergeant', () => {
     })
 
     it('play-abusive-sergeant', async () => {
-        abusiveSergeant.play();
+        abusiveSergeant.launcher.run();
         await sleep();
         playerA.controller.selectTarget(0);
         await sleep();

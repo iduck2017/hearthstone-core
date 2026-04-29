@@ -42,7 +42,7 @@ describe("ogre-magi", () => {
 
     it("spell-damage-boosts-fireball", async () => {
         // Boulderfist Ogre has 7 HP: survives Fireball (6), dies to Spell Damage +1 Fireball (7)
-        fireball.play();
+        fireball.launcher.run();
         await sleep();
         playerA.controller.selectTarget(boulderfistOgre.role);
         await sleep();

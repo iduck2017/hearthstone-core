@@ -47,7 +47,7 @@ describe('gnomish-inventor', () => {
     });
 
     it('battlecry-draws-top-card-on-play', async () => {
-        gnomishInventor.play();
+        gnomishInventor.launcher.run();
         await sleep();
         playerA.controller.selectTarget(0);
         await sleep();

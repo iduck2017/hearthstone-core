@@ -39,11 +39,11 @@ describe('silver-hand-knight', () => {
         expect(playerA.board.cards.length).toBe(0);
         expect(game.currentPlayer).toBe(playerA);
         expect(playerA.mana.current).toBe(5);
-        expect(silverHandKnight.isPlayable).toBe(true);
+        expect(silverHandKnight.launcher.isPlayable).toBe(true);
     })
 
     it('play-silver-hand-knight', async () => {
-        silverHandKnight.play();
+        silverHandKnight.launcher.run();
         await sleep();
         playerA.controller.selectTarget(0);
         await sleep();

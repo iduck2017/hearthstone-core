@@ -38,7 +38,7 @@ describe("frostwolf-warlord", () => {
 
     it("battlecry-buffs-per-friendly-minion", async () => {
         // Play Frostwolf Warlord with 2 other friendly minions → +2/+2
-        frostwolfWarlord.play();
+        frostwolfWarlord.launcher.run();
         await sleep();
         playerA.controller.selectTarget(0); // select board position
         await sleep();

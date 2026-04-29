@@ -39,7 +39,7 @@ describe("ironforge-rifleman", () => {
     });
 
     it("battlecry-deals-one-damage-to-enemy-minion", async () => {
-        ironforgeRifleman.play();
+        ironforgeRifleman.launcher.run();
         await sleep();
         playerA.controller.selectTarget(0);
         await sleep();
@@ -47,7 +47,7 @@ describe("ironforge-rifleman", () => {
         expect(options).toContain(wisp.role);
         playerA.controller.selectTarget(wisp.role);
         await sleep();
-
+        console.log(playerA.controller.selector)
         expect(wisp.role.health.current).toBe(0);
         expect(wisp.disposer.isActived).toBe(true);
     });

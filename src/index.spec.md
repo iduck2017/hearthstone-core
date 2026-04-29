@@ -136,7 +136,7 @@ GameModel
 
 Key API:
 - `player.drawCard()` / `player.opponent` / `player.controller`
-- `minion.summon(board?, pos?)` / `minion.play()`
+- `minion.summon(board?, pos?)` / `minion.launcher.launch()`
 - `card.addFeature(feat)` / `card.removeFeature(feat)` / `card.consumeMana()`
 - `role.receiveDamage({ value })` / `role.runAttack()` / `role.isAttackEnabled`
 - Keywords passed via constructor: `new RoleModel({ taunt: new TauntModel({ isActived: true }) })`
@@ -222,7 +222,7 @@ Reference: [cards/neutral/loot-hoarder/index.test.ts](cards/neutral/loot-hoarder
 
 **Async sequences:**
 - Attack: `role.runAttack()` → `await sleep()` → `controller.selectTarget(targetRole)` → `await sleep()`
-- Play: `card.play()` → `await sleep()` → `controller.selectTarget(boardIndex)` → `await sleep()`
+- Play: `card.launcher.launch()` → `await sleep()` → `controller.selectTarget(boardIndex)` → `await sleep()`
 - Play with target: add `await sleep()` + `controller.selectTarget(targetRole)` after board index
 
 **Assertions:** `disposer.isActived` · `role.attack.current` · `role.health.current` / `.maximum` · `player.board.minions.length` · `player.hand.cards` · `role.divineShield.isActived` · `controller.selector?.options`
@@ -377,7 +377,7 @@ role.runAttack()                         — checks isAttackEnabled
 ### Minion play flow
 
 ```
-minion.play()
+minion.launcher.launch()
 ├── preparePlay()                                — async, all user interaction happens here
 │   ├── controller.fetchTarget(positions)        — user picks board position (0 … board.length)
 │   └── battlecry.getTargets()                  — per battlecry: getSelector → fetchTarget loop
@@ -399,7 +399,7 @@ minion.play()
 ### Spell play flow
 
 ```
-spell.play()
+spell.launcher.launch()
 ├── spellEffect.getTargets()                     — async target selection per spell effect
 ├── consumeMana()                                — deduct cost from player's mana
 ├── HooksLauncherModel.next()                   — card stays in hand so Spell Damage auras remain active
@@ -414,7 +414,7 @@ spell.play()
 ### Weapon play flow
 
 ```
-weapon.play()
+weapon.launcher.launch()
 ├── consumeMana()                                — deduct cost from player's mana
 ├── launch()                                     — move card from hand → workspace
 └── equip()                                     — move from workspace → hero

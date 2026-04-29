@@ -24,7 +24,7 @@
 
 **Flow**
 
-1. `leeroyJenkins.play()` → select board index 0.
+1. `leeroyJenkins.launcher.launch()` → select board index 0.
 2. Battlecry fires → two `WhelpModel` instances (1/1) summoned to playerB's board.
 3. Leeroy is on playerA's board with Charge active.
 
@@ -35,7 +35,7 @@
 
 ### 3.2 battlecry-summons-two-whelps-for-opponent
 
-- leeroyJenkins.play() → select position 0.
+- leeroyJenkins.launcher.launch() → select position 0.
 - Assert playerA.board.minions contains leeroyJenkins.
 - Assert playerB.board.minions.length === 2.
 - Assert each minion on playerB.board is WhelpModel with attack 1 and health 1.

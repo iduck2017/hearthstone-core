@@ -36,7 +36,7 @@
 
 ### 3.2 battlecry-buffs-per-friendly-minion
 
-- `frostwolfWarlord.play()`, controller selects position 0.
+- `frostwolfWarlord.launcher.launch()`, controller selects position 0.
 - Assert `frostwolfWarlord.role.attack.current === 6`.
 - Assert `frostwolfWarlord.role.health.current === 6`.
 

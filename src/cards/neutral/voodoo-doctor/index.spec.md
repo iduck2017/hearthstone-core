@@ -20,7 +20,7 @@
 
 **Flow**
 
-1. `voodooDoctor.play()`, select board position.
+1. `voodooDoctor.launcher.launch()`, select board position.
 2. Battlecry selector offers all characters; choose `injuredBlademaster.role`.
 3. injuredBlademaster is restored 2 health: current 3 → 5.
 
@@ -31,7 +31,7 @@
 
 ### 3.2 battlecry-restores-two-health
 
-- voodooDoctor.play(), select board position, select injuredBlademaster.role.
+- voodooDoctor.launcher.launch(), select board position, select injuredBlademaster.role.
 - Assert playerA.board contains voodooDoctor.
 - Assert injuredBlademaster.role.health.current === 5.
 - Assert injuredBlademaster.role.health.maximum === 7.

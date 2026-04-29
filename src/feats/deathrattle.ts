@@ -9,8 +9,6 @@ export class DeathrattleModel extends FeatModel {
     public run() {
         if (!this.isActived) return;
         const hooks = getDeathrattleRunHooks(this);
-        for (const hook of hooks) {
-            hook();
-        }
+        for (const hook of hooks) hook();
     }
 }

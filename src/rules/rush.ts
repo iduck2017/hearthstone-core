@@ -11,7 +11,6 @@ export class RushModel extends Model {
     }) {
         super();
         this._isActived = props?.isActived ?? false;
-        
     }
 
     @useRoute(() => RoleModel)
@@ -28,20 +27,12 @@ export class RushModel extends Model {
         return this._isActived;
     }
 
-    
-    public active() {
-        this._isActived = true;
-    }
-
-    public deactive() {
-        this._isActived = false;
-    }
-
+    public active() { this._isActived = true; }
+    public deactive() { this._isActived = false; }
 
     @useAsleepDecorConsumer()
-    private handleSleepStatusCalc(decor: AsleepDecor) {
+    protected handleAsleepCheck(decor: AsleepDecor) {
         if (!this.isActived) return;
-        console.log('Handle charge check')
         decor.result = false;
     }
 }

@@ -30,7 +30,7 @@ Data flow:
 
 ### 3.2 battlecry-destroys-opponent-weapon
 
-- `ooze.play()`, select board position.
+- `ooze.launcher.launch()`, select board position.
 - Assert `playerA.weapon` is undefined.
 - Assert `playerA.graveyard.cards` contains `fieryWarAxe`.
 
