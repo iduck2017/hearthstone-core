@@ -1,4 +1,4 @@
-import { useRoute, useState, Model, useMemo, useDecorProducer } from "set-piece";
+import { useRoute, useState, Model, useMemo, useDecorProducer, useChild } from "set-piece";
 import { GameModel } from "../entities/game";
 import { PlayerModel } from "../entities/player";
 import { MinionModel } from "../cards/minion";
@@ -26,9 +26,11 @@ export abstract class SubFeatModel extends Model {
 export abstract class FeatModel extends Model {
     constructor(props?: {
         isActived?: boolean;
+        subFeats?: SubFeatModel[]
     }) {
         super();
         this._isActived = props?.isActived ?? true;
+        this._subFeats = props?.subFeats ?? [];
     }
 
     @useDecorProducer(() => FeatActiveDecor)
@@ -42,6 +44,11 @@ export abstract class FeatModel extends Model {
         this._isActived = false;
     }
 
+    @useChild()
+    private _subFeats: SubFeatModel[];
+    public get subFeats() {
+        return this._subFeats;
+    }
 
     @useRoute(() => GameModel)
     private _game?: GameModel;

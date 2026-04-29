@@ -1,9 +1,9 @@
-import { useChild, useMemo, useRoute, useModel } from "set-piece";
+import { useMemo, useRoute, useModel } from "set-piece";
 import { FeatModel } from "../../../feats";
 import { MinionModel } from "../../minion";
 import { BuffOperatorType, RoleAttackDecor, useAllyRoleAttackDecorConsumer } from "../../../decors/role-attack";
 import { RoleHealthDecor, useAllyRoleHealthDecorConsumer } from "../../../decors/role-health";
-import { BoardOnlyTagModel } from "../../../rules/board-only-tag";
+import { BoardOnlyControllerModel } from "../../../feats/board-only-controller";
 
 @useModel('stormwind-champion-feat-model')
 export class StormwindChampionFeatModel extends FeatModel {
@@ -15,13 +15,8 @@ export class StormwindChampionFeatModel extends FeatModel {
         return this._minion?.role ?? this._hero?.role;
     }
 
-    @useChild()
-    private _boardOnly: BoardOnlyTagModel;
-
     constructor() {
-        super();
-        this._boardOnly = new BoardOnlyTagModel();
-        
+        super({ subFeats: [new BoardOnlyControllerModel()] });
     }
 
     // Grant +1 Attack to every other allied minion as a reactive aura.

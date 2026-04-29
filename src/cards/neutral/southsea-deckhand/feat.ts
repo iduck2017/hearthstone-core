@@ -1,7 +1,7 @@
-import { useChild, useMemo, useRoute, useModel } from "set-piece";
+import { useMemo, useRoute, useModel } from "set-piece";
 import { FeatModel } from "../../../feats";
 import { MinionModel } from "../../minion";
-import { BoardOnlyTagModel } from "../../../rules/board-only-tag";
+import { BoardOnlyControllerModel } from "../../../feats/board-only-controller";
 import { ChargeActiveDecor, useChargeActiveFlagDecorConsumer } from "../../../decors/charge-active";
 
 @useModel('southsea-deckhand-feat-model')
@@ -15,12 +15,8 @@ export class SouthseaDeckhandFeatModel extends FeatModel {
         return this._minion?.role ?? this._hero?.role;
     }
 
-    @useChild()
-    private _boardOnly: BoardOnlyTagModel;
-
     constructor() {
-        super();
-        this._boardOnly = new BoardOnlyTagModel();
+        super({ subFeats: [new BoardOnlyControllerModel()] });
     }
 
     // Activate Charge as a reactive aura while the controller has a weapon equipped.

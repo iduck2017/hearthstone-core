@@ -1,4 +1,4 @@
-import { useChild, useModel } from "set-piece";
+import { useModel } from "set-piece";
 import { FeatModel } from "../../../feats";
 import { RoleAttackBuffModel } from "../../../feats/role-attack-buff";
 import { RoleHealthBuffModel } from "../../../feats/role-health-buff";
@@ -8,15 +8,7 @@ import { RoleHealthBuffModel } from "../../../feats/role-health-buff";
 export class FrostwolfWarlordBuffModel extends FeatModel {
     protected _brand: symbol = Symbol('frostwolf-warlord-buff-model');
 
-    @useChild()
-    public attackBuff: RoleAttackBuffModel;
-
-    @useChild()
-    public healthBuff: RoleHealthBuffModel;
-
     constructor(value: number) {
-        super();
-        this.attackBuff = new RoleAttackBuffModel(value);
-        this.healthBuff = new RoleHealthBuffModel(value);
+        super({ subFeats: [new RoleAttackBuffModel(value), new RoleHealthBuffModel(value)] });
     }
 }

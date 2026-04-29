@@ -1,9 +1,9 @@
-import { useChild, useMemo, useRoute, useModel } from "set-piece";
+import { useMemo, useRoute, useModel } from "set-piece";
 import { FeatModel } from "../../../feats";
 import { MinionModel } from "../../minion";
 import { BuffOperatorType, RoleAttackDecor, useAllyRoleAttackDecorConsumer } from "../../../decors/role-attack";
 import { RoleHealthDecor, useAllyRoleHealthDecorConsumer } from "../../../decors/role-health";
-import { BoardOnlyTagModel } from "../../../rules/board-only-tag";
+import { BoardOnlyControllerModel } from "../../../feats/board-only-controller";
 import { RoleAttackModel } from "../../../rules/role-attack";
 import { RaceType } from "../../../rules/race";
 
@@ -18,12 +18,8 @@ export class SouthseaCaptainFeatModel extends FeatModel {
         return this._minion?.role ?? this._hero?.role;
     }
 
-    @useChild()
-    private _boardOnly: BoardOnlyTagModel;
-
     constructor() {
-        super();
-        this._boardOnly = new BoardOnlyTagModel();
+        super({ subFeats: [new BoardOnlyControllerModel()] });
     }
 
     // Grant +1 Attack to every other allied Pirate as a reactive aura.
@@ -43,7 +39,6 @@ export class SouthseaCaptainFeatModel extends FeatModel {
     @useAllyRoleHealthDecorConsumer()
     protected _onAllyHealthDecor(decor: RoleHealthDecor) {
         if (decor.target === this.role?.health) return;
-        // Find the minion that owns this health model and check its race
         const targetMinion = this.player?.board.minions.find(m => m.role?.health === decor.target);
         if (!targetMinion?.races.includes(RaceType.PIRATE)) return;
         decor.addBuff({

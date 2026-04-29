@@ -1,6 +1,5 @@
-import { useChild, useMemo, useRoute, useModel } from "set-piece";
+import { useMemo, useRoute, useModel } from "set-piece";
 import { FeatModel } from "../../../feats";
-import { RoleModel } from "../../../entities/role";
 import { BoardModel } from "../../../entities/board";
 import { TurnEndPostEvent, useTurnEndEventConsumer } from "../../../event/turn-end";
 import { RoleAttackBuffModel } from "../../../feats/role-attack-buff";
@@ -15,13 +14,8 @@ export class DarkIronDwarfBuffModel extends FeatModel {
         return this._board;
     }
 
-    @useChild()
-    public attackBuff: RoleAttackBuffModel;
-
     constructor() {
-        super();
-        this.attackBuff = new RoleAttackBuffModel(2);
-        
+        super({ subFeats: [new RoleAttackBuffModel(2)] });
     }
 
     @useTurnEndEventConsumer()

@@ -68,6 +68,7 @@ export class SpellLauncherModel extends LauncherModel {
         this._options = undefined;
         this._currentIndex = undefined;
         this.moveToGraveyard();
-        this.emit(new SpellPlayPostEvent({ options: {}, result: undefined }), { isDefer: true });
+        const postEvent = new SpellPlayPostEvent({ options: {}, result: undefined })
+        this.emitDeferEvent(postEvent);
     }
 }

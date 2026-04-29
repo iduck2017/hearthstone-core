@@ -1,7 +1,7 @@
-import { useChild, useMemo, useRoute, useModel } from "set-piece";
+import { useMemo, useRoute, useModel } from "set-piece";
 import { FeatModel } from "../../../feats";
 import { MinionModel } from "../../minion";
-import { BoardOnlyTagModel } from "../../../rules/board-only-tag";
+import { BoardOnlyControllerModel } from "../../../feats/board-only-controller";
 import { SpellPlayPostEvent, usePlayerSpellCast } from "../../../event/spell-play";
 import { ManaAddictBuffModel } from "./buff";
 
@@ -17,12 +17,8 @@ export class ManaAddictFeatModel extends FeatModel {
         return this._minion?.role;
     }
 
-    @useChild()
-    private _boardOnly: BoardOnlyTagModel;
-
     constructor() {
-        super();
-        this._boardOnly = new BoardOnlyTagModel();
+        super({ subFeats: [new BoardOnlyControllerModel()] });
     }
 
     @usePlayerSpellCast()

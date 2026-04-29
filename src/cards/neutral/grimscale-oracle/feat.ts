@@ -1,8 +1,8 @@
-import { useChild, useMemo, useRoute, useModel } from "set-piece";
+import { useMemo, useRoute, useModel } from "set-piece";
 import { FeatModel } from "../../../feats";
 import { MinionModel } from "../../minion";
 import { BuffOperatorType, RoleAttackDecor, useAllyRoleAttackDecorConsumer } from "../../../decors/role-attack";
-import { BoardOnlyTagModel } from "../../../rules/board-only-tag";
+import { BoardOnlyControllerModel } from "../../../feats/board-only-controller";
 import { RoleAttackModel } from "../../../rules/role-attack";
 import { RaceType } from "../../../rules/race";
 
@@ -16,22 +16,15 @@ export class GrimscaleOracleFeatModel extends FeatModel {
         return this._minion?.role ?? this._hero?.role;
     }
 
-    @useChild()
-    private isBoardOnly: BoardOnlyTagModel;
-
     constructor() {
-        super();
-        this.isBoardOnly = new BoardOnlyTagModel();
-        
+        super({ subFeats: [new BoardOnlyControllerModel()] });
     }
 
     // Grant +1 Attack to every other allied Murloc as a reactive aura.
     @useAllyRoleAttackDecorConsumer()
     protected _onAllyAttackDecor(decor: RoleAttackDecor) {
-        // Skip self
         if (decor.target === this.role?.attack) return;
-        // Only buff Murloc allies
-        if (!(decor.target instanceof RoleAttackModel)) return; 
+        if (!(decor.target instanceof RoleAttackModel)) return;
         if (!decor.target.minion?.races.includes(RaceType.MURLOC)) return;
         decor.addBuff({
             value: 1,

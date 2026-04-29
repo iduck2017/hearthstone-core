@@ -1,8 +1,8 @@
-import { useChild, useModel } from "set-piece";
+import { useModel } from "set-piece";
 import { FeatModel } from ".";
 import { SpellDamageDecor, usePlayerSpellDamageDecorConsumer } from "../decors/spell-damage";
 import { BuffOperatorType } from "../decors/role-attack";
-import { BoardOnlyTagModel } from "../rules/board-only-tag";
+import { BoardOnlyControllerModel } from "./board-only-controller";
 
 /** Reusable Spell Damage aura feat. Active only while the entity is on the board. */
 @useModel('spell-damage-feat-model')
@@ -11,13 +11,9 @@ export class SpellDamageFeatModel extends FeatModel {
 
     private readonly _value: number;
 
-    @useChild()
-    private _boardOnly: BoardOnlyTagModel;
-
     constructor(value: number = 1) {
-        super();
+        super({ subFeats: [new BoardOnlyControllerModel()] });
         this._value = value;
-        this._boardOnly = new BoardOnlyTagModel();
     }
 
     @usePlayerSpellDamageDecorConsumer()

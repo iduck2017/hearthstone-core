@@ -1,8 +1,8 @@
-import { useChild, useMemo, useRoute, useModel } from "set-piece";
+import { useMemo, useRoute, useModel } from "set-piece";
 import { FeatModel } from "../../../feats";
 import { MinionModel } from "../../minion";
 import { BuffOperatorType, RoleAttackDecor, useAllyRoleAttackDecorConsumer } from "../../../decors/role-attack";
-import { BoardOnlyTagModel } from "../../../rules/board-only-tag";
+import { BoardOnlyControllerModel } from "../../../feats/board-only-controller";
 
 @useModel('raid-leader-feat-model')
 export class RaidLeaderFeatModel extends FeatModel {
@@ -14,13 +14,8 @@ export class RaidLeaderFeatModel extends FeatModel {
         return this._minion?.role ?? this._hero?.role;
     }
 
-    @useChild()
-    private isBoardOnly: BoardOnlyTagModel;
-
     constructor() {
-        super();
-        this.isBoardOnly = new BoardOnlyTagModel();
-        
+        super({ subFeats: [new BoardOnlyControllerModel()] });
     }
 
     // Grant +1 Attack to every other allied minion as a reactive aura.

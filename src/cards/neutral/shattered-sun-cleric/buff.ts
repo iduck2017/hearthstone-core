@@ -1,4 +1,4 @@
-import { useChild, useMemo, useRoute, useModel } from "set-piece";
+import { useMemo, useRoute, useModel } from "set-piece";
 import { FeatModel } from "../../../feats";
 import { RoleModel } from "../../../entities/role";
 import { RoleAttackBuffModel } from "../../../feats/role-attack-buff";
@@ -14,16 +14,12 @@ export class ShatteredSunClericBuffModel extends FeatModel {
         return this._role;
     }
 
-    @useChild()
-    public attackBuff: RoleAttackBuffModel;
-
-    @useChild()
-    public healthBuff: RoleHealthBuffModel;
-
     constructor() {
-        super();
-        this.attackBuff = new RoleAttackBuffModel(1);
-        this.healthBuff = new RoleHealthBuffModel(1);
-        
+        super({ 
+            subFeats: [
+                new RoleAttackBuffModel(1), 
+                new RoleHealthBuffModel(1)
+            ] 
+        });
     }
 }
