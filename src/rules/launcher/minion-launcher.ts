@@ -66,7 +66,6 @@ export class MinionLauncherModel extends CardLauncherModel {
         const options: Array<[BattlecryModel, Array<Model | undefined>]> = [];
         for (const hook of card.battlecries) {
             const params = await hook.getTargets();
-            console.log(params)
             options.push([hook, params])
         }
         return {

@@ -12,15 +12,15 @@ class FeatSelectorRegistry {
         this.map.set(Constructor, keys);
     }
 
-    public getHooks(prototype: FeatModel) {
-        let constructor: any = prototype.constructor;
+    public getHooks(feat: FeatModel) {
+        let constructor: any = feat.constructor;
         const result: Method<Selector<any>, any[]>[] = [];
         while (constructor) {
             const keys = this.map.get(constructor) ?? [];
             keys.forEach(key => {
-                const method = Reflect.get(prototype, key);
-                if (method instanceof Function) return;
-                result.push(method.bind(prototype));
+                const method = Reflect.get(feat, key);
+                if (!(method instanceof Function)) return;
+                result.push(method.bind(feat));
             })
             constructor = Object.getPrototypeOf(constructor);
         }
@@ -30,7 +30,7 @@ class FeatSelectorRegistry {
 
 export const battlecrySelectorRegistry = new FeatSelectorRegistry();
 
-export function useBattlecrySelector<T extends Model>() {
+export function useBattlecrySelectHook<T extends Model>() {
     return function(
         prototype: BattlecryModel<T>,
         key: string,

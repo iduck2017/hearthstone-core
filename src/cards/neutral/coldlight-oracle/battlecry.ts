@@ -1,15 +1,10 @@
 import { BattlecryModel } from "../../../feats/battlecry";
-import { Selector } from "../../../utils/controller";
 import { Model, useModel } from "set-piece";
 import { useBattlecryRunHook } from "../../../hooks/battlecry-run";
 
 @useModel('coldlight-oracle-battlecry-model')
 export class ColdlightOracleBattlecryModel extends BattlecryModel<Model> {
     protected _brand: symbol = Symbol('coldlight-oracle-battlecry-model');
-
-    public getSelector(): Selector<Model> | undefined {
-        return undefined;
-    }
 
     @useBattlecryRunHook()
     protected async handleRun(): Promise<void> {

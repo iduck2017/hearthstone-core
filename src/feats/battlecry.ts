@@ -20,35 +20,20 @@ export abstract class BattlecryModel<T extends Model = Model> extends FeatModel 
         this._isPending = props?.isPending ?? false;
     }
 
-    /** Target selector */
-    public abstract getSelector(params: Array<T | undefined>): Selector<T> | undefined 
 
+    /** Target selector */
     public async getTargets(): Promise<Array<T | undefined>> {
         if (!this.player) return [];
         const targets: Array<T | undefined> = [];
-        while (true) {
-            const selector = this.getSelector(targets);
-            if (!selector) break;
-            const target = await this.player.controller.fetchTarget(selector);
+        const hooks = battlecrySelectorRegistry.getHooks(this);
+        for (const hook of hooks) {
+            const selector = hook(...targets)
+            const controller = this.player.controller;
+            const target = await controller.fetchTarget(selector);
             targets.push(target);
-            break;
         }
         return targets;
     }
-
-    /** Target selector */
-    // public async getTargets(): Promise<Array<T | undefined>> {
-    //     if (!this.player) return [];
-    //     const targets: Array<T | undefined> = [];
-    //     const hooks = battlecrySelectorRegistry.getHooks(this);
-    //     for (const hook of hooks) {
-    //         const selector = hook(...targets)
-    //         const controller = this.player.controller;
-    //         const target = await controller.fetchTarget(selector);
-    //         targets.push(target);
-    //     }
-    //     return targets;
-    // }
 
     public async run(...params: Array<T | undefined>) {
         if (!this.isActived) return;

@@ -8,12 +8,7 @@ import { MinionModel } from "../../minion";
 export class MurlocTidehunterBattlecryModel extends BattlecryModel<Model> {
     protected _brand: symbol = Symbol('murloc-tidehunter-battlecry-model');
 
-    public getSelector(params: Array<Model | undefined>): undefined {
-        return undefined;
-    }
-
-
-    @useRoute(() => MinionModel)
+@useRoute(() => MinionModel)
     private _minion?: MinionModel;
 
     @useBattlecryRunHook()

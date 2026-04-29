@@ -1,5 +1,4 @@
 import { BattlecryModel } from "../../../feats/battlecry";
-import { Selector } from "../../../utils/controller";
 import { Model, useModel } from "set-piece";
 import { useBattlecryRunHook } from "../../../hooks/battlecry-run";
 import { FrostwolfWarlordBuffModel } from "./buff";
@@ -7,10 +6,6 @@ import { FrostwolfWarlordBuffModel } from "./buff";
 @useModel('frostwolf-warlord-battlecry-model')
 export class FrostwolfWarlordBattlecryModel extends BattlecryModel<Model> {
     protected _brand: symbol = Symbol('frostwolf-warlord-battlecry-model');
-
-    public getSelector(): Selector<Model> | undefined {
-        return undefined;
-    }
 
     @useBattlecryRunHook()
     protected async handleRun(): Promise<void> {

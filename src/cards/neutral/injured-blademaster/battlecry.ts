@@ -1,7 +1,6 @@
 import { BattlecryModel } from "../../../feats/battlecry";
 import { Model, useRoute, useModel } from "set-piece";
 import { useBattlecryRunHook } from "../../../hooks/battlecry-run";
-import { Selector } from "../../../utils/controller";
 import { RoleModel } from "../../../entities/role";
 import { MinionModel } from "../../minion";
 
@@ -9,11 +8,7 @@ import { MinionModel } from "../../minion";
 export class InjuredBlademasterBattlecryModel extends BattlecryModel<Model> {
     protected _brand: symbol = Symbol('injured-blademaster-battlecry-model');
 
-    public getSelector(): Selector<Model> | undefined {
-        return undefined;
-    }
-
-    @useRoute(() => MinionModel)
+@useRoute(() => MinionModel)
     private _minion?: MinionModel;
 
     @useBattlecryRunHook()

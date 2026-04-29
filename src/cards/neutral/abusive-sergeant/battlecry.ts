@@ -4,19 +4,18 @@ import { RoleModel } from "../../../entities/role";
 import { AbusiveSergeantBuffModel } from "./buff";
 import { useBattlecryRunHook } from "../../../hooks/battlecry-run";
 import { useConsoleGroup, useModel } from "set-piece";
+import { useBattlecrySelectHook } from "../../../hooks/battlecry-selector";
 
 @useModel('abusive-sergeant-battlecry-model')
 export class AbusiveSergeantBattlecryModel extends BattlecryModel<RoleModel> {
     protected _brand: symbol = Symbol('abusive-sergeant-battlecry-model');
-    constructor() {
-        super();
-        
-    }
 
-    public getSelector(params: Array<RoleModel | undefined>): Selector<RoleModel> | undefined {
+    @useBattlecrySelectHook()
+    protected handleSelect(): Selector<RoleModel> | undefined {
         const player = this.player;
         if (!player) return;
-        const options = player.board.minions.map(minion => minion.role);
+        const minions = player.board.minions;
+        const options = minions.map(minion => minion.role);
         return { options };
     }
 
@@ -24,7 +23,6 @@ export class AbusiveSergeantBattlecryModel extends BattlecryModel<RoleModel> {
     @useConsoleGroup()
     protected async handleRun(target?: RoleModel): Promise<void> {
         if (!target) return;
-        console.log('Buff target', target.name)
         target.entity?.addFeat(new AbusiveSergeantBuffModel());
     }
 }

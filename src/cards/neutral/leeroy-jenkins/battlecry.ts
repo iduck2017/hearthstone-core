@@ -8,10 +8,6 @@ import { PlayerModel } from "../../../entities/player";
 export class LeeroyJenkinsBattlecryModel extends BattlecryModel<Model> {
     protected _brand: symbol = Symbol('leeroy-jenkins-battlecry-model');
 
-    public getSelector(): undefined {
-        return undefined;
-    }
-
     @useBattlecryRunHook()
     @useAction()
     protected async handleRun(): Promise<void> {

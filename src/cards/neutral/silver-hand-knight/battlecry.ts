@@ -8,11 +8,7 @@ import { MinionModel } from "../../minion";
 export class SilverHandKnightBattlecryModel extends BattlecryModel<Model> {
     protected _brand: symbol = Symbol('silver-hand-knight-battlecry-model');
 
-    public getSelector(params: Array<Model | undefined>): undefined {
-        return undefined;
-    }
-
-    @useRoute(() => MinionModel)
+@useRoute(() => MinionModel)
     private _minion?: MinionModel;
 
     @useBattlecryRunHook()
