@@ -52,7 +52,7 @@ describe('fiery-war-axe', () => {
 
     it('weapon-breaks-after-two-attacks', async () => {
         // First hero attack: durability 2 → 1
-        heroA.role.runAttack();
+        heroA.role.action.launch();
         await sleep();
         playerA.controller.selectTarget(wispA.role);
         await sleep();
@@ -62,7 +62,7 @@ describe('fiery-war-axe', () => {
 
         // Second hero attack: durability 1 → 0, weapon destroyed
         heroA.role.action.resetCurrent();
-        heroA.role.runAttack();
+        heroA.role.action.launch();
         await sleep();
         playerA.controller.selectTarget(wispB.role);
         await sleep();

@@ -51,12 +51,12 @@ describe('argent-squire', () => {
         expect(squire.role.divineShield.isActived).toBe(true);
         expect(wispA.role.divineShield.isActived).toBe(false);
         expect(wispB.role.divineShield.isActived).toBe(false);
-        expect(wispA.role.isAttackEnabled).toBe(true);
-        expect(wispB.role.isAttackEnabled).toBe(true);
+        expect(wispA.role.action.isEnabled).toBe(true);
+        expect(wispB.role.action.isEnabled).toBe(true);
     })
 
     it('divine-shield-absorbs-first-hit', async () => {
-        wispA.role.runAttack();
+        wispA.role.action.launch();
         await sleep();
         playerA.controller.selectTarget(squire.role);
         await sleep();
@@ -68,7 +68,7 @@ describe('argent-squire', () => {
     })
 
     it('attack-after-shield-broken', async () => {
-        wispB.role.runAttack();
+        wispB.role.action.launch();
         await sleep();
         playerA.controller.selectTarget(squire.role);
         await sleep();

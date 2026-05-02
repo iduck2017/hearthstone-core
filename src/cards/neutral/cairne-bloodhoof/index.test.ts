@@ -38,7 +38,7 @@ describe("cairne-bloodhoof", () => {
         game.nextTurn();
         await sleep();
 
-        boulderfistOgre.role.runAttack();
+        boulderfistOgre.role.action.launch();
         await sleep();
         playerB.controller.selectTarget(cairneBloodhoof.role);
         await sleep();

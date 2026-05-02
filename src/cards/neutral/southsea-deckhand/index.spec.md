@@ -37,20 +37,20 @@ Data flow:
 **Flow**
 
 1. Verify `deckhand.role.charge.isActived === true` — `ChargeActiveDecor` activated by weapon aura.
-2. Verify `deckhand.role.isAttackEnabled === true` — can attack on summon turn.
+2. Verify `deckhand.role.action.isEnabled === true` — can attack on summon turn.
 3. `deckhand.role.runAttack()` → target `playerB.hero.role` → hero loses 2 HP (Mage has 0 attack, deckhand survives).
 4. `hero.role.action.wakeup()`, `hero.role.runAttack()` → target `wisp1.role` → wisp1 dies, `fieryWarAxe` durability 2 → 1.
 5. `hero.role.action.resetCurrent()`, `hero.role.runAttack()` → target `wisp2.role` → wisp2 dies, durability 1 → 0, weapon destroyed.
 6. Assert `playerA.weapon === undefined`.
 7. Assert `deckhand.role.charge.isActived === false` — `ChargeActiveDecor` no longer activated.
 8. `deckhand.role.action.resetCurrent()` → simulate action refresh.
-9. Assert `deckhand.role.isAttackEnabled === false` — summoning sickness applies without Charge.
+9. Assert `deckhand.role.action.isEnabled === false` — summoning sickness applies without Charge.
 
 ### 3.1 check-initial-state
 
 - `playerA.weapon === fieryWarAxe`.
 - `deckhand.role.charge.isActived === true`.
-- `deckhand.role.isAttackEnabled === true`.
+- `deckhand.role.action.isEnabled === true`.
 
 ### 3.2 charge-lost-when-weapon-is-destroyed
 
@@ -61,7 +61,7 @@ Data flow:
 - Assert `playerA.weapon === undefined`.
 - Assert `deckhand.role.charge.isActived === false`.
 - `deckhand.role.action.resetCurrent()`.
-- Assert `deckhand.role.isAttackEnabled === false`.
+- Assert `deckhand.role.action.isEnabled === false`.
 
 ## 4. Reference cards
 

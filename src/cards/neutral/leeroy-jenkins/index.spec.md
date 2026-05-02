@@ -39,4 +39,4 @@
 - Assert playerA.board.minions contains leeroyJenkins.
 - Assert playerB.board.minions.length === 2.
 - Assert each minion on playerB.board is WhelpModel with attack 1 and health 1.
-- Assert leeroyJenkins.role.isAttackEnabled === true (Charge).
+- Assert leeroyJenkins.role.action.isEnabled === true (Charge).

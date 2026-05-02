@@ -29,11 +29,11 @@ describe('bluegill-warrior', () => {
     it('check-initial-state', () => {
         expect(bluegill.role.charge.isActived).toBe(true);
         // Charge grants attack right on the summon turn
-        expect(bluegill.role.isAttackEnabled).toBe(true);
+        expect(bluegill.role.action.isEnabled).toBe(true);
     });
 
     it('charge-can-attack-hero-on-summon-turn', async () => {
-        bluegill.role.runAttack();
+        bluegill.role.action.launch();
         await sleep();
         // Selector must include the opponent's hero (Charge bypasses summon-turn restriction)
         const options = playerA.controller.selector?.options;

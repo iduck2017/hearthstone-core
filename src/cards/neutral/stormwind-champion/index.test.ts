@@ -39,7 +39,7 @@ describe("stormwind-champion", () => {
 
     it("wisp-takes-damage-while-buffed", async () => {
         // Wisp (2 atk) attacks enemyWisp (1 hp): enemyWisp dies, wisp takes 1 damage
-        wispA.role.runAttack();
+        wispA.role.action.launch();
         await sleep();
         playerA.controller.selectTarget(wispB.role);
         await sleep();
@@ -51,7 +51,7 @@ describe("stormwind-champion", () => {
 
     it("aura-removed-on-champion-death-health-stays-at-1", async () => {
         // Champion (6 atk) attacks ogre (6/7): champion dies, ogre survives
-        stormwindChampion.role.runAttack();
+        stormwindChampion.role.action.launch();
         await sleep();
         playerA.controller.selectTarget(boulderfistOgre.role);
         await sleep();

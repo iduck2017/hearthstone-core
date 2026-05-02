@@ -35,7 +35,7 @@
 ### 3.2 charge-attack-divine-shield-absorbs-counter
 
 - `argentCommander.launcher.launch()` → select position 0.
-- Assert `argentCommander.role.isAttackEnabled === true` (Charge).
+- Assert `argentCommander.role.action.isEnabled === true` (Charge).
 - `argentCommander.role.runAttack()` → select `wispA.role`.
 - Assert `wispA.disposer.isActived === true`.
 - Assert `argentCommander.role.divineShield.isActived === false` (shield consumed).

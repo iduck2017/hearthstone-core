@@ -48,7 +48,7 @@ describe("acolyte-of-pain", () => {
         game.nextTurn();
         await sleep();
 
-        wisp.role.runAttack();
+        wisp.role.action.launch();
         await sleep();
         playerB.controller.selectTarget(acolyteOfPain.role);
         await sleep();

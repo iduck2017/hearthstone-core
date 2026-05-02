@@ -54,7 +54,7 @@ describe('goldshine-footman', () => {
     })
 
     it('taunt-restricts-target', async () => {
-        wispA.role.runAction();
+        wispA.role.action.launch();
         await sleep();
         const options = playerA.controller.selector?.options;
         expect(options).toContain(footman.role);

@@ -6,6 +6,7 @@ import { HeroModel } from "../heroes";
 import { RoleAttackDecor } from "../decors/role-attack";
 import { RoleFeatModel } from "../feats";
 import { RoleModel } from "../entities/role";
+import { useDisposer } from "../utils/disposer";
 
 export interface RoleAttackOption {
     target: RoleModel;
@@ -26,9 +27,16 @@ export class RoleAttackModel extends Model {
         super();
         this._origin = props?.origin ?? 1;
         this._current = this._origin;
-        
     }
 
+    @useMemo()
+    public isEnabled() {
+        if (this.current <= 0) return;
+        const selector = this.getSelector();
+        if (!selector?.options.length) return;
+        return true
+    }
+    
     // Routes
     @useRoute(() => MinionModel)
     private _minion?: MinionModel;
@@ -124,7 +132,7 @@ export class RoleAttackModel extends Model {
         return target
     }
 
-
+    @useDisposer()
     public launch(options: RoleAttackOption) {
         const role = this.role;
         if (!role) return

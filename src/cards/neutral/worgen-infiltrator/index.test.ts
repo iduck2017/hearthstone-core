@@ -60,7 +60,7 @@ describe('worgen-infiltrator', () => {
     })
 
     it('stealth-restricts-target', async () => {
-        wispA.role.runAction();
+        wispA.role.action.launch();
         await sleep();
         const options = playerA.controller.selector?.options;
         expect(options).toContain(wispB.role);
@@ -78,7 +78,7 @@ describe('worgen-infiltrator', () => {
         game.nextTurn();
         await sleep();
         expect(infiltrator.role.stealth.isActived).toBe(true);
-        infiltrator.role.runAction();
+        infiltrator.role.action.launch();
         await sleep();
         playerB.controller.selectTarget(playerA.hero.role);
         await sleep();

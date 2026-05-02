@@ -37,7 +37,7 @@ describe("southsea-captain", () => {
 
     it("aura-removed-when-captain-dies", async () => {
         // Captain (4 atk) attacks Boulderfist Ogre (6 atk / 7 hp): captain dies, ogre survives
-        southseaCaptain.role.runAttack();
+        southseaCaptain.role.action.launch();
         await sleep();
         playerA.controller.selectTarget(boulderfistOgre.role);
         await sleep();

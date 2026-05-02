@@ -43,7 +43,7 @@ describe('harvest-golem', () => {
     });
 
     it('deathrattle-summon-damaged-golem-on-death', async () => {
-        harvestGolem.role.runAttack();
+        harvestGolem.role.action.launch();
         await sleep();
         playerA.controller.selectTarget(bloodfenRaptor.role);
         await sleep();

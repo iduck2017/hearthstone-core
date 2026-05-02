@@ -83,7 +83,7 @@ describe('stonetusk-boar', () => {
     })
 
     it('boar-attacks-immediately', async () => {
-        boar.role.runAction();
+        boar.role.action.launch();
         await sleep();
         playerA.controller.selectTarget(target.role);
         await sleep();

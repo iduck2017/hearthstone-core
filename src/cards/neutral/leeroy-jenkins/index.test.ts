@@ -50,6 +50,6 @@ describe("leeroy-jenkins", () => {
             expect(whelp.role.health.current).toBe(1);
         }
         // Charge: leeroy can attack the same turn it was played
-        expect(leeroyJenkins.role.isAttackEnabled).toBe(true);
+        expect(leeroyJenkins.role.action.isEnabled).toBe(true);
     });
 });

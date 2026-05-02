@@ -54,10 +54,7 @@ export class RoleModel extends Model {
     public get name() {
         return `${this.parent?.name}.RoleModel`
     }
-
-    @useRoute(() => BoardModel)
-    private _board?: BoardModel;
-
+    
     @useChild()
     private _health: RoleHealthModel;
     @useMemo()
@@ -79,23 +76,6 @@ export class RoleModel extends Model {
         return this._attack;
     }
 
-    @useMemo()
-    public get isAttackEnabled() {
-        const currentPlayer = this._game?.currentPlayer;
-        /** Check current turn */
-        if (this._player !== currentPlayer) return false;
-        /** Check action */
-        if (!this.action.isEnable) return false;
-        /** Check attack */
-        if (this.attack.current <= 0) return false;
-        /** Check position — minions must be on a board; heroes are always in play */
-        if (!this._board && !this._hero) return false;
-        /** Check disposer */
-        if (!this.entity) return false;
-        if (this.entity.disposer.isActived) return false;
-        const selector = this.attack.getSelector();
-        return !!selector?.options.length;
-    }
 
     @useChild()
     private _taunt: TauntModel;
@@ -132,10 +112,6 @@ export class RoleModel extends Model {
         return this._stealth;
     }
 
-    // Route
-    @useRoute(() => PlayerModel)
-    private _player?: PlayerModel;
-
     @useRoute(() => GameModel)
     private _game?: GameModel;
     @useMemo()
@@ -154,18 +130,6 @@ export class RoleModel extends Model {
         return this._minion ?? this._hero;
     }
 
-    /** Attack and receiveAttack */
-    @useDisposer()
-    @useAction()
-    public async runAction() {
-        if (!this.isAttackEnabled) return;
-        // Get target
-        const target = await this.attack.getTarget();
-        if (!target) return;
-        if (!this.isAttackEnabled) return;
-        this.attack.launch({ target })
-        this.action.consumeCurrent()
-    }
 
     public _receiveAttack(options: RoleAttackReceiveOption) {
         const prevEvent = new RoleAttackReceivePrevEvent(options);

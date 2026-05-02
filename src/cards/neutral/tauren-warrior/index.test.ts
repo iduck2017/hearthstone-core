@@ -46,7 +46,7 @@ describe("tauren-warrior", () => {
     });
 
     it("enrage-gains-attack-while-damaged", async () => {
-        wisp.role.runAttack();
+        wisp.role.action.launch();
         await sleep();
         playerB.controller.selectTarget(taurenWarrior.role);
         await sleep();

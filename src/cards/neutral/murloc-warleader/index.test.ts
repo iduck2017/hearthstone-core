@@ -43,7 +43,7 @@ describe("murloc-warleader", () => {
 
     it("aura-removed-when-warleader-dies", async () => {
         // Warleader (3 atk) attacks Boulderfist Ogre (6 atk / 7 hp): warleader dies, ogre survives
-        murlocWarleader.role.runAttack();
+        murlocWarleader.role.action.launch();
         await sleep();
         playerA.controller.selectTarget(boulderfistOgre.role);
         await sleep();

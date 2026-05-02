@@ -51,7 +51,7 @@ describe("sunwalker", () => {
     });
 
     it("divine-shield-absorbs-first-attack", async () => {
-        wispA.role.runAttack();
+        wispA.role.action.launch();
         await sleep();
         playerA.controller.selectTarget(sunwalker.role);
         await sleep();
@@ -63,7 +63,7 @@ describe("sunwalker", () => {
     });
 
     it("takes-damage-after-shield-broken", async () => {
-        wispB.role.runAttack();
+        wispB.role.action.launch();
         await sleep();
         playerA.controller.selectTarget(sunwalker.role);
         await sleep();

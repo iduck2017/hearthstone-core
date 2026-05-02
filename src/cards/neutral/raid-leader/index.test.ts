@@ -35,7 +35,7 @@ describe("raid-leader", () => {
 
     it("aura-removed-when-raid-leader-dies", async () => {
         // raidLeader (2 attack) attacks boulderfistOgre (6/7): raidLeader dies, ogre survives
-        raidLeader.role.runAttack();
+        raidLeader.role.action.launch();
         await sleep();
         playerA.controller.selectTarget(boulderfistOgre.role);
         await sleep();

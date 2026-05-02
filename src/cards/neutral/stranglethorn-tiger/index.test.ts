@@ -29,11 +29,11 @@ describe('stranglethorn-tiger', () => {
 
     it('check-initial-state', () => {
         expect(tiger.role.stealth.isActived).toBe(true);
-        expect(wisp.role.isAttackEnabled).toBe(true);
+        expect(wisp.role.action.isEnabled).toBe(true);
     });
 
     it('stealth-hides-from-attacker', async () => {
-        wisp.role.runAttack();
+        wisp.role.action.launch();
         await sleep();
         const options = playerA.controller.selector?.options;
         // Tiger (stealthed) must not appear; freeTarget and hero must appear
@@ -51,7 +51,7 @@ describe('stranglethorn-tiger', () => {
         game.nextTurn();
         await sleep();
         expect(tiger.role.stealth.isActived).toBe(true);
-        tiger.role.runAttack();
+        tiger.role.action.launch();
         await sleep();
         playerB.controller.selectTarget(playerA.hero.role);
         await sleep();

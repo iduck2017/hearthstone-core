@@ -28,7 +28,7 @@
 ### 3.1 check-initial-state
 
 - `tiger.role.stealth.isActived === true`.
-- `wisp.role.isAttackEnabled === true`.
+- `wisp.role.action.isEnabled === true`.
 
 ### 3.2 stealth-hides-from-attacker
 

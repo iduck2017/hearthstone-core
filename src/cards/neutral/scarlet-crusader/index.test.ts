@@ -32,7 +32,7 @@ describe('scarlet-crusader', () => {
     });
 
     it('divine-shield-absorbs-first-hit', async () => {
-        wispA.role.runAttack();
+        wispA.role.action.launch();
         await sleep();
         playerA.controller.selectTarget(crusader.role);
         await sleep();
@@ -46,7 +46,7 @@ describe('scarlet-crusader', () => {
     });
 
     it('dies-after-shield-broken', async () => {
-        wispB.role.runAttack();
+        wispB.role.action.launch();
         await sleep();
         playerA.controller.selectTarget(crusader.role);
         await sleep();

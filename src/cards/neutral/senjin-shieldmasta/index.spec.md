@@ -28,7 +28,7 @@
 
 - `shieldmasta.role.taunt.isActived === true`.
 - `freeTarget.role.taunt.isActived === false`.
-- `wisp.role.isAttackEnabled === true`.
+- `wisp.role.action.isEnabled === true`.
 
 ### 3.2 taunt-forces-attacker-to-target-shieldmasta
 

@@ -55,12 +55,12 @@ describe('southsea-deckhand', () => {
         expect(playerA.board.minions).toContain(deckhand);
         // Weapon equipped → ChargeActiveDecor fires active() → charge overrides summoning sickness
         expect(deckhand.role.charge.isActived).toBe(true);
-        expect(deckhand.role.isAttackEnabled).toBe(true);
+        expect(deckhand.role.action.isEnabled).toBe(true);
     });
 
     it('charge-allows-attack-on-summon-turn', async () => {
         // Deckhand attacks opponent hero via Charge (Mage has 0 attack, deckhand survives)
-        deckhand.role.runAttack();
+        deckhand.role.action.launch();
         await sleep();
         playerA.controller.selectTarget(playerB.hero.role);
         await sleep();
@@ -70,7 +70,7 @@ describe('southsea-deckhand', () => {
 
     it('charge-lost-when-weapon-is-destroyed', async () => {
         // First hero attack: durability 2 → 1
-        warrior.role.runAttack();
+        warrior.role.action.launch();
         await sleep();
         playerA.controller.selectTarget(wispA.role);
         await sleep();
@@ -79,7 +79,7 @@ describe('southsea-deckhand', () => {
 
         // Second hero attack: durability 1 → 0, weapon destroyed
         warrior.role.action.resetCurrent();
-        warrior.role.runAttack();
+        warrior.role.action.launch();
         await sleep();
         playerA.controller.selectTarget(wispB.role);
         await sleep();

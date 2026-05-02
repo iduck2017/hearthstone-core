@@ -29,11 +29,11 @@ describe('senjin-shieldmasta', () => {
     it('check-initial-state', () => {
         expect(shieldmasta.role.taunt.isActived).toBe(true);
         expect(freeTarget.role.taunt.isActived).toBe(false);
-        expect(wisp.role.isAttackEnabled).toBe(true);
+        expect(wisp.role.action.isEnabled).toBe(true);
     });
 
     it('taunt-forces-attacker-to-target-shieldmasta', async () => {
-        wisp.role.runAttack();
+        wisp.role.action.launch();
         await sleep();
         const options = playerA.controller.selector?.options;
         // Only taunt targets are selectable

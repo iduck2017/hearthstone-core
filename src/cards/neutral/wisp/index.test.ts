@@ -49,7 +49,7 @@ describe('wisp', () => {
     })
 
     it('wisp-attack-wisp', async () => {
-        wispA.role.runAction();
+        wispA.role.action.launch();
         await sleep();
         const options = playerA.controller.selector?.options;
         expect(options).toContain(wispB.role);

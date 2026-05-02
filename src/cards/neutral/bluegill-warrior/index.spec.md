@@ -20,7 +20,7 @@
 
 **Flow**
 
-1. Verify `bluegill.role.isAttackEnabled` is true on the summon turn (Charge).
+1. Verify `bluegill.role.action.isEnabled` is true on the summon turn (Charge).
 2. Verify the target selector includes the opponent's hero (Charge bypasses the summon-turn restriction).
 3. `bluegill.role.runAttack()` → target `playerB.hero.role` → hero loses 2 health, bluegill loses 0 (hero has 0 attack).
 4. After attacking, `bluegill.role.action.current === 0` — can no longer attack.
@@ -28,7 +28,7 @@
 ### 3.1 check-initial-state
 
 - `bluegill.role.charge.isActived === true`.
-- `bluegill.role.isAttackEnabled === true` (Charge grants immediate attack right).
+- `bluegill.role.action.isEnabled === true` (Charge grants immediate attack right).
 
 ### 3.2 charge-can-attack-hero-on-summon-turn
 

@@ -138,7 +138,7 @@ Key API:
 - `player.drawCard()` / `player.opponent` / `player.controller`
 - `minion.summon(board?, pos?)` / `minion.launcher.launch()`
 - `card.addFeature(feat)` / `card.removeFeature(feat)` / `card.consumeMana()`
-- `role.receiveDamage({ value })` / `role.runAttack()` / `role.isAttackEnabled`
+- `role.receiveDamage({ value })` / `role.runAttack()` / `role.action.isEnabled`
 - Keywords passed via constructor: `new RoleModel({ taunt: new TauntModel({ isActived: true }) })`
 
 ---

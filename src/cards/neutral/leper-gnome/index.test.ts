@@ -43,9 +43,9 @@ describe('leper-gnome', () => {
     });
 
     it('leper-gnome-attack-wisp', async () => {
-        expect(leperGnome.role.isAttackEnabled).toBe(true);
+        expect(leperGnome.role.action.isEnabled).toBe(true);
 
-        leperGnome.role.runAttack();
+        leperGnome.role.action.launch();
         await sleep();
         playerA.controller.selectTarget(wisp.role);
         await sleep();

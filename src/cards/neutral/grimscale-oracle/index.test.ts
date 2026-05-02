@@ -52,7 +52,7 @@ describe("grimscale-oracle", () => {
     });
 
     it("aura-removed-when-oracle-dies", async () => {
-        grimscaleOracle.role.runAttack();
+        grimscaleOracle.role.action.launch();
         await sleep();
         playerA.controller.selectTarget(boulderfistOgre.role);
         await sleep();

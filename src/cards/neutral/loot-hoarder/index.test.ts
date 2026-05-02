@@ -55,9 +55,9 @@ describe('loot-hoarder', () => {
     });
 
     it('deathrattle-draws-top-card-on-death', async () => {
-        expect(lootHoarder.role.isAttackEnabled).toBe(true);
+        expect(lootHoarder.role.action.isEnabled).toBe(true);
 
-        lootHoarder.role.runAttack();
+        lootHoarder.role.action.launch();
         await sleep();
         playerA.controller.selectTarget(target.role);
         await sleep();

@@ -58,7 +58,7 @@ describe("bloodmage-thalnos", () => {
 
     it("deathrattle-draws-card-on-death", async () => {
         // Thalnos (1 atk) attacks enemyWisp (1 hp) → both die; deathrattle draws deckWisp
-        bloodmageThalnos.role.runAttack();
+        bloodmageThalnos.role.action.launch();
         await sleep();
         playerA.controller.selectTarget(enemyWisp.role);
         await sleep();

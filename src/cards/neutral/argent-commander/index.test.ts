@@ -63,9 +63,9 @@ describe("argent-commander", () => {
 
         expect(playerA.board.minions).toContain(argentCommander);
         // Charge: can attack the same turn it was played
-        expect(argentCommander.role.isAttackEnabled).toBe(true);
+        expect(argentCommander.role.action.isEnabled).toBe(true);
 
-        argentCommander.role.runAttack();
+        argentCommander.role.action.launch();
         await sleep();
         playerA.controller.selectTarget(wispA.role);
         await sleep();
@@ -81,7 +81,7 @@ describe("argent-commander", () => {
         game.nextTurn();
         await sleep();
 
-        wispB.role.runAttack();
+        wispB.role.action.launch();
         await sleep();
         playerB.controller.selectTarget(argentCommander.role);
         await sleep();
