@@ -12,14 +12,19 @@ export interface RoleFeatModel extends Model {
     player: PlayerModel | undefined
 }
 
-export abstract class BaseFeatModel extends Model {
+export interface BaseFeatModel extends Model {
+    feat: FeatModel | undefined,
+    player: PlayerModel | undefined
+}
+
+export abstract class SubFeatModel extends Model {
     @useRoute(() => FeatModel)
     private _feat?: FeatModel
     @useMemo()
     public get feat() { return this._feat }
 
     @useRoute(() => PlayerModel)
-    private _player?: PlayerModel;
+    protected _player?: PlayerModel;
     @useMemo()
     public get player() { return this._player }
 }
@@ -27,7 +32,7 @@ export abstract class BaseFeatModel extends Model {
 export abstract class FeatModel extends Model {
     constructor(props?: {
         isActived?: boolean;
-        subFeats?: BaseFeatModel[]
+        subFeats?: SubFeatModel[]
     }) {
         super();
         this._isActived = props?.isActived ?? true;
@@ -46,7 +51,7 @@ export abstract class FeatModel extends Model {
     }
 
     @useChild()
-    private _subFeats: BaseFeatModel[];
+    private _subFeats: SubFeatModel[];
     public get subFeats() {
         return this._subFeats;
     }
@@ -59,7 +64,7 @@ export abstract class FeatModel extends Model {
     }
 
     @useRoute(() => PlayerModel)
-    private _player?: PlayerModel;
+    protected _player?: PlayerModel;
     @useMemo()
     public get player() {
         return this._player;

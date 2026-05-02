@@ -1,7 +1,7 @@
-import { useDep, useRoute, useState, Model, useMemo, useRange, useDecorConsumer, useDecorProducer, useModel } from "set-piece";
+import { useDep, useRoute, useState, Model, useMemo, useRange, useDecorConsumer, useDecorProducer, useModel, Decor } from "set-piece";
 import { RoleModel } from "../entities/role";
-import { AsleepDecor } from "../decors/asleep";
 import { PlayerModel } from "../entities/player";
+import type { RoleFeatModel } from "../feats";
 import { GameModel } from "../entities/game";
 import { BoardModel } from "../entities/board";
 import { HeroModel } from "../heroes";
@@ -116,5 +116,23 @@ export class RoleActionModel extends Model {
         if (!target) return;
         role.attack.launch({ target })
         this.consume()
+    }
+}
+
+export class AsleepDecor extends Decor<boolean> {
+    public wakeup() { this._result = false }
+}
+
+export function useAsleepDecorConsumer<I extends RoleFeatModel>() {
+    return function(
+        prototype: I,
+        key: string,
+        descriptor: TypedPropertyDescriptor<(decor: AsleepDecor) => void>
+    ) {
+        useDecorConsumer((that: I) => {
+            if (!that.feat?.isActived) return;
+            const action = that.role?.action;
+            return [action, AsleepDecor]
+        })(prototype, key, descriptor);
     }
 }

@@ -1,6 +1,6 @@
 import { useDep, useRoute, useState, Model, useMemo, useDecorProducer, useModel, useDecorConsumer } from "set-piece";
 import { RoleModel } from "../entities/role";
-import { AsleepDecor, useAsleepDecorConsumer } from "../decors/asleep";
+import { AsleepDecor, useAsleepDecorConsumer } from "../rules/role-action";
 import { HeroSelectableDecor } from "./role-attack";
 import { FeatModel } from "..";
 

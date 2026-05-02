@@ -2,7 +2,7 @@ import { useMemo, useRoute, useModel, useDecorConsumer } from "set-piece";
 import { FeatModel } from "../../../feats";
 import { MinionModel } from "../../minion";
 import { BoardOnlyControllerModel } from "../../../feats/board-only-controller";
-import { FeatActiveDecor, useFeatActiveDecorConsumer } from "../../../decors/feat-active";
+import { FeatActiveDecor } from "../../../decors/feat-active";
 
 @useModel('southsea-deckhand-feat-model')
 export class SouthseaDeckhandFeatModel extends FeatModel {

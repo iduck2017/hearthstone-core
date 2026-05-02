@@ -1,7 +1,7 @@
 import { useRoute, useState, Model, useMemo, useModel } from "set-piece";
 import { RoleModel } from "../entities/role";
 import { RoleActionModel } from "./role-action";
-import { AsleepDecor, useAsleepDecorConsumer } from "../decors/asleep";
+import { AsleepDecor, useAsleepDecorConsumer } from "../rules/role-action";
 import { FeatModel } from "..";
 
 @useModel('rush-model')

@@ -18,23 +18,22 @@ export class SpellDamageDecor extends Decor<number> {
 
     public get result() {
         let origin = this.origin;
-        this._operators.sort((a, b) => a.source.uuid.localeCompare(b.source.uuid));
-        this._operators
-            .filter(op => op.type !== BuffOperatorType.AURA)
-            .forEach(op => {
-                switch (op.type) {
-                    case BuffOperatorType.COMMON:
-                        origin += op.value;
-                        break;
-                    case BuffOperatorType.RESET:
-                        origin = op.value;
-                        break;
-                    default: break;
-                }
-            });
-        this._operators
-            .filter(op => op.type === BuffOperatorType.AURA)
-            .forEach(op => origin += op.value);
+        this._operators.sort((opA, opB) => {
+            if (opA.type === BuffOperatorType.AURA) return 1;
+            return opA.source.uuid.localeCompare(opB.source.uuid);
+        });
+        this._operators.forEach(op => {
+            switch (op.type) {
+                case BuffOperatorType.COMMON:
+                case BuffOperatorType.AURA:
+                    origin += op.value;
+                    break;
+                case BuffOperatorType.RESET:
+                    origin = op.value;
+                    break;
+                default: break;
+            }
+        });
         return origin;
     }
 }
