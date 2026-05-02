@@ -3,9 +3,10 @@ import { PlayerModel } from "../entities/player";
 import { Selector } from "../utils/controller";
 import { FeatModel } from ".";
 import { FeatLauncherRegistry } from "../utils/feat-launcher-registry";
-import { battlecrySelectorRegistry } from "../hooks/battlecry-selector";
+import { FeatSelectorRegistry } from "../utils/feat-selector-registry";
 
 export const battlecryLauncherRegistry = new FeatLauncherRegistry()
+export const battlecrySelectorRegistry = new FeatSelectorRegistry();
 
 export function useBattlecryLaunchHook<T extends Model>() {
     return function(
@@ -15,6 +16,18 @@ export function useBattlecryLaunchHook<T extends Model>() {
     ) {
         const Constructor: any = prototype.constructor;
         battlecryLauncherRegistry.register(Constructor, key)
+    }
+}
+
+
+export function useBattlecrySelectHook<T extends Model>() {
+    return function(
+        prototype: BattlecryModel<T>,
+        key: string,
+        descriptor: TypedPropertyDescriptor<Method<Selector<T> | undefined, Array<T | undefined>>>,
+    ) {
+        const Constructor: any = prototype.constructor
+        battlecrySelectorRegistry.register(Constructor, key);
     }
 }
 
@@ -32,7 +45,6 @@ export abstract class BattlecryModel<T extends Model = Model> extends FeatModel 
         super();
         this._isPending = props?.isPending ?? false;
     }
-
 
     /** Target selector */
     public async getTargets(): Promise<Array<T | undefined>> {

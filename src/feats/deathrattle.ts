@@ -1,7 +1,19 @@
-import { useRoute, Model, useMemo, useModel } from "set-piece";
-import { PlayerModel } from "../entities/player";
+import { Method, useModel } from "set-piece";
 import { FeatModel } from ".";
-import { deathrattleLauncherRegistry } from "../hooks/deathrattle-launcher";
+import { FeatLauncherRegistry } from "../utils/feat-launcher-registry";
+
+export const deathrattleLauncherRegistry = new FeatLauncherRegistry();
+
+export function useDeathrattleLaunchHook() {
+    return function(
+        prototype: DeathrattleModel,
+        key: string,
+        _descriptor: TypedPropertyDescriptor<Method<void, []>>,
+    ) {
+        const Constructor: any = prototype.constructor;
+        deathrattleLauncherRegistry.register(Constructor, key)
+    }
+}
 
 @useModel('deathrattle-model')
 export class DeathrattleModel extends FeatModel {

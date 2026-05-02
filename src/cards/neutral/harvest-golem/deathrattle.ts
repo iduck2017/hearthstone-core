@@ -1,7 +1,7 @@
 import { useModel } from "set-piece";
 import { DeathrattleModel } from "../../../feats/deathrattle";
 import { DamagedGolemModel } from "../../derivatives/damaged-golem";
-import { useDeathrattleLaunchHook } from "../../../hooks/deathrattle-launcher";
+import { useDeathrattleLaunchHook } from "../../../feats/deathrattle";
 
 @useModel('harvest-golem-deathrattle-model')
 export class HarvestGolemDeathrattleModel extends DeathrattleModel {

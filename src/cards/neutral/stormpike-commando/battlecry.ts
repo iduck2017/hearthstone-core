@@ -2,7 +2,7 @@ import { BattlecryModel } from "../../../feats/battlecry";
 import { Selector } from "../../../utils/controller";
 import { RoleModel } from "../../../entities/role";
 import { useBattlecryLaunchHook } from "../../../feats/battlecry";
-import { useBattlecrySelectHook } from "../../../hooks/battlecry-selector";
+import { useBattlecrySelectHook } from "../../../feats/battlecry";
 import { useRoute, useModel } from "set-piece";
 import { MinionModel } from "../../minion";
 

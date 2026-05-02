@@ -3,7 +3,7 @@ import { BattlecryModel } from "../../../feats/battlecry";
 import { Selector } from "../../../utils/controller";
 import { RoleModel } from "../../../entities/role";
 import { useBattlecryLaunchHook } from "../../../feats/battlecry";
-import { useBattlecrySelectHook } from "../../../hooks/battlecry-selector";
+import { useBattlecrySelectHook } from "../../../feats/battlecry";
 
 @useModel('earthen-ring-farseer-battlecry-model')
 export class EarthenRingFarseerBattlecryModel extends BattlecryModel<RoleModel> {

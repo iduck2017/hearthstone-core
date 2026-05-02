@@ -4,7 +4,7 @@ import { Selector } from "../../../utils/controller";
 import { RoleModel } from "../../../entities/role";
 import { DarkIronDwarfBuffModel } from "./buff";
 import { useBattlecryLaunchHook } from "../../../feats/battlecry";
-import { useBattlecrySelectHook } from "../../../hooks/battlecry-selector";
+import { useBattlecrySelectHook } from "../../../feats/battlecry";
 
 @useModel('dark-iron-dwarf-battlecry-model')
 export class DarkIronDwarfBattlecryModel extends BattlecryModel<RoleModel> {

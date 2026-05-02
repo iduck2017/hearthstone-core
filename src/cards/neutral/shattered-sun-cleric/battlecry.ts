@@ -3,7 +3,7 @@ import { Selector } from "../../../utils/controller";
 import { RoleModel } from "../../../entities/role";
 import { ShatteredSunClericBuffModel } from "./buff";
 import { useBattlecryLaunchHook } from "../../../feats/battlecry";
-import { useBattlecrySelectHook } from "../../../hooks/battlecry-selector";
+import { useBattlecrySelectHook } from "../../../feats/battlecry";
 import { useConsoleGroup, useModel } from "set-piece";
 
 @useModel('shattered-sun-cleric-battlecry-model')

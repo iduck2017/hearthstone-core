@@ -1,6 +1,6 @@
 import { useModel } from "set-piece";
 import { DeathrattleModel } from "../../../feats/deathrattle";
-import { useDeathrattleLaunchHook } from "../../../hooks/deathrattle-launcher";
+import { useDeathrattleLaunchHook } from "../../../feats/deathrattle";
 
 @useModel('bloodmage-thalnos-deathrattle-model')
 export class BloodmageThalnosDeathrattleModel extends DeathrattleModel {

@@ -1,6 +1,6 @@
 import { useModel } from "set-piece";
 import { DeathrattleModel } from "../../../feats/deathrattle";
-import { useDeathrattleLaunchHook } from "../../../hooks/deathrattle-launcher";
+import { useDeathrattleLaunchHook } from "../../../feats/deathrattle";
 import { BaineBloodhoofModel } from "../../derivatives/baine-bloodhoof";
 
 @useModel('cairne-bloodhoof-deathrattle-model')

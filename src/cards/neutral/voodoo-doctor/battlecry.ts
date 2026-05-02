@@ -2,7 +2,7 @@ import { useModel } from "set-piece";
 import { BattlecryModel } from "../../../feats/battlecry";
 import { Selector } from "../../../utils/controller";
 import { RoleModel } from "../../../entities/role";
-import { useBattlecrySelectHook } from "../../../hooks/battlecry-selector";
+import { useBattlecrySelectHook } from "../../../feats/battlecry";
 import { useBattlecryLaunchHook } from "../../../feats/battlecry";
 
 @useModel('voodoo-doctor-battlecry-model')
