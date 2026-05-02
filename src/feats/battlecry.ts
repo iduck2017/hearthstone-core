@@ -60,7 +60,7 @@ export abstract class BattlecryModel<T extends Model = Model> extends FeatModel 
         return targets;
     }
 
-    public async run(...params: Array<T | undefined>) {
+    public async launch(...params: Array<T | undefined>) {
         if (!this.isActived) return;
         if (!this.isPending) this._isPending = true;
         const hooks = battlecryLauncherRegistry.getHooks(this);

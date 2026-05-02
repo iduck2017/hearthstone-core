@@ -6,7 +6,7 @@ import { FeatSelectorRegistry } from "../utils/feat-selector-registry";
 
 export const spellEffectRunRegistry = new FeatLauncherRegistry();
 
-export function useSpellEffectRunHook<T extends Model>() {
+export function useSpellEffectLaunchHook<T extends Model>() {
     return function(
         prototype: SpellEffectModel<T>,
         key: string,
@@ -75,12 +75,11 @@ export abstract class SpellEffectModel<T extends Model = Model> extends FeatMode
         return targets;
     }
 
-    public async run(...params: Array<T | undefined>) {
+    public async launch(...params: Array<T | undefined>) {
         if (!this.isActived) return;
-        if (!this.isPending) {
-            this._isPending = true;
-        }
+        if (!this.isPending) this._isPending = true;
         const hooks = spellEffectRunRegistry.getHooks(this);
         for (const hook of hooks) await hook(...params);
+        this._isPending = false;
     }
 }

@@ -56,6 +56,6 @@ export class MinionDisposerModel extends DisposerModel {
         const minion = this._minion;
         if (!minion) return;
         const deathrattles = minion.deathrattles;
-        deathrattles.forEach(hook => hook.run());
+        deathrattles.forEach(hook => hook.launch());
     }
 }               

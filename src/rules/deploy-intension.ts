@@ -19,6 +19,6 @@ export class DeployIntensionModel extends Model {
     }
 
     public async launch() {
-        await this._feat.run(...this._params);
+        await this._feat.launch(...this._params);
     }
 }

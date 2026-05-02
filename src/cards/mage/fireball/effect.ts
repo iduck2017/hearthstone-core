@@ -1,4 +1,4 @@
-import { SpellEffectModel, useSpellEffectRunHook, useSpellEffectSelectHook } from "../../../feats/spell-effect";
+import { SpellEffectModel, useSpellEffectLaunchHook, useSpellEffectSelectHook } from "../../../feats/spell-effect";
 import { Selector } from "../../../utils/controller";
 import { RoleModel } from "../../../entities/role";
 import { useDecorProducer, useState, useModel } from "set-piece";
@@ -25,7 +25,7 @@ export class FireballEffectModel extends SpellEffectModel<RoleModel> {
         return { options };
     }
 
-    @useSpellEffectRunHook()
+    @useSpellEffectLaunchHook()
     protected async handleRun(target?: RoleModel): Promise<void> {
         if (!target) return;
         this.entity?.damageSource.dealDamage({ target, value: this._damage });

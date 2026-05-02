@@ -1,6 +1,6 @@
 import { Model, useMemo, useState, useModel, useRoute } from "set-piece";
 import { CardModel } from "../cards";
-import { registerDisposer, useDisposer } from "../hooks/disposer";
+import { registerDisposer, useDisposer } from "../utils/disposer";
 
 @useModel('weapon-durability-model')
 export class WeaponDurabilityModel extends Model {

@@ -1,5 +1,5 @@
 import { useRoute, Model, useMemo, useState } from "set-piece";
-import { registerDisposer, useDisposer } from "../../hooks/disposer";
+import { registerDisposer, useDisposer } from "../../utils/disposer";
 
 export abstract class DisposerModel extends Model {
 

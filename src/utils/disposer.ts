@@ -1,6 +1,10 @@
 import { actionManager } from "set-piece";
 import { DisposerModel } from "../rules/disposers";
 
+export class DisposerResolver {
+    private _isPending = false;
+    
+}
 
 let isPending = false;
 const disposerRegistry: DisposerModel[] = [];

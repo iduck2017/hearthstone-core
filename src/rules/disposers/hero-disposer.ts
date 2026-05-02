@@ -36,7 +36,7 @@ export class HeroDisposerModel extends DisposerModel {
         const hero = this._hero;
         if (!hero) return;
         const deathrattles = hero.deathrattles;
-        deathrattles.forEach(hook => hook.run());
+        deathrattles.forEach(hook => hook.launch());
     }
 }
     

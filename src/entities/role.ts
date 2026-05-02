@@ -12,7 +12,7 @@ import { PlayerModel } from "./player";
 import { GameModel } from "./game";
 import { MinionModel } from "../cards/minion";
 import { HeroModel } from "../heroes";
-import { registerDisposer, useDisposer } from "../hooks/disposer";
+import { registerDisposer, useDisposer } from "../utils/disposer";
 
 export interface RoleDamageReceiveOption {
     value: number;

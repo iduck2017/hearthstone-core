@@ -18,7 +18,7 @@ export function useDeathrattleLaunchHook() {
 @useModel('deathrattle-model')
 export class DeathrattleModel extends FeatModel {
     protected _brand: symbol = Symbol('deathrattle-model');
-    public run() {
+    public launch() {
         if (!this.isActived) return;
         const hooks = deathrattleLauncherRegistry.getHooks(this);
         for (const hook of hooks) hook();
