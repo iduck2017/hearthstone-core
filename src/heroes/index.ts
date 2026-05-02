@@ -1,7 +1,7 @@
 import { useChild, Model, useMemo, useRoute, useAction } from "set-piece";
 import { HeroDisposerModel } from "../rules/disposers/hero-disposer";
 import { RoleModel, RoleProps } from "../entities/role";
-import { FeatModel } from "../feats";
+import type { FeatModel } from "../feats";
 import { DeathrattleModel } from "../feats/deathrattle";
 import { DamageSourceModel } from "../rules/source/damage-source";
 import { RestoreSourceModel } from "../rules/source/restore-source";

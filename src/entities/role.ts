@@ -1,4 +1,4 @@
-import { Model, useChild, useMemo, useRoute, useAction, Event, PrevEvent, useEventConsumer, useModel } from "set-piece";
+import { Model, useChild, useMemo, useRoute, Event, PrevEvent, useEventConsumer, useModel } from "set-piece";
 import { TauntModel } from "../rules/taunt";
 import { DivineShieldModel } from "../rules/divine-shield";
 import { ChargeModel } from "../rules/charge";
@@ -6,14 +6,11 @@ import { RushModel } from "../rules/rush";
 import { StealthModel } from "../rules/stealth";
 import { RoleAttackModel } from "../rules/role-attack";
 import { RoleHealthModel } from "../rules/role-health";
-import { BoardModel } from "./board";
 import { RoleActionModel } from "../rules/role-action";
-import { PlayerModel } from "./player";
 import { GameModel } from "./game";
 import { MinionModel } from "../cards/minion";
 import { HeroModel } from "../heroes";
-import { registerDisposer, useDisposer } from "../utils/disposer";
-import { BaseFeatModel, RoleFeatModel } from "../feats";
+import { RoleFeatModel } from "../feats";
 
 export interface RoleAttackReceiveOption {
     source: RoleModel;
@@ -46,8 +43,8 @@ export class RoleModel extends Model {
         this._action = new RoleActionModel();
         this._taunt = props.taunt ?? new TauntModel();
         this._divineShield = props.divineShield ?? new DivineShieldModel();
-        this._charge = props.charge ?? new ChargeModel();
-        this._rush = props.rush ?? new RushModel();
+        this._charge = props.charge ?? new ChargeModel({ isActived: false });
+        this._rush = props.rush ?? new RushModel({ isActived: false });
         this._stealth = props.stealth ?? new StealthModel();
     }
 
@@ -147,9 +144,9 @@ export function useRoleAttackReceivePrevEventConsumer<I extends RoleFeatModel>()
         key: string,
         descriptor: TypedPropertyDescriptor<(event: RoleAttackReceivePrevEvent) => void>
     ) {
-        useEventConsumer((self: I) => {
-            const role = self.role;
-            const feat = self.feat;
+        useEventConsumer((that: I) => {
+            const role = that.role;
+            const feat = that.feat;
             if (!feat?.isActived) return;
             if (!role) return;
             return [role, RoleAttackReceivePrevEvent]
@@ -163,9 +160,9 @@ export function useRoleAttackReceiveEventConsumer<I extends RoleFeatModel>() {
         key: string,
         descriptor: TypedPropertyDescriptor<(event: RoleAttackReceiveEvent) => void>
     ) {
-        useEventConsumer((self: I) => {
-            const role = self.role;
-            const feat = self.feat;
+        useEventConsumer((that: I) => {
+            const role = that.role;
+            const feat = that.feat;
             if (!feat?.isActived) return;
             if (!role) return;
             return [role, RoleAttackReceiveEvent]

@@ -2,13 +2,16 @@ import { Decor, Model, useDecorConsumer } from "set-piece";
 import { FeatModel } from "../feats";
 
 export class FeatActiveDecor extends Decor<boolean> {
-    private _disabled = false;
-    public disable() {
-        this._disabled = true;
-    }
+    private _isLocked = false;
 
-    public get result(): boolean {
-        return this.origin && !this._disabled;
+    public disable() { 
+        this._isLocked = true; 
+        this._result = false;
+    }
+    
+    public enable() {
+        if (this._isLocked) return;
+        this._result = true; 
     }
 }
 

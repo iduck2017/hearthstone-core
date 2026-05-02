@@ -16,7 +16,6 @@
  *   After attack: infiltrator (2 hp - 1 dmg) survives at 1 hp, wispA dies.
  *
  */
-
 import { AppModel } from "../../../app";
 import { GameModel } from "../../../entities/game";
 import { PlayerModel } from "../../../entities/player";
@@ -84,5 +83,4 @@ describe('worgen-infiltrator', () => {
         await sleep();
         expect(infiltrator.role.stealth.isActived).toBe(false);
     })
-
 })

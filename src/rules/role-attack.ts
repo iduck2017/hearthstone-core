@@ -1,4 +1,4 @@
-import { useDep, useRoute, useState, Model, useMemo, useRange, useChild, useDecorProducer, useConsoleGroup, useModel, useAction, useEventConsumer, PrevEvent, Event } from "set-piece";
+import { useRoute, useState, Model, useMemo, useRange, useChild, useDecorProducer, useModel, useAction, useEventConsumer, PrevEvent, Event, Decor, useDecorConsumer } from "set-piece";
 import { PlayerModel } from "../entities/player";
 import { GameModel } from "../entities/game";
 import { MinionModel } from "../cards/minion";
@@ -18,15 +18,21 @@ export class RoleAttackPrevEvent extends PrevEvent<RoleAttackOption> {
     protected _brand: symbol = Symbol('role-attack-perform-prev-event');
 }
 
+export class HeroSelectableDecor extends Decor {
+    public unlock() { this._result = true; }
+}
+
 @useModel('role-attack-model')
 export class RoleAttackModel extends Model {
     protected _brand: symbol = Symbol('role-attack-model');
+
     constructor(props?: {
         origin?: number;
     }) {
         super();
         this._origin = props?.origin ?? 1;
         this._current = this._origin;
+        this._isHeroSelectable = false;
     }
 
     @useMemo()
@@ -41,30 +47,22 @@ export class RoleAttackModel extends Model {
     @useRoute(() => MinionModel)
     private _minion?: MinionModel;
     @useMemo()
-    public get minion() {
-        return this._minion;
-    }
+    public get minion() { return this._minion }
 
     @useRoute(() => HeroModel)
     private _hero?: HeroModel;
     @useMemo()
-    public get hero() {
-        return this._hero;
-    }
+    public get hero() { return this._hero }
 
     @useRoute(() => GameModel)
     private _game?: GameModel;
     @useMemo()
-    public get game() {
-        return this._game;
-    }
+    public get game() { return this._game }
 
     @useRoute(() => RoleModel)
     private _role?: RoleModel;
     @useMemo()
-    public get role() {
-        return this._role;
-    }
+    public get role() { return this._role }
 
     @useRoute(() => PlayerModel)
     private _player?: PlayerModel;
@@ -74,48 +72,34 @@ export class RoleAttackModel extends Model {
     @useState()
     private _origin: number;
     @useMemo()
-    public get origin() {
-        return this._origin;
-    }
+    public get origin() { return this._origin }
 
     // Current
     @useState()
     @useDecorProducer(() => RoleAttackDecor)
     private _current: number;
     @useMemo()
-    public get current() {
-        return this._current;
-    }
+    public get current() { return this._current }
 
-    @useMemo()
-    private get isOpponentHeroSelectable() {
-        const minion = this.minion;
-        if (!minion) return false;
-        const role = this.role;
-        if (!role) return false;
-        if (role.charge.isActived) return true;
-        const game = this.game;
-        if (!game) return false;
-        const summonedTurn = minion.deployer.summonedTurn;
-        const currentTurn = game.turn;
-        if (summonedTurn !== currentTurn) return true;
-        return false;
+    @useState()
+    @useDecorProducer(() => HeroSelectableDecor)
+    private _isHeroSelectable: boolean;
+    public setHeroSelectable(flag: boolean) {
+        this._isHeroSelectable = flag
     }
 
     public getSelector() {
         const player = this._player;
         const opponent = player?.opponent;
         if (!opponent) return;
-        
         const minions = opponent.board.minions;
         let options = [...minions, opponent.hero].map(item => item.role);
         options = options.filter(role => !role.stealth.isActived);
-        if (!this.isOpponentHeroSelectable) {
+        if (!this._isHeroSelectable) {
             options = options.filter(role => role !== opponent.hero.role);
         }
-        if (options.find(role => role.taunt.isActived)) {
-            options = options.filter(role => role.taunt.isActived);
-        }
+        const isBlock = Boolean(options.find(role => role.taunt.isActived))
+        if (isBlock) options = options.filter(role => role.taunt.isActived);
         return { options }
     }
 
@@ -179,9 +163,9 @@ export function useRoleAttackPrevEventConsumer<I extends RoleFeatModel>() {
         key: string,
         descriptor: TypedPropertyDescriptor<(event: RoleAttackPrevEvent) => void>
     ) {
-        useEventConsumer((self: I) => {
-            const role = self.role;
-            const feat = self.feat;
+        useEventConsumer((that: I) => {
+            const role = that.role;
+            const feat = that.feat;
             if (!feat?.isActived) return;
             if (!role) return;
             return [role.attack, RoleAttackPrevEvent]
@@ -195,9 +179,9 @@ export function useRoleAttackEventConsumer<I extends RoleFeatModel>() {
         key: string,
         descriptor: TypedPropertyDescriptor<(event: RoleAttackEvent) => void>
     ) {
-        useEventConsumer((self: I) => {
-            const role = self.role;
-            const feat = self.feat;
+        useEventConsumer((that: I) => {
+            const role = that.role;
+            const feat = that.feat;
             if (!feat?.isActived) return;
             if (!role) return;
             return [role.attack, RoleAttackEvent]

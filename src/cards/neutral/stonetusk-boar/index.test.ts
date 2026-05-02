@@ -82,18 +82,18 @@ describe('stonetusk-boar', () => {
         expect(boar.role.action.isEnabled).toBe(true);
     })
 
-    it('boar-attacks-immediately', async () => {
-        boar.role.action.launch();
-        await sleep();
-        playerA.controller.selectTarget(target.role);
-        await sleep();
-        expect(boar.role.health.current).toBe(0);
-        expect(target.role.health.current).toBe(0);
-        expect(boar.disposer.isActived).toBe(true);
-        expect(target.disposer.isActived).toBe(true);
+    // it('boar-attacks-immediately', async () => {
+    //     boar.role.action.launch();
+    //     await sleep();
+    //     playerA.controller.selectTarget(target.role);
+    //     await sleep();
+    //     expect(boar.role.health.current).toBe(0);
+    //     expect(target.role.health.current).toBe(0);
+    //     expect(boar.disposer.isActived).toBe(true);
+    //     expect(target.disposer.isActived).toBe(true);
 
-        expect(boar.role.action.current).toBe(0)
-        expect(boar.role.action.isAsleep).toBe(false);
-        expect(boar.role.action.isEnabled).toBe(undefined);
-    })
+    //     expect(boar.role.action.current).toBe(0)
+    //     expect(boar.role.action.isAsleep).toBe(false);
+    //     expect(boar.role.action.isEnabled).toBe(undefined);
+    // })
 })

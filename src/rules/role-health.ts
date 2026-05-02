@@ -118,9 +118,9 @@ export function useDamageReceivePrevEventConsumer<I extends RoleFeatModel>() {
         key: string,
         descriptor: TypedPropertyDescriptor<(event: RoleDamageReceivePrevEvent) => void>
     ) {
-        useEventConsumer((self: I) => {
-            const role = self.role;
-            const feat = self.feat;
+        useEventConsumer((that: I) => {
+            const role = that.role;
+            const feat = that.feat;
             if (!feat?.isActived) return;
             if (!role) return;
             return [role, RoleDamageReceivePrevEvent]
@@ -134,9 +134,9 @@ export function useDamageReceiveEventConsumer<I extends RoleFeatModel>() {
         key: string,
         descriptor: TypedPropertyDescriptor<(event: RoleDamageReceiveEvent) => void>
     ) {
-        useEventConsumer((self: I) => {
-            const role = self.role;
-            const feat = self.feat;
+        useEventConsumer((that: I) => {
+            const role = that.role;
+            const feat = that.feat;
             if (!feat?.isActived) return;
             if (!role) return;
             return [role.health, RoleDamageReceiveEvent]

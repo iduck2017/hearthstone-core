@@ -1,8 +1,8 @@
-import { useMemo, useRoute, useModel } from "set-piece";
+import { useMemo, useRoute, useModel, useDecorConsumer } from "set-piece";
 import { FeatModel } from "../../../feats";
 import { MinionModel } from "../../minion";
 import { BoardOnlyControllerModel } from "../../../feats/board-only-controller";
-import { ChargeActiveDecor, useChargeActiveFlagDecorConsumer } from "../../../decors/charge-active";
+import { FeatActiveDecor, useFeatActiveDecorConsumer } from "../../../decors/feat-active";
 
 @useModel('southsea-deckhand-feat-model')
 export class SouthseaDeckhandFeatModel extends FeatModel {
@@ -16,14 +16,22 @@ export class SouthseaDeckhandFeatModel extends FeatModel {
     }
 
     constructor() {
-        super({ subFeats: [new BoardOnlyControllerModel()] });
+        super({ 
+            subFeats: [new BoardOnlyControllerModel()] 
+        });
     }
 
     // Activate Charge as a reactive aura while the controller has a weapon equipped.
-    @useChargeActiveFlagDecorConsumer()
-    protected _onChargeActiveDecor(decor: ChargeActiveDecor) {
-        if (!this.isActived) return;
+    @useDecorConsumer(that => {
+        const role = that.role;
+        if (!that.isActived) return;
+        if (!role) return;
+        const charge = role.charge;
+        return [charge, FeatActiveDecor]
+    })
+    protected _onChargeActiveDecor(decor: FeatActiveDecor) {
         const weapon = this.player?.hero.weapon;
-        if (weapon) decor.active();
+        console.log('hasWeapon')
+        if (weapon) decor.enable();
     }
 }

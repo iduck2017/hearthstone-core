@@ -1,7 +1,7 @@
 import { Constructor, Method, useRoute, useState, Model, useMemo } from "set-piece";
 import { PlayerModel } from "../entities/player";
 import { Selector } from "../utils/controller";
-import { FeatModel } from ".";
+import { FeatModel } from "..";
 import { FeatLauncherRegistry } from "../utils/feat-launcher-registry";
 import { FeatSelectorRegistry } from "../utils/feat-selector-registry";
 

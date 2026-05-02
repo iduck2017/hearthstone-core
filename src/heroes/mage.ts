@@ -11,6 +11,5 @@ export class MageModel extends HeroModel {
             attack: new RoleAttackModel({ origin: 0 }),
             health: new RoleHealthModel({ origin: 30 }),
         });
-        
     }
 }

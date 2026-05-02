@@ -1,46 +1,33 @@
-import { useDep, useRoute, useState, CustomDecor, Model, useMemo, useDecorProducer, useModel } from "set-piece";
+import { useDep, useRoute, useState, Model, useMemo, useDecorProducer, useModel, useDecorConsumer } from "set-piece";
 import { RoleModel } from "../entities/role";
 import { AsleepDecor, useAsleepDecorConsumer } from "../decors/asleep";
-import { ChargeActiveDecor } from "../decors/charge-active";
+import { HeroSelectableDecor } from "./role-attack";
+import { FeatModel } from "..";
 
 @useModel('charge-model')
-export class ChargeModel extends Model {
+export class ChargeModel extends FeatModel {
     protected _brand: symbol = Symbol('charge-model');
-    constructor(props?: {
-        isActived?: boolean;
-    }) {
-        super();
-        this._isActived = props?.isActived ?? false;
-        
-    }
 
     @useRoute(() => RoleModel)
     private _role?: RoleModel;
     @useMemo()
-    public get role() {
-        return this._role;
-    }
-
-    @useDecorProducer(() => ChargeActiveDecor)
-    @useState()
-    private _isActived: boolean;
-    @useMemo()
-    public get isActived() {
-        return this._isActived;
-    }
-
-    public active() {
-        this._isActived = true;
-    }
-
-    public deactive() {
-        this._isActived = false;
-    }
+    public get role() { return this._role }
 
     @useAsleepDecorConsumer()
-    private handleSleepStatusCalc(decor: AsleepDecor) {
+    protected _handleSleepStatusCalc(decor: AsleepDecor) {
         if (!this.isActived) return;
         console.log('wake up')
-        decor.result = false;
+        decor.wakeup()
+    }
+
+    @useDecorConsumer(that => {
+        const role = that.role;
+        if (!role) return;
+        if (!that.feat?.isActived) return;
+        return [role?.attack, HeroSelectableDecor]
+    })
+    protected _handlerHeroSelectableCheck(decor: HeroSelectableDecor) {
+        if (!this.isActived) return;
+        decor.unlock()
     }
 }

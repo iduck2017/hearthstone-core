@@ -16,13 +16,6 @@ export class MinionDeployerModel extends CardDeployerModel {
     }
 
     @useState()
-    private _summonedTurn?: number;
-    @useMemo()
-    public get summonedTurn() {
-        return this._summonedTurn;
-    }
-
-    @useState()
     private _position?: number;
 
     @useChild()
@@ -48,17 +41,15 @@ export class MinionDeployerModel extends CardDeployerModel {
         if (!minion) return;
         this.prepare(player);
         this.spawn(player, position);
-        this.finishSummon();
+        this._finishSleep()
     }
 
     @useAction()
-    public finishSummon() {
-        const game = this._game;
-        if (!game) return;
+    private _finishSleep() {
         const role = this._role;
         if (!role) return;
-        this._summonedTurn = game.turn;
         role.action.sleep();
+        role.attack.setHeroSelectable(false)
     }
 
     private async prepareLaunch() {

@@ -1,4 +1,4 @@
-import { useChild, useState, Event, Model, TypedPropertyDecorator, useRoute, useEventConsumer, PrevEvent, useMemo, useModel } from "set-piece";
+import { useChild, useState, Event, Model, TypedPropertyDecorator, useRoute, useEventConsumer, PrevEvent, useMemo, useModel, useAction } from "set-piece";
 import { PlayerModel } from "./player";
 import { MageModel } from "../heroes/mage";
 
@@ -18,51 +18,38 @@ export class GameModel extends Model {
         playerB?: PlayerModel;
     }) {
         super();
-        this._playerA = props?.playerA ?? new PlayerModel({
-            hero: new MageModel(),
-        });
-        this._playerB = props?.playerB ?? new PlayerModel({
-            hero: new MageModel(),
-        });
-
+        this._playerA = props?.playerA ?? 
+            new PlayerModel({ hero: new MageModel() });
+        this._playerB = props?.playerB ?? 
+            new PlayerModel({ hero: new MageModel() });
     }
 
     @useChild()
     private _playerA: PlayerModel;
     @useMemo()
-    public get playerA() {
-        return this._playerA;
-    }
+    public get playerA() { return this._playerA }
 
     @useChild()
     private _playerB: PlayerModel;
     @useMemo()
-    public get playerB() {
-        return this._playerB;
-    }
+    public get playerB() { return this._playerB }
 
     @useMemo()
     public get currentPlayer() {
-        if (this._turn % 2) {
-            return this._playerA;
-        }
+        if (this._turn % 2) return this._playerA;
         return this._playerB;
     }
-
 
     @useState()
     private _isStarted: boolean = false;
     @useMemo()
-    public get isStarted() {
-        return this._isStarted;
-    }
+    public get isStarted() { return this._isStarted }
 
     @useState()
     private _turn: number = 0;
     @useMemo()
-    public get turn() {
-        return this._turn;
-    }
+    public get turn() { return this._turn }
+
     public nextTurn() {
         this.endTurn({});
         this._turn += 1;
@@ -77,15 +64,18 @@ export class GameModel extends Model {
         this.emitAsyncEvent(postEvent);
     }
 
+    @useAction()
     private startTurn() {
         const currentPlayer = this.currentPlayer;
         currentPlayer.mana.addMaximum(1);
         currentPlayer.mana.reset();
         currentPlayer.hero.role.action.wakeup();
+        currentPlayer.hero.role.attack.setHeroSelectable(true);
         currentPlayer.hero.role.action.resetCurrent();
         const minions = currentPlayer.board.minions;
         minions.forEach(minion => {
             minion.role.action.wakeup();
+            minion.role.attack.setHeroSelectable(true);
             minion.role.action.resetCurrent();
         });
     }
@@ -93,10 +83,7 @@ export class GameModel extends Model {
     public start(options?: {
         isInitPhaseIgnored?: boolean;
     }) {
-        if (this._isStarted) {
-            console.error('Game already started');
-            return;
-        }
+        if (this._isStarted) return;
         this._isStarted = true;
         if (!options?.isInitPhaseIgnored) {
             this._playerA.prepareGame(true);

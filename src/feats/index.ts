@@ -1,10 +1,9 @@
 import { useRoute, useState, Model, useMemo, useDecorProducer, useChild } from "set-piece";
 import { GameModel } from "../entities/game";
 import { PlayerModel } from "../entities/player";
-import { MinionModel } from "../cards/minion";
-import { HeroModel } from "../heroes";
-import { RoleModel } from "../entities/role";
-import { CardModel } from "../cards";
+import { HeroModel } from "..";
+import { RoleModel } from "..";
+import { CardModel } from "..";
 import { FeatActiveDecor } from "../decors/feat-active";
 
 export interface RoleFeatModel extends Model {

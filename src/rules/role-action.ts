@@ -1,4 +1,4 @@
-import { useDep, useRoute, useState, CustomDecor, Model, useMemo, useRange, useDecorConsumer, useDecorProducer, useModel } from "set-piece";
+import { useDep, useRoute, useState, Model, useMemo, useRange, useDecorConsumer, useDecorProducer, useModel } from "set-piece";
 import { RoleModel } from "../entities/role";
 import { AsleepDecor } from "../decors/asleep";
 import { PlayerModel } from "../entities/player";
@@ -95,17 +95,10 @@ export class RoleActionModel extends Model {
     @useState()
     private _isAsleep: boolean;
     @useMemo()
-    public get isAsleep() {
-        return this._isAsleep;
-    }
+    public get isAsleep() { return this._isAsleep }
 
-    public sleep() {
-        this._isAsleep = true;
-    }
-
-    public wakeup() {
-        this._isAsleep = false;
-    }
+    public sleep() { this._isAsleep = true }
+    public wakeup() { this._isAsleep = false }
     
     constructor() {
         super();

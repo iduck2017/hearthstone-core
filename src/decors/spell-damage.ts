@@ -29,8 +29,7 @@ export class SpellDamageDecor extends Decor<number> {
                     case BuffOperatorType.RESET:
                         origin = op.value;
                         break;
-                    default:
-                        break;
+                    default: break;
                 }
             });
         this._operators
@@ -48,16 +47,12 @@ export function usePlayerSpellDamageDecorConsumer<I extends SpellFeatureModel>()
         key: string,
         descriptor: TypedPropertyDescriptor<(decor: SpellDamageDecor) => void>
     ) {
-        useDecorConsumer((i: I) => {
-            const cards: CardModel[] = i.player?.cards ?? [];
+        useDecorConsumer((that: I) => {
+            const cards: CardModel[] = that.player?.cards ?? [];
             const targets: FeatModel[] = [];
             cards.forEach(card => targets.push(...card.feats))
-            if (!i.feat?.isActived) return [undefined, SpellDamageDecor];
+            if (!that.feat?.isActived) return;
             return [targets, SpellDamageDecor]
-        })(
-            prototype,
-            key,
-            descriptor
-        );
+        })(prototype, key, descriptor);
     }
 }

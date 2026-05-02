@@ -16,7 +16,6 @@ export interface BuffOperator {
     source: Model;
 }
 
-
 export class RoleAttackDecor extends Decor<number> {
     private _operators: BuffOperator[] = [];
 
@@ -26,7 +25,10 @@ export class RoleAttackDecor extends Decor<number> {
 
     public get result() {
         let origin = this.origin;
-        this._operators.sort((opA, opB) => opA.source.uuid.localeCompare(opB.source.uuid))
+        this._operators.sort((opA, opB) => (
+            
+            opA.source.uuid.localeCompare(opB.source.uuid)
+        ))
         this._operators
             .filter(op => op.type !== BuffOperatorType.AURA)
             .forEach(op => {
