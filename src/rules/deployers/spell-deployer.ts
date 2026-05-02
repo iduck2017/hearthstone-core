@@ -1,0 +1,59 @@
+import { useChild, useModel, useRoute } from "set-piece";
+import { SpellModel } from "../../cards/spell";
+import { SpellPlayPostEvent } from "../../event/spell-play";
+import { CardDeployerModel } from "./card-deployer";
+import { DeployIntensionModel } from "../deploy-intension";
+
+@useModel('spell-deployer')
+export class SpellDeployerModel extends CardDeployerModel {
+    protected _brand: symbol = Symbol('spell-deployer')
+
+    @useRoute(() => SpellModel)
+    protected _spell?: SpellModel
+
+    @useChild()
+    private intensions?: DeployIntensionModel[];
+
+    /** Move this card from workspace into the owning player's graveyard. */
+    public dispose() {
+        const player = this._player;
+        if (!player) return;
+        const card = this._card;
+        if (!card) return;
+        player.workspace?.removeCard(card);
+        player.graveyard.addCard(card);
+    }
+
+    private async prepareLaunch() {
+        const spell = this._spell;
+        if (!spell) return;
+        const intensions: DeployIntensionModel[] = [];
+        for (const feat of spell.spellEffects) {
+            const params = await feat.getTargets();
+            const intension = new DeployIntensionModel({ feat, params });
+            intensions.push(intension);
+        }
+        this.intensions = intensions;
+        return true;
+    }
+
+    public async launch() {
+        if (!this.isPlayable) return;
+        const player = this._player;
+        if (!player) return;
+        const spell = this._spell;
+        if (!spell) return;
+        const isValid = await this.prepareLaunch();
+        if (!isValid) return;
+        spell.consumeMana();
+        spell.prepare(player);
+        while (this.intensions?.length) {
+            const intension = this.intensions.pop();
+            await intension?.launch();
+        }
+        this.intensions = undefined;
+        this.dispose();
+        const postEvent = new SpellPlayPostEvent({ options: {}, result: undefined });
+        this.emitDeferEvent(postEvent);
+    }
+}

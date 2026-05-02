@@ -1,7 +1,7 @@
 import { useChild, useMemo } from "set-piece";
 import { CardModel, CardProps } from ".";
 import { SpellEffectModel } from "../feats/spell-effect";
-import { SpellLauncherModel } from "../rules/deployers/spell-launcher";
+import { SpellDeployerModel } from "../rules/deployers/spell-deployer";
 
 export interface SpellProps extends CardProps {}
 export abstract class SpellModel extends CardModel {
@@ -10,7 +10,7 @@ export abstract class SpellModel extends CardModel {
     }
 
     @useChild()
-    protected _deployer: SpellLauncherModel = new SpellLauncherModel();
+    protected _deployer: SpellDeployerModel = new SpellDeployerModel();
 
     @useMemo()
     public get spellEffects() {

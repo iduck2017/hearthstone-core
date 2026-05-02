@@ -1,8 +1,7 @@
-import { Model, useAction, useChild, useDep, useMemo, useModel, useRoute, useState } from "set-piece";
+import { useAction, useChild, useMemo, useModel, useRoute, useState } from "set-piece";
 import { PlayerModel } from "../../entities/player";
 import { MinionModel } from "../../cards/minion";
-import { BattlecryModel } from "../../feats/battlecry";
-import { CardDeployerModel } from "./card-launcher";
+import { CardDeployerModel } from "./card-deployer";
 import { DeployIntensionModel } from "../deploy-intension";
 
 @useModel('minion-deployer')

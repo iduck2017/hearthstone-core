@@ -11,7 +11,7 @@ import { DamageSourceModel } from "../rules/damage-source";
 import { RestoreSourceModel } from "../rules/restore-source";
 import { RarityType } from "../rules/rarity";
 import { ClassType } from "../rules/class";
-import { CardDeployerModel } from "../rules/deployers/card-launcher";
+import { CardDeployerModel } from "../rules/deployers/card-deployer";
 import { HandModel } from "../entities/hand";
 import { DeckModel } from "../entities/deck";
 import { GraveyardModel } from "../entities/graveyard";
@@ -104,7 +104,6 @@ export abstract class CardModel extends Model {
         return this._restoreSource;
     }
 
-
     @useChild()
     public _feats: FeatModel[];
     @useMemo()
@@ -145,7 +144,6 @@ export abstract class CardModel extends Model {
         this._graveyard?.removeCard(this);
         player.workspace.addCard(this);
     }
-
 
     @useChild()
     protected abstract _deployer: CardDeployerModel;
