@@ -15,7 +15,8 @@
       "Bash(grep -rLn \"this\\\\.init\\(\\)\" src/cards/neutral/*/index.ts src/cards/derivatives/*/index.ts)",
       "Bash(node -e ' *)",
       "Bash([ -f \"c:/Users/admin/Documents/hearthstone-core/src/cards/neutral/$dir/index.ts\" ])",
-      "Bash(xargs sed *)"
+      "Bash(xargs sed *)",
+      "Bash(rm src/hooks/spell-effect-run.ts)"
     ]
   }
 }

@@ -1,7 +1,6 @@
-import { SpellEffectModel } from "../../../feats/spell-effect";
+import { SpellEffectModel, useSpellEffectRunHook, useSpellEffectSelectHook } from "../../../feats/spell-effect";
 import { Selector } from "../../../utils/controller";
 import { RoleModel } from "../../../entities/role";
-import { useSpellEffectRunHook } from "../../../hooks/spell-effect-run";
 import { useDecorProducer, useState, useModel } from "set-piece";
 import { SpellDamageDecor } from "../../../decors/spell-damage";
 
@@ -12,7 +11,7 @@ export class FireballEffectModel extends SpellEffectModel<RoleModel> {
     @useDecorProducer(() => SpellDamageDecor)
     private _damage: number = 6;
 
-
+    @useSpellEffectSelectHook()
     public getSelector(): Selector<RoleModel> | undefined {
         const player = this.player;
         const opponent = player?.opponent;

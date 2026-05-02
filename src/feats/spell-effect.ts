@@ -1,7 +1,34 @@
-import { useState, Model, useMemo } from "set-piece";
-import { getSpellEffectRunHooks } from "../hooks/spell-effect-run";
+import { Method, useState, Model, useMemo } from "set-piece";
 import { FeatModel } from ".";
 import { Selector } from "../utils/controller";
+import { FeatLauncherRegistry } from "../utils/feat-launcher-registry";
+import { FeatSelectorRegistry } from "../utils/feat-selector-registry";
+
+export const spellEffectRunRegistry = new FeatLauncherRegistry();
+
+export function useSpellEffectRunHook<T extends Model>() {
+    return function(
+        prototype: SpellEffectModel<T>,
+        key: string,
+        _descriptor: TypedPropertyDescriptor<Method<Promise<void>, Array<T | undefined>>>,
+    ) {
+        const Constructor: any = prototype.constructor;
+        spellEffectRunRegistry.register(Constructor, key);
+    }
+}
+
+export const spellEffectSelectorRegistry = new FeatSelectorRegistry();
+
+export function useSpellEffectSelectHook<T extends Model>() {
+    return function(
+        prototype: SpellEffectModel<T>,
+        key: string,
+        _descriptor: TypedPropertyDescriptor<Method<Selector<T> | undefined, Array<T | undefined>>>,
+    ) {
+        const Constructor: any = prototype.constructor;
+        spellEffectSelectorRegistry.register(Constructor, key);
+    }
+}
 
 export abstract class SpellEffectModel<T extends Model = Model> extends FeatModel {
     @useState()
@@ -32,19 +59,18 @@ export abstract class SpellEffectModel<T extends Model = Model> extends FeatMode
         this._isMultiTarget = props?.isMultiTarget ?? false;
     }
 
-    /** Target selector */
-    public abstract getSelector(params: Array<T | undefined>): Selector<T> | undefined
-
     public async getTargets(): Promise<Array<T | undefined>> {
         if (!this.player) return [];
-
         const targets: Array<T | undefined> = [];
-        while (true) {
-            const selector = this.getSelector(targets);
-            if (!selector) break;
-            const target = await this.player.controller.fetchTarget(selector);
-            targets.push(target);
-            if (!this.isMultiTarget) break;
+        const hooks = spellEffectSelectorRegistry.getHooks(this);
+        for (const hook of hooks) {
+            while (true) {
+                const selector = hook(...targets);
+                if (!selector) break;
+                const target = await this.player.controller.fetchTarget(selector);
+                targets.push(target);
+                if (!this.isMultiTarget) break;
+            }
         }
         return targets;
     }
@@ -54,9 +80,7 @@ export abstract class SpellEffectModel<T extends Model = Model> extends FeatMode
         if (!this.isPending) {
             this._isPending = true;
         }
-        const hooks = getSpellEffectRunHooks(this);
-        for (const hook of hooks) {
-            await hook(...params);
-        }
+        const hooks = spellEffectRunRegistry.getHooks(this);
+        for (const hook of hooks) await hook(...params);
     }
 }
