@@ -2,7 +2,7 @@ import { Event, Model, PrevEvent, useDecorProducer, useEffect, useEventConsumer,
 import { RoleHealthDecor } from "../decors/role-health";
 import { registerDisposer, useDisposer } from "../utils/disposer";
 import { RoleModel } from "../entities/role";
-import type { RoleFeatModel } from "../feats";
+import type { RoleFeatIntf } from "../feats";
 
 export interface RoleDamageReceiveOption {
     value: number;
@@ -112,7 +112,7 @@ export class RoleHealthModel extends Model {
     }
 }
 
-export function useDamageReceivePrevEventConsumer<I extends RoleFeatModel>() {
+export function useDamageReceivePrevEventConsumer<I extends RoleFeatIntf>() {
     return function(
         prototype: I,
         key: string,
@@ -128,7 +128,7 @@ export function useDamageReceivePrevEventConsumer<I extends RoleFeatModel>() {
     }
 }
 
-export function useDamageReceiveEventConsumer<I extends RoleFeatModel>() {
+export function useDamageReceiveEventConsumer<I extends RoleFeatIntf>() {
     return function(
         prototype: I,
         key: string,

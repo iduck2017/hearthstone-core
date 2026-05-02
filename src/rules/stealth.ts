@@ -1,22 +1,10 @@
-import { useState, Model, useMemo, useModel } from "set-piece";
+import { useModel } from "set-piece";
+import { FeatModel } from "../feats";
 
 @useModel('stealth-model')
-export class StealthModel extends Model {
+export class StealthModel extends FeatModel {
     protected _brand: symbol = Symbol('stealth-model');
-    constructor(props?: {
-        isActived?: boolean;
-    }) {
-        super();
-        this._isActived = props?.isActived ?? false;
-    }
 
-    @useState()
-    private _isActived: boolean;
-    @useMemo()
-    public get isActived() {
-        return this._isActived;
-    }
-    
-    public active() { this._isActived = true;  }
-    public deactive() { this._isActived = false;  }
+    public active() { super.active(); }
+    public deactive() { this.disable(); }
 }

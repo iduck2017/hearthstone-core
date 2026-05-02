@@ -20,6 +20,6 @@ export class DarkIronDwarfBuffModel extends FeatModel {
 
     @useTurnEndEventConsumer()
     private _handleTurnEnd(event: TurnEndEvent) {
-        this.deactive();
+        this.disable();
     }
 }

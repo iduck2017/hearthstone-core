@@ -10,7 +10,7 @@ import { RoleActionModel } from "../rules/role-action";
 import { GameModel } from "./game";
 import { MinionModel } from "../cards/minion";
 import { HeroModel } from "../heroes";
-import { RoleFeatModel } from "../feats";
+import { RoleFeatIntf } from "../feats";
 
 export interface RoleAttackReceiveOption {
     source: RoleModel;
@@ -41,11 +41,11 @@ export class RoleModel extends Model {
         this._health = props.health;
         this._attack = props.attack;
         this._action = new RoleActionModel();
-        this._taunt = props.taunt ?? new TauntModel();
-        this._divineShield = props.divineShield ?? new DivineShieldModel();
+        this._taunt = props.taunt ?? new TauntModel({ isActived: false });
+        this._divineShield = props.divineShield ?? new DivineShieldModel({ isActived: false });
         this._charge = props.charge ?? new ChargeModel({ isActived: false });
         this._rush = props.rush ?? new RushModel({ isActived: false });
-        this._stealth = props.stealth ?? new StealthModel();
+        this._stealth = props.stealth ?? new StealthModel({ isActived: false });
     }
 
     public get name() {
@@ -112,12 +112,12 @@ export class RoleModel extends Model {
     @useRoute(() => GameModel)
     private _game?: GameModel;
     @useMemo()
-    public get game() {
-        return this._game;
-    }
+    public get game() { return this._game }
 
     @useRoute(() => MinionModel)
     private _minion?: MinionModel;
+    @useMemo()
+    public get minion() { return this._minion }
 
     @useRoute(() => HeroModel)
     private _hero?: HeroModel;
@@ -138,7 +138,7 @@ export class RoleModel extends Model {
     }
 }
 
-export function useRoleAttackReceivePrevEventConsumer<I extends RoleFeatModel>() {
+export function useRoleAttackReceivePrevEventConsumer<I extends RoleFeatIntf>() {
     return function(
         prototype: I,
         key: string,
@@ -154,7 +154,7 @@ export function useRoleAttackReceivePrevEventConsumer<I extends RoleFeatModel>()
     }
 }
 
-export function useRoleAttackReceiveEventConsumer<I extends RoleFeatModel>() {
+export function useRoleAttackReceiveEventConsumer<I extends RoleFeatIntf>() {
     return function(
         prototype: I,
         key: string,

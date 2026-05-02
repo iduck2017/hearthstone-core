@@ -1,7 +1,7 @@
 import { useDep, useRoute, useState, Model, useMemo, useRange, useDecorConsumer, useDecorProducer, useModel, Decor } from "set-piece";
 import { RoleModel } from "../entities/role";
 import { PlayerModel } from "../entities/player";
-import type { RoleFeatModel } from "../feats";
+import type { RoleFeatIntf } from "../feats";
 import { GameModel } from "../entities/game";
 import { BoardModel } from "../entities/board";
 import { HeroModel } from "../heroes";
@@ -123,7 +123,7 @@ export class AsleepDecor extends Decor<boolean> {
     public wakeup() { this._result = false }
 }
 
-export function useAsleepDecorConsumer<I extends RoleFeatModel>() {
+export function useAsleepDecorConsumer<I extends RoleFeatIntf>() {
     return function(
         prototype: I,
         key: string,

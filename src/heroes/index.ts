@@ -15,10 +15,11 @@ export interface HeroProps extends RoleProps {
 export abstract class HeroModel extends Model {
     constructor(props: HeroProps) {
         super();
+        const feats = props.feats ?? [];
+        feats.forEach(feat => feat.isOriginal = true)
         this._role = new RoleModel(props);
-        this._deathrattles = [];
         this._disposer = new HeroDisposerModel();
-        this._feats = props?.feats ?? [];
+        this._feats = feats;
         this._damageSource = new DamageSourceModel();
         this._restoreSource = new RestoreSourceModel();
     }
@@ -40,29 +41,23 @@ export abstract class HeroModel extends Model {
         return this._restoreSource;
     }
 
-    @useChild()
-    private _deathrattles: DeathrattleModel[];
     @useMemo()
     public get deathrattles() {
-        return [...this._deathrattles];
+        return this.feats.filter(item => item instanceof DeathrattleModel)
     }
 
     @useChild()
     public _feats: FeatModel[];
     @useMemo()
-    public get feats() {
-        return [...this._feats];
-    }
+    public get feats() { return [...this._feats] }
 
     public addFeat(feat: FeatModel) {
         this._feats.push(feat);
     }
-
     public removeFeat(feat: FeatModel) {
         const index = this._feats.indexOf(feat);
-        if (index !== -1) {
-            this._feats.splice(index, 1);
-        }
+        if (index === -1) return;
+        this._feats.splice(index, 1);
     }
 
     @useChild()
@@ -90,16 +85,16 @@ export abstract class HeroModel extends Model {
     @useAction()
     public equipWeapon(weapon: WeaponModel) {
         const prevWeapon = this._weapon;
-        if (prevWeapon) {
-            this._weapon = undefined;
-            this._player?.graveyard.addCard(prevWeapon);
-        }
+        if (prevWeapon) this.unequipWeapon()
         this._weapon = weapon;
     }
 
     /** Remove the equipped weapon from the slot (does not send to graveyard). */
     @useAction()
     public unequipWeapon() {
+        const weapon = this._weapon;
+        if (!weapon) return;
         this._weapon = undefined;
+        this._player?.graveyard.addCard(weapon);
     }
 }

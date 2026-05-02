@@ -30,7 +30,11 @@ src/
 │   ├── game.ts           — GameModel
 │   ├── player.ts         — PlayerModel
 │   ├── board.ts          — BoardModel
-│   └── role.ts           — RoleModel
+│   ├── hand.ts           — HandModel
+│   ├── deck.ts           — DeckModel
+│   ├── graveyard.ts      — GraveyardModel
+│   ├── workspace.ts      — WorkspaceModel
+│   └── role.ts           — RoleModel + RoleAttackReceiveEvent/PrevEvent + consumer helpers
 ├── cards/
 │   ├── index.ts          — CardModel (abstract base)
 │   ├── minion.ts         — MinionModel
@@ -38,63 +42,66 @@ src/
 │   ├── weapon.ts         — WeaponModel
 │   ├── neutral/<name>/   — one folder per card
 │   ├── mage/<name>/
+│   ├── warrior/<name>/
 │   └── derivatives/      — token minions
 ├── feats/
-│   ├── index.ts          — FeatModel (abstract base)
-│   ├── battlecry.ts      — BattlecryModel<T>
-│   ├── deathrattle.ts    — DeathrattleModel
-│   ├── role-attack-buff.ts
-│   ├── role-health-buff.ts
-│   └── spell-damage-feat.ts
+│   ├── index.ts          — FeatModel, SubFeatModel, RoleFeatIntf interface, FeatIntf interface
+│   ├── battlecry.ts      — BattlecryModel<T>, registries, hook decorators
+│   ├── deathrattle.ts    — DeathrattleModel, registry, hook decorator
+│   ├── spell-effect.ts   — SpellEffectModel<T>, registries, hook decorators
+│   ├── role-attack-buff.ts  — RoleAttackBuffModel (SubFeatModel)
+│   ├── role-health-buff.ts  — RoleHealthBuffModel (SubFeatModel)
+│   ├── spell-damage-feat.ts — SpellDamageFeatModel
+│   └── board-only-controller.ts — BoardOnlyControllerModel (SubFeatModel, disables feat off-board)
 ├── rules/
-│   ├── role-attack.ts
-│   ├── role-health.ts
-│   ├── role-action.ts
+│   ├── role-attack.ts    — RoleAttackModel + RoleAttackEvent/PrevEvent + consumer helpers
+│   ├── role-health.ts    — RoleHealthModel + RoleDamageReceiveEvent/PrevEvent + consumer helpers
+│   ├── role-action.ts    — RoleActionModel + AsleepDecor + useAsleepDecorConsumer
 │   ├── taunt.ts
-│   ├── charge.ts
-│   ├── rush.ts
+│   ├── charge.ts         — ChargeModel (extends FeatModel)
+│   ├── rush.ts           — RushModel (extends FeatModel)
 │   ├── stealth.ts
 │   ├── divine-shield.ts
 │   ├── mana.ts
 │   ├── cost.ts
-│   ├── class.ts
-│   ├── race.ts
-│   ├── rarity.ts
-│   ├── board-only-tag.ts
-│   └── disposers/
-│       ├── index.ts           — DisposerModel (abstract base)
-│       ├── minion-disposer.ts — MinionDisposerModel
-│       ├── weapon-disposer.ts — WeaponDisposerModel
-│       └── hero-disposer.ts   — HeroDisposerModel
+│   ├── weapon-attack.ts
+│   ├── weapon-durability.ts
+│   ├── deploy-intension.ts
+│   ├── deployers/
+│   │   ├── index.ts           — LauncherModel (abstract base)
+│   │   ├── card-deployer.ts   — CardDeployerModel (isPlayable, prepare)
+│   │   ├── minion-deployer.ts — MinionDeployerModel
+│   │   ├── spell-deployer.ts  — SpellDeployerModel + SpellPlayPostEvent/PrevEvent + usePlayerSpellCast
+│   │   └── weapon-deployer.ts — WeaponDeployerModel
+│   ├── disposers/
+│   │   ├── index.ts           — DisposerModel (abstract base)
+│   │   ├── minion-disposer.ts — MinionDisposerModel
+│   │   ├── weapon-disposer.ts — WeaponDisposerModel
+│   │   └── hero-disposer.ts   — HeroDisposerModel
+│   └── source/
+│       ├── damage-source.ts   — DamageSourceModel + DamageDealEvent/PrevEvent + consumer helpers
+│       └── restore-source.ts  — RestoreSourceModel + RestoreDealEvent/PrevEvent + consumer helpers
 ├── decors/
-│   ├── role-attack.ts
-│   ├── role-health.ts
-│   ├── spell-damage.ts
-│   ├── feat-active.ts
-│   ├── asleep.ts
-│   └── charge-active.ts
-├── event/
-│   ├── turn-end.ts
-│   ├── role-damage-receive.ts
-│   ├── role-attack-perform.ts
-│   ├── role-attack-receive.ts
-│   ├── damage-deal.ts
-│   └── restore-deal.ts
-├── hooks/
-│   ├── battlecry-run.ts
-│   ├── deathrattle-run.ts
-│   ├── disposer.ts
-│   └── feat-deactive.ts
+│   ├── role-attack.ts    — RoleAttackDecor, BuffOperator, BuffOperatorType, consumer helpers
+│   ├── role-health.ts    — RoleHealthDecor, consumer helpers
+│   ├── spell-damage.ts   — SpellDamageDecor, consumer helpers
+│   └── feat-active.ts    — FeatActiveDecor, useFeatActiveDecorConsumer
 ├── heroes/
-│   ├── index.ts
-│   ├── mage.ts
-│   └── warrior.ts
+│   ├── index.ts          — HeroModel
+│   ├── mage.ts           — MageModel
+│   └── warrior.ts        — WarriorModel
 └── utils/
-    ├── controller.ts
-    └── sleep.ts
+    ├── controller.ts     — Controller, Selector
+    ├── disposer.ts       — registerDisposer, useDisposer
+    ├── enums.ts          — RarityType, RaceType, ClassType
+    ├── feat-launcher-registry.ts — FeatLauncherRegistry
+    ├── feat-selector-registry.ts — FeatSelectorRegistry
+    └── sleep.ts          — sleep()
 ```
 
-**set-piece** decorators: `@useModel` · `@useState` · `@useMemo` · `@useChild` · `@useRoute` · `@useDecorProducer` · `@useDecorConsumer` · `@useEventProducer` · `@useEventConsumer` · `@useAction` · `runAction()`
+**set-piece** decorators used: `@useModel` · `@useState` · `@useMemo` · `@useChild` · `@useRoute` · `@useDecorProducer` · `@useDecorConsumer` · `@useEventConsumer` · `@useAction` · `@useEffect` · `@useRange` · `@useDep`
+
+Events are emitted manually: `this.emitEvent(prevEvent)` → check `prevEvent.isAborted` → work → `this.emitAsyncEvent(postEvent)`. There is no `@useEventProducer`.
 
 ---
 
@@ -119,26 +126,33 @@ GameModel
 │   ├── board: BoardModel
 │   │   └── minions[]: MinionModel
 │   │       ├── role: RoleModel       — same structure as hero.role
-│   │       ├── races: RaceType[]
 │   │       ├── feats: FeatModel[]
+│   │       ├── deployer: MinionDeployerModel
 │   │       ├── disposer: MinionDisposerModel
-│   │       └── damageSource / restoreSource
+│   │       ├── damageSource: DamageSourceModel
+│   │       └── restoreSource: RestoreSourceModel
 │   ├── hand: HandModel      — CardModel[]
 │   ├── deck: DeckModel      — CardModel[]
 │   ├── graveyard: GraveyardModel
-│   ├── workspace: WorkspaceModel  — transient staging area while a card moves between containers
+│   ├── workspace: WorkspaceModel
 │   └── mana: ManaModel
 ├── currentPlayer          — odd turn = playerA
 ├── turn: number
 ├── start()                — init game, fire first turn
-└── nextTurn()             — TurnEnd events → turn++ → wake/reset all
+└── nextTurn()             — TurnEnd events → turn++ → startTurn (wake/reset all roles)
 ```
 
 Key API:
-- `player.drawCard()` / `player.opponent` / `player.controller`
-- `minion.summon(board?, pos?)` / `minion.launcher.launch()`
-- `card.addFeature(feat)` / `card.removeFeature(feat)` / `card.consumeMana()`
-- `role.receiveDamage({ value })` / `role.runAttack()` / `role.action.isEnabled`
+- `player.drawCard()` / `player.opponent` / `player.controller` / `player.cards` (hand)
+- `minion.deployer.summon(player, pos)` / `minion.deployer.launch()`
+- `card.feats` / `card.battlecries` / `card.cost.consume()`
+- `role.action.launch()` — user-facing attack entry point
+- `role.action.isEnabled` — `true` if the role can attack this turn (checks turn, action count, sleep, attack > 0, position, alive)
+- `role.action.isAsleep` / `.wakeup()` / `.sleep()` / `.resetCurrent()`
+- `role.attack.launch({ target })` — performs attack (fires events, delegates damage)
+- `role.attack.setHeroSelectable(bool)` — called by `startTurn`; enables hero targeting after summon turn
+- `role.health.receiveDamage({ value, source? })` / `.receiveRestore({ value })`
+- `minion.withdraw()` — removes minion from board, adds to owner's hand, strips all non-original feats (`_feats.filter(feat => feat.isOriginal)`)
 - Keywords passed via constructor: `new RoleModel({ taunt: new TauntModel({ isActived: true }) })`
 
 ---
@@ -147,70 +161,155 @@ Key API:
 
 All card effects live in `FeatModel` subclasses — [feats/index.ts](feats/index.ts)
 
-| Type | Key hook / pattern | Source |
-|------|--------------------|--------|
-| `BattlecryModel<T>` | `getSelector()` + `@useBattlecryRunHook handleRun()` | [feats/battlecry.ts](feats/battlecry.ts) |
-| `DeathrattleModel` | `@useDeathrattleRunHook _run()` — fires after minion moves to graveyard | [feats/deathrattle.ts](feats/deathrattle.ts) |
-| Passive `FeatModel` | event/decor consumers + `@useChild _boardOnly: BoardOnlyTagModel` | [feats/index.ts](feats/index.ts) |
-| Temp buff `FeatModel` | `addFeature()` at runtime; `@useTurnEndEventConsumer` → `deactive()` | [feats/index.ts](feats/index.ts) |
+### Key types
+
+| Type | Description | Source |
+|------|-------------|--------|
+| `BattlecryModel<T>` | On-play effect; uses `@useBattlecrySelectHook` + `@useBattlecryLaunchHook` | [feats/battlecry.ts](feats/battlecry.ts) |
+| `DeathrattleModel` | On-death effect; uses `@useDeathrattleLaunchHook`; fired via `deathrattle.launch()` | [feats/deathrattle.ts](feats/deathrattle.ts) |
+| `SpellEffectModel<T>` | Spell effect; uses `@useSpellEffectSelectHook` + `@useSpellEffectLaunchHook` | [feats/spell-effect.ts](feats/spell-effect.ts) |
+| Passive `FeatModel` | Event/decor consumers; use `BoardOnlyControllerModel` as a sub-feat to auto-disable off-board | [feats/index.ts](feats/index.ts) |
+| Temp buff `FeatModel` | Added via `entity.addFeat()`; `@useTurnEndEventConsumer` → `this.deactive()` | — |
+
+### Hook registration pattern (battlecry example)
+
+```typescript
+// In BattlecryModel subclass:
+@useBattlecrySelectHook()
+protected handleSelect(...targets): Selector<T> | undefined { ... }
+
+@useBattlecryLaunchHook()
+protected async handleRun(...targets): Promise<void> { ... }
+```
+
+`BattlecryModel.getTargets()` reads the selector registry; `launch(...params)` reads the launcher registry. Same pattern for `SpellEffectModel` (use `@useSpellEffectSelectHook` / `@useSpellEffectLaunchHook`).
+
+### Sub-feats (children of FeatModel)
+
+`SubFeatModel` extends `Model` and routes up to its parent `FeatModel` via `@useRoute(() => FeatModel)`. Common sub-feats:
+
+| Sub-feat | Purpose |
+|----------|---------|
+| `BoardOnlyControllerModel` | Disables parent feat when minion leaves the board |
+| `RoleAttackBuffModel` | Holds a `RoleAttackDecor` consumer for a buff value |
+| `RoleHealthBuffModel` | Holds a `RoleHealthDecor` consumer for a buff value |
 
 ---
 
 ## 4. Keyword Rules (RoleModel)
 
-Passed into `RoleModel` constructor; all default to `false`. Source: [rules/](rules/)
+Passed into `RoleModel` constructor; all default to inactive. Source: [rules/](rules/)
 
-| Keyword       | Model               | Source                                           |
-|---------------|---------------------|--------------------------------------------------|
-| Taunt         | `TauntModel`        | [rules/taunt.ts](rules/taunt.ts)                 |
-| Divine Shield | `DivineShieldModel` | [rules/divine-shield.ts](rules/divine-shield.ts) |
-| Charge        | `ChargeModel`       | [rules/charge.ts](rules/charge.ts)               |
-| Rush          | `RushModel`         | [rules/rush.ts](rules/rush.ts)                   |
-| Stealth       | `StealthModel`      | [rules/stealth.ts](rules/stealth.ts)             |
+| Keyword       | Model               | Default    | Source |
+|---------------|---------------------|------------|--------|
+| Taunt         | `TauntModel`        | inactive   | [rules/taunt.ts](rules/taunt.ts) |
+| Divine Shield | `DivineShieldModel` | inactive   | [rules/divine-shield.ts](rules/divine-shield.ts) |
+| Charge        | `ChargeModel`       | inactive   | [rules/charge.ts](rules/charge.ts) |
+| Rush          | `RushModel`         | inactive   | [rules/rush.ts](rules/rush.ts) |
+| Stealth       | `StealthModel`      | inactive   | [rules/stealth.ts](rules/stealth.ts) |
+
+`ChargeModel` and `RushModel` extend `FeatModel` and use `@useAsleepDecorConsumer` / `HeroSelectableDecor` consumers to override the default sleep/hero-selectable state when active.
 
 ---
 
 ## 5. Decor System (Reactive Buffs)
 
-Producer emits a `Decor`; consumers mutate it; `.result` is the final value. Any state read inside a consumer becomes a reactive dependency.
+Producer emits a `Decor`; consumers mutate it; `.result` is the final value. Any state read inside a consumer is a reactive dependency.
 
-`BuffOperatorType`: `COMMON` (permanent additive) · `AURA` (reactive additive) · `RESET` (set to fixed value)
+`BuffOperatorType` (in [decors/role-attack.ts](decors/role-attack.ts)): `COMMON` (permanent additive) · `AURA` (reactive additive, applied last) · `RESET` (set to fixed value)
 
-| Decorator | Source | Description |
-|-----------|--------|-------------|
+Sort order in `result()`: non-AURA operators sorted by `source.uuid`, then all AURA operators last. This ensures RESET from a permanent buff always precedes aura additions.
+
+### Decor consumers
+
+| Function | Source | Description |
+|----------|--------|-------------|
 | `@useRoleAttackDecorConsumer()` | [decors/role-attack.ts](decors/role-attack.ts) | Buff host's own attack |
 | `@useAllyRoleAttackDecorConsumer()` | [decors/role-attack.ts](decors/role-attack.ts) | Aura buff all friendly minions' attack |
 | `@useRoleHealthDecorConsumer()` | [decors/role-health.ts](decors/role-health.ts) | Buff host's own max health |
 | `@useAllyRoleHealthDecorConsumer()` | [decors/role-health.ts](decors/role-health.ts) | Aura buff all friendly minions' health |
-| `@usePlayerSpellDamageDecorConsumer()` | [decors/spell-damage.ts](decors/spell-damage.ts) | Add Spell Damage +N to player's spells |
-| `@useFeatActiveDecorConsumer()` | [decors/feat-active.ts](decors/feat-active.ts) | Disable a feat when not on board/hero |
-| `@useAsleepDecorConsumer()` | [decors/asleep.ts](decors/asleep.ts) | Override sleep state (used by Charge) |
-| `@useChargeActiveFlagDecorConsumer()` | [decors/charge-active.ts](decors/charge-active.ts) | Temporarily grant Charge as a reactive aura |
+| `@usePlayerSpellDamageDecorConsumer()` | [decors/spell-damage.ts](decors/spell-damage.ts) | Add Spell Damage +N to all player's spells |
+| `@useFeatActiveDecorConsumer()` | [decors/feat-active.ts](decors/feat-active.ts) | Disable a feat (used by `BoardOnlyControllerModel`) |
+| `@useAsleepDecorConsumer()` | [rules/role-action.ts](rules/role-action.ts) | Override sleep state (used by Charge/Rush) |
+
+### Decor producers
+
+| Producer | Decor | Location |
+|----------|-------|----------|
+| `RoleAttackModel._current` | `RoleAttackDecor` | [rules/role-attack.ts](rules/role-attack.ts) |
+| `RoleAttackModel._isHeroSelectable` | `HeroSelectableDecor` | [rules/role-attack.ts](rules/role-attack.ts) |
+| `RoleHealthModel._maximum` | `RoleHealthDecor` | [rules/role-health.ts](rules/role-health.ts) |
+| `RoleActionModel._isAsleep` | `AsleepDecor` | [rules/role-action.ts](rules/role-action.ts) |
+| `FeatModel._isActived` | `FeatActiveDecor` | [feats/index.ts](feats/index.ts) |
+| `SpellEffectModel` (spell card) | `SpellDamageDecor` | [cards/mage/fireball/effect.ts](cards/mage/fireball/effect.ts) |
 
 ---
 
 ## 6. Event System
 
-Prev → action → Post order. Prev can mutate options; Post reacts to result.
+All events are defined and emitted in the same file as the behavior that produces them. Consumer helpers (exported functions) are also co-located.
 
-| Decorator | Source | Description |
-|-----------|--------|-------------|
-| `@useTurnEndEventConsumer()` | [event/turn-end.ts](event/turn-end.ts) | After current turn ends |
-| `@useTurnEndPrevEventConsumer()` | [event/turn-end.ts](event/turn-end.ts) | Before current turn ends |
-| `@useRoleDamageReceiveEventConsumer()` | [event/role-damage-receive.ts](event/role-damage-receive.ts) | After host's role receives damage |
-| `@useRoleDamageReceivePrevEventConsumer()` | [event/role-damage-receive.ts](event/role-damage-receive.ts) | Before host's role receives damage |
-| `@useRoleAttackPerformEventConsumer()` | [event/role-attack-perform.ts](event/role-attack-perform.ts) | After host's role attacks |
-| `@useRoleAttackPerformPrevEventConsumer()` | [event/role-attack-perform.ts](event/role-attack-perform.ts) | Before host's role attacks |
-| `@useRoleAttackReceiveEventConsumer()` | [event/role-attack-receive.ts](event/role-attack-receive.ts) | After host's role is attacked |
-| `@useRoleAttackReceivePrevEventConsumer()` | [event/role-attack-receive.ts](event/role-attack-receive.ts) | Before host's role is attacked |
-| `@useDamageDealEventConsumer()` | [event/damage-deal.ts](event/damage-deal.ts) | After host deals damage |
-| `@useDamageDealPrevEventConsumer()` | [event/damage-deal.ts](event/damage-deal.ts) | Before host deals damage |
-| `@useRestoreDealEventConsumer()` | [event/restore-deal.ts](event/restore-deal.ts) | After host heals a target |
-| `@useRestoreDealPrevEventConsumer()` | [event/restore-deal.ts](event/restore-deal.ts) | Before host heals a target |
-| `@useSpellPlayEventConsumer()` | [event/spell-play.ts](event/spell-play.ts) | After player casts a spell; subscribes to `i.player?.hand.cards` |
+Manual emit pattern:
+```typescript
+const prev = new XxxPrevEvent(options);
+this.emitEvent(prev);
+if (prev.isAborted) return;
+// ... do work ...
+const post = new XxxEvent();
+this.emitAsyncEvent(post);
+```
+
+Events emitted on child models (e.g. `role.attack`, `role.health`) bubble up to parent `role`, so consumer helpers can choose to listen on `role` or the child.
+
+### All consumer helpers
+
+| Function | Constraint | Listens on | Source |
+|----------|-----------|------------|--------|
+| `@useTurnEndPrevEventConsumer()` | `{ game }` | `game` | [entities/game.ts](entities/game.ts) |
+| `@useTurnEndEventConsumer()` | `{ game }` | `game` | [entities/game.ts](entities/game.ts) |
+| `@useDamageReceivePrevEventConsumer()` | `RoleFeatIntf` | `role` | [rules/role-health.ts](rules/role-health.ts) |
+| `@useDamageReceiveEventConsumer()` | `RoleFeatIntf` | `role.health` | [rules/role-health.ts](rules/role-health.ts) |
+| `@useRoleAttackPrevEventConsumer()` | `RoleFeatIntf` | `role.attack` | [rules/role-attack.ts](rules/role-attack.ts) |
+| `@useRoleAttackEventConsumer()` | `RoleFeatIntf` | `role.attack` | [rules/role-attack.ts](rules/role-attack.ts) |
+| `@useRoleAttackReceivePrevEventConsumer()` | `RoleFeatIntf` | `role` | [entities/role.ts](entities/role.ts) |
+| `@useRoleAttackReceiveEventConsumer()` | `RoleFeatIntf` | `role` | [entities/role.ts](entities/role.ts) |
+| `@useDamageDealEventConsumer()` | `{ damageSource }` | `damageSource` | [rules/source/damage-source.ts](rules/source/damage-source.ts) |
+| `@useDamageDealPrevEventConsumer()` | `{ damageSource }` | `damageSource` | [rules/source/damage-source.ts](rules/source/damage-source.ts) |
+| `@useRestoreDealEventConsumer()` | `{ restoreSource }` | `restoreSource` | [rules/source/restore-source.ts](rules/source/restore-source.ts) |
+| `@useRestoreDealPrevEventConsumer()` | `{ restoreSource }` | `restoreSource` | [rules/source/restore-source.ts](rules/source/restore-source.ts) |
+| `@usePlayerSpellCast()` | `{ player }` | all `card.deployer` in hand | [rules/deployers/spell-deployer.ts](rules/deployers/spell-deployer.ts) |
+
+`RoleFeatIntf` interface (from [feats/index.ts](feats/index.ts)) requires: `role: RoleModel | undefined`, `feat: FeatModel | undefined`, `player: PlayerModel | undefined`.
+`FeatIntf` interface requires: `feat: FeatModel | undefined`, `player: PlayerModel | undefined`.
+
+Consumer helper lambda style — always use extracted variables:
+```typescript
+useEventConsumer((self: I) => {
+    const role = self.role;
+    const feat = self.feat;
+    if (!feat?.isActived) return;
+    if (!role) return;
+    return [role, SomeEvent]
+})(prototype, key, descriptor);
+```
 
 ---
 
+## 7. Disposer System
+
+Triggered automatically by `@useDisposer()` wrapping `receiveDamage()` and `runAction()`.
+
+```typescript
+@useDisposer()
+public receiveDamage(options) { ... }   // in RoleHealthModel
+```
+
+`registerDisposer(disposer)` queues a disposer for deferred execution. After the outermost `@useDisposer()` frame exits, all queued disposers run in batch. `finishRun()` fires after the board settles, triggering deathrattles.
+
+- `isPending` guard prevents re-entrancy
+- `finishRun()` fires outside the batched action — board is already updated when deathrattles execute
+
+---
 
 ## 8. Test Harness Patterns
 
@@ -218,14 +317,34 @@ Reference: [cards/neutral/loot-hoarder/index.test.ts](cards/neutral/loot-hoarder
 
 - `game.start({ isInitPhaseIgnored: true })` — skip initial draw; use when pre-populating board/hand
 - `game.start()` — use when the test needs mana or the draw phase
-- PlayerA = odd turns, PlayerB = even turns; call `game.nextTurn()` first to test PlayerB
+- PlayerA = odd turns (turn 1), PlayerB = even turns; call `game.nextTurn()` to switch turns
 
 **Async sequences:**
-- Attack: `role.runAttack()` → `await sleep()` → `controller.selectTarget(targetRole)` → `await sleep()`
-- Play: `card.launcher.launch()` → `await sleep()` → `controller.selectTarget(boardIndex)` → `await sleep()`
-- Play with target: add `await sleep()` + `controller.selectTarget(targetRole)` after board index
+```typescript
+// Attack
+role.action.launch();
+await sleep();
+controller.selectTarget(targetRole);
+await sleep();
 
-**Assertions:** `disposer.isActived` · `role.attack.current` · `role.health.current` / `.maximum` · `player.board.minions.length` · `player.hand.cards` · `role.divineShield.isActived` · `controller.selector?.options`
+// Play minion (no battlecry target)
+minion.deployer.launch();
+await sleep();
+controller.selectTarget(boardPositionIndex);   // 0 … board.length
+await sleep();
+
+// Play minion (with battlecry target)
+minion.deployer.launch();
+await sleep();
+controller.selectTarget(boardPositionIndex);
+await sleep();
+controller.selectTarget(targetRole);
+await sleep();
+```
+
+**Assertions:** `disposer.isActived` · `role.attack.current` · `role.health.current` / `.maximum` · `role.action.isEnabled` / `.isAsleep` · `role.divineShield.isActived` · `player.board.minions` / `.cards` · `player.hand.cards` · `controller.selector?.options`
+
+Note: `role.action.isEnabled` returns `true | undefined` (not `true | false`). Assert `toBe(undefined)` for the disabled case.
 
 ---
 
@@ -237,9 +356,10 @@ src/cards/neutral/<card-name>/
   index.spec.md   — spec file (required, written first)
   index.test.ts   — test file (required)
   battlecry.ts    — if has battlecry
-  buff.ts         — if battlecry applies a temporary buff
+  buff.ts         — if battlecry applies a temporary buff (extends FeatModel)
   deathrattle.ts  — if has deathrattle
   feat.ts         — if has passive / aura / enrage / "whenever" effect
+  feature.ts      — SubFeatModel used inside feat.ts (if complex)
 
 src/cards/derivatives/<token-name>/index.ts
 ```
@@ -248,9 +368,11 @@ src/cards/derivatives/<token-name>/index.ts
 
 ## 10. Enums Quick Reference
 
-- **ClassType** — [rules/class.ts](rules/class.ts): `NEUTRAL | MAGE | PALADIN | WARRIOR | DRUID | HUNTER | PRIEST | ROGUE | SHAMAN | WARLOCK`
-- **RarityType** — [rules/rarity.ts](rules/rarity.ts): `BASIC | COMMON | RARE | EPIC | LEGENDARY`
-- **RaceType** — [rules/race.ts](rules/race.ts): `MURLOC | BEAST | DRAGON | PIRATE | DEMON | ELEMENTAL | MECH | TOTEM`
+All enums live in [utils/enums.ts](utils/enums.ts):
+
+- **ClassType**: `NEUTRAL | MAGE | PALADIN | WARRIOR | DRUID | HUNTER | PRIEST | ROGUE | SHAMAN | WARLOCK`
+- **RarityType**: `BASIC | COMMON | RARE | EPIC | LEGENDARY`
+- **RaceType**: `MURLOC | BEAST | DRAGON | PIRATE | DEMON | ELEMENTAL | MECH | TOTEM`
 
 ---
 
@@ -278,11 +400,13 @@ src/cards/derivatives/<token-name>/index.ts
 | Aura buff by race | [cards/neutral/southsea-captain/feat.ts](cards/neutral/southsea-captain/feat.ts) |
 | Summon token | [cards/neutral/silver-hand-knight/battlecry.ts](cards/neutral/silver-hand-knight/battlecry.ts) |
 | Destroy weapon | [cards/neutral/acidic-swamp-ooze/battlecry.ts](cards/neutral/acidic-swamp-ooze/battlecry.ts) |
+| Bounce a minion | [cards/neutral/ancient-brewmaster/battlecry.ts](cards/neutral/ancient-brewmaster/battlecry.ts) |
 | Spell Damage +N | [feats/spell-damage-feat.ts](feats/spell-damage-feat.ts) |
 | **Keywords** | |
 | Taunt | [cards/neutral/senjin-shieldmasta/index.ts](cards/neutral/senjin-shieldmasta/index.ts) |
 | Divine Shield | [cards/neutral/scarlet-crusader/index.ts](cards/neutral/scarlet-crusader/index.ts) |
-| Charge | [cards/neutral/wolfrider/index.ts](cards/neutral/wolfrider/index.ts) |
+| Charge | [cards/neutral/bluegill-warrior/index.ts](cards/neutral/bluegill-warrior/index.ts) |
+| Rush | [cards/neutral/stonetusk-boar/index.ts](cards/neutral/stonetusk-boar/index.ts) |
 | Stealth | [cards/neutral/stranglethorn-tiger/index.ts](cards/neutral/stranglethorn-tiger/index.ts) |
 
 ---
@@ -298,43 +422,48 @@ AppModel
     │   ├── ManaModel
     │   ├── HeroModel
     │   │   ├── RoleModel
-    │   │   │   ├── RoleAttackModel       ← @useDecorProducer(RoleAttackDecor)
-    │   │   │   ├── RoleHealthModel       ← @useDecorProducer(RoleHealthDecor)
-    │   │   │   ├── RoleActionModel
+    │   │   │   ├── RoleAttackModel    ← @useDecorProducer(RoleAttackDecor)
+    │   │   │   │                      ← @useDecorProducer(HeroSelectableDecor)
+    │   │   │   ├── RoleHealthModel    ← @useDecorProducer(RoleHealthDecor)
+    │   │   │   ├── RoleActionModel    ← @useDecorProducer(AsleepDecor)
     │   │   │   ├── TauntModel
     │   │   │   ├── DivineShieldModel
-    │   │   │   ├── ChargeModel           ← @useDecorProducer(ChargeActiveDecor)
-    │   │   │   ├── RushModel
+    │   │   │   ├── ChargeModel        (extends FeatModel)
+    │   │   │   ├── RushModel          (extends FeatModel)
     │   │   │   └── StealthModel
+    │   │   ├── DamageSourceModel
+    │   │   ├── RestoreSourceModel
+    │   │   ├── HeroDisposerModel
+    │   │   ├── FeatModel[]            (hero feats)
     │   │   └── WeaponModel?
     │   │       ├── CostModel
     │   │       ├── WeaponDisposerModel
     │   │       ├── DamageSourceModel
-    │   │       ├── RestoreSourceModel
     │   │       └── FeatModel[]
     │   ├── BoardModel
     │   │   └── MinionModel[]
     │   │       ├── CostModel
-    │   │       ├── RoleModel             (same structure as hero's RoleModel)
+    │   │       ├── RoleModel          (same structure as hero's RoleModel)
+    │   │       ├── MinionDeployerModel
     │   │       ├── MinionDisposerModel
     │   │       ├── DamageSourceModel
     │   │       ├── RestoreSourceModel
     │   │       └── FeatModel[]
     │   │           ├── BattlecryModel<T>
+    │   │           │   └── (no sub-feats)
     │   │           ├── DeathrattleModel
     │   │           ├── passive FeatModel
-    │   │           │   ├── BoardOnlyTagModel
-    │   │           │   └── RoleAttackBuffModel?
-    │   │           └── runtime buff FeatModel  (via addFeature)
-    │   │               ├── RoleAttackBuffModel?
-    │   │               └── RoleHealthBuffModel?
+    │   │           │   └── SubFeatModel[]  (e.g. BoardOnlyControllerModel)
+    │   │           └── runtime buff FeatModel  (via entity.addFeat())
+    │   │               └── SubFeatModel[]  (e.g. RoleAttackBuffModel)
     │   ├── HandModel  → CardModel[]
     │   ├── DeckModel  → CardModel[]
-    │   └── GraveyardModel  → CardModel[]
+    │   ├── GraveyardModel  → CardModel[]
+    │   └── WorkspaceModel  → CardModel[]  (transient staging area)
     └── PlayerModel  (playerB — identical structure)
 ```
 
-**FeatModel built-in routes:** `this.player` · `this.game` · `this.entity` (MinionModel | HeroModel) · `this.player?.opponent`
+**FeatModel built-in routes:** `this.player` · `this.game` · `this.entity` (`HeroModel | CardModel`) · `this.player?.opponent`
 
 ---
 
@@ -344,101 +473,95 @@ AppModel
 
 ```
 Hand / Deck
-└── minion.summon(board, position)
-    └── Board  (summonedTurn set, action.sleep())
+└── minion.deployer.summon(player, position)
+    └── Board  (action.sleep(), attack.setHeroSelectable(false))
         └── health.current ≤ 0  |  disposer.destroy()
             └── disposer.run()
-                └── Graveyard  (removed from board)
+                ├── removes from board
+                └── moves to graveyard
                     └── disposer.finishRun()
-                        └── deathrattle hooks fire
+                        └── deathrattle.launch() → @useDeathrattleLaunchHook
 ```
 
 ### Role attack flow
 
 ```
-role.runAttack()                         — checks isAttackEnabled
-└── attack.getSelector()                 — builds target list (taunt / stealth filtered)
-    └── controller.fetchTarget()         — async: user picks target
-        └── role._performAttack(target)
-            ├── [RoleAttackPerformPrevEvent]
-            ├── action.consumeCurrent()  — uses up the action for this turn
-            ├── stealth.deactive()       — attacker loses stealth
-            ├── target._receiveAttack(source)
-            │   ├── [RoleAttackReceivePrevEvent]
-            │   ├── source.attack.run(target)
-            │   │   ├── source.damageSource.dealDamage(target, source.attack.current)
-            │   │   │   └── target.receiveDamage()  →  [RoleDamageReceiveEvent]
-            │   │   └── target.damageSource.dealDamage(source, target.attack.current)
-            │   │       └── source.receiveDamage()  →  [RoleDamageReceiveEvent]
-            │   └── [RoleAttackReceivePostEvent]
-            └── [RoleAttackPerformPostEvent]
+role.action.launch()                         — checks isEnabled, then:
+├── role.attack.getTarget()                  — builds selector (taunt/stealth filtered), fetchTarget
+├── role.attack.launch({ target })
+│   ├── [RoleAttackPrevEvent on role.attack]  — consumers listen on role.attack (bubbles to role)
+│   ├── target._receiveAttack({ source: role })
+│   │   ├── [RoleAttackReceivePrevEvent on target]
+│   │   ├── source.attack.executeLaunch({ target })
+│   │   │   ├── source.damageSource.launch({ target, value: attack })
+│   │   │   │   └── target.health.receiveDamage()  →  [RoleDamageReceiveEvent on role.health]
+│   │   │   ├── target.damageSource.launch({ target: source, value: target.attack })
+│   │   │   │   └── source.health.receiveDamage()  →  [RoleDamageReceiveEvent on role.health]
+│   │   │   └── hero.weapon?.durability.consume()   — if attacker is a hero
+│   │   └── [RoleAttackReceiveEvent async on target]
+│   ├── role.stealth.deactive()
+│   └── [RoleAttackEvent async on role.attack]
+└── action.consume()
 ```
 
 ### Minion play flow
 
 ```
-minion.launcher.launch()
-├── preparePlay()                                — async, all user interaction happens here
+minion.deployer.launch()
+├── prepareLaunch()                              — async, all user interaction here
 │   ├── controller.fetchTarget(positions)        — user picks board position (0 … board.length)
-│   └── battlecry.getTargets()                  — per battlecry: getSelector → fetchTarget loop
-├── consumeMana()                                — deduct cost from player's mana
-├── summon(board, boardIndex)
-│   ├── launch()                                — move card from current container → workspace
-│   ├── handleSummon(board, position)           — move from workspace → board.summonMinion()
-│   │   ├── workspace.removeCard(this)
-│   │   └── board.summonMinion(this, position)  — insert into BoardModel
-│   └── finishSummon()
-│       ├── summonedTurn = game.turn
-│       └── role.action.sleep()                 — summoning sickness
-└── HooksLauncherModel.next()                   — iterates registry one hook per call
-    └── battlecry.run(target)
-        ├── isPending = true
-        └── @useBattlecryRunHook                — handleRun(target) on the BattlecryModel subclass
+│   └── battlecry.getTargets()                  — per battlecry: selector hook → fetchTarget loop
+├── minion.cost.consume()                        — deduct mana
+├── deployer.summon(player, position)
+│   ├── prepare(player)                          — move card from hand → workspace
+│   ├── spawn(player, position)                  — workspace → board.summonMinion()
+│   └── _finishSleep()
+│       ├── role.action.sleep()                  — summoning sickness
+│       └── role.attack.setHeroSelectable(false) — can't attack hero until next turn (unless Charge)
+└── intensions.forEach → intension.launch()
+    └── battlecry.launch(...params)              — @useBattlecryLaunchHook on BattlecryModel subclass
 ```
 
 ### Spell play flow
 
 ```
-spell.launcher.launch()
-├── spellEffect.getTargets()                     — async target selection per spell effect
-├── consumeMana()                                — deduct cost from player's mana
-├── HooksLauncherModel.next()                   — card stays in hand so Spell Damage auras remain active
-│   └── spellEffect.run(target)
-│       └── @useSpellEffectRunHook              — handleRun(target) on the SpellEffectModel subclass
-├── launch()                                     — move card from hand → workspace
-└── dispose()                                   — move from workspace → graveyard
-    ├── workspace.removeCard(this)
-    └── graveyard.disposeCard(this)
+spell.deployer.launch()
+├── prepareLaunch()
+│   └── spellEffect.getTargets()                 — selector hook → fetchTarget per effect
+├── spell.cost.consume()
+├── prepare(player)                              — hand → workspace (Spell Damage auras still active)
+├── intensions.forEach → intension.launch()
+│   └── spellEffect.launch(...params)            — @useSpellEffectLaunchHook on SpellEffectModel subclass
+├── dispose()
+│   ├── workspace.removeCard(spell)
+│   └── graveyard.addCard(spell)
+└── [SpellPlayPostEvent]                         — triggers @usePlayerSpellCast consumers
 ```
 
 ### Weapon play flow
 
 ```
-weapon.launcher.launch()
-├── consumeMana()                                — deduct cost from player's mana
-├── launch()                                     — move card from hand → workspace
-└── equip()                                     — move from workspace → hero
-    ├── workspace.removeCard(this)
-    └── hero.equipWeapon(this)                  — attach weapon to hero; previous weapon is disposed
+weapon.deployer.launch()
+├── weapon.cost.consume()
+├── prepare(player)                              — hand → workspace
+└── equip()
+    ├── workspace.removeCard(weapon)
+    └── hero.equipWeapon(weapon)                 — attaches weapon; old weapon disposed
 ```
 
-### Disposer execution flow
-
-Triggered automatically by `@useDisposer()` wrapping `receiveDamage()` / `destroy()` / `runAttack()`.
+### Turn flow
 
 ```
-@useDisposer() wrapper               — hooks/disposer.ts
-├── original method runs             — e.g. receiveDamage / destroy
-│   └── registerDisposer(disposer)   — queues disposer into pending registry
-├── [batched runAction]              — all run() calls are atomic
-│   └── disposer.run()               — per queued disposer
-│       ├── isActived check          — health ≤ 0 or isDestroyed
-│       ├── container.removeCard()   — remove from Board / Hand / Deck
-│       └── graveyard.disposeCard()  — move to GraveyardModel
-└── disposer.finishRun()             — after board state settled
-    └── deathrattle.run()            — per deathrattle on the minion
-        └── @useDeathrattleRunHook   — _run() on the DeathrattleModel subclass
+game.nextTurn()
+├── endTurn({})
+│   ├── [TurnEndPrevEvent]
+│   └── [TurnEndEvent async]                     — @useTurnEndEventConsumer fires here
+├── turn += 1
+└── startTurn()
+    ├── currentPlayer.mana.addMaximum(1)
+    ├── currentPlayer.mana.reset()
+    └── for each role (hero + all minions):
+        ├── action.wakeup()
+        ├── attack.setHeroSelectable(true)
+        └── action.resetCurrent()
 ```
-
-- `isPending` guard prevents re-entrancy — nested `@useDisposer()` calls skip the flush
-- `finishRun()` fires outside the batched action, so the board is already updated when deathrattles execute

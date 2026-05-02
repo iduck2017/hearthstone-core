@@ -4,7 +4,7 @@ import { GameModel } from "../entities/game";
 import { MinionModel } from "../cards/minion";
 import { HeroModel } from "../heroes";
 import { RoleAttackDecor } from "../decors/role-attack";
-import { RoleFeatModel } from "../feats";
+import { RoleFeatIntf } from "../feats";
 import { RoleModel } from "../entities/role";
 import { useDisposer } from "../utils/disposer";
 
@@ -157,7 +157,7 @@ export class RoleAttackModel extends Model {
     }
 }
 
-export function useRoleAttackPrevEventConsumer<I extends RoleFeatModel>() {
+export function useRoleAttackPrevEventConsumer<I extends RoleFeatIntf>() {
     return function(
         prototype: I,
         key: string,
@@ -173,7 +173,7 @@ export function useRoleAttackPrevEventConsumer<I extends RoleFeatModel>() {
     }
 }
 
-export function useRoleAttackEventConsumer<I extends RoleFeatModel>() {
+export function useRoleAttackEventConsumer<I extends RoleFeatIntf>() {
     return function(
         prototype: I,
         key: string,

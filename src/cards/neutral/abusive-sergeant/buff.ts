@@ -21,6 +21,6 @@ export class AbusiveSergeantBuffModel extends FeatModel {
     @useTurnEndEventConsumer()
     private _handleTurnEnd(event: TurnEndEvent) {
         console.log('HandleTurnEnd', this.board);
-        this.deactive();
+        this.disable();
     }
 }

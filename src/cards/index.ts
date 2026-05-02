@@ -1,4 +1,4 @@
-import { Model, useChild, useMemo, useRoute } from "set-piece";
+import { Model, useAction, useChild, useMemo, useRoute } from "set-piece";
 import { LauncherModel } from "../rules/deployers";
 import { GameModel } from "../entities/game";
 import { PlayerModel } from "../entities/player";
@@ -27,8 +27,10 @@ export interface CardProps {
 export abstract class CardModel extends Model {
     constructor(props: CardProps) {
         super();
+        const feats = props.feats ?? [];
+        feats.forEach(feat => feat.isOriginal = true);
         this._cost = props?.cost ?? new CostModel();
-        this._feats = props?.feats ?? [];
+        this._feats = feats;
         this._rarity = props.rarity;
         this._class = props.class;
     }
@@ -134,4 +136,6 @@ export abstract class CardModel extends Model {
     public get deployer() {
         return this._deployer;
     }
+
+
 }

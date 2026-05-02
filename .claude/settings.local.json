@@ -16,7 +16,8 @@
       "Bash(node -e ' *)",
       "Bash([ -f \"c:/Users/admin/Documents/hearthstone-core/src/cards/neutral/$dir/index.ts\" ])",
       "Bash(xargs sed *)",
-      "Bash(rm src/hooks/spell-effect-run.ts)"
+      "Bash(rm src/hooks/spell-effect-run.ts)",
+      "Bash(rm src/decors/asleep.ts)"
     ]
   }
 }

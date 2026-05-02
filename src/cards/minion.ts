@@ -46,5 +46,24 @@ export abstract class MinionModel extends CardModel {
         return this._deployer;
     }
 
+    @useAction()
+    public withdraw() {
+        const player = this.player;
+        if (!player) return;
+        player.board.removeCard(this);
+        player.hand.addCard(this);
+        this._feats = this._feats.filter(feat => feat.isOriginal);
+    }
+
+
+    @useAction()
+    public silence() {
+        this._feats.forEach(feat => feat.disable());
+        this._role.taunt.disable();
+        this._role.divineShield.disable();
+        this._role.charge.disable();
+        this._role.rush.disable();
+        this._role.stealth.disable();
+    }
 
 }

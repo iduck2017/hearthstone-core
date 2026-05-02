@@ -1,5 +1,5 @@
 import { Decor, Model, useDecorConsumer } from "set-piece";
-import { BaseFeatModel, FeatModel } from "../feats";
+import { FeatIntf, FeatModel } from "../feats";
 
 export class FeatActiveDecor extends Decor<boolean> {
     private _isLocked = false;
@@ -15,7 +15,7 @@ export class FeatActiveDecor extends Decor<boolean> {
     }
 }
 
-export function useFeatActiveDecorConsumer<I extends BaseFeatModel>() {
+export function useFeatActiveDecorConsumer<I extends FeatIntf>() {
     return function(
         prototype: I,
         key: string,

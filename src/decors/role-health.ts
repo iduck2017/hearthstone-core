@@ -1,7 +1,7 @@
 import { Decor, Model, useDecorConsumer } from "set-piece";
 import { BuffOperator, BuffOperatorType } from "./role-attack";
 import { RoleModel } from "../entities/role";
-import { FeatModel, SubFeatModel, RoleFeatModel, BaseFeatModel } from "../feats";
+import { FeatModel, SubFeatModel, RoleFeatIntf, FeatIntf } from "../feats";
 import { PlayerModel } from "../entities/player";
 
 export class RoleHealthDecor extends Decor<number> {
@@ -34,7 +34,7 @@ export class RoleHealthDecor extends Decor<number> {
 }
 
 
-export function useRoleHealthDecorConsumer<F extends RoleFeatModel>() {
+export function useRoleHealthDecorConsumer<F extends RoleFeatIntf>() {
     return function(
         prototype: F,
         key: string,
@@ -52,7 +52,7 @@ export function useRoleHealthDecorConsumer<F extends RoleFeatModel>() {
 
 // Subscribes to the RoleHealthDecor of every allied minion on the board.
 // The handler is called once per ally; use this to apply aura buffs to all friendly minions.
-export function useAllyRoleHealthDecorConsumer<F extends BaseFeatModel>() {
+export function useAllyRoleHealthDecorConsumer<F extends FeatIntf>() {
     return function(
         prototype: F,
         key: string,

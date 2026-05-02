@@ -14,6 +14,6 @@ export class ManaAddictBuffModel extends FeatModel {
 
     @useTurnEndEventConsumer()
     private _handleTurnEnd(_event: TurnEndEvent) {
-        this.deactive();
+        this.disable();
     }
 }
