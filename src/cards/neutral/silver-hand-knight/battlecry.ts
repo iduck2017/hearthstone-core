@@ -1,7 +1,7 @@
 import { BattlecryModel } from "../../../feats/battlecry";
 import { SquireModel } from "../../derivatives/squire";
 import { Model, useRoute, useModel } from "set-piece";
-import { useBattlecryRunHook } from "../../../hooks/battlecry-run";
+import { useBattlecryLaunchHook } from "../../../hooks/battlecry-launcher";
 import { MinionModel } from "../../minion";
 
 @useModel('silver-hand-knight-battlecry-model')
@@ -11,7 +11,7 @@ export class SilverHandKnightBattlecryModel extends BattlecryModel<Model> {
 @useRoute(() => MinionModel)
     private _minion?: MinionModel;
 
-    @useBattlecryRunHook()
+    @useBattlecryLaunchHook()
     protected async handleRun(): Promise<void> {
         const player = this.player;
         if (!player) return;

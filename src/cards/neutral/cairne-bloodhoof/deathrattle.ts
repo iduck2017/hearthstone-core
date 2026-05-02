@@ -1,12 +1,12 @@
 import { useModel } from "set-piece";
 import { DeathrattleModel } from "../../../feats/deathrattle";
-import { useDeathrattleRunHook } from "../../../hooks/deathrattle-run";
+import { useDeathrattleLaunchHook } from "../../../hooks/deathrattle-launcher";
 import { BaineBloodhoofModel } from "../../derivatives/baine-bloodhoof";
 
 @useModel('cairne-bloodhoof-deathrattle-model')
 export class CairneBloodhoofDeathrattleModel extends DeathrattleModel {
     protected _brand: symbol = Symbol('cairne-bloodhoof-deathrattle-model');
-    @useDeathrattleRunHook()
+    @useDeathrattleLaunchHook()
     protected _run(): void {
         const player = this.player;
         if (!player) return;

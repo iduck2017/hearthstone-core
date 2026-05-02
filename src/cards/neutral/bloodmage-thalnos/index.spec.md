@@ -12,7 +12,7 @@
 ## 2. Implementation
 
 - **ThalnosDeathrattleModel**: extends `DeathrattleModel<Model>`.
-  - `@useDeathrattleRunHook()` `handleRun()`: calls `player.drawCard()`.
+  - `@useDeathrattleLaunchHook()` `handleRun()`: calls `player.drawCard()`.
 - **ThalnossModel** (feat): extends `SpellDamageFeatModel(1)` — reuses the shared feat that wraps `BoardOnlyTagModel` + `usePlayerSpellDamageDecorConsumer` with value 1.
   - Alternatively, inline `KoboldGeomancerFeatModel` pattern: `BoardOnlyTagModel` + `@usePlayerSpellDamageDecorConsumer()` adding AURA +1.
 - **BloodmageThalnossModel**: extends `MinionModel`, 2 cost, 1/1, Neutral, Legendary, feats = `[new SpellDamageFeatModel(1), new ThalnosDeathrattleModel()]`.

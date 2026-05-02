@@ -1,13 +1,13 @@
 import { BattlecryModel } from "../../../feats/battlecry";
 import { Model, useModel } from "set-piece";
-import { useBattlecryRunHook } from "../../../hooks/battlecry-run";
+import { useBattlecryLaunchHook } from "../../../hooks/battlecry-launcher";
 import { FrostwolfWarlordBuffModel } from "./buff";
 
 @useModel('frostwolf-warlord-battlecry-model')
 export class FrostwolfWarlordBattlecryModel extends BattlecryModel<Model> {
     protected _brand: symbol = Symbol('frostwolf-warlord-battlecry-model');
 
-    @useBattlecryRunHook()
+    @useBattlecryLaunchHook()
     protected async handleRun(): Promise<void> {
         const player = this.player;
         if (!player) return;

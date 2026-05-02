@@ -2,8 +2,8 @@ import { useModel } from "set-piece";
 import { BattlecryModel } from "../../../feats/battlecry";
 import { Selector } from "../../../utils/controller";
 import { RoleModel } from "../../../entities/role";
-import { useBattlecryRunHook } from "../../../hooks/battlecry-run";
 import { useBattlecrySelectHook } from "../../../hooks/battlecry-selector";
+import { useBattlecryLaunchHook } from "../../../hooks/battlecry-launcher";
 
 @useModel('voodoo-doctor-battlecry-model')
 export class VoodooDoctorBattlecryModel extends BattlecryModel<RoleModel> {
@@ -21,7 +21,7 @@ export class VoodooDoctorBattlecryModel extends BattlecryModel<RoleModel> {
         return { options };
     }
 
-    @useBattlecryRunHook()
+    @useBattlecryLaunchHook()
     private async handleRun(target?: RoleModel): Promise<void> {
         if (!target) return;
         this.entity?.restoreSource.restoreHealth({ target, value: 2 });

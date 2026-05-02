@@ -2,7 +2,7 @@ import { useModel } from "set-piece";
 import { BattlecryModel } from "../../../feats/battlecry";
 import { Selector } from "../../../utils/controller";
 import { RoleModel } from "../../../entities/role";
-import { useBattlecryRunHook } from "../../../hooks/battlecry-run";
+import { useBattlecryLaunchHook } from "../../../hooks/battlecry-launcher";
 import { useBattlecrySelectHook } from "../../../hooks/battlecry-selector";
 
 @useModel('elven-archer-battlecry-model')
@@ -19,7 +19,7 @@ export class ElvenArcherBattlecryModel extends BattlecryModel<RoleModel> {
         return { options }
     }
 
-    @useBattlecryRunHook()
+    @useBattlecryLaunchHook()
     private async handleRun(target?: RoleModel): Promise<void> {
         if (!target) return;
         this.entity?.damageSource.dealDamage({ target, value: 1 });

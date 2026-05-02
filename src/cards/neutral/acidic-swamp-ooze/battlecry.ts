@@ -1,12 +1,12 @@
 import { Model, useModel } from "set-piece";
 import { BattlecryModel } from "../../../feats/battlecry";
-import { useBattlecryRunHook } from "../../../hooks/battlecry-run";
+import { useBattlecryLaunchHook } from "../../../hooks/battlecry-launcher";
 
 @useModel('acidic-swamp-ooze-battlecry-model')
 export class AcidicSwampOozeBattlecryModel extends BattlecryModel<Model> {
     protected _brand: symbol = Symbol('acidic-swamp-ooze-battlecry-model');
 
-    @useBattlecryRunHook()
+    @useBattlecryLaunchHook()
     protected async handleRun(): Promise<void> {
         const opponent = this.player?.opponent;
         const weapon = opponent?.hero.weapon;

@@ -1,4 +1,4 @@
-import { runAction } from "set-piece";
+import { actionManager } from "set-piece";
 import { DisposerModel } from "../rules/disposers";
 
 let isPending = false;
@@ -26,7 +26,7 @@ export function useDisposer() {
             isPending = false;
             const prevDisposerRegistry = [...disposerRegistry];
             disposerRegistry.length = 0;
-            runAction(() => {
+            actionManager.launch(() => {
                 prevDisposerRegistry.forEach(item => item.run())
             })
             prevDisposerRegistry.forEach(item => item.finishRun())

@@ -1,11 +1,12 @@
 import { useModel } from "set-piece";
 import { DeathrattleModel } from "../../../feats/deathrattle";
-import { useDeathrattleRunHook } from "../../../hooks/deathrattle-run";
+import { useDeathrattleLaunchHook } from "../../../hooks/deathrattle-launcher";
+
 
 @useModel('loot-hoarder-deathrattle-model')
 export class LootHoarderDeathrattleModel extends DeathrattleModel {
     protected _brand: symbol = Symbol('loot-hoarder-deathrattle-model');
-    @useDeathrattleRunHook()
+    @useDeathrattleLaunchHook()
     protected _run(): void {
         const player = this.player;
         player?.drawCard();

@@ -1,12 +1,12 @@
 import { BattlecryModel } from "../../../feats/battlecry";
 import { Model, useModel } from "set-piece";
-import { useBattlecryRunHook } from "../../../hooks/battlecry-run";
+import { useBattlecryLaunchHook } from "../../../hooks/battlecry-launcher";
 
 @useModel('antique-healbot-battlecry-model')
 export class AntiqueHealbotBattlecryModel extends BattlecryModel<Model> {
     protected _brand: symbol = Symbol('antique-healbot-battlecry-model');
     
-    @useBattlecryRunHook()
+    @useBattlecryLaunchHook()
     private async handleRun(): Promise<void> {
         const hero = this.player?.hero;
         if (!hero) return;

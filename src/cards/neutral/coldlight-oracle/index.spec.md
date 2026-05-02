@@ -10,7 +10,7 @@
 
 - **ColdlightOracleBattlecryModel**: extends `BattlecryModel<Model>`.
   - `getSelector()`: returns `undefined` (no target).
-  - `@useBattlecryRunHook()` `handleRun()`: calls `player.drawCard()` twice, then `opponent.drawCard()` twice.
+  - `@useBattlecryLaunchHook()` `handleRun()`: calls `player.drawCard()` twice, then `opponent.drawCard()` twice.
 - **ColdlightOracleModel**: extends `MinionModel`, 3 cost, 2/2, Neutral, Rare, races = `[RaceType.MURLOC]`, feats = `[new ColdlightOracleBattlecryModel()]`.
 
 ## 3. Test scenario

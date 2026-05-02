@@ -1,7 +1,7 @@
 import { BattlecryModel } from "../../../feats/battlecry";
 import { Selector } from "../../../utils/controller";
 import { RoleModel } from "../../../entities/role";
-import { useBattlecryRunHook } from "../../../hooks/battlecry-run";
+import { useBattlecryLaunchHook } from "../../../hooks/battlecry-launcher";
 import { useBattlecrySelectHook } from "../../../hooks/battlecry-selector";
 import { useRoute, useModel } from "set-piece";
 import { MinionModel } from "../../minion";
@@ -20,7 +20,7 @@ export class StormpikeCommandoBattlecryModel extends BattlecryModel<RoleModel> {
     }
 
 
-    @useBattlecryRunHook()
+    @useBattlecryLaunchHook()
     protected async handleRun(target?: RoleModel): Promise<void> {
         if (!target) return;
         this.entity?.damageSource.dealDamage({ target, value: 2 });

@@ -1,6 +1,6 @@
 import { BattlecryModel } from "../../../feats/battlecry";
 import { Model, useRoute, useModel } from "set-piece";
-import { useBattlecryRunHook } from "../../../hooks/battlecry-run";
+import { useBattlecryLaunchHook } from "../../../hooks/battlecry-launcher";
 import { RoleModel } from "../../../entities/role";
 import { MinionModel } from "../../minion";
 
@@ -11,7 +11,7 @@ export class InjuredBlademasterBattlecryModel extends BattlecryModel<Model> {
 @useRoute(() => MinionModel)
     private _minion?: MinionModel;
 
-    @useBattlecryRunHook()
+    @useBattlecryLaunchHook()
     protected async handleRun(): Promise<void> {
         const minion = this._minion;
         if (!minion) return;

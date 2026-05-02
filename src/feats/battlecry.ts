@@ -1,9 +1,9 @@
 import { useRoute, useState, Model, useMemo } from "set-piece";
 import { PlayerModel } from "../entities/player";
 import { Selector } from "../utils/controller";
-import { getBattlecryRunHooks } from "../hooks/battlecry-run";
 import { FeatModel } from ".";
 import { battlecrySelectorRegistry } from "../hooks/battlecry-selector";
+import { battlecryLauncherRegistry } from "../hooks/battlecry-launcher";
 
 export abstract class BattlecryModel<T extends Model = Model> extends FeatModel {
     @useState()
@@ -38,7 +38,7 @@ export abstract class BattlecryModel<T extends Model = Model> extends FeatModel 
     public async run(...params: Array<T | undefined>) {
         if (!this.isActived) return;
         if (!this.isPending) this._isPending = true;
-        const hooks = getBattlecryRunHooks(this);
+        const hooks = battlecryLauncherRegistry.getHooks(this);
         for (const hook of hooks) await hook(...params);
         this._isPending = false;
     }

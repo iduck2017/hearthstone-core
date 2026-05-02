@@ -2,7 +2,7 @@ import { BattlecryModel } from "../../../feats/battlecry";
 import { Selector } from "../../../utils/controller";
 import { RoleModel } from "../../../entities/role";
 import { AbusiveSergeantBuffModel } from "./buff";
-import { useBattlecryRunHook } from "../../../hooks/battlecry-run";
+import { useBattlecryLaunchHook } from "../../../hooks/battlecry-launcher";
 import { useConsoleGroup, useModel } from "set-piece";
 import { useBattlecrySelectHook } from "../../../hooks/battlecry-selector";
 
@@ -19,7 +19,7 @@ export class AbusiveSergeantBattlecryModel extends BattlecryModel<RoleModel> {
         return { options };
     }
 
-    @useBattlecryRunHook()
+    @useBattlecryLaunchHook()
     @useConsoleGroup()
     protected async handleRun(target?: RoleModel): Promise<void> {
         if (!target) return;

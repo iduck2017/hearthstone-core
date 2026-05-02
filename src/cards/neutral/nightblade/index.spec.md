@@ -10,7 +10,7 @@
 
 - **NightbladeBattlecryModel**: extends `BattlecryModel<RoleModel>`.
   - `getSelector()`: returns `undefined` (no target selection; hero is fixed).
-  - `@useBattlecryRunHook()` `handleRun()`: `this.entity?.damageSource.dealDamage({ target: opponent.hero.role, value: 3 })`.
+  - `@useBattlecryLaunchHook()` `handleRun()`: `this.entity?.damageSource.dealDamage({ target: opponent.hero.role, value: 3 })`.
 - **NightbladeModel**: extends `MinionModel`, 5 cost, 4/4, Neutral, Common, feats = `[new NightbladeBattlecryModel()]`.
 
 ## 3. Test scenario

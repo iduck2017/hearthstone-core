@@ -1,12 +1,12 @@
 import { BattlecryModel } from "../../../feats/battlecry";
 import { Model, useModel } from "set-piece";
-import { useBattlecryRunHook } from "../../../hooks/battlecry-run";
+import { useBattlecryLaunchHook } from "../../../hooks/battlecry-launcher";
 
 @useModel('coldlight-oracle-battlecry-model')
 export class ColdlightOracleBattlecryModel extends BattlecryModel<Model> {
     protected _brand: symbol = Symbol('coldlight-oracle-battlecry-model');
 
-    @useBattlecryRunHook()
+    @useBattlecryLaunchHook()
     protected async handleRun(): Promise<void> {
         const player = this.player;
         const opponent = player?.opponent;

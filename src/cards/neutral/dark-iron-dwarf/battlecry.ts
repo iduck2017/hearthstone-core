@@ -3,7 +3,7 @@ import { BattlecryModel } from "../../../feats/battlecry";
 import { Selector } from "../../../utils/controller";
 import { RoleModel } from "../../../entities/role";
 import { DarkIronDwarfBuffModel } from "./buff";
-import { useBattlecryRunHook } from "../../../hooks/battlecry-run";
+import { useBattlecryLaunchHook } from "../../../hooks/battlecry-launcher";
 import { useBattlecrySelectHook } from "../../../hooks/battlecry-selector";
 
 @useModel('dark-iron-dwarf-battlecry-model')
@@ -18,7 +18,7 @@ export class DarkIronDwarfBattlecryModel extends BattlecryModel<RoleModel> {
         return { options };
     }
 
-    @useBattlecryRunHook()
+    @useBattlecryLaunchHook()
     protected async handleRun(target?: RoleModel): Promise<void> {
         if (!target) return;
         target.entity?.addFeat(new DarkIronDwarfBuffModel());

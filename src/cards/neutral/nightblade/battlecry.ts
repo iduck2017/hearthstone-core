@@ -1,12 +1,12 @@
 import { BattlecryModel } from "../../../feats/battlecry";
 import { Model, useModel } from "set-piece";
-import { useBattlecryRunHook } from "../../../hooks/battlecry-run";
+import { useBattlecryLaunchHook } from "../../../hooks/battlecry-launcher";
 
 @useModel('nightblade-battlecry-model')
 export class NightbladeBattlecryModel extends BattlecryModel<Model> {
     protected _brand: symbol = Symbol('nightblade-battlecry-model');
 
-    @useBattlecryRunHook()
+    @useBattlecryLaunchHook()
     protected async handleRun(): Promise<void> {
         const opponent = this.player?.opponent;
         if (!opponent) return;

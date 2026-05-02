@@ -10,7 +10,7 @@
 
 - **FrostwolfWarlordBattlecryModel**: extends `BattlecryModel<Model>`.
   - `getSelector()`: returns `undefined` (no target).
-  - `@useBattlecryRunHook()` `handleRun()`:
+  - `@useBattlecryLaunchHook()` `handleRun()`:
     - Count `n = player.board.minions.length - 1` (exclude self, warlord is already on board when battlecry fires).
     - If `n <= 0` return.
     - Apply `RoleAttackBuffModel` and `RoleHealthBuffModel` with value `n` to the warlord's role.

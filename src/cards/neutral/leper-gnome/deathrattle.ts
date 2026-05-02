@@ -1,11 +1,11 @@
 import { useModel } from "set-piece";
 import { DeathrattleModel } from "../../../feats/deathrattle";
-import { useDeathrattleRunHook } from "../../../hooks/deathrattle-run";
+import { useDeathrattleLaunchHook } from "../../../hooks/deathrattle-launcher";
 
 @useModel('leper-gnome-deathrattle-model')
 export class LeperGnomeDeathrattleModel extends DeathrattleModel {
     protected _brand: symbol = Symbol('leper-gnome-deathrattle-model');
-    @useDeathrattleRunHook()
+    @useDeathrattleLaunchHook()
     protected _run(): void {
         const player = this.player;
         const opponent = player?.opponent;
