@@ -113,11 +113,11 @@ export function useTurnEndPrevEventConsumer<I extends Model & { game: GameModel 
         key: string,
         descriptor: TypedPropertyDescriptor<(event: TurnEndPrevEvent) => void>
     ) {
-        useEventConsumer((i: I) => [i.game, TurnEndPrevEvent])(
-            prototype,
-            key,
-            descriptor
-        );
+        useEventConsumer((self: I) => {
+            const game = self.game;
+            if (!game) return;
+            return [game, TurnEndPrevEvent]
+        })(prototype, key, descriptor);
     }
 }
 
@@ -127,10 +127,10 @@ export function useTurnEndEventConsumer<I extends Model & { game: GameModel | un
         key: string,
         descriptor: TypedPropertyDescriptor<(event: TurnEndEvent) => void>
     ) {
-        useEventConsumer((i: I) => [i.game, TurnEndEvent])(
-            prototype,
-            key,
-            descriptor
-        );
+        useEventConsumer((self: I) => {
+            const game = self.game;
+            if (!game) return;
+            return [game, TurnEndEvent]
+        })(prototype, key, descriptor);
     }
 }

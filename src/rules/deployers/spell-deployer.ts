@@ -17,9 +17,10 @@ export function usePlayerSpellCast<I extends Model & { player: PlayerModel | und
         key: string,
         descriptor: TypedPropertyDescriptor<(event: SpellPlayPostEvent) => void>
     ) {
-        useEventConsumer((i: I) => {
-            const cards = i.player?.cards ?? [];
-            const deployers = cards.map(card => card.deployer);
+        useEventConsumer((self: I) => {
+            const player = self.player;
+            if (!player) return;
+            const deployers = player.cards.map(card => card.deployer);
             return [deployers, SpellPlayPostEvent]
         })(prototype, key, descriptor);
     }

@@ -23,7 +23,10 @@ export class RestoreSourceModel extends Model {
         const prevEvent = new RestoreDealPrevEvent(options);
         this.emitEvent(prevEvent);
         if (prevEvent.isAborted) return;
-        options.target.receiveRestore({ value: options.value });
+        options.target.health.receiveRestore({ 
+            value: options.value,
+            source: this.parent,
+        });
         const postEvent = new RestoreDealEvent();
         this.emitAsyncEvent(postEvent);
     }
@@ -35,9 +38,11 @@ export function useRestoreDealEventConsumer<I extends Model & { restoreSource: R
         key: string,
         descriptor: TypedPropertyDescriptor<(event: RestoreDealEvent) => void>
     ) {
-        useEventConsumer
-            ((i: I) => [i.restoreSource, RestoreDealEvent])
-            (prototype, key, descriptor)
+        useEventConsumer((self: I) => {
+            const restoreSource = self.restoreSource;
+            if (!restoreSource) return;
+            return [restoreSource, RestoreDealEvent]
+        })(prototype, key, descriptor)
     }
 }
 
@@ -47,8 +52,10 @@ export function useRestoreDealPrevEventConsumer<I extends Model & { restoreSourc
         key: string,
         descriptor: TypedPropertyDescriptor<(event: RestoreDealPrevEvent) => void>
     ) {
-        useEventConsumer
-            ((i: I) => [i.restoreSource, RestoreDealPrevEvent])
-            (prototype, key, descriptor)
+        useEventConsumer((self: I) => {
+            const restoreSource = self.restoreSource;
+            if (!restoreSource) return;
+            return [restoreSource, RestoreDealPrevEvent]
+        })(prototype, key, descriptor)
     }
 }

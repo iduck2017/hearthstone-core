@@ -23,7 +23,10 @@ export class DamageSourceModel extends Model {
         const prevEvent = new DamageDealPrevEvent(options);
         this.emitEvent(prevEvent);
         if (prevEvent.isAborted) return;
-        options.target.receiveDamage({ value: options.value });
+        options.target.health.receiveDamage({
+            value: options.value,
+            source: this.parent,
+        });
         const postEvent = new DamageDealEvent()
         this.emitAsyncEvent(postEvent)
     }
@@ -35,9 +38,11 @@ export function useDamageDealEventConsumer<I extends Model & { damageSource: Dam
         key: string,
         descriptor: TypedPropertyDescriptor<(event: DamageDealEvent) => void>
     ) {
-        useEventConsumer
-            ((i: I) => [i.damageSource, DamageDealEvent])
-            (prototype, key, descriptor)
+        useEventConsumer((self: I) => {
+            const damageSource = self.damageSource;
+            if (!damageSource) return;
+            return [damageSource, DamageDealEvent]
+        })(prototype, key, descriptor)
     }
 }
 
@@ -47,8 +52,10 @@ export function useDamageDealPrevEventConsumer<I extends Model & { damageSource:
         key: string,
         descriptor: TypedPropertyDescriptor<(event: DamageDealPrevEvent) => void>
     ) {
-        useEventConsumer
-            ((i: I) => [i.damageSource, DamageDealPrevEvent])
-            (prototype, key, descriptor)
+        useEventConsumer((self: I) => {
+            const damageSource = self.damageSource;
+            if (!damageSource) return;
+            return [damageSource, DamageDealPrevEvent]
+        })(prototype, key, descriptor)
     }
 }
