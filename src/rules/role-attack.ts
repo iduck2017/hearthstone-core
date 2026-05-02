@@ -1,10 +1,21 @@
-import { useDep, useRoute, useState, Model, useMemo, useRange, useChild, useDecorProducer, useConsoleGroup, useModel, useAction } from "set-piece";
-import { RoleModel } from "../../src/entities/role";
+import { useDep, useRoute, useState, Model, useMemo, useRange, useChild, useDecorProducer, useConsoleGroup, useModel, useAction, useEventConsumer, PrevEvent, Event } from "set-piece";
 import { PlayerModel } from "../entities/player";
 import { GameModel } from "../entities/game";
 import { MinionModel } from "../cards/minion";
 import { HeroModel } from "../heroes";
 import { RoleAttackDecor } from "../decors/role-attack";
+import { RoleFeatModel } from "../feats";
+import { RoleModel } from "../entities/role";
+
+export interface RoleAttackOption {
+    target: RoleModel;
+}
+export class RoleAttackEvent extends Event {
+    protected _brand: symbol = Symbol('role-attack-perform-event');
+}
+export class RoleAttackPrevEvent extends PrevEvent<RoleAttackOption> {
+    protected _brand: symbol = Symbol('role-attack-perform-prev-event');
+}
 
 @useModel('role-attack-model')
 export class RoleAttackModel extends Model {
@@ -114,23 +125,74 @@ export class RoleAttackModel extends Model {
     }
 
 
+    public launch(options: RoleAttackOption) {
+        const role = this.role;
+        if (!role) return
+        const prevEvent = new RoleAttackPrevEvent(options);
+        this.emitEvent(prevEvent);
+        if (prevEvent.isAborted) return;
+        options.target._receiveAttack({ source: this.role });
+        role.stealth.deactive();
+        const postEvent = new RoleAttackEvent();
+        this.emitAsyncEvent(postEvent);
+    }
+
     // Attack
     @useAction()
-    public launch(options: {
-        target: RoleModel;
-    }) {
+    public executeLaunch(options: RoleAttackOption) {
         // Check role
         const role = this.role;
         if (!role) return;
         // Deal damage to each other via damageSource
-        const { target } = options;
-        role.entity?.damageSource.launch({ target, value: this._current });
-        target.entity?.damageSource.launch({ target: role, value: target.attack._current });
+        const source = role.entity;
+        const target = options.target.entity;
+        if (!source) return;
+        if (!target) return;
+        source.damageSource.launch({ 
+            target: target.role, 
+            value: this._current 
+        });
+        target.damageSource.launch({ 
+            target: role, 
+            value: target.role.attack.current 
+        });
         // If this is a hero attack, consume weapon durability
         const hero = this._hero
+        const weapon = hero?.weapon;
         if (!hero) return;
-        const weapon = hero.weapon;
         if (!weapon) return;
         weapon?.durability.consume();
+    }
+}
+
+export function useRoleAttackPrevEventConsumer<I extends RoleFeatModel>() {
+    return function(
+        prototype: I,
+        key: string,
+        descriptor: TypedPropertyDescriptor<(event: RoleAttackPrevEvent) => void>
+    ) {
+        useEventConsumer((self: I) => {
+            const role = self.role;
+            const feat = self.feat;
+            if (!feat?.isActived) return;
+            if (!role) return;
+            return [role.attack, RoleAttackPrevEvent]
+        })(prototype, key, descriptor);
+    }
+}
+
+export function useRoleAttackEventConsumer<I extends RoleFeatModel>() {
+    return function(
+        prototype: I,
+        key: string,
+        descriptor: TypedPropertyDescriptor<(event: RoleAttackEvent) => void>
+    ) {
+        useEventConsumer((self: I) => {
+            const role = self.role;
+            const feat = self.feat;
+            if (!feat?.isActived) return;
+            if (!role) return;
+            return [role.attack, RoleAttackEvent]
+        })(prototype, key, descriptor);
     }
 }

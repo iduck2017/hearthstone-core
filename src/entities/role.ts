@@ -15,16 +15,6 @@ import { HeroModel } from "../heroes";
 import { registerDisposer, useDisposer } from "../utils/disposer";
 import { BaseFeatModel, RoleFeatModel } from "../feats";
 
-export interface RoleAttackPerformOption {
-    target: RoleModel;
-}
-export class RoleAttackPerformEvent extends Event {
-    protected _brand: symbol = Symbol('role-attack-perform-event');
-}
-export class RoleAttackPerformPrevEvent extends PrevEvent<RoleAttackPerformOption> {
-    protected _brand: symbol = Symbol('role-attack-perform-prev-event');
-}
-
 export interface RoleAttackReceiveOption {
     source: RoleModel;
 }
@@ -167,65 +157,23 @@ export class RoleModel extends Model {
     /** Attack and receiveAttack */
     @useDisposer()
     @useAction()
-    public async runAttack() {
+    public async runAction() {
         if (!this.isAttackEnabled) return;
         // Get target
         const target = await this.attack.getTarget();
         if (!target) return;
         if (!this.isAttackEnabled) return;
-        this._executeAttack({ target })
+        this.attack.launch({ target })
+        this.action.consumeCurrent()
     }
 
-    private _executeAttack(options: RoleAttackPerformOption) {
-        const prevEvent = new RoleAttackPerformPrevEvent(options);
-        this.emitEvent(prevEvent);
-        if (prevEvent.isAborted) return;
-        this.action.consumeCurrent();
-        options.target._receiveAttack({ source: this });
-        this._stealth.deactive();
-        const postEvent = new RoleAttackPerformEvent();
-        this.emitAsyncEvent(postEvent);
-    }
-
-    private _receiveAttack(options: RoleAttackReceiveOption) {
+    public _receiveAttack(options: RoleAttackReceiveOption) {
         const prevEvent = new RoleAttackReceivePrevEvent(options);
         this.emitEvent(prevEvent);
         if (prevEvent.isAborted) return;
-        options.source.attack.launch({ target: this });
+        options.source.attack.executeLaunch({ target: this });
         const postEvent = new RoleAttackReceiveEvent();
         this.emitAsyncEvent(postEvent);
-    }
-}
-
-export function useRoleAttackPerformPrevEventConsumer<I extends RoleFeatModel>() {
-    return function(
-        prototype: I,
-        key: string,
-        descriptor: TypedPropertyDescriptor<(event: RoleAttackPerformPrevEvent) => void>
-    ) {
-        useEventConsumer((self: I) => {
-            const role = self.role;
-            const feat = self.feat;
-            if (!feat?.isActived) return;
-            if (!role) return;
-            return [role, RoleAttackPerformPrevEvent]
-        })(prototype, key, descriptor);
-    }
-}
-
-export function useRoleAttackPerformEventConsumer<I extends RoleFeatModel>() {
-    return function(
-        prototype: I,
-        key: string,
-        descriptor: TypedPropertyDescriptor<(event: RoleAttackPerformEvent) => void>
-    ) {
-        useEventConsumer((self: I) => {
-            const role = self.role;
-            const feat = self.feat;
-            if (!feat?.isActived) return;
-            if (!role) return;
-            return [role, RoleAttackPerformEvent]
-        })(prototype, key, descriptor);
     }
 }
 
