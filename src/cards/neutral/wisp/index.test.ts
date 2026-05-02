@@ -44,12 +44,12 @@ describe('wisp', () => {
         expect(wispA.role.attack.current).toBe(1);
         expect(wispB.role.attack.current).toBe(1);
 
-        expect(wispA.role.isAttackEnabled).toBe(true);
-        expect(wispB.role.isAttackEnabled).toBe(false);
+        expect(wispA.role.action.isEnabled).toBe(true);
+        expect(wispB.role.action.isEnabled).toBe(undefined);
     })
 
     it('wisp-attack-wisp', async () => {
-        wispA.role.runAttack();
+        wispA.role.runAction();
         await sleep();
         const options = playerA.controller.selector?.options;
         expect(options).toContain(wispB.role);

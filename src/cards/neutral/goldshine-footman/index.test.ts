@@ -49,12 +49,12 @@ describe('goldshine-footman', () => {
         expect(playerB.hero.role.taunt.isActived).toBe(false);
         expect(wispB.role.taunt.isActived).toBe(false);
         expect(footman.role.taunt.isActived).toBe(true);
-        expect(wispA.role.isAttackEnabled).toBe(true);
-        expect(wispB.role.isAttackEnabled).toBe(false);
+        expect(wispA.role.action.isEnabled).toBe(true);
+        expect(wispB.role.action.isEnabled).toBe(undefined);
     })
 
     it('taunt-restricts-target', async () => {
-        wispA.role.runAttack();
+        wispA.role.runAction();
         await sleep();
         const options = playerA.controller.selector?.options;
         expect(options).toContain(footman.role);
