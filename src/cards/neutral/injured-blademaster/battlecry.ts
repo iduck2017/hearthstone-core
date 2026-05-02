@@ -1,6 +1,6 @@
 import { BattlecryModel } from "../../../feats/battlecry";
 import { Model, useRoute, useModel } from "set-piece";
-import { useBattlecryLaunchHook } from "../../../hooks/battlecry-launcher";
+import { useBattlecryLaunchHook } from "../../../feats/battlecry";
 import { RoleModel } from "../../../entities/role";
 import { MinionModel } from "../../minion";
 

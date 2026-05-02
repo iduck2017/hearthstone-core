@@ -1,8 +1,8 @@
-import { Constructor, Method, Model } from "set-piece";
-import { BattlecryModel } from "../feats/battlecry";
+import { Constructor, Method } from "set-piece";
 import { FeatModel } from "../feats";
+import { Selector } from "./controller";
 
-export class FeatLauncherRegistry<P extends any[]> {
+export class FeatSelectorRegistry {
     private map: Map<Constructor<FeatModel>, string[]> = new Map();
 
     public register(Constructor: Constructor<FeatModel>, key: string) {
@@ -13,7 +13,7 @@ export class FeatLauncherRegistry<P extends any[]> {
 
     public getHooks(feat: FeatModel) {
         let constructor: any = feat.constructor;
-        const result: Method<void, P>[] = [];
+        const result: Method<Selector<any>, any[]>[] = [];
         while (constructor) {
             const keys = this.map.get(constructor) ?? [];
             keys.forEach(key => {
@@ -24,18 +24,5 @@ export class FeatLauncherRegistry<P extends any[]> {
             constructor = Object.getPrototypeOf(constructor);
         }
         return result;
-    }
-}
-
-export const battlecryLauncherRegistry = new FeatLauncherRegistry()
-
-export function useBattlecryLaunchHook<T extends Model>() {
-    return function(
-        prototype: BattlecryModel<T>,
-        key: string,
-        descriptor: TypedPropertyDescriptor<Method<Promise<void>, Array<T | undefined>>>,
-    ) {
-        const Constructor: any = prototype.constructor;
-        battlecryLauncherRegistry.register(Constructor, key)
     }
 }

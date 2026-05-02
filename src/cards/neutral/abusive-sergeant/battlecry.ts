@@ -2,7 +2,7 @@ import { BattlecryModel } from "../../../feats/battlecry";
 import { Selector } from "../../../utils/controller";
 import { RoleModel } from "../../../entities/role";
 import { AbusiveSergeantBuffModel } from "./buff";
-import { useBattlecryLaunchHook } from "../../../hooks/battlecry-launcher";
+import { useBattlecryLaunchHook } from "../../../feats/battlecry";
 import { useConsoleGroup, useModel } from "set-piece";
 import { useBattlecrySelectHook } from "../../../hooks/battlecry-selector";
 

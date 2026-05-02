@@ -1,9 +1,22 @@
-import { useRoute, useState, Model, useMemo } from "set-piece";
+import { Constructor, Method, useRoute, useState, Model, useMemo } from "set-piece";
 import { PlayerModel } from "../entities/player";
 import { Selector } from "../utils/controller";
 import { FeatModel } from ".";
+import { FeatLauncherRegistry } from "../utils/feat-launcher-registry";
 import { battlecrySelectorRegistry } from "../hooks/battlecry-selector";
-import { battlecryLauncherRegistry } from "../hooks/battlecry-launcher";
+
+export const battlecryLauncherRegistry = new FeatLauncherRegistry()
+
+export function useBattlecryLaunchHook<T extends Model>() {
+    return function(
+        prototype: BattlecryModel<T>,
+        key: string,
+        descriptor: TypedPropertyDescriptor<Method<Promise<void>, Array<T | undefined>>>,
+    ) {
+        const Constructor: any = prototype.constructor;
+        battlecryLauncherRegistry.register(Constructor, key)
+    }
+}
 
 export abstract class BattlecryModel<T extends Model = Model> extends FeatModel {
     @useState()

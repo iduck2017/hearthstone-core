@@ -1,6 +1,6 @@
 import { BattlecryModel } from "../../../feats/battlecry";
 import { Model, useModel } from "set-piece";
-import { useBattlecryLaunchHook } from "../../../hooks/battlecry-launcher";
+import { useBattlecryLaunchHook } from "../../../feats/battlecry";
 
 @useModel('nightblade-battlecry-model')
 export class NightbladeBattlecryModel extends BattlecryModel<Model> {

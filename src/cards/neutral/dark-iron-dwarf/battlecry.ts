@@ -3,7 +3,7 @@ import { BattlecryModel } from "../../../feats/battlecry";
 import { Selector } from "../../../utils/controller";
 import { RoleModel } from "../../../entities/role";
 import { DarkIronDwarfBuffModel } from "./buff";
-import { useBattlecryLaunchHook } from "../../../hooks/battlecry-launcher";
+import { useBattlecryLaunchHook } from "../../../feats/battlecry";
 import { useBattlecrySelectHook } from "../../../hooks/battlecry-selector";
 
 @useModel('dark-iron-dwarf-battlecry-model')

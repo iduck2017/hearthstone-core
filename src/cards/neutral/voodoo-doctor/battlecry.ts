@@ -3,7 +3,7 @@ import { BattlecryModel } from "../../../feats/battlecry";
 import { Selector } from "../../../utils/controller";
 import { RoleModel } from "../../../entities/role";
 import { useBattlecrySelectHook } from "../../../hooks/battlecry-selector";
-import { useBattlecryLaunchHook } from "../../../hooks/battlecry-launcher";
+import { useBattlecryLaunchHook } from "../../../feats/battlecry";
 
 @useModel('voodoo-doctor-battlecry-model')
 export class VoodooDoctorBattlecryModel extends BattlecryModel<RoleModel> {

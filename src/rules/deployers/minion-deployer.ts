@@ -89,7 +89,7 @@ export class MinionDeployerModel extends CardDeployerModel {
         if (!minion) return;
         const isValid = await this.prepareLaunch();
         if (!isValid) return;
-        minion.consumeMana();
+        minion.cost.consume();
         if (this._position === undefined) return;
         this.summon(player, this._position);
         while (this.intensions?.length) {

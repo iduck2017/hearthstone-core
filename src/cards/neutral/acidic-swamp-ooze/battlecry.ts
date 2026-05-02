@@ -1,6 +1,6 @@
 import { Model, useModel } from "set-piece";
 import { BattlecryModel } from "../../../feats/battlecry";
-import { useBattlecryLaunchHook } from "../../../hooks/battlecry-launcher";
+import { useBattlecryLaunchHook } from "../../../feats/battlecry";
 
 @useModel('acidic-swamp-ooze-battlecry-model')
 export class AcidicSwampOozeBattlecryModel extends BattlecryModel<Model> {

@@ -1,7 +1,7 @@
 import { BattlecryModel } from "../../../feats/battlecry";
 import { MechanicalDragonlingModel } from "../../derivatives/mechanical-dragonling";
 import { Model, useRoute, useModel } from "set-piece";
-import { useBattlecryLaunchHook } from "../../../hooks/battlecry-launcher";
+import { useBattlecryLaunchHook } from "../../../feats/battlecry";
 import { MinionModel } from "../../minion";
 
 @useModel('dragonling-mechanic-battlecry-model')

@@ -68,7 +68,6 @@ export class RoleModel extends Model {
         this._charge = props.charge ?? new ChargeModel();
         this._rush = props.rush ?? new RushModel();
         this._stealth = props.stealth ?? new StealthModel();
-
     }
 
     public get name() {
@@ -192,10 +191,6 @@ export class RoleModel extends Model {
             return;
         }
         // Apply damage and fire RoleDamageReceive events
-        this._applyDamage(options);
-    }
-
-    private _applyDamage(options: RoleDamageReceiveOption) {
         const prevEvent = new RoleDamageReceivePrevEvent(options);
         this.emitEvent(prevEvent);
         if (prevEvent.isAborted) return;
@@ -204,6 +199,7 @@ export class RoleModel extends Model {
         const postEvent = new RoleDamageReceiveEvent();
         this.emitAsyncEvent(postEvent);
     }
+
 
     /** Attack and receiveAttack */
     @useDisposer()

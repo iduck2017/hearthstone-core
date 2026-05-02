@@ -1,7 +1,7 @@
 import { BattlecryModel } from "../../../feats/battlecry";
 import { BoarModel } from "../../derivatives/boar";
 import { Model, useRoute, useModel } from "set-piece";
-import { useBattlecryLaunchHook } from "../../../hooks/battlecry-launcher";
+import { useBattlecryLaunchHook } from "../../../feats/battlecry";
 import { MinionModel } from "../../minion";
 
 @useModel('razorfen-hunter-battlecry-model')

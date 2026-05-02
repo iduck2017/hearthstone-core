@@ -67,13 +67,6 @@ export abstract class CardModel extends Model {
     }
 
     @useMemo()
-    public consumeMana() {
-        if (!this._player) return;
-        const cost = this._cost.current;
-        this._player.mana.consume(cost);
-    }
-
-    @useMemo()
     public get battlecries() {
         return this.feats.filter(i => i instanceof BattlecryModel);
     }

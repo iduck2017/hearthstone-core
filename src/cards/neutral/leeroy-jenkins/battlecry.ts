@@ -1,7 +1,7 @@
 import { BattlecryModel } from "../../../feats/battlecry";
 import { WhelpModel } from "../../derivatives/whelp";
 import { Model, useAction, useModel } from "set-piece";
-import { useBattlecryLaunchHook } from "../../../hooks/battlecry-launcher";
+import { useBattlecryLaunchHook } from "../../../feats/battlecry";
 import { PlayerModel } from "../../../entities/player";
 
 @useModel('leeroy-jenkins-battlecry-model')

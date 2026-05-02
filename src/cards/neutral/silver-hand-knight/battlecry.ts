@@ -1,7 +1,7 @@
 import { BattlecryModel } from "../../../feats/battlecry";
 import { SquireModel } from "../../derivatives/squire";
 import { Model, useRoute, useModel } from "set-piece";
-import { useBattlecryLaunchHook } from "../../../hooks/battlecry-launcher";
+import { useBattlecryLaunchHook } from "../../../feats/battlecry";
 import { MinionModel } from "../../minion";
 
 @useModel('silver-hand-knight-battlecry-model')

@@ -43,7 +43,7 @@ export class WeaponDeployerModel extends CardDeployerModel {
         if (!weapon) return;
         const isValid = await this.prepareLaunch();
         if (!isValid) return;
-        weapon.consumeMana();
+        weapon.cost.consume();
         this.prepare(player);
         this.equip(player);
         while (this.intensions?.length) {

@@ -1,5 +1,6 @@
 import { useDep, useRoute, useState, Model, useMemo, useModel } from "set-piece";
 import { CardModel } from "../cards";
+import { PlayerModel } from "../entities/player";
 
 export interface CostBuff {
     readonly name: string;
@@ -42,4 +43,13 @@ export class CostModel extends Model {
         return result;
     }
 
+
+    @useRoute(() => PlayerModel) 
+    private _player?: PlayerModel;
+
+    @useMemo()
+    public consume() {
+        if (!this._player) return;
+        this._player.mana.consume(this.current);
+    }
 }           

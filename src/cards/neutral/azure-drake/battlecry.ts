@@ -1,7 +1,7 @@
 import { useModel } from "set-piece";
 import { BattlecryModel } from "../../../feats/battlecry";
 import { Model } from "set-piece";
-import { useBattlecryLaunchHook } from "../../../hooks/battlecry-launcher";
+import { useBattlecryLaunchHook } from "../../../feats/battlecry";
 
 @useModel('azure-drake-battlecry-model')
 export class AzureDrakeBattlecryModel extends BattlecryModel<Model> {
