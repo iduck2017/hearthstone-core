@@ -5,7 +5,7 @@ import { BuffOperatorType, RoleAttackDecor, useAllyRoleAttackDecorConsumer } fro
 import { RoleHealthDecor, useAllyRoleHealthDecorConsumer } from "../../../decors/role-health";
 import { BoardOnlyControllerModel } from "../../../feats/board-only-controller";
 import { RoleAttackModel } from "../../../rules/role-attack";
-import { RaceType } from "../../../rules/race";
+import { RaceType } from "../../../utils/enums";
 
 @useModel('murloc-warleader-feat-model')
 export class MurlocWarleaderFeatModel extends FeatModel {

@@ -14,7 +14,8 @@
       "Bash(grep -rn \"useMemo\" node_modules/set-piece/dist/*.d.ts)",
       "Bash(grep -rLn \"this\\\\.init\\(\\)\" src/cards/neutral/*/index.ts src/cards/derivatives/*/index.ts)",
       "Bash(node -e ' *)",
-      "Bash([ -f \"c:/Users/admin/Documents/hearthstone-core/src/cards/neutral/$dir/index.ts\" ])"
+      "Bash([ -f \"c:/Users/admin/Documents/hearthstone-core/src/cards/neutral/$dir/index.ts\" ])",
+      "Bash(xargs sed *)"
     ]
   }
 }

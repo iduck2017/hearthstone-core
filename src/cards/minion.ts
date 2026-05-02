@@ -4,7 +4,7 @@ import { RoleModel } from "../entities/role";
 import { MinionDisposerModel } from "../rules/disposers/minion-disposer";
 import { MinionDeployerModel } from "../rules/deployers/minion-deployer";
 import { BoardModel } from "../entities/board";
-import { RaceType } from "../rules/race";
+import { RaceType } from "../utils/enums";
 import { PlayerModel } from "../entities/player";
 
 export interface MinionProps extends CardProps {
@@ -46,11 +46,5 @@ export abstract class MinionModel extends CardModel {
         return this._deployer;
     }
 
-    /** Move this minion from workspace onto the given board at the given position. */
-    @useAction()
-    public moveToBoard(board: BoardModel, position: number) {
-        this._workspace?.removeCard(this);
-        board.summonMinion(this, position);
-    }
 
 }

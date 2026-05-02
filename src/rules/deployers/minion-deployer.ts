@@ -28,6 +28,16 @@ export class MinionDeployerModel extends CardDeployerModel {
     @useChild()
     private intensions?: DeployIntensionModel[];
 
+    
+    /** Move this minion from workspace onto the given board at the given position. */
+    @useAction()
+    private spawn(player: PlayerModel, position: number) {
+        const minion = this._minion;
+        if (!minion) return;
+        player.workspace?.removeCard(minion);
+        player.board.summonMinion(minion, position);
+    }
+
     /** Summon from anywhere to board. board defaults to player.board; safe for fresh tokens. */
     public summon(player: PlayerModel, position: number) {
         player = player ?? this._player;
@@ -36,8 +46,8 @@ export class MinionDeployerModel extends CardDeployerModel {
         position = position ?? board.cards.length;
         const minion = this._minion;
         if (!minion) return;
-        minion.prepare(player);
-        minion.moveToBoard(board, position);
+        this.prepare(player);
+        this.spawn(player, position);
         this.finishSummon();
     }
 

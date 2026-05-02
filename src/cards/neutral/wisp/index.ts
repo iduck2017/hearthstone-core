@@ -2,9 +2,9 @@ import { useModel } from "set-piece";
 import { CostModel } from "../../../rules/cost";
 import { RoleAttackModel } from "../../../rules/role-attack";
 import { RoleHealthModel } from "../../../rules/role-health";
-import { ClassType } from "../../../rules/class";
+import { ClassType } from "../../../utils/enums";
 import { MinionModel } from "../../minion";
-import { RarityType } from "../../../rules/rarity";
+import { RarityType } from "../../../utils/enums";
 import { RoleModel } from "../../../entities/role";
 
 @useModel('wisp-model')

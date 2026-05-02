@@ -1,12 +1,12 @@
 import { useModel } from "set-piece";
 import { RoleAttackModel } from "../../../rules/role-attack";
 import { RoleHealthModel } from "../../../rules/role-health";
-import { ClassType } from "../../../rules/class";
+import { ClassType } from "../../../utils/enums";
 import { CostModel } from "../../../rules/cost";
 import { ShatteredSunClericBattlecryModel } from "./battlecry";
 import { MinionModel } from "../../minion";
 import { RoleModel } from "../../../entities/role";
-import { RarityType } from "../../../rules/rarity";
+import { RarityType } from "../../../utils/enums";
 
 @useModel('shattered-sun-cleric-model')
 export class ShatteredSunClericModel extends MinionModel {

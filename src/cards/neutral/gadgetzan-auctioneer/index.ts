@@ -4,8 +4,8 @@ import { RoleModel } from "../../../entities/role";
 import { RoleAttackModel } from "../../../rules/role-attack";
 import { RoleHealthModel } from "../../../rules/role-health";
 import { CostModel } from "../../../rules/cost";
-import { ClassType } from "../../../rules/class";
-import { RarityType } from "../../../rules/rarity";
+import { ClassType } from "../../../utils/enums";
+import { RarityType } from "../../../utils/enums";
 import { GadgetzanAuctioneerFeatModel } from "./feat";
 
 @useModel('gadgetzan-auctioneer-model')

@@ -4,7 +4,7 @@ import { MinionModel } from "../../minion";
 import { BuffOperatorType, RoleAttackDecor, useAllyRoleAttackDecorConsumer } from "../../../decors/role-attack";
 import { BoardOnlyControllerModel } from "../../../feats/board-only-controller";
 import { RoleAttackModel } from "../../../rules/role-attack";
-import { RaceType } from "../../../rules/race";
+import { RaceType } from "../../../utils/enums";
 
 @useModel('grimscale-oracle-feat-model')
 export class GrimscaleOracleFeatModel extends FeatModel {

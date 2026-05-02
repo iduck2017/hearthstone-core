@@ -1,13 +1,13 @@
 import { useModel } from "set-piece";
 import { RoleAttackModel } from "../../../rules/role-attack";
 import { RoleHealthModel } from "../../../rules/role-health";
-import { ClassType } from "../../../rules/class";
+import { ClassType } from "../../../utils/enums";
 import { ChargeModel } from "../../../rules/charge";
 import { CostModel } from "../../../rules/cost";
 import { MinionModel } from "../../minion";
 import { RoleModel } from "../../../entities/role";
-import { RaceType } from "../../../rules/race";
-import { RarityType } from "../../../rules/rarity";
+import { RaceType } from "../../../utils/enums";
+import { RarityType } from "../../../utils/enums";
 
 @useModel('stonetusk-boar-model')
 export class StonetuskBoarModel extends MinionModel {

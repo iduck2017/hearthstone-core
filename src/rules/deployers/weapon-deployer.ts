@@ -2,6 +2,7 @@ import { useAction, useChild, useModel, useRoute } from "set-piece";
 import { WeaponModel } from "../../cards/weapon";
 import { CardDeployerModel } from "./card-deployer";
 import { DeployIntensionModel } from "../deploy-intension";
+import { PlayerModel } from "../../entities/player";
 
 @useModel('weapon-deployer')
 export class WeaponDeployerModel extends CardDeployerModel {
@@ -14,9 +15,7 @@ export class WeaponDeployerModel extends CardDeployerModel {
     private intensions?: DeployIntensionModel[];
 
     @useAction()
-    public equip() {
-        const player = this._player;
-        if (!player) return;
+    private equip(player: PlayerModel) {
         const weapon = this._weapon;
         if (!weapon) return;
         player.workspace.removeCard(weapon);
@@ -45,8 +44,8 @@ export class WeaponDeployerModel extends CardDeployerModel {
         const isValid = await this.prepareLaunch();
         if (!isValid) return;
         weapon.consumeMana();
-        weapon.prepare(player);
-        this.equip();
+        this.prepare(player);
+        this.equip(player);
         while (this.intensions?.length) {
             const intension = this.intensions.pop();
             intension?.launch();

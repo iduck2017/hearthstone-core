@@ -3,11 +3,11 @@ import { MinionModel } from "../../minion";
 import { RoleAttackModel } from "../../../rules/role-attack";
 import { RoleHealthModel } from "../../../rules/role-health";
 import { ChargeModel } from "../../../rules/charge";
-import { ClassType } from "../../../rules/class";
+import { ClassType } from "../../../utils/enums";
 import { DivineShieldModel } from "../../../rules/divine-shield";
 import { CostModel } from "../../../rules/cost";
 import { RoleModel } from "../../../entities/role";
-import { RarityType } from "../../../rules/rarity";
+import { RarityType } from "../../../utils/enums";
 
 @useModel('argent-commander-model')
 export class ArgentCommanderModel extends MinionModel {

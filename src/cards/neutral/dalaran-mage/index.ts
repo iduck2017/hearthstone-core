@@ -2,10 +2,10 @@ import { useModel } from "set-piece";
 import { MinionModel } from "../../minion";
 import { RoleAttackModel } from "../../../rules/role-attack";
 import { RoleHealthModel } from "../../../rules/role-health";
-import { ClassType } from "../../../rules/class";
+import { ClassType } from "../../../utils/enums";
 import { CostModel } from "../../../rules/cost";
 import { RoleModel } from "../../../entities/role";
-import { RarityType } from "../../../rules/rarity";
+import { RarityType } from "../../../utils/enums";
 import { SpellDamageFeatModel } from "../../../feats/spell-damage-feat";
 
 @useModel('dalaran-mage-model')

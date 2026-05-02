@@ -9,8 +9,8 @@ import { FeatModel } from "../feats";
 import { DisposerModel } from "../rules/disposers";
 import { DamageSourceModel } from "../rules/damage-source";
 import { RestoreSourceModel } from "../rules/restore-source";
-import { RarityType } from "../rules/rarity";
-import { ClassType } from "../rules/class";
+import { RarityType } from "../utils/enums";
+import { ClassType } from "../utils/enums";
 import { CardDeployerModel } from "../rules/deployers/card-deployer";
 import { HandModel } from "../entities/hand";
 import { DeckModel } from "../entities/deck";
@@ -134,16 +134,6 @@ export abstract class CardModel extends Model {
 
     @useRoute(() => WorkspaceModel)
     protected _workspace?: WorkspaceModel;
-
-    /** Move this card from hand/deck/graveyard into the given player's workspace. */
-    public prepare(player?: PlayerModel) {
-        player = player ?? this._player;
-        if (!player) return;
-        this._hand?.removeCard(this);
-        this._deck?.removeCard(this);
-        this._graveyard?.removeCard(this);
-        player.workspace.addCard(this);
-    }
 
     @useChild()
     protected abstract _deployer: CardDeployerModel;

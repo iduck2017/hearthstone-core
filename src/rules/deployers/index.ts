@@ -2,11 +2,11 @@ import { Model, useRoute } from "set-piece";
 import { PlayerModel } from "../../entities/player";
 import { CardModel } from "../../cards";
 import { GameModel } from "../../entities/game";
+import { HandModel } from "../../entities/hand";
+import { DeckModel } from "../../entities/deck";
+import { GraveyardModel } from "../../entities/graveyard";
 
 export abstract class LauncherModel extends Model {
-    @useRoute(() => CardModel)
-    protected _card?: CardModel;
-
     @useRoute(() => PlayerModel)
     protected _player?: PlayerModel;
     

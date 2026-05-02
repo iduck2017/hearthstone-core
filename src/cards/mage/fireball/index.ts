@@ -1,8 +1,8 @@
 import { useModel } from "set-piece";
 import { SpellModel } from "../../spell";
 import { CostModel } from "../../../rules/cost";
-import { ClassType } from "../../../rules/class";
-import { RarityType } from "../../../rules/rarity";
+import { ClassType } from "../../../utils/enums";
+import { RarityType } from "../../../utils/enums";
 import { FireballEffectModel } from "./effect";
 
 @useModel('fireball-model')

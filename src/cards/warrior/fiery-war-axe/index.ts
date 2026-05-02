@@ -1,8 +1,8 @@
 import { useModel } from "set-piece";
 import { WeaponModel } from "../../weapon";
 import { CostModel } from "../../../rules/cost";
-import { ClassType } from "../../../rules/class";
-import { RarityType } from "../../../rules/rarity";
+import { ClassType } from "../../../utils/enums";
+import { RarityType } from "../../../utils/enums";
 
 @useModel('fiery-war-axe-model')
 export class FieryWarAxeModel extends WeaponModel {

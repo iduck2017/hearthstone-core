@@ -2,11 +2,11 @@ import { useModel } from "set-piece";
 import { MinionModel } from "../../minion";
 import { RoleHealthModel } from "../../../rules/role-health";
 import { RoleAttackModel } from "../../../rules/role-attack";
-import { ClassType } from "../../../rules/class";
+import { ClassType } from "../../../utils/enums";
 import { CostModel } from "../../../rules/cost";
 import { RoleModel } from "../../../entities/role";
 import { LeperGnomeDeathrattleModel } from "./deathrattle";
-import { RarityType } from "../../../rules/rarity";
+import { RarityType } from "../../../utils/enums";
 
 @useModel('leper-gnome-model')
 export class LeperGnomeModel extends MinionModel {

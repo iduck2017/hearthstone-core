@@ -2,12 +2,12 @@ import { useModel } from "set-piece";
 import { MinionModel } from "../../minion";
 import { RoleAttackModel } from "../../../rules/role-attack";
 import { RoleHealthModel } from "../../../rules/role-health";
-import { ClassType } from "../../../rules/class";
+import { ClassType } from "../../../utils/enums";
 import { TauntModel } from "../../../rules/taunt";
 import { CostModel } from "../../../rules/cost";
 import { RoleModel } from "../../../entities/role";
 import { TaurenWarriorFeatModel } from "./feat";
-import { RarityType } from "../../../rules/rarity";
+import { RarityType } from "../../../utils/enums";
 
 @useModel('tauren-warrior-model')
 export class TaurenWarriorModel extends MinionModel {

@@ -67,7 +67,7 @@ export class SpellDeployerModel extends CardDeployerModel {
         const isValid = await this.prepareLaunch();
         if (!isValid) return;
         spell.consumeMana();
-        spell.prepare(player);
+        this.prepare(player);
         while (this.intensions?.length) {
             const intension = this.intensions.pop();
             await intension?.launch();
