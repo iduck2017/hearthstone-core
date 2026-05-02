@@ -42,7 +42,7 @@ describe('fiery-war-axe', () => {
     });
 
     it('equip-weapon-on-play', async () => {
-        await fieryWarAxe.launcher.run();
+        await fieryWarAxe.deployer.launch();
 
         expect(heroA.weapon).toBe(fieryWarAxe);
         expect(heroA.role.attack.current).toBe(3);

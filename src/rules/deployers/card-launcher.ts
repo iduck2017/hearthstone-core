@@ -1,7 +1,7 @@
 import { useMemo } from "set-piece";
 import { LauncherModel } from ".";
 
-export abstract class CardLauncherModel extends LauncherModel {
+export abstract class CardDeployerModel extends LauncherModel {
     @useMemo()
     public get isPlayable() {
         if (!this._player) return false;

@@ -3,7 +3,7 @@ import { CardModel, CardProps } from ".";
 import { WeaponAttackModel } from "../rules/weapon-attack";
 import { WeaponDurabilityModel } from "../rules/weapon-durability";
 import { WeaponDisposerModel } from "../rules/disposers/weapon-disposer";
-import { WeaponLauncherModel } from "../rules/launcher/weapon-launcher";
+import { WeaponLauncherModel } from "../rules/deployers/weapon-launcher";
 
 export interface WeaponProps extends CardProps {
     /** Base attack value granted to the hero while equipped. */
@@ -43,5 +43,5 @@ export abstract class WeaponModel extends CardModel {
     }
 
     @useChild()
-    protected _launcher: WeaponLauncherModel = new WeaponLauncherModel();
+    protected _deployer: WeaponLauncherModel = new WeaponLauncherModel();
 }

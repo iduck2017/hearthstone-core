@@ -12,6 +12,6 @@ export class HarvestGolemDeathrattleModel extends DeathrattleModel {
         const board = player?.board;
         if (!board) return;
         const token = new DamagedGolemModel();
-        token.launcher.summon(player, 0);
+        token.deployer.summon(player, 0);
     }
 }

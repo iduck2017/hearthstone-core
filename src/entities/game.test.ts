@@ -57,18 +57,18 @@ describe('game', () => {
         const wispB = playerA.hand.cards[1];
         const wispC = playerB.hand.cards[0];
 
-        expect(wispA?.launcher.isPlayable).toBe(true);
-        expect(wispB?.launcher.isPlayable).toBe(true);
-        expect(wispC?.launcher.isPlayable).toBe(false);
+        expect(wispA?.deployer.isPlayable).toBe(true);
+        expect(wispB?.deployer.isPlayable).toBe(true);
+        expect(wispC?.deployer.isPlayable).toBe(false);
 
-        const promiseA = wispA?.launcher.run();
+        const promiseA = wispA?.deployer.launch();
         playerA.controller.selectTarget(0);
         await promiseA;
         expect(playerA.board.cards[0]).toBe(wispA);
         expect(playerA.board.cards.length).toBe(1);
         expect(playerA.hand.cards.length).toBe(2);
         
-        const promiseB = wispB?.launcher.run();
+        const promiseB = wispB?.deployer.launch();
         playerA.controller.selectTarget(0);
         await promiseB;
         expect(playerA.board.cards[0]).toBe(wispB);

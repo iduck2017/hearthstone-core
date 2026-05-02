@@ -42,7 +42,7 @@ describe("gadgetzan-auctioneer", () => {
     });
 
     it("spell-triggers-draw", async () => {
-        fireball.launcher.run();
+        fireball.deployer.launch();
         await sleep();
         playerA.controller.selectTarget(playerB.hero.role);
         await sleep();

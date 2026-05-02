@@ -21,6 +21,6 @@ export class DragonlingMechanicBattlecryModel extends BattlecryModel<Model> {
         const index = board.cards.indexOf(minion);
         if (index === -1) return;
         const dragonling = new MechanicalDragonlingModel();
-        dragonling.launcher.summon(player, index + 1);
+        dragonling.deployer.summon(player, index + 1);
     }
 }

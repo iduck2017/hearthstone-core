@@ -4,10 +4,10 @@ import { PlayerModel } from "../../entities/player";
 import { SpellModel } from "../../cards/spell";
 import { SpellEffectModel } from "../../feats/spell-effect";
 import { SpellPlayPostEvent } from "../../event/spell-play";
-import { CardLauncherModel } from "./card-launcher";
+import { CardDeployerModel } from "./card-launcher";
 
 @useModel('spell-launcher')
-export class SpellLauncherModel extends CardLauncherModel {
+export class SpellLauncherModel extends CardDeployerModel {
     protected _brand: symbol = Symbol('spell-launcher')
 
     @useRoute(() => SpellModel)
@@ -18,6 +18,16 @@ export class SpellLauncherModel extends CardLauncherModel {
 
     @useState()
     private _currentIndex?: number;
+
+    /** Move this card from workspace into the owning player's graveyard. */
+    public dispose() {
+        const player = this._player;
+        if (!player) return;
+        const card = this._card;
+        if (!card) return;
+        player.workspace?.removeCard(card);
+        player.graveyard.addCard(card);
+    }
 
     private async proceedCast(): Promise<boolean> {
         if (!this._options) return false;
@@ -41,7 +51,7 @@ export class SpellLauncherModel extends CardLauncherModel {
         return { options };
     }
 
-    public async run() {
+    public async launch() {
         if (!this.isPlayable) return;
         const player = this._player;
         if (!player) return;
@@ -50,7 +60,7 @@ export class SpellLauncherModel extends CardLauncherModel {
         const result = await this.prepareRun();
         if (!result) return;
         spell.consumeMana();
-        spell.moveToWorkspace(player);
+        spell.prepare(player);
         this._options = result.options;
         this._currentIndex = 0;
         while (true) {
@@ -59,7 +69,7 @@ export class SpellLauncherModel extends CardLauncherModel {
         }
         this._options = undefined;
         this._currentIndex = undefined;
-        spell.moveToGraveyard();
+        this.dispose();
         const postEvent = new SpellPlayPostEvent({ options: {}, result: undefined })
         this.emitDeferEvent(postEvent);
     }

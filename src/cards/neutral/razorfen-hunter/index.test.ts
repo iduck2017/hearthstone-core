@@ -39,11 +39,11 @@ describe('razorfen-hunter', () => {
         expect(playerA.board.cards.length).toBe(0);
         expect(game.currentPlayer).toBe(playerA);
         expect(playerA.mana.current).toBe(3);
-        expect(razorfenHunter.launcher.isPlayable).toBe(true);
+        expect(razorfenHunter.deployer.isPlayable).toBe(true);
     })
 
     it('play-razorfen-hunter', async () => {
-        razorfenHunter.launcher.run();
+        razorfenHunter.deployer.launch();
         await sleep();
         playerA.controller.selectTarget(0);
         await sleep();

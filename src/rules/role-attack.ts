@@ -77,7 +77,7 @@ export class RoleAttackModel extends Model {
         if (role.charge.isActived) return true;
         const game = this.game;
         if (!game) return false;
-        const summonedTurn = minion.launcher.summonedTurn;
+        const summonedTurn = minion.deployer.summonedTurn;
         const currentTurn = game.turn;
         if (summonedTurn !== currentTurn) return true;
         return false;

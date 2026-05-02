@@ -37,7 +37,7 @@ describe("priestess-of-elune", () => {
     });
 
     it("battlecry-restores-four-health-to-hero", async () => {
-        priestess.launcher.run();
+        priestess.deployer.launch();
         await sleep();
         playerA.controller.selectTarget(0);
         await sleep();

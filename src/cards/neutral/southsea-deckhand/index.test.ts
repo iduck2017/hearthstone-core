@@ -47,7 +47,7 @@ describe('southsea-deckhand', () => {
 
     it('charge-active-on-summon-with-weapon', async () => {
         // Play deckhand from hand — finishSummon() calls sleep(), summoning sickness applies
-        deckhand.launcher.run();
+        deckhand.deployer.launch();
         await sleep();
         playerA.controller.selectTarget(0);
         await sleep();

@@ -42,7 +42,7 @@ describe("kobold-geomancer", () => {
 
     it("spell-damage-boosts-fireball", async () => {
         // Boulderfist Ogre has 7 HP: survives 6 damage (Fireball), dies to 7 (Spell Damage +1)
-        fireball.launcher.run();
+        fireball.deployer.launch();
         await sleep();
         playerA.controller.selectTarget(boulderfistOgre.role);
         await sleep();

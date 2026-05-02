@@ -2,7 +2,7 @@ import { useAction, useChild, useMemo } from "set-piece";
 import { CardModel, CardProps } from ".";
 import { RoleModel } from "../entities/role";
 import { MinionDisposerModel } from "../rules/disposers/minion-disposer";
-import { MinionLauncherModel } from "../rules/launcher/minion-launcher";
+import { MinionDeployerModel } from "../rules/deployers/minion-deployer";
 import { BoardModel } from "../entities/board";
 import { RaceType } from "../rules/race";
 import { PlayerModel } from "../entities/player";
@@ -40,10 +40,10 @@ export abstract class MinionModel extends CardModel {
     }
 
     @useChild()
-    protected _launcher: MinionLauncherModel = new MinionLauncherModel();
+    protected _deployer: MinionDeployerModel = new MinionDeployerModel();
     @useMemo()
-    public get launcher() {
-        return this._launcher;
+    public get deployer() {
+        return this._deployer;
     }
 
     /** Move this minion from workspace onto the given board at the given position. */

@@ -41,7 +41,7 @@ describe("earthen-ring-farseer", () => {
     });
 
     it("battlecry-restores-three-health", async () => {
-        farseer.launcher.run();
+        farseer.deployer.launch();
         await sleep();
         playerA.controller.selectTarget(1); // board position after injuredBlademaster
         await sleep();

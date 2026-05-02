@@ -29,6 +29,6 @@ export class VioletTeacherFeatModel extends FeatModel {
         const board = player.board;
         const index = board.cards.indexOf(minion);
         const apprentice = new VioletApprenticeModel();
-        apprentice.launcher.summon(player, index + 1);
+        apprentice.deployer.summon(player, index + 1);
     }
 }

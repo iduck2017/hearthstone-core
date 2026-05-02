@@ -2,10 +2,10 @@ import { useAction, useModel, useRoute } from "set-piece";
 import { LauncherModel } from ".";
 import { PlayerModel } from "../../entities/player";
 import { WeaponModel } from "../../cards/weapon";
-import { CardLauncherModel } from "./card-launcher";
+import { CardDeployerModel } from "./card-launcher";
 
 @useModel('weapon-launcher')
-export class WeaponLauncherModel extends CardLauncherModel {
+export class WeaponLauncherModel extends CardDeployerModel {
     protected _brand: symbol = Symbol('weapon-launcher')
 
     @useRoute(() => WeaponModel)
@@ -21,14 +21,14 @@ export class WeaponLauncherModel extends CardLauncherModel {
         player.hero.equipWeapon(weapon);
     }
 
-    public async run() {
+    public async launch() {
         if (!this.isPlayable) return;
         const player = this._player;
         if (!player) return;
         const weapon = this._weapon;
         if (!weapon) return;
         weapon.consumeMana();
-        weapon.moveToWorkspace(player);
+        weapon.prepare(player);
         this.equip();
     }
 }

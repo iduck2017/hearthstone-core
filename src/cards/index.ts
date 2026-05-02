@@ -1,5 +1,5 @@
 import { Model, useChild, useMemo, useRoute } from "set-piece";
-import { LauncherModel } from "../rules/launcher";
+import { LauncherModel } from "../rules/deployers";
 import { GameModel } from "../entities/game";
 import { PlayerModel } from "../entities/player";
 import { CostModel } from "../rules/cost";
@@ -11,7 +11,7 @@ import { DamageSourceModel } from "../rules/damage-source";
 import { RestoreSourceModel } from "../rules/restore-source";
 import { RarityType } from "../rules/rarity";
 import { ClassType } from "../rules/class";
-import { CardLauncherModel } from "../rules/launcher/card-launcher";
+import { CardDeployerModel } from "../rules/deployers/card-launcher";
 import { HandModel } from "../entities/hand";
 import { DeckModel } from "../entities/deck";
 import { GraveyardModel } from "../entities/graveyard";
@@ -137,7 +137,7 @@ export abstract class CardModel extends Model {
     protected _workspace?: WorkspaceModel;
 
     /** Move this card from hand/deck/graveyard into the given player's workspace. */
-    public moveToWorkspace(player?: PlayerModel) {
+    public prepare(player?: PlayerModel) {
         player = player ?? this._player;
         if (!player) return;
         this._hand?.removeCard(this);
@@ -146,18 +146,11 @@ export abstract class CardModel extends Model {
         player.workspace.addCard(this);
     }
 
-    /** Move this card from workspace into the owning player's graveyard. */
-    public moveToGraveyard() {
-        const player = this._player;
-        if (!player) return;
-        this._workspace?.removeCard(this);
-        player.graveyard.addCard(this);
-    }
 
     @useChild()
-    protected abstract _launcher: CardLauncherModel;
+    protected abstract _deployer: CardDeployerModel;
     @useMemo()
-    public get launcher() {
-        return this._launcher;
+    public get deployer() {
+        return this._deployer;
     }
 }

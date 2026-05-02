@@ -47,7 +47,7 @@ describe("bloodmage-thalnos", () => {
 
     it("spell-damage-boosts-fireball", async () => {
         // Fireball with Spell Damage +1 deals 7 damage; Boulderfist Ogre has 7 HP → dies
-        fireball.launcher.run();
+        fireball.deployer.launch();
         await sleep();
         playerA.controller.selectTarget(boulderfistOgre.role);
         await sleep();

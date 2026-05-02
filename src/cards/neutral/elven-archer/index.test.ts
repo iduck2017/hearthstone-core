@@ -41,11 +41,11 @@ describe('elven-archer', () => {
         expect(wisp.role.health.current).toBe(1);
         expect(game.currentPlayer).toBe(playerA);
         expect(playerA.mana.current).toBe(1);
-        expect(elvenArcher.launcher.isPlayable).toBe(true)
+        expect(elvenArcher.deployer.isPlayable).toBe(true)
     })
 
     it('play-elven-archer', async () => {
-        elvenArcher.launcher.run();
+        elvenArcher.deployer.launch();
         await sleep();
         playerA.controller.selectTarget(0);
         await sleep();

@@ -44,7 +44,7 @@ describe("malygos", () => {
     it("spell-damage-plus-five-boosts-fireball", async () => {
         // Without Malygos: Fireball deals 6 → Ogre survives (7 HP)
         // With Malygos Spell Damage +5: Fireball deals 11 → Ogre dies
-        fireball.launcher.run();
+        fireball.deployer.launch();
         await sleep();
         playerA.controller.selectTarget(boulderfistOgre.role);
         await sleep();

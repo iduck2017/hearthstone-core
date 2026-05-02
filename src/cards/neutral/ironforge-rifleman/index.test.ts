@@ -39,7 +39,7 @@ describe("ironforge-rifleman", () => {
     });
 
     it("battlecry-deals-one-damage-to-enemy-minion", async () => {
-        ironforgeRifleman.launcher.run();
+        ironforgeRifleman.deployer.launch();
         await sleep();
         playerA.controller.selectTarget(0);
         await sleep();

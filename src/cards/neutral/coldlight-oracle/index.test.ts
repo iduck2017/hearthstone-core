@@ -47,7 +47,7 @@ describe("coldlight-oracle", () => {
 
     it("battlecry-both-players-draw-two", async () => {
         // Play Coldlight Oracle; battlecry draws 2 for each player
-        coldlightOracle.launcher.run();
+        coldlightOracle.deployer.launch();
         await sleep();
         playerA.controller.selectTarget(0); // select board position
         await sleep();

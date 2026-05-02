@@ -17,7 +17,7 @@ export function usePlayerSpellCast<I extends Model & { player: PlayerModel | und
     ) {
         useEventConsumer((i: I) => {
             const cards = i.player?.cards ?? [];
-            const launchers = cards.map(card => card.launcher);
+            const launchers = cards.map(card => card.deployer);
             return [launchers, SpellPlayPostEvent] 
         })(prototype, key, descriptor);
     }

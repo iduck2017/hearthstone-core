@@ -54,7 +54,7 @@ describe("gurubashi-berserker", () => {
     });
 
     it("battlecry-hit-stacks-another-plus-three", async () => {
-        elvenArcher.launcher.run();
+        elvenArcher.deployer.launch();
         await sleep();
         playerB.controller.selectTarget(0);
         await sleep();

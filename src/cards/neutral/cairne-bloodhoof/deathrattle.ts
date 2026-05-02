@@ -11,6 +11,6 @@ export class CairneBloodhoofDeathrattleModel extends DeathrattleModel {
         const player = this.player;
         if (!player) return;
         const token = new BaineBloodhoofModel();
-        token.launcher.summon(player, 0);
+        token.deployer.summon(player, 0);
     }
 }

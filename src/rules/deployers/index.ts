@@ -13,5 +13,5 @@ export abstract class LauncherModel extends Model {
     @useRoute(() => GameModel)
     protected _game?: GameModel;
 
-    public abstract run(): Promise<void>;
+    public abstract launch(): Promise<void>;
 }

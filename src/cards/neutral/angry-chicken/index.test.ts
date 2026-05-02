@@ -40,7 +40,7 @@ describe("angry-chicken", () => {
     });
 
     it("enrage-gains-attack-while-damaged", async () => {
-        shatteredSunCleric.launcher.run();
+        shatteredSunCleric.deployer.launch();
         await sleep();
         playerA.controller.selectTarget(0);
         await sleep();

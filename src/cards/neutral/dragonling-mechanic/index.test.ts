@@ -39,11 +39,11 @@ describe('dragonling-mechanic', () => {
         expect(playerA.board.cards.length).toBe(0);
         expect(game.currentPlayer).toBe(playerA);
         expect(playerA.mana.current).toBe(4);
-        expect(dragonlingMechanic.launcher.isPlayable).toBe(true);
+        expect(dragonlingMechanic.deployer.isPlayable).toBe(true);
     })
 
     it('play-dragonling-mechanic', async () => {
-        dragonlingMechanic.launcher.run();
+        dragonlingMechanic.deployer.launch();
         await sleep();
         playerA.controller.selectTarget(0);
         await sleep();

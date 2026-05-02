@@ -39,11 +39,11 @@ describe('murloc-tidehunter', () => {
         expect(playerA.board.cards.length).toBe(0);
         expect(game.currentPlayer).toBe(playerA);
         expect(playerA.mana.current).toBe(2);
-        expect(murlocTidehunter.launcher.isPlayable).toBe(true);
+        expect(murlocTidehunter.deployer.isPlayable).toBe(true);
     })
 
     it('play-murloc-tidehunter', async () => {
-        murlocTidehunter.launcher.run();
+        murlocTidehunter.deployer.launch();
         await sleep();
         // Select board position (0 = first position)
         playerA.controller.selectTarget(0);

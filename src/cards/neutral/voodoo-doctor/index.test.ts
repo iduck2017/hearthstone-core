@@ -42,7 +42,7 @@ describe("voodoo-doctor", () => {
     });
 
     it("battlecry-restores-two-health", async () => {
-        voodooDoctor.launcher.run();
+        voodooDoctor.deployer.launch();
         await sleep();
         playerA.controller.selectTarget(0); // board position
         await sleep();

@@ -40,7 +40,7 @@ describe("mana-addict", () => {
 
     it("spell-grants-attack-buff", async () => {
         // Play fireball targeting playerB hero
-        fireballA.launcher.run();
+        fireballA.deployer.launch();
         await sleep();
         playerA.controller.selectTarget(playerB.hero.role);
         await sleep();
@@ -50,7 +50,7 @@ describe("mana-addict", () => {
 
     it("buff-stacks-per-spell", async () => {
         // Play a second fireball; buff should stack to +4
-        fireballB.launcher.run();
+        fireballB.deployer.launch();
         await sleep();
         playerA.controller.selectTarget(playerB.hero.role);
         await sleep();

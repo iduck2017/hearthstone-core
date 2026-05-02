@@ -37,7 +37,7 @@ describe("leeroy-jenkins", () => {
     });
 
     it("battlecry-summons-two-whelps-for-opponent", async () => {
-        leeroyJenkins.launcher.run();
+        leeroyJenkins.deployer.launch();
         await sleep();
         playerA.controller.selectTarget(0);
         await sleep();
