@@ -1,4 +1,4 @@
-import { Model, TypedPropertyDecorator, useChild, useMemo, useRoute, useAction, useEventProducer, PrevEvent, useModel } from "set-piece";
+import { Model, TypedPropertyDecorator, useChild, useMemo, useRoute, useAction, Event, PrevEvent, useEventConsumer, useModel } from "set-piece";
 import { TauntModel } from "../rules/taunt";
 import { DivineShieldModel } from "../rules/divine-shield";
 import { ChargeModel } from "../rules/charge";
@@ -13,10 +13,36 @@ import { GameModel } from "./game";
 import { MinionModel } from "../cards/minion";
 import { HeroModel } from "../heroes";
 import { registerDisposer, useDisposer } from "../hooks/disposer";
-import { RoleAttackPerformOption, RoleAttackPerformPostEvent, RoleAttackPerformPrevEvent } from "../event/role-attack-perform";
-import { RoleAttackReceiveOption, RoleAttackReceivePostEvent, RoleAttackReceivePrevEvent } from "../event/role-attack-receive";
-import { RoleDamageReceiveOption, RoleDamageReceivePostEvent, RoleDamageReceivePrevEvent } from "../event/role-damage-receive";
 
+export interface RoleDamageReceiveOption {
+    value: number;
+}
+export class RoleDamageReceiveEvent extends Event {
+    protected _brand: symbol = Symbol('role-damage-receive-event');
+}
+export class RoleDamageReceivePrevEvent extends PrevEvent<RoleDamageReceiveOption> {
+    protected _brand: symbol = Symbol('role-damage-receive-prev-event');
+}
+
+export interface RoleAttackPerformOption {
+    target: RoleModel;
+}
+export class RoleAttackPerformEvent extends Event {
+    protected _brand: symbol = Symbol('role-attack-perform-event');
+}
+export class RoleAttackPerformPrevEvent extends PrevEvent<RoleAttackPerformOption> {
+    protected _brand: symbol = Symbol('role-attack-perform-prev-event');
+}
+
+export interface RoleAttackReceiveOption {
+    source: RoleModel;
+}
+export class RoleAttackReceiveEvent extends Event {
+    protected _brand: symbol = Symbol('role-attack-receive-event');
+}
+export class RoleAttackReceivePrevEvent extends PrevEvent<RoleAttackReceiveOption> {
+    protected _brand: symbol = Symbol('role-attack-receive-prev-event');
+}
 
 export interface RoleProps {
     taunt?: TauntModel;
@@ -42,13 +68,13 @@ export class RoleModel extends Model {
         this._charge = props.charge ?? new ChargeModel();
         this._rush = props.rush ?? new RushModel();
         this._stealth = props.stealth ?? new StealthModel();
-        
+
     }
 
     public get name() {
         return `${this.parent?.name}.RoleModel`
     }
-    
+
     @useRoute(() => BoardModel)
     private _board?: BoardModel;
 
@@ -72,7 +98,7 @@ export class RoleModel extends Model {
     public get attack() {
         return this._attack;
     }
-    
+
     @useMemo()
     public get isAttackEnabled() {
         const currentPlayer = this._game?.currentPlayer;
@@ -139,10 +165,10 @@ export class RoleModel extends Model {
 
     @useRoute(() => MinionModel)
     private _minion?: MinionModel;
-    
+
     @useRoute(() => HeroModel)
     private _hero?: HeroModel;
-    
+
     @useMemo()
     public get entity() {
         return this._minion ?? this._hero;
@@ -169,13 +195,17 @@ export class RoleModel extends Model {
         this._applyDamage(options);
     }
 
-    @useEventProducer(() => [RoleDamageReceivePrevEvent, RoleDamageReceivePostEvent])
-    private _applyDamage(options: RoleDamageReceiveOption, _event?: RoleDamageReceivePrevEvent) {
+    private _applyDamage(options: RoleDamageReceiveOption) {
+        const prevEvent = new RoleDamageReceivePrevEvent(options);
+        this.emitEvent(prevEvent);
+        if (prevEvent.isAborted) return;
         console.log(this.name, 'Receive damage', options.value);
         this.health.consumeCurrent(options.value);
+        const postEvent = new RoleDamageReceiveEvent();
+        this.emitAsyncEvent(postEvent);
     }
-    
-    /** Attack and receiveAttacl */
+
+    /** Attack and receiveAttack */
     @useDisposer()
     @useAction()
     public async runAttack() {
@@ -187,15 +217,107 @@ export class RoleModel extends Model {
         this._performAttack({ target })
     }
 
-    @useEventProducer(() => [RoleAttackPerformPrevEvent, RoleAttackPerformPostEvent])
-    private _performAttack(options: RoleAttackPerformOption, event?: RoleAttackPerformPrevEvent) {
+    private _performAttack(options: RoleAttackPerformOption) {
+        const prevEvent = new RoleAttackPerformPrevEvent(options);
+        this.emitEvent(prevEvent);
+        if (prevEvent.isAborted) return;
         this.action.consumeCurrent();
-        options.target._receiveAttack({ source: this });        
+        options.target._receiveAttack({ source: this });
         this._stealth.deactive();
+        const postEvent = new RoleAttackPerformEvent();
+        this.emitAsyncEvent(postEvent);
     }
 
-    @useEventProducer(() => [RoleAttackReceivePrevEvent, RoleAttackReceivePostEvent])
-    private _receiveAttack(options: RoleAttackReceiveOption, event?: RoleAttackReceivePrevEvent) {
-        options.source.attack.launch({ target: this })
+    private _receiveAttack(options: RoleAttackReceiveOption) {
+        const prevEvent = new RoleAttackReceivePrevEvent(options);
+        this.emitEvent(prevEvent);
+        if (prevEvent.isAborted) return;
+        options.source.attack.launch({ target: this });
+        const postEvent = new RoleAttackReceiveEvent();
+        this.emitAsyncEvent(postEvent);
+    }
+}
+
+export function useRoleDamageReceivePrevEventConsumer<I extends Model & { role: RoleModel | undefined }>() {
+    return function(
+        prototype: I,
+        key: string,
+        descriptor: TypedPropertyDescriptor<(event: RoleDamageReceivePrevEvent) => void>
+    ) {
+        useEventConsumer((i: I) => [i.role, RoleDamageReceivePrevEvent])(
+            prototype,
+            key,
+            descriptor
+        );
+    }
+}
+
+export function useRoleDamageReceiveEventConsumer<I extends Model & { role: RoleModel | undefined }>() {
+    return function(
+        prototype: I,
+        key: string,
+        descriptor: TypedPropertyDescriptor<(event: RoleDamageReceiveEvent) => void>
+    ) {
+        useEventConsumer((i: I) => [i.role, RoleDamageReceiveEvent])(
+            prototype,
+            key,
+            descriptor
+        );
+    }
+}
+
+export function useRoleAttackPerformPrevEventConsumer<I extends Model & { role: RoleModel | undefined }>() {
+    return function(
+        prototype: I,
+        key: string,
+        descriptor: TypedPropertyDescriptor<(event: RoleAttackPerformPrevEvent) => void>
+    ) {
+        useEventConsumer((i: I) => [i.role, RoleAttackPerformPrevEvent])(
+            prototype,
+            key,
+            descriptor
+        );
+    }
+}
+
+export function useRoleAttackPerformEventConsumer<I extends Model & { role: RoleModel | undefined }>() {
+    return function(
+        prototype: I,
+        key: string,
+        descriptor: TypedPropertyDescriptor<(event: RoleAttackPerformEvent) => void>
+    ) {
+        useEventConsumer((i: I) => [i.role, RoleAttackPerformEvent])(
+            prototype,
+            key,
+            descriptor
+        );
+    }
+}
+
+export function useRoleAttackReceivePrevEventConsumer<I extends Model & { role: RoleModel | undefined }>() {
+    return function(
+        prototype: I,
+        key: string,
+        descriptor: TypedPropertyDescriptor<(event: RoleAttackReceivePrevEvent) => void>
+    ) {
+        useEventConsumer((i: I) => [i.role, RoleAttackReceivePrevEvent])(
+            prototype,
+            key,
+            descriptor
+        );
+    }
+}
+
+export function useRoleAttackReceiveEventConsumer<I extends Model & { role: RoleModel | undefined }>() {
+    return function(
+        prototype: I,
+        key: string,
+        descriptor: TypedPropertyDescriptor<(event: RoleAttackReceiveEvent) => void>
+    ) {
+        useEventConsumer((i: I) => [i.role, RoleAttackReceiveEvent])(
+            prototype,
+            key,
+            descriptor
+        );
     }
 }

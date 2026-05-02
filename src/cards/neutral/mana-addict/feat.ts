@@ -2,7 +2,7 @@ import { useMemo, useRoute, useModel } from "set-piece";
 import { FeatModel } from "../../../feats";
 import { MinionModel } from "../../minion";
 import { BoardOnlyControllerModel } from "../../../feats/board-only-controller";
-import { SpellPlayPostEvent, usePlayerSpellCast } from "../../../event/spell-play";
+import { SpellPlayPostEvent, usePlayerSpellCast } from "../../../rules/deployers/spell-deployer";
 import { ManaAddictBuffModel } from "./buff";
 
 // Whenever the controller casts a spell, attach a temporary +2 Attack buff to this minion.

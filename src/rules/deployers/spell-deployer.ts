@@ -1,8 +1,29 @@
-import { useChild, useModel, useRoute } from "set-piece";
+import { Event, Model, PrevEvent, useChild, useEventConsumer, useModel, useRoute } from "set-piece";
 import { SpellModel } from "../../cards/spell";
-import { SpellPlayPostEvent } from "../../event/spell-play";
 import { CardDeployerModel } from "./card-deployer";
 import { DeployIntensionModel } from "../deploy-intension";
+import { PlayerModel } from "../../entities/player";
+
+export class SpellPlayPrevEvent extends PrevEvent<{}> {
+    protected _brand: symbol = Symbol('spell-play-prev-event');
+}
+export class SpellPlayPostEvent extends Event {
+    protected _brand: symbol = Symbol('spell-play-post-event');
+}
+
+export function usePlayerSpellCast<I extends Model & { player: PlayerModel | undefined }>() {
+    return function(
+        prototype: I,
+        key: string,
+        descriptor: TypedPropertyDescriptor<(event: SpellPlayPostEvent) => void>
+    ) {
+        useEventConsumer((i: I) => {
+            const cards = i.player?.cards ?? [];
+            const deployers = cards.map(card => card.deployer);
+            return [deployers, SpellPlayPostEvent]
+        })(prototype, key, descriptor);
+    }
+}
 
 @useModel('spell-deployer')
 export class SpellDeployerModel extends CardDeployerModel {
@@ -52,8 +73,8 @@ export class SpellDeployerModel extends CardDeployerModel {
             await intension?.launch();
         }
         this.intensions = undefined;
+        const postEvent = new SpellPlayPostEvent();
         this.dispose();
-        const postEvent = new SpellPlayPostEvent({ options: {}, result: undefined });
         this.emitDeferEvent(postEvent);
     }
 }

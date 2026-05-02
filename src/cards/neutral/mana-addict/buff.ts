@@ -1,7 +1,7 @@
 import { useModel } from "set-piece";
 import { FeatModel } from "../../../feats";
 import { RoleAttackBuffModel } from "../../../feats/role-attack-buff";
-import { TurnEndPostEvent, useTurnEndEventConsumer } from "../../../event/turn-end";
+import { TurnEndEvent, useTurnEndEventConsumer } from "../../../entities/game";
 
 // Temporary +2 Attack buff granted each time a spell is cast. Expires at turn end.
 @useModel('mana-addict-buff-model')
@@ -13,7 +13,7 @@ export class ManaAddictBuffModel extends FeatModel {
     }
 
     @useTurnEndEventConsumer()
-    private _handleTurnEnd(_event: TurnEndPostEvent) {
+    private _handleTurnEnd(_event: TurnEndEvent) {
         this.deactive();
     }
 }

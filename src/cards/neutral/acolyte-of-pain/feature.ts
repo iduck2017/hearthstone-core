@@ -1,7 +1,7 @@
 import { useMemo, useRoute, useModel } from "set-piece";
 import { FeatModel } from "../../../feats";
 import { MinionModel } from "../../minion";
-import { RoleDamageReceivePostEvent, useRoleDamageReceiveEventConsumer } from "../../../event/role-damage-receive";
+import { RoleDamageReceiveEvent, useRoleDamageReceiveEventConsumer } from "../../../entities/role";
 
 @useModel('acolyte-of-pain-feature-model')
 export class AcolyteOfPainFeatureModel extends FeatModel {
@@ -16,7 +16,7 @@ export class AcolyteOfPainFeatureModel extends FeatModel {
 
     // Whenever this minion takes damage, draw a card for its controller.
     @useRoleDamageReceiveEventConsumer()
-    private _onDamageReceive(event: RoleDamageReceivePostEvent) {
+    private _onDamageReceive(event: RoleDamageReceiveEvent) {
         this.player?.drawCard();
     }
 }

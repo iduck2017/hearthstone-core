@@ -1,7 +1,7 @@
 import { useMemo, useRoute, useModel } from "set-piece";
 import { FeatModel } from "../../../feats";
 import { BoardModel } from "../../../entities/board";
-import { TurnEndPostEvent, useTurnEndEventConsumer } from "../../../event/turn-end";
+import { TurnEndEvent, useTurnEndEventConsumer } from "../../../entities/game";
 import { RoleAttackBuffModel } from "../../../feats/role-attack-buff";
 
 @useModel('dark-iron-dwarf-buff-model')
@@ -19,7 +19,7 @@ export class DarkIronDwarfBuffModel extends FeatModel {
     }
 
     @useTurnEndEventConsumer()
-    private _handleTurnEnd(event: TurnEndPostEvent) {
+    private _handleTurnEnd(event: TurnEndEvent) {
         this.deactive();
     }
 }

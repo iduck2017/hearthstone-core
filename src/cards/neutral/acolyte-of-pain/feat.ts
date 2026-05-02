@@ -2,7 +2,7 @@ import { useMemo, useRoute, useModel } from "set-piece";
 import { FeatModel } from "../../../feats";
 import { MinionModel } from "../../minion";
 import { BoardOnlyControllerModel } from "../../../feats/board-only-controller";
-import { RoleDamageReceivePostEvent, useRoleDamageReceiveEventConsumer } from "../../../event/role-damage-receive";
+import { RoleDamageReceiveEvent, useRoleDamageReceiveEventConsumer } from "../../../entities/role";
 
 @useModel('acolyte-of-pain-feat-model')
 export class AcolyteOfPainFeatModel extends FeatModel {
@@ -20,7 +20,7 @@ export class AcolyteOfPainFeatModel extends FeatModel {
 
     // Whenever this minion takes damage, draw a card for its controller.
     @useRoleDamageReceiveEventConsumer()
-    private _onDamageReceive(event: RoleDamageReceivePostEvent) {
+    private _onDamageReceive(event: RoleDamageReceiveEvent) {
         this.player?.drawCard();
     }
 }

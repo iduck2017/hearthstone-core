@@ -2,7 +2,7 @@ import { useMemo, useRoute, useModel } from "set-piece";
 import { FeatModel } from "../../../feats";
 import { MinionModel } from "../../minion";
 import { BoardOnlyControllerModel } from "../../../feats/board-only-controller";
-import { SpellPlayPostEvent, usePlayerSpellCast } from "../../../event/spell-play";
+import { SpellPlayPostEvent, usePlayerSpellCast } from "../../../rules/deployers/spell-deployer";
 
 // Whenever the controller casts a spell, draw a card.
 @useModel('gadgetzan-auctioneer-feat-model')

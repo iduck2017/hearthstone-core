@@ -1,7 +1,13 @@
-import { useChild, useState, Event, Model, TypedPropertyDecorator, useRoute, useEventConsumer, PostEvent, PrevEvent, useEventProducer, useMemo, useModel } from "set-piece";
+import { useChild, useState, Event, Model, TypedPropertyDecorator, useRoute, useEventConsumer, PrevEvent, useMemo, useModel } from "set-piece";
 import { PlayerModel } from "./player";
 import { MageModel } from "../heroes/mage";
-import { TurnEndPostEvent, TurnEndPrevEvent } from "../event/turn-end";
+
+export class TurnEndEvent extends Event {
+    protected _brand: symbol = Symbol('turn-end-event');
+}
+export class TurnEndPrevEvent extends PrevEvent<{}> {
+    protected _brand: symbol = Symbol('turn-end-prev-event');
+}
 
 @useModel('game-model')
 export class GameModel extends Model {
@@ -18,7 +24,7 @@ export class GameModel extends Model {
         this._playerB = props?.playerB ?? new PlayerModel({
             hero: new MageModel(),
         });
-        
+
     }
 
     @useChild()
@@ -63,11 +69,14 @@ export class GameModel extends Model {
         this.startTurn();
     }
 
-    @useEventProducer(() => [TurnEndPrevEvent, TurnEndPostEvent])
-    private endTurn(options: {}, event?: TurnEndPrevEvent): void {
-        return;
+    private endTurn(options: {}) {
+        const prevEvent = new TurnEndPrevEvent(options);
+        this.emitEvent(prevEvent);
+        if (prevEvent.isAborted) return;
+        const postEvent = new TurnEndEvent();
+        this.emitAsyncEvent(postEvent);
     }
-    
+
     private startTurn() {
         const currentPlayer = this.currentPlayer;
         currentPlayer.mana.addMaximum(1);
@@ -82,7 +91,7 @@ export class GameModel extends Model {
     }
 
     public start(options?: {
-        isInitPhaseIgnored?: boolean;  
+        isInitPhaseIgnored?: boolean;
     }) {
         if (this._isStarted) {
             console.error('Game already started');
@@ -96,4 +105,32 @@ export class GameModel extends Model {
         this.nextTurn();
     }
 
+}
+
+export function useTurnEndPrevEventConsumer<I extends Model & { game: GameModel | undefined }>() {
+    return function(
+        prototype: I,
+        key: string,
+        descriptor: TypedPropertyDescriptor<(event: TurnEndPrevEvent) => void>
+    ) {
+        useEventConsumer((i: I) => [i.game, TurnEndPrevEvent])(
+            prototype,
+            key,
+            descriptor
+        );
+    }
+}
+
+export function useTurnEndEventConsumer<I extends Model & { game: GameModel | undefined }>() {
+    return function(
+        prototype: I,
+        key: string,
+        descriptor: TypedPropertyDescriptor<(event: TurnEndEvent) => void>
+    ) {
+        useEventConsumer((i: I) => [i.game, TurnEndEvent])(
+            prototype,
+            key,
+            descriptor
+        );
+    }
 }
