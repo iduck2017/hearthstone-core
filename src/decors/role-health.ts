@@ -1,7 +1,7 @@
 import { Decor, Model, useDecorConsumer } from "set-piece";
 import { BuffOperator, BuffOperatorType } from "./role-attack";
 import { RoleModel } from "../entities/role";
-import { FeatModel, SubFeatModel } from "../feats";
+import { FeatModel, BaseFeatModel } from "../feats";
 import { PlayerModel } from "../entities/player";
 
 export class RoleHealthDecor extends Decor<number> {

@@ -23,6 +23,6 @@ export class StormpikeCommandoBattlecryModel extends BattlecryModel<RoleModel> {
     @useBattlecryLaunchHook()
     protected async handleRun(target?: RoleModel): Promise<void> {
         if (!target) return;
-        this.entity?.damageSource.dealDamage({ target, value: 2 });
+        this.entity?.damageSource.launch({ target, value: 2 });
     }
 }

@@ -24,6 +24,6 @@ export class EarthenRingFarseerBattlecryModel extends BattlecryModel<RoleModel> 
     @useBattlecryLaunchHook()
     private async handleRun(target?: RoleModel): Promise<void> {
         if (!target) return;
-        this.entity?.restoreSource.restoreHealth({ target, value: 3 });
+        this.entity?.restoreSource.launch({ target, value: 3 });
     }
 }

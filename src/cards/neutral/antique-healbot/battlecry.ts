@@ -10,6 +10,6 @@ export class AntiqueHealbotBattlecryModel extends BattlecryModel<Model> {
     private async handleRun(): Promise<void> {
         const hero = this.player?.hero;
         if (!hero) return;
-        hero.restoreSource.restoreHealth({ target: hero.role, value: 8 });
+        hero.restoreSource.launch({ target: hero.role, value: 8 });
     }
 }

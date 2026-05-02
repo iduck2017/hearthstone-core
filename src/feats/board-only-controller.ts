@@ -1,11 +1,11 @@
 import { Model, useMemo, useRoute, useModel } from "set-piece";
-import { FeatModel, SubFeatModel } from ".";
+import { FeatModel, BaseFeatModel } from ".";
 import { FeatActiveDecor, useFeatActiveDecorConsumer } from "../decors/feat-active";
 import { BoardModel } from "../entities/board";
 import { HeroModel } from "../heroes";
 
 @useModel('board-only-tag-model')
-export class BoardOnlyControllerModel extends SubFeatModel {
+export class BoardOnlyControllerModel extends BaseFeatModel {
     protected _brand: symbol = Symbol('board-only-tag-model');
 
     @useRoute(() => BoardModel)

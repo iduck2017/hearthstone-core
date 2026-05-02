@@ -1,5 +1,5 @@
 import { Model, useState, useRoute, useMemo, useModel } from "set-piece";
-import { FeatModel, SubFeatModel } from ".";
+import { FeatModel, BaseFeatModel } from ".";
 import { BuffOperatorType, BuffOperator } from "../decors/role-attack";
 import { RoleHealthDecor, useRoleHealthDecorConsumer } from "../decors/role-health";
 import { RoleModel } from "../entities/role";
@@ -7,7 +7,7 @@ import { MinionModel } from "../cards/minion";
 import { HeroModel } from "../heroes";
 
 @useModel('role-health-buff-model')
-export class RoleHealthBuffModel extends SubFeatModel {
+export class RoleHealthBuffModel extends BaseFeatModel {
     protected _brand: symbol = Symbol('role-health-buff-model');
     @useState()
     public offset: number;

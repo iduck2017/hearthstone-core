@@ -3,8 +3,8 @@ import { HeroDisposerModel } from "../rules/disposers/hero-disposer";
 import { RoleModel, RoleProps } from "../entities/role";
 import { FeatModel } from "../feats";
 import { DeathrattleModel } from "../feats/deathrattle";
-import { DamageSourceModel } from "../rules/damage-source";
-import { RestoreSourceModel } from "../rules/restore-source";
+import { DamageSourceModel } from "../rules/source/damage-source";
+import { RestoreSourceModel } from "../rules/source/restore-source";
 import { WeaponModel } from "../cards/weapon";
 import { PlayerModel } from "../entities/player";
 

@@ -124,8 +124,8 @@ export class RoleAttackModel extends Model {
         if (!role) return;
         // Deal damage to each other via damageSource
         const { target } = options;
-        role.entity?.damageSource.dealDamage({ target, value: this._current });
-        target.entity?.damageSource.dealDamage({ target: role, value: target.attack._current });
+        role.entity?.damageSource.launch({ target, value: this._current });
+        target.entity?.damageSource.launch({ target: role, value: target.attack._current });
         // If this is a hero attack, consume weapon durability
         const hero = this._hero
         if (!hero) return;

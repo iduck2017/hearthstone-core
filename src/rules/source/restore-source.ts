@@ -1,5 +1,5 @@
 import { Event, Model, PrevEvent, useEventConsumer, useModel } from "set-piece";
-import { RoleModel } from "../entities/role";
+import { RoleModel } from "../../entities/role";
 
 export interface RestoreDealOption {
     target: RoleModel;
@@ -19,7 +19,7 @@ export class RestoreSourceModel extends Model {
 
     // Restore health to a target role, firing RestoreDeal events around the call.
     // target.receiveRestore handles the actual health restoration.
-    public restoreHealth(options: RestoreDealOption) {
+    public launch(options: RestoreDealOption) {
         const prevEvent = new RestoreDealPrevEvent(options);
         this.emitEvent(prevEvent);
         if (prevEvent.isAborted) return;

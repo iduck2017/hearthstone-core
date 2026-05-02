@@ -15,6 +15,6 @@ export class InjuredBlademasterBattlecryModel extends BattlecryModel<Model> {
     protected async handleRun(): Promise<void> {
         const minion = this._minion;
         if (!minion) return;
-        minion.damageSource.dealDamage({ target: minion.role, value: 4 });
+        minion.damageSource.launch({ target: minion.role, value: 4 });
     }
 }

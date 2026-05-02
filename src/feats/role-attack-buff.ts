@@ -1,12 +1,12 @@
 import { Model, useMemo, useRoute, useState, useModel } from "set-piece";
-import { FeatModel, SubFeatModel } from ".";
+import { FeatModel, BaseFeatModel } from ".";
 import { BuffOperatorType, RoleAttackDecor, useRoleAttackDecorConsumer } from "../decors/role-attack";
 import { MinionModel } from "../cards/minion";
 import { HeroModel } from "../heroes";
 import { RoleModel } from "../entities/role";
 
 @useModel('role-attack-buff-model')
-export class RoleAttackBuffModel extends SubFeatModel {
+export class RoleAttackBuffModel extends BaseFeatModel {
     protected _brand: symbol = Symbol('role-attack-buff-model');
     @useState()
     public offset: number;

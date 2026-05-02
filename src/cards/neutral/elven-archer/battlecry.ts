@@ -22,6 +22,6 @@ export class ElvenArcherBattlecryModel extends BattlecryModel<RoleModel> {
     @useBattlecryLaunchHook()
     private async handleRun(target?: RoleModel): Promise<void> {
         if (!target) return;
-        this.entity?.damageSource.dealDamage({ target, value: 1 });
+        this.entity?.damageSource.launch({ target, value: 1 });
     }
 }

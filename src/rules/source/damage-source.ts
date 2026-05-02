@@ -1,5 +1,5 @@
 import { Event, Model, PrevEvent, useEventConsumer, useModel } from "set-piece";
-import { RoleModel } from "../entities/role";
+import { RoleModel } from "../../entities/role";
 
 export interface DamageDealOption {
     target: RoleModel;
@@ -19,7 +19,7 @@ export class DamageSourceModel extends Model {
 
     // Deal damage to a target role, firing DamageDeal events around the call.
     // target.receiveDamage handles divine shield and fires RoleDamageReceive events.
-    public dealDamage(options: DamageDealOption) {
+    public launch(options: DamageDealOption) {
         const prevEvent = new DamageDealPrevEvent(options);
         this.emitEvent(prevEvent);
         if (prevEvent.isAborted) return;

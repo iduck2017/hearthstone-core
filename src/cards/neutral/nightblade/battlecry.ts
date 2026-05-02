@@ -10,6 +10,6 @@ export class NightbladeBattlecryModel extends BattlecryModel<Model> {
     protected async handleRun(): Promise<void> {
         const opponent = this.player?.opponent;
         if (!opponent) return;
-        this.entity?.damageSource.dealDamage({ target: opponent.hero.role, value: 3 });
+        this.entity?.damageSource.launch({ target: opponent.hero.role, value: 3 });
     }
 }

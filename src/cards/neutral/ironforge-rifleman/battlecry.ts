@@ -21,6 +21,6 @@ export class IronforgeRiflemanBattlecryModel extends BattlecryModel<RoleModel> {
     @useBattlecryLaunchHook()
     protected async handleRun(target?: RoleModel): Promise<void> {
         if (!target) return;
-        this.entity?.damageSource.dealDamage({ target, value: 1 });
+        this.entity?.damageSource.launch({ target, value: 1 });
     }
 }

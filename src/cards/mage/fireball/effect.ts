@@ -28,7 +28,7 @@ export class FireballEffectModel extends SpellEffectModel<RoleModel> {
     @useSpellEffectLaunchHook()
     protected async handleRun(target?: RoleModel): Promise<void> {
         if (!target) return;
-        this.entity?.damageSource.dealDamage({ target, value: this._damage });
+        this.entity?.damageSource.launch({ target, value: this._damage });
     }
 
 }

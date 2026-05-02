@@ -13,6 +13,7 @@ import { GameModel } from "./game";
 import { MinionModel } from "../cards/minion";
 import { HeroModel } from "../heroes";
 import { registerDisposer, useDisposer } from "../utils/disposer";
+import { BaseFeatModel, RoleFeatModel } from "../feats";
 
 export interface RoleDamageReceiveOption {
     value: number;
@@ -210,10 +211,10 @@ export class RoleModel extends Model {
         const target = await this.attack.getTarget();
         if (!target) return;
         if (!this.isAttackEnabled) return;
-        this._performAttack({ target })
+        this._executeAttack({ target })
     }
 
-    private _performAttack(options: RoleAttackPerformOption) {
+    private _executeAttack(options: RoleAttackPerformOption) {
         const prevEvent = new RoleAttackPerformPrevEvent(options);
         this.emitEvent(prevEvent);
         if (prevEvent.isAborted) return;
@@ -234,86 +235,80 @@ export class RoleModel extends Model {
     }
 }
 
-export function useRoleDamageReceivePrevEventConsumer<I extends Model & { role: RoleModel | undefined }>() {
+export function useDamageReceiveBefore<I extends RoleFeatModel>() {
     return function(
         prototype: I,
         key: string,
         descriptor: TypedPropertyDescriptor<(event: RoleDamageReceivePrevEvent) => void>
     ) {
-        useEventConsumer((i: I) => [i.role, RoleDamageReceivePrevEvent])(
-            prototype,
-            key,
-            descriptor
-        );
+        useEventConsumer((self: I) => {
+            if (!self.feat?.isActived) return;
+            return [self.role, RoleDamageReceivePrevEvent]
+        })(prototype, key, descriptor);
     }
 }
 
-export function useRoleDamageReceiveEventConsumer<I extends Model & { role: RoleModel | undefined }>() {
+export function useRoleDamageReceiveEventConsumer<I extends RoleFeatModel>() {
     return function(
         prototype: I,
         key: string,
         descriptor: TypedPropertyDescriptor<(event: RoleDamageReceiveEvent) => void>
     ) {
-        useEventConsumer((i: I) => [i.role, RoleDamageReceiveEvent])(
-            prototype,
-            key,
-            descriptor
-        );
+        useEventConsumer((self: I) => {
+            if (!self.feat?.isActived) return;
+            return [self.role, RoleDamageReceiveEvent]
+        })(prototype, key, descriptor);
     }
 }
 
-export function useRoleAttackPerformPrevEventConsumer<I extends Model & { role: RoleModel | undefined }>() {
+export function useRoleAttackPerformPrevEventConsumer<I extends RoleFeatModel>() {
     return function(
         prototype: I,
         key: string,
         descriptor: TypedPropertyDescriptor<(event: RoleAttackPerformPrevEvent) => void>
     ) {
-        useEventConsumer((i: I) => [i.role, RoleAttackPerformPrevEvent])(
-            prototype,
-            key,
-            descriptor
-        );
+        useEventConsumer((self: I) => {
+            if (!self.feat?.isActived) return;
+            return [self.role, RoleAttackPerformPrevEvent]
+        })(prototype, key, descriptor);
     }
 }
 
-export function useRoleAttackPerformEventConsumer<I extends Model & { role: RoleModel | undefined }>() {
+export function useRoleAttackPerformEventConsumer<I extends RoleFeatModel>() {
     return function(
         prototype: I,
         key: string,
         descriptor: TypedPropertyDescriptor<(event: RoleAttackPerformEvent) => void>
     ) {
-        useEventConsumer((i: I) => [i.role, RoleAttackPerformEvent])(
-            prototype,
-            key,
-            descriptor
-        );
+        useEventConsumer((self: I) => {
+            if (!self.feat?.isActived) return;
+            return [self.role, RoleAttackPerformEvent]
+        })(prototype, key, descriptor);
     }
 }
 
-export function useRoleAttackReceivePrevEventConsumer<I extends Model & { role: RoleModel | undefined }>() {
+export function useRoleAttackReceivePrevEventConsumer<I extends RoleFeatModel>() {
     return function(
         prototype: I,
         key: string,
         descriptor: TypedPropertyDescriptor<(event: RoleAttackReceivePrevEvent) => void>
     ) {
-        useEventConsumer((i: I) => [i.role, RoleAttackReceivePrevEvent])(
-            prototype,
-            key,
-            descriptor
-        );
+        useEventConsumer((self: I) => {
+            if (!self.feat?.isActived) return;
+            return [self.role, RoleAttackReceivePrevEvent]
+        })(prototype, key, descriptor);
     }
 }
 
-export function useRoleAttackReceiveEventConsumer<I extends Model & { role: RoleModel | undefined }>() {
+export function useRoleAttackReceiveEventConsumer<I extends RoleFeatModel>() {
     return function(
         prototype: I,
         key: string,
         descriptor: TypedPropertyDescriptor<(event: RoleAttackReceiveEvent) => void>
     ) {
-        useEventConsumer((i: I) => [i.role, RoleAttackReceiveEvent])(
-            prototype,
-            key,
-            descriptor
-        );
+        useEventConsumer((self: I) => {
+            if (!self.feat?.isActived) return;
+            return [self.role, RoleAttackReceiveEvent]
+        })(prototype, key, descriptor);
     }
 }

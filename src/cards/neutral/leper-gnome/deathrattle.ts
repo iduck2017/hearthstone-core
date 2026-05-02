@@ -10,6 +10,6 @@ export class LeperGnomeDeathrattleModel extends DeathrattleModel {
         const player = this.player;
         const opponent = player?.opponent;
         if (!opponent) return;
-        this.entity?.damageSource.dealDamage({ target: opponent.hero.role, value: 2 });
+        this.entity?.damageSource.launch({ target: opponent.hero.role, value: 2 });
     }
 }

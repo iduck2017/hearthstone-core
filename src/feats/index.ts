@@ -7,26 +7,28 @@ import { RoleModel } from "../entities/role";
 import { CardModel } from "../cards";
 import { FeatActiveDecor } from "../decors/feat-active";
 
-export abstract class SubFeatModel extends Model {
+export interface RoleFeatModel extends Model {
+    role: RoleModel | undefined
+    feat: FeatModel | undefined,
+    player: PlayerModel | undefined
+}
+
+export abstract class BaseFeatModel extends Model {
     @useRoute(() => FeatModel)
     private _feat?: FeatModel
     @useMemo()
-    public get feat() {
-        return this._feat;
-    }
+    public get feat() { return this._feat }
 
     @useRoute(() => PlayerModel)
     private _player?: PlayerModel;
     @useMemo()
-    public get player() {
-        return this._player;
-    }
+    public get player() { return this._player }
 }
 
 export abstract class FeatModel extends Model {
     constructor(props?: {
         isActived?: boolean;
-        subFeats?: SubFeatModel[]
+        subFeats?: BaseFeatModel[]
     }) {
         super();
         this._isActived = props?.isActived ?? true;
@@ -45,7 +47,7 @@ export abstract class FeatModel extends Model {
     }
 
     @useChild()
-    private _subFeats: SubFeatModel[];
+    private _subFeats: BaseFeatModel[];
     public get subFeats() {
         return this._subFeats;
     }
@@ -73,7 +75,5 @@ export abstract class FeatModel extends Model {
         return this._hero ?? this._card
     }
 
-    public get feat() {
-        return this;
-    }
+    public get feat() { return this; }
 }

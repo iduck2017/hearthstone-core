@@ -1,7 +1,7 @@
 import { number } from "joi";
 import { Decor, Model, useDecorConsumer } from "set-piece";
 import { RoleModel } from "../entities/role";
-import { FeatModel, SubFeatModel } from "../feats";
+import { FeatModel, BaseFeatModel } from "../feats";
 import { PlayerModel } from "../entities/player";
 
 export enum BuffOperatorType {
