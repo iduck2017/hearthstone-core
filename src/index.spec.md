@@ -31,6 +31,7 @@ A quick-lookup table for the **atomic** features that make up implemented cards.
 | Target filter | [hungry-crab/battlecry.ts](src/cards/neutral/hungry-crab/battlecry.ts) |
 | Random target | [ragnaros-the-firelord/feat.ts](src/cards/neutral/ragnaros-the-firelord/feat.ts) |
 | Draw a card | [novice-engineer/battlecry.ts](src/cards/neutral/novice-engineer/battlecry.ts) |
+| Draw a Pirate from your deck | [captains-parrot/battlecry.ts](src/cards/neutral/captains-parrot/battlecry.ts) |
 | Deal $N damage | [elven-archer/battlecry.ts](src/cards/neutral/elven-archer/battlecry.ts) |
 | Restore #N Health | [earthen-ring-farseer/battlecry.ts](src/cards/neutral/earthen-ring-farseer/battlecry.ts) |
 | Summon a minion | [razorfen-hunter/battlecry.ts](src/cards/neutral/razorfen-hunter/battlecry.ts) |
