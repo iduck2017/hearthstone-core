@@ -49,7 +49,7 @@ export abstract class FeatModel extends Model {
     private _isActived: boolean;
     @useMemo()
     public get isActived() { return this._isActived }
-    protected active() { this._isActived = true }
+    public active() { this._isActived = true }
     public disable() { this._isActived = false }
 
     @useState()

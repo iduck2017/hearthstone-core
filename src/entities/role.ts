@@ -2,6 +2,7 @@ import { Model, useChild, useMemo, useRoute, Event, PrevEvent, useEventConsumer,
 import { TauntModel } from "../rules/taunt";
 import { DivineShieldModel } from "../rules/divine-shield";
 import { ChargeModel } from "../rules/charge";
+import { FreezeModel } from "../rules/freeze";
 import { RushModel } from "../rules/rush";
 import { StealthModel } from "../rules/stealth";
 import { RoleAttackModel } from "../rules/role-attack";
@@ -26,6 +27,7 @@ export interface RoleProps {
     taunt?: TauntModel;
     divineShield?: DivineShieldModel;
     charge?: ChargeModel;
+    freeze?: FreezeModel;
     rush?: RushModel;
     stealth?: StealthModel;
     attack: RoleAttackModel;
@@ -44,6 +46,7 @@ export class RoleModel extends Model {
         this._taunt = props.taunt ?? new TauntModel({ isActived: false });
         this._divineShield = props.divineShield ?? new DivineShieldModel({ isActived: false });
         this._charge = props.charge ?? new ChargeModel({ isActived: false });
+        this._freeze = props.freeze ?? new FreezeModel({ isActived: false });
         this._rush = props.rush ?? new RushModel({ isActived: false });
         this._stealth = props.stealth ?? new StealthModel({ isActived: false });
     }
@@ -91,9 +94,12 @@ export class RoleModel extends Model {
     @useChild()
     private _charge: ChargeModel;
     @useMemo()
-    public get charge() {
-        return this._charge;
-    }
+    public get charge() { return this._charge; }
+
+    @useChild()
+    private _freeze: FreezeModel;
+    @useMemo()
+    public get freeze() { return this._freeze; }
 
     @useChild()
     private _rush: RushModel;

@@ -52,6 +52,7 @@ A quick-lookup table for the **atomic** features that make up implemented cards.
 | Give your weapon +N/+N | [captain-greenskin/battlecry.ts](src/cards/neutral/captain-greenskin/battlecry.ts) |
 | Whenever you summon a minion of type X | [murloc-tidecaller/feat.ts](src/cards/neutral/murloc-tidecaller/feat.ts) |
 | Give your opponent a Mana Crystal | [arcane-golem/battlecry.ts](src/cards/neutral/arcane-golem/battlecry.ts) |
+| Freeze a character | [frost-elemental/battlecry.ts](src/cards/neutral/frost-elemental/battlecry.ts) |
 
 ---
 

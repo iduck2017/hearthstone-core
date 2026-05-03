@@ -39,6 +39,8 @@ export class RoleActionModel extends Model {
         /** Check action */
         if (this.current <= 0) return;
         if (this.isAsleep) return;
+        /** Check freeze */
+        if (role.freeze.isActived) return;
         /** Check attack */
         if (!role.attack.isEnabled) return;
         /** Check position — minions must be on a board; heroes are always in play */
@@ -99,7 +101,7 @@ export class RoleActionModel extends Model {
 
     public sleep() { this._isAsleep = true }
     public wakeup() { this._isAsleep = false }
-    
+
     constructor() {
         super();
         this._current = this.origin;
@@ -121,12 +123,12 @@ export class RoleActionModel extends Model {
 
 export class AsleepDecor extends Decor<boolean> {
     private _isLock = false;
-    
-    public wakeup() { 
+
+    public wakeup() {
         if (this._isLock) return;
-        this._result = false 
+        this._result = false
     }
-    
+
     public sleep() {
         this._isLock = true;
         this._result = true;

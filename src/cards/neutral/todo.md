@@ -82,7 +82,7 @@
 - [x] Murloc Tidecaller (`murloc-tidecaller`)
 - [x] Frostwolf Warlord (`frostwolf-warlord`)
 - [x] Grimscale Oracle (`grimscale-oracle`)
-- [ ] Frost Elemental (`frost-elemental`)
+- [x] Frost Elemental (`frost-elemental`)
 - [ ] Archmage (`archmage`)
 - [ ] Gruul (`gruul`)
 - [ ] Captain's Parrot (`captains-parrot`)

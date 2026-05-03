@@ -68,6 +68,12 @@ export class GameModel extends Model {
         const prevEvent = new TurnEndPrevEvent(options);
         this.emitEvent(prevEvent);
         if (prevEvent.isAborted) return;
+        const currentPlayer = this.currentPlayer;
+        currentPlayer.hero.role.freeze.check();
+        const minions = currentPlayer.board.minions;
+        minions.forEach(minion => {
+            minion.role.freeze.check();
+        });
         const postEvent = new TurnEndPostEvent();
         this.emitAsyncEvent(postEvent);
     }
