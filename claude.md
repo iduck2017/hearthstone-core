@@ -17,19 +17,24 @@ alwaysApply: true
 - **Keep it simple**: Minimize entities involved; steps should be clear.
 - **Correct process**: Damage, death, and resolution order must match the rules.
 - **Necessary assertions only**: Assert only behavior relevant to the feature under test; do not assert base stats or other unrelated properties.
+- **Simulate player behavior only**: Use public APIs only (deployer.launch, controller.selectTarget, game.nextTurn, role.action.launch). Do not call internal functions directly (e.g., no `role.receiveDamage({ value: 10 })`).
 
 ## New Feature Development
 
 1. Look up the card’s exact effect (cost, stats, all keywords, effect text) before writing anything.
 2. **Before writing any spec or code**, read `src/index.spec.md` as implementation reference — it contains all patterns, the model tree, enums, and a reference card index.
-3. Write the technical spec first (see e.g. loot-hoarder’s index.spec.md). It must include:
+3. **Implement the effect first** (feat.ts + index.ts according to patterns in `src/index.spec.md`).
+4. **If encountering unimplemented general features**: propose implementation approach to user for approval before proceeding.
+5. **Stop and confirm implementation correctness** with the user before proceeding to test design.
+6. **Design test scenarios** that simulate player behavior (deployer.launch, controller.selectTarget, game.nextTurn, role.action.launch). Do not call internal functions directly (e.g., no `role.receiveDamage({ value: 10 })`).
+7. **Implement tests** (index.test.ts) according to designed scenarios.
+8. **Update index.spec.md** to include:
    - **Rules**: Card name, cost/stats, effect description, edge cases.
    - **Implementation**: Core components, data flow (trigger → execute → result).
-   - **Test scenario**: Setup, flow, and per-case assertions.
+   - **Test scenarios**: Setup, flow, and per-case assertions.
    - **Reference cards**: Reference cards and reference effects the design builds on.
-4. Implement the card and tests according to the spec.
-5. After implementation, mark the card as completed (`[x]`) in the relevant `src/cards/<class>/todo.md`.
-6. If the implementation introduces a new pattern not yet covered in `src/index.spec.md`, append it to the appropriate section of that file.
+9. After implementation, mark the card as completed (`[x]`) in the relevant `src/cards/<class>/todo.md`.
+10. If the implementation introduces a new pattern not yet covered in `src/index.spec.md`, append it to the appropriate section of that file.
 
 ## Workflow
 

@@ -17,7 +17,8 @@
       "Bash([ -f \"c:/Users/admin/Documents/hearthstone-core/src/cards/neutral/$dir/index.ts\" ])",
       "Bash(xargs sed *)",
       "Bash(rm src/hooks/spell-effect-run.ts)",
-      "Bash(rm src/decors/asleep.ts)"
+      "Bash(rm src/decors/asleep.ts)",
+      "Bash(python -c \"import json,sys; cards=json.load\\(sys.stdin\\); match=[c for c in cards if c.get\\('id'\\)=='CS2_g03' or 'secretkeeper' in c.get\\('id',''\\).lower\\(\\) or 'secretkeeper' in str\\(c.get\\('name',''\\)\\).lower\\(\\)]; print\\(json.dumps\\(match, indent=2, ensure_ascii=False\\)\\)\")"
     ]
   }
 }

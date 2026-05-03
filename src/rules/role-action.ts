@@ -120,7 +120,17 @@ export class RoleActionModel extends Model {
 }
 
 export class AsleepDecor extends Decor<boolean> {
-    public wakeup() { this._result = false }
+    private _isLock = false;
+    
+    public wakeup() { 
+        if (this._isLock) return;
+        this._result = false 
+    }
+    
+    public sleep() {
+        this._isLock = true;
+        this._result = true;
+    }
 }
 
 export function useAsleepDecorConsumer<I extends RoleFeatIntf>() {
