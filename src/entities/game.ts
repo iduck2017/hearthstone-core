@@ -1,12 +1,20 @@
 import { useChild, useState, Event, Model, TypedPropertyDecorator, useRoute, useEventConsumer, PrevEvent, useMemo, useModel, useAction } from "set-piece";
 import { PlayerModel } from "./player";
 import { MageModel } from "../heroes/mage";
+import { FeatIntf } from "../feats";
 
-export class TurnEndEvent extends Event {
+export class TurnEndPostEvent extends Event {
     protected _brand: symbol = Symbol('turn-end-event');
 }
 export class TurnEndPrevEvent extends PrevEvent<{}> {
     protected _brand: symbol = Symbol('turn-end-prev-event');
+}
+
+export class TurnStartPostEvent extends Event {
+    protected _brand: symbol = Symbol('turn-start-event');
+}
+export class TurnStartPrevEvent extends PrevEvent<{}> {
+    protected _brand: symbol = Symbol('turn-start-prev-event');
 }
 
 @useModel('game-model')
@@ -60,12 +68,15 @@ export class GameModel extends Model {
         const prevEvent = new TurnEndPrevEvent(options);
         this.emitEvent(prevEvent);
         if (prevEvent.isAborted) return;
-        const postEvent = new TurnEndEvent();
+        const postEvent = new TurnEndPostEvent();
         this.emitAsyncEvent(postEvent);
     }
 
     @useAction()
     private startTurn() {
+        const prevEvent = new TurnStartPrevEvent({});
+        this.emitEvent(prevEvent);
+        if (prevEvent.isAborted) return;
         const currentPlayer = this.currentPlayer;
         currentPlayer.mana.addMaximum(1);
         currentPlayer.mana.reset();
@@ -78,6 +89,8 @@ export class GameModel extends Model {
             minion.role.attack.setHeroSelectable(true);
             minion.role.action.resetCurrent();
         });
+        const postEvent = new TurnStartPostEvent();
+        this.emitAsyncEvent(postEvent);
     }
 
     public start(options?: {
@@ -94,7 +107,7 @@ export class GameModel extends Model {
 
 }
 
-export function useTurnEndPrevEventConsumer<I extends Model & { game: GameModel | undefined }>() {
+export function useTurnEndPrevEventConsumer<I extends FeatIntf>(isPlayerTurn?: boolean) {
     return function(
         prototype: I,
         key: string,
@@ -103,21 +116,61 @@ export function useTurnEndPrevEventConsumer<I extends Model & { game: GameModel 
         useEventConsumer((self: I) => {
             const game = self.game;
             if (!game) return;
+            if (!self.feat?.isActived) return;
+            if (isPlayerTurn === true && game.currentPlayer !== self.player) return;
+            if (isPlayerTurn === false && game.currentPlayer === self.player) return;
             return [game, TurnEndPrevEvent]
         })(prototype, key, descriptor);
     }
 }
 
-export function useTurnEndEventConsumer<I extends Model & { game: GameModel | undefined }>() {
+export function useTurnEndEventConsumer<I extends FeatIntf>(isPlayerTurn?: boolean) {
     return function(
         prototype: I,
         key: string,
-        descriptor: TypedPropertyDescriptor<(event: TurnEndEvent) => void>
+        descriptor: TypedPropertyDescriptor<(event: TurnEndPostEvent) => void>
     ) {
         useEventConsumer((self: I) => {
             const game = self.game;
             if (!game) return;
-            return [game, TurnEndEvent]
+            if (!self.feat?.isActived) return;
+            if (isPlayerTurn === true && game.currentPlayer !== self.player) return;
+            if (isPlayerTurn === false && game.currentPlayer === self.player) return;
+            return [game, TurnEndPostEvent]
+        })(prototype, key, descriptor);
+    }
+}
+
+export function useTurnStartPrevEventConsumer<I extends FeatIntf>(isPlayerTurn?: boolean) {
+    return function(
+        prototype: I,
+        key: string,
+        descriptor: TypedPropertyDescriptor<(event: TurnStartPrevEvent) => void>
+    ) {
+        useEventConsumer((self: I) => {
+            const game = self.game;
+            if (!game) return;
+            if (!self.feat?.isActived) return;
+            if (isPlayerTurn === true && game.currentPlayer !== self.player) return;
+            if (isPlayerTurn === false && game.currentPlayer === self.player) return;
+            return [game, TurnStartPrevEvent]
+        })(prototype, key, descriptor);
+    }
+}
+
+export function useTurnStartEventConsumer<I extends FeatIntf>(isPlayerTurn?: boolean) {
+    return function(
+        prototype: I,
+        key: string,
+        descriptor: TypedPropertyDescriptor<(event: TurnStartPostEvent) => void>
+    ) {
+        useEventConsumer((self: I) => {
+            const game = self.game;
+            if (!game) return;
+            if (!self.feat?.isActived) return;
+            if (isPlayerTurn === true && game.currentPlayer !== self.player) return;
+            if (isPlayerTurn === false && game.currentPlayer === self.player) return;
+            return [game, TurnStartPostEvent]
         })(prototype, key, descriptor);
     }
 }

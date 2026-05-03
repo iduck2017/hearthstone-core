@@ -13,6 +13,7 @@ export interface RoleFeatIntf extends FeatIntf {
 export interface FeatIntf extends Model {
     feat: FeatModel | undefined,
     player: PlayerModel | undefined
+    game: GameModel | undefined
 }
 
 export abstract class SubFeatModel extends Model {
@@ -25,6 +26,11 @@ export abstract class SubFeatModel extends Model {
     protected _player?: PlayerModel;
     @useMemo()
     public get player() { return this._player }
+
+    @useRoute(() => GameModel)
+    private _game?: GameModel;
+    @useMemo()
+    public get game() { return this._game }
 }
 
 export abstract class FeatModel extends Model {

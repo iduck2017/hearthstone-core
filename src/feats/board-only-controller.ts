@@ -16,7 +16,7 @@ export class BoardOnlyControllerModel extends SubFeatModel {
 
     // Disable the parent feat when its entity is neither on the board nor a hero.
     @useFeatActiveDecorConsumer()
-    private _handleFeatActive(decor: FeatActiveDecor) {
+    protected _handleFeatActive(decor: FeatActiveDecor) {
         if (this._hero) return;
         if (this._board) return
         decor.disable();

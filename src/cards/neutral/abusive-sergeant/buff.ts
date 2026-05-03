@@ -1,7 +1,7 @@
 import { useMemo, useRoute, useModel } from "set-piece";
 import { FeatModel } from "../../../feats";
 import { BoardModel } from "../../../entities/board";
-import { TurnEndEvent, useTurnEndEventConsumer } from "../../../entities/game";
+import { TurnEndPostEvent, useTurnEndEventConsumer } from "../../../entities/game";
 import { RoleAttackBuffModel } from "../../../feats/role-attack-buff";
 
 @useModel('abusive-sergeant-buff-model')
@@ -19,7 +19,7 @@ export class AbusiveSergeantBuffModel extends FeatModel {
     }
 
     @useTurnEndEventConsumer()
-    private _handleTurnEnd(event: TurnEndEvent) {
+    private _handleTurnEnd(event: TurnEndPostEvent) {
         console.log('HandleTurnEnd', this.board);
         this.disable();
     }

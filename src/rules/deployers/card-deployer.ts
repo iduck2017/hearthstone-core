@@ -1,9 +1,36 @@
-import { useMemo, useRoute } from "set-piece";
+import { Event, Model, useMemo, useRoute, useEventConsumer } from "set-piece";
 import { LauncherModel } from ".";
 import { CardModel } from "../../cards";
 import { HandModel } from "../../entities/hand";
 import { DeckModel } from "../../entities/deck";
 import { PlayerModel } from "../../entities/player";
+import { FeatIntf } from "../../feats";
+
+export class CardPlayPostEvent extends Event {
+    protected _brand: symbol = Symbol('card-play-post-event');
+    public readonly card: CardModel;
+    constructor(card: CardModel) {
+        super();
+        this.card = card;
+    }
+}
+
+export function usePlayerCardPlay<I extends FeatIntf>() {
+    return function(
+        prototype: I,
+        key: string,
+        descriptor: TypedPropertyDescriptor<(event: CardPlayPostEvent) => void>
+    ) {
+        useEventConsumer((self: I) => {
+            const player = self.player;
+            if (!player) return;
+            if (!self.feat?.isActived) return;
+            const cards = player.cards;
+            const deployers = cards.map(card => card.deployer);
+            return [deployers, CardPlayPostEvent];
+        })(prototype, key, descriptor);
+    }
+}
 
 export abstract class CardDeployerModel extends LauncherModel {
     @useMemo()
@@ -41,5 +68,11 @@ export abstract class CardDeployerModel extends LauncherModel {
         this._hand?.removeCard(card);
         this._deck?.removeCard(card);
         player.workspace.addCard(card);
+    }
+
+    protected finishLaunch() {
+        const card = this._card;
+        if (!card) return;
+        this.emitDeferEvent(new CardPlayPostEvent(card));
     }
 }

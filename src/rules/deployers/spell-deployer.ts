@@ -3,6 +3,7 @@ import { SpellModel } from "../../cards/spell";
 import { CardDeployerModel } from "./card-deployer";
 import { DeployIntensionModel } from "../deploy-intension";
 import { PlayerModel } from "../../entities/player";
+import { FeatIntf } from "../../feats";
 
 export class SpellPlayPrevEvent extends PrevEvent<{}> {
     protected _brand: symbol = Symbol('spell-play-prev-event');
@@ -11,7 +12,7 @@ export class SpellPlayPostEvent extends Event {
     protected _brand: symbol = Symbol('spell-play-post-event');
 }
 
-export function usePlayerSpellCast<I extends Model & { player: PlayerModel | undefined }>() {
+export function usePlayerSpellCast<I extends FeatIntf>() {
     return function(
         prototype: I,
         key: string,
@@ -20,7 +21,9 @@ export function usePlayerSpellCast<I extends Model & { player: PlayerModel | und
         useEventConsumer((self: I) => {
             const player = self.player;
             if (!player) return;
-            const deployers = player.cards.map(card => card.deployer);
+            if (!self.feat?.isActived) return;
+            const cards = player.cards;
+            const deployers = cards.map(card => card.deployer);
             return [deployers, SpellPlayPostEvent]
         })(prototype, key, descriptor);
     }
@@ -77,5 +80,6 @@ export class SpellDeployerModel extends CardDeployerModel {
         const postEvent = new SpellPlayPostEvent();
         this.dispose();
         this.emitDeferEvent(postEvent);
+        this.finishLaunch();
     }
 }

@@ -88,6 +88,7 @@ export class MinionDeployerModel extends CardDeployerModel {
             intension?.launch();
         }
         this.intensions = undefined;
+        this.finishLaunch();
     }
 
 }

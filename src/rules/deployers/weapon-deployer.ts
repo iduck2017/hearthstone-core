@@ -51,5 +51,6 @@ export class WeaponDeployerModel extends CardDeployerModel {
             intension?.launch();
         }
         this.intensions = undefined;
+        this.finishLaunch();
     }
 }

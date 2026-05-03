@@ -54,14 +54,12 @@ describe("mana-addict", () => {
         await sleep();
         playerA.controller.selectTarget(playerB.hero.role);
         await sleep();
-
         expect(manaAddict.role.attack.current).toBe(5);
     });
 
     it("buff-expires-at-turn-end", async () => {
         game.nextTurn();
         await sleep();
-
         expect(manaAddict.role.attack.current).toBe(1);
     });
 });
