@@ -40,6 +40,7 @@ describe("master-swordsmith", () => {
         expect(masterSmith.role.attack.current).toBe(1);
         const wispAAttack = wispA.role.attack.current;
         const wispBAttack = wispB.role.attack.current;
+        console.warn(wispAAttack, wispBAttack)
         expect(wispAAttack === 2 || wispBAttack === 2).toBe(true);
     });
 });

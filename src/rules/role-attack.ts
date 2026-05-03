@@ -6,7 +6,7 @@ import { HeroModel } from "../heroes";
 import { RoleAttackDecor } from "../decors/role-attack";
 import { RoleFeatIntf } from "../feats";
 import { RoleModel } from "../entities/role";
-import { useDisposer } from "../utils/disposer";
+import { useDisposer } from "../utils/disposer-resolver";
 
 export interface RoleAttackOption {
     target: RoleModel;

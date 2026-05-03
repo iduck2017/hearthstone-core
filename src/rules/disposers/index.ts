@@ -1,5 +1,5 @@
 import { useRoute, Model, useMemo, useState } from "set-piece";
-import { registerDisposer, useDisposer } from "../../utils/disposer";
+import { disposerResolver, useDisposer } from "../../utils/disposer-resolver";
 
 export abstract class DisposerModel extends Model {
 
@@ -13,12 +13,12 @@ export abstract class DisposerModel extends Model {
     public destroy() {
         this._isDestroyed = true;
         console.log('Destroy', this.parent)
-        registerDisposer(this);
+        disposerResolver.register(this);
     }
     
     public abstract get isActived(): boolean;
 
-    public abstract run(): void;
-    public abstract finishRun(): void;
+    public abstract executeLaunch(): void;
+    public abstract finishLaunch(): void;
 }           
 

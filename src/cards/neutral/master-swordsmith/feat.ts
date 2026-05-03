@@ -12,7 +12,7 @@ export class MasterSmithFeatModel extends FeatModel {
         super({ subFeats: [new BoardOnlyControllerModel()] });
     }
 
-    @useTurnEndEventConsumer()
+    @useTurnEndEventConsumer(true)
     protected _handleTurnEnd(_event: TurnEndPostEvent) {
         const game = this.game;
         const player = this.player;

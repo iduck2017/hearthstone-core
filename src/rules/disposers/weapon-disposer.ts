@@ -24,7 +24,7 @@ export class WeaponDisposerModel extends DisposerModel {
         return false;
     }
 
-    public run() {
+    public executeLaunch() {
         if (!this.isActived) return;
         const hero = this._hero;
         const player = this._player;
@@ -35,7 +35,7 @@ export class WeaponDisposerModel extends DisposerModel {
         player.graveyard.addCard(weapon);
     }
 
-    public finishRun() {
+    public finishLaunch() {
         // Weapons have no deathrattle
     }
 }

@@ -11,11 +11,14 @@ export class ElvenArcherBattlecryModel extends BattlecryModel<RoleModel> {
 
     @useBattlecrySelectHook()
     protected handleSelect(): Selector<RoleModel> | undefined {
-        const player = this.player;
-        const opponent = player?.opponent;
-        if (!opponent) return;
-        const board = opponent.board;
-        const options = [...board.minions, opponent.hero].map(item => item.role);
+        const game = this.game;
+        if (!game) return;
+        const options = [
+            ...game.playerA.board.minions,
+            ...game.playerB.board.minions,
+            game.playerA.hero,
+            game.playerB.hero,
+        ].map(item => item.role);
         return { options }
     }
 

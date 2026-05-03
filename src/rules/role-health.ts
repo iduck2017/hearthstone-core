@@ -1,6 +1,6 @@
 import { Event, Model, PrevEvent, useDecorProducer, useEffect, useEventConsumer, useMemo, useRange, useState, useModel, useRoute } from "set-piece";
 import { RoleHealthDecor } from "../decors/role-health";
-import { registerDisposer, useDisposer } from "../utils/disposer";
+import { disposerResolver, useDisposer } from "../utils/disposer-resolver";
 import { RoleModel } from "../entities/role";
 import type { RoleFeatIntf } from "../feats";
 
@@ -85,7 +85,7 @@ export class RoleHealthModel extends Model {
         if (!role) return;
         if (!entity) return;
         const disposer = entity.disposer;
-        registerDisposer(disposer);
+        disposerResolver.register(disposer);
         // Consume divine shield — no actual damage, event must NOT fire
         if (role.divineShield.isActived) {
             role.divineShield.consume();

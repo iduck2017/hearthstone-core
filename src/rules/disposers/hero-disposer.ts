@@ -26,13 +26,13 @@ export class HeroDisposerModel extends DisposerModel {
         return false;
     }
 
-    public run() {
+    public executeLaunch() {
         if (!this.isActived) return;
         const player = this._player;
         console.log('Game over', player);
     }
 
-    public finishRun() {
+    public finishLaunch() {
         const hero = this._hero;
         if (!hero) return;
         const deathrattles = hero.deathrattles;
