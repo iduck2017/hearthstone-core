@@ -1,8 +1,34 @@
-import { useAction, useChild, useMemo, useModel, useRoute, useState } from "set-piece";
+import { useAction, useChild, useMemo, useModel, useRoute, useState, Event, useEventConsumer } from "set-piece";
 import { PlayerModel } from "../../entities/player";
 import { MinionModel } from "../../cards/minion";
 import { CardDeployerModel } from "./card-deployer";
 import { DeployIntensionModel } from "../deploy-intension";
+import { FeatIntf } from "../../feats";
+
+export class MinionSummonPostEvent extends Event {
+    protected _brand: symbol = Symbol('minion-summon-post-event');
+    public readonly minion: MinionModel;
+    constructor(minion: MinionModel) {
+        super();
+        this.minion = minion;
+    }
+}
+
+export function usePlayerMinionSummonEventConsumer<I extends FeatIntf>() {
+    return function(
+        prototype: I,
+        key: string,
+        descriptor: TypedPropertyDescriptor<(event: MinionSummonPostEvent) => void>
+    ) {
+        useEventConsumer((that: I) => {
+            if (!that.feat?.isActived) return;
+            const player = that.player;
+            if (!player) return;
+            const deployers = player.cards.map(card => card.deployer);
+            return [deployers, MinionSummonPostEvent];
+        })(prototype, key, descriptor);
+    };
+}
 
 @useModel('minion-deployer')
 export class MinionDeployerModel extends CardDeployerModel {
@@ -42,6 +68,7 @@ export class MinionDeployerModel extends CardDeployerModel {
         this.prepare(player);
         this.spawn(player, position);
         this._finishSleep()
+        this.emitDeferEvent(new MinionSummonPostEvent(minion));
     }
 
     @useAction()

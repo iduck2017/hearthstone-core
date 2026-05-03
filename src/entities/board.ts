@@ -22,7 +22,7 @@ export class BoardModel extends Model {
     public get cards() {
         return [...this._cards];
     }
-    
+
     @useMemo()
     public get minions(): MinionModel[] {
         return this._cards.filter((card) => card instanceof MinionModel)

@@ -1,4 +1,4 @@
-import { useRoute, useState, Model, useRange, useMemo, useModel } from "set-piece";
+import { useRoute, useState, Model, useRange, useMemo, useModel, useAction } from "set-piece";
 import { PlayerModel } from "../entities/player";
 
 @useModel('mana-model')
@@ -17,7 +17,8 @@ export class ManaModel extends Model {
         return this._maximum;
     }
 
-    public addMaximum(value: number) {
+    @useAction()
+    public upgrade(value: number) {
         this._maximum += value;
         if (this._current > this._maximum) {
             this._current = this._maximum;

@@ -78,7 +78,7 @@ export class GameModel extends Model {
         this.emitEvent(prevEvent);
         if (prevEvent.isAborted) return;
         const currentPlayer = this.currentPlayer;
-        currentPlayer.mana.addMaximum(1);
+        currentPlayer.mana.upgrade(1);
         currentPlayer.mana.reset();
         currentPlayer.hero.role.action.wakeup();
         currentPlayer.hero.role.attack.setHeroSelectable(true);
