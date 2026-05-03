@@ -83,7 +83,7 @@
 - [x] Frostwolf Warlord (`frostwolf-warlord`)
 - [x] Grimscale Oracle (`grimscale-oracle`)
 - [x] Frost Elemental (`frost-elemental`)
-- [ ] Archmage (`archmage`)
+- [x] Archmage (`archmage`)
 - [ ] Gruul (`gruul`)
 - [ ] Captain's Parrot (`captains-parrot`)
 - [ ] Faceless Manipulator (`faceless-manipulator`)
