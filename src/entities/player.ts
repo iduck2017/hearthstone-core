@@ -121,8 +121,8 @@ export class PlayerModel extends Model {
         this._hand.addCards(cards);
     }
 
-    public drawCard() {
-        const card = this.deck.cards[0];
+    public drawCard(card?: CardModel) {
+        card = card ?? this.deck.cards[0];
         if (!card) return;
         this.deck.removeCard(card);
         this.hand.addCard(card);

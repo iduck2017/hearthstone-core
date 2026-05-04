@@ -9,6 +9,7 @@ import { sleep } from "../../../utils/sleep";
 import { CaptainsParrotModel } from "./index";
 import { SouthseaDeckhandModel } from "../southsea-deckhand";
 import { WispModel } from "../wisp";
+import { ManaModel } from "../../../rules/mana";
 
 describe('captains-parrot', () => {
     const app = new AppModel();
@@ -25,6 +26,7 @@ describe('captains-parrot', () => {
             deck: new DeckModel({
                 cards: [deckhand, wisp],
             }),
+            mana: new ManaModel({ maximum: 10 })
         }),
         playerB: new PlayerModel({
             hero: new MageModel(),
@@ -42,7 +44,7 @@ describe('captains-parrot', () => {
 
     it('check-initial-state', () => {
         expect(playerA.hand.cards.length).toBe(1);
-        expect(playerA.hand.cards[0]).toBe(parrot);
+        expect(playerA.hand.cards).toContain(parrot);
         expect(playerA.deck.cards.length).toBe(2);
         expect(playerA.deck.cards).toContain(deckhand);
         expect(playerA.deck.cards).toContain(wisp);
@@ -56,6 +58,6 @@ describe('captains-parrot', () => {
         expect(playerA.hand.cards.length).toBe(1);
         expect(playerA.hand.cards).toContain(deckhand);
         expect(playerA.deck.cards.length).toBe(1);
-        expect(playerA.deck.cards[0]).toBe(wisp);
+        expect(playerA.deck.cards).toContain(wisp);
     });
 });

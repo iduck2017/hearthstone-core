@@ -71,3 +71,5 @@ A test file uses a **single shared `GameModel`** with multiple `it()` cases that
 | End the current turn | [`game.nextTurn()`](src/entities/game.ts) |
 
 `await sleep()` is placed **after `selectTarget()`** to let the async behavior triggered by the selection resolve (e.g., battlecry execution, token summons). Only add it when there is async work to wait for — omit it when the selection has no async follow-up.
+
+Ensure the player has sufficient mana to play cards — initialize `PlayerModel` with `mana: new ManaModel({ maximum: N })` where N ≥ the card's cost.

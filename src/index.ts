@@ -9,3 +9,4 @@ export { FeatModel } from './feats';
 export { HeroModel } from "./heroes";
 export { RoleModel } from "./entities/role";
 export { CardModel } from "./cards";
+

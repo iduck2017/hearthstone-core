@@ -87,7 +87,7 @@
 - [x] Gruul (`gruul`)
 - [x] Captain's Parrot (`captains-parrot`)
 - [ ] Faceless Manipulator (`faceless-manipulator`)
-- [ ] Xavius (`xavius`)
+- [x] Xavius (`xavius`)
 - [x] Leeroy Jenkins (`leeroy-jenkins`)
 - [ ] Windfury Harpy (`windfury-harpy`)
 - [ ] Tinkmaster Overspark (`tinkmaster-overspark`)
