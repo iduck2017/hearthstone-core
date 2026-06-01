@@ -1,37 +1,46 @@
 import { Method } from "set-piece";
-import { PlayerModel } from "../models/entities/player";
-import { Selector } from "./selector";
+
+export interface Selector<T> {
+    readonly options: Readonly<T[]>;
+    readonly hint?: string;
+}
 
 export class Controller {
-    public readonly player: PlayerModel;
+    private _resolvers: Method<any>[];
 
-    private resolvers: Method[];
-
-    private selectors: Selector[];
-    public get current() {
-        return this.selectors[0];
+    private _selectors: Selector<any>[];
+    public get selector() {
+        return this._selectors[0];
     }
 
-    constructor(player: PlayerModel) {
-        this.player = player;
-        this.resolvers = [];
-        this.selectors = [];
+    constructor() {
+        this._resolvers = [];
+        this._selectors = [];
     }
 
-    public get<T>(selector: Selector<T>): Promise<T | undefined> {
+    public fetchTarget<T>(selector: Selector<T>): Promise<T | undefined> {
         if (!selector.options.length) return Promise.resolve(undefined);
         return new Promise<T | undefined>((resolve) => {
-            this.selectors.push(selector);
-            this.resolvers.push(resolve);
+            this._selectors.push(selector);
+            this._resolvers.push(resolve);
         });
     }
 
-    public set<T>(target: T | undefined) {
-        const selector = this.selectors.shift();
-        const resolver = this.resolvers.shift();
-        if (!selector) return;
-        if (!resolver) return;
-        if (!selector.options.includes(target)) resolver(undefined);
+    public selectTarget<T>(target: T | undefined) {
+        const selector = this._selectors.shift();
+        const resolver = this._resolvers.shift();
+        if (!selector) {
+            console.log('Selector not found');
+            return;
+        }
+        if (!resolver) {
+            console.log('Resolver not found');
+            return;
+        }
+        if (!selector.options.includes(target)) {
+            console.error('Target not found', target);
+            resolver(undefined);
+        }
         else resolver(target);
     }
 }

@@ -1,0 +1,24 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(//c/Users/admin/Documents/set-piece/dist/**)",
+      "Read(//c/Users/admin/Documents/set-piece/**)",
+      "Bash(xargs grep *)",
+      "Bash(python3 -c ' *)",
+      "Bash(git add *)",
+      "Bash(git commit -m ' *)",
+      "Bash(git push *)",
+      "Bash(npx jest *)",
+      "Bash(npx tsc *)",
+      "Read(//c/Users/admin/Documents/hearthstone-core/node_modules/set-piece/dist/dep/**)",
+      "Bash(grep -rn \"useMemo\" node_modules/set-piece/dist/*.d.ts)",
+      "Bash(grep -rLn \"this\\\\.init\\(\\)\" src/cards/neutral/*/index.ts src/cards/derivatives/*/index.ts)",
+      "Bash(node -e ' *)",
+      "Bash([ -f \"c:/Users/admin/Documents/hearthstone-core/src/cards/neutral/$dir/index.ts\" ])",
+      "Bash(xargs sed *)",
+      "Bash(rm src/hooks/spell-effect-run.ts)",
+      "Bash(rm src/decors/asleep.ts)",
+      "Bash(python -c \"import json,sys; cards=json.load\\(sys.stdin\\); match=[c for c in cards if c.get\\('id'\\)=='CS2_g03' or 'secretkeeper' in c.get\\('id',''\\).lower\\(\\) or 'secretkeeper' in str\\(c.get\\('name',''\\)\\).lower\\(\\)]; print\\(json.dumps\\(match, indent=2, ensure_ascii=False\\)\\)\")"
+    ]
+  }
+}

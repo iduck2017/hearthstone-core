@@ -1,14 +1,16 @@
 {
   "name": "hearthstone-core",
-  "version": "0.1.0",
+  "version": "2.0.0",
   "private": true,
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
   "types": "dist/type/index.d.ts",
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "keywords": [
     "typescript",
-    "hearthstone"
+    "utils"
   ],
   "author": "iduck",
   "license": "MIT",
@@ -17,17 +19,17 @@
     "joi": "^17.13.3"
   },
   "devDependencies": {
+    "@types/jest": "^30.0.0",
+    "esbuild": "^0.28.0",
     "jest": "^29.7.0",
-    "@types/jest": "^29.5.14",
     "ts-jest": "^29.3.2",
     "typescript": "^5.6.2",
     "utility-types": "^3.11.0"
   },
   "scripts": {
     "test": "jest",
-    "build:cjs": "tsc -p tsconfig.cjs.json",
-    "build:esm": "tsc -p tsconfig.esm.json",
-    "watch:cjs": "tsc -p tsconfig.cjs.json --watch",
-    "watch:esm": "tsc -p tsconfig.esm.json --watch"
+    "build": "tsc -p tsconfig.json",
+    "watch": "tsc -p tsconfig.json --watch",
+    "serve": "node esbuild.config.js"
   }
 }

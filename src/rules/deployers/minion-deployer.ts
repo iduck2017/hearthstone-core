@@ -1,0 +1,121 @@
+import { useAction, useChild, useMemo, useModel, useRoute, useState, Event, useEventConsumer } from "set-piece";
+import { PlayerModel } from "../../entities/player";
+import { MinionModel } from "../../cards/minion";
+import { CardDeployerModel } from "./card-deployer";
+import { DeployIntensionModel } from "../deploy-intension";
+import { FeatIntf } from "../../feats";
+
+export class MinionSummonPostEvent extends Event {
+    protected _brand: symbol = Symbol('minion-summon-post-event');
+    public readonly minion: MinionModel;
+    constructor(minion: MinionModel) {
+        super();
+        this.minion = minion;
+    }
+}
+
+export function usePlayerMinionSummonEventConsumer<I extends FeatIntf>() {
+    return function(
+        prototype: I,
+        key: string,
+        descriptor: TypedPropertyDescriptor<(event: MinionSummonPostEvent) => void>
+    ) {
+        useEventConsumer((that: I) => {
+            if (!that.feat?.isActived) return;
+            const player = that.player;
+            if (!player) return;
+            const deployers = player.cards.map(card => card.deployer);
+            return [deployers, MinionSummonPostEvent];
+        })(prototype, key, descriptor);
+    };
+}
+
+@useModel('minion-deployer')
+export class MinionDeployerModel extends CardDeployerModel {
+    protected _brand: symbol = Symbol('minion-deployer')
+
+    @useRoute(() => MinionModel)
+    protected _minion?: MinionModel
+    @useMemo()
+    protected get _role() {
+        return this._minion?.role
+    }
+
+    @useState()
+    private _position?: number;
+
+    @useChild()
+    private intensions?: DeployIntensionModel[];
+
+    
+    /** Move this minion from workspace onto the given board at the given position. */
+    @useAction()
+    private spawn(player: PlayerModel, position: number) {
+        const minion = this._minion;
+        if (!minion) return;
+        player.workspace?.removeCard(minion);
+        player.board.summonMinion(minion, position);
+    }
+
+    /** Summon from anywhere to board. board defaults to player.board; safe for fresh tokens. */
+    public summon(player: PlayerModel, position: number) {
+        player = player ?? this._player;
+        if (!player) return;
+        const board = player.board;
+        position = position ?? board.cards.length;
+        const minion = this._minion;
+        if (!minion) return;
+        this.prepare(player);
+        this.spawn(player, position);
+        this._finishSleep()
+        this.emitDeferEvent(new MinionSummonPostEvent(minion));
+    }
+
+    @useAction()
+    private _finishSleep() {
+        const role = this._role;
+        if (!role) return;
+        role.action.sleep();
+        role.attack.setHeroSelectable(false)
+    }
+
+    private async prepareLaunch() {
+        const player = this._player;
+        if (!player) return;
+        const card = this._card;
+        if (!card) return;
+        const board = player.board;
+        const positions = new Array(board.cards.length + 1).fill(0).map((_, index) => index);
+        const position = await player.controller.fetchTarget({ options: positions })
+        if (position === undefined) return;
+        const intensions: DeployIntensionModel[] = [];
+        for (const feat of card.battlecries) {
+            const params = await feat.getTargets();
+            const intension = new DeployIntensionModel({ feat, params })
+            intensions.push(intension)
+        }
+        this._position = position;
+        this.intensions = intensions;
+        return true;
+    }
+
+    public async launch() {
+        if (!this.isPlayable) return;
+        const player = this._player;
+        if (!player) return;
+        const minion = this._minion;
+        if (!minion) return;
+        const isValid = await this.prepareLaunch();
+        if (!isValid) return;
+        minion.cost.consume();
+        if (this._position === undefined) return;
+        this.summon(player, this._position);
+        while (this.intensions?.length) {
+            const intension = this.intensions.pop();
+            intension?.launch();
+        }
+        this.intensions = undefined;
+        this.finishLaunch();
+    }
+
+}
